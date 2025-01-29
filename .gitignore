@@ -1,0 +1,25 @@
+# Node.js bağımlılıkları (Hem frontend hem de backend için)
+node_modules/
+
+# Ortak Konfigürasyon Dosyaları (Backend ve Frontend)
+.env
+.DS_Store
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.idea/
+.vscode/
+
+# React veya Vue.js build klasörleri (Eğer frontend React/Vue ise)
+frontend/build/
+frontend/dist/
+
+# Logs ve Cache Dosyaları
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary dosyalar
+*.swp
