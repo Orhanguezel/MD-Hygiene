@@ -1,16 +1,26 @@
+import Home from "./components/Home";
+import ContactForm from "./components/ContactForm";
+import NotFound from "./components/NotFound";
+import { Routes, Route } from "react-router-dom";
+import "./App.css";
 
-import Home from './pages/Home'
-import './App.css'
-
-function App() {
-
+const App = () => {
+  const formData = {
+    name: "",
+    email: "",
+    message: "",
+  };
 
   return (
-    <>
-     <Home/>
-        
-    </>
-  )
-}
+    <div className="App">
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/contact" element={<ContactForm formData={formData} />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </div>
+  );
+};
 
-export default App
+export default App;
+

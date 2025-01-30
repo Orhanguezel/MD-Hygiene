@@ -1,6 +1,5 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.active-link {
+  font-weight: bold;
+  color: rgb(140, 25, 102);
+  text-decoration: underline;
 }

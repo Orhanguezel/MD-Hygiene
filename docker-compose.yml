@@ -29,8 +29,8 @@ services:
     environment:
       - NODE_ENV=production
       - MONGO_URI=mongodb://admin:adminpassword@mongo:27017/md-hygiene
-    env_file:
-      - ./backend-MD-Hygiene/.env
+      - SMTP_USER=info@md-hygienelogistik.de
+      - SMTP_PASSWORD=AaBb1234,
     depends_on:
       mongo:
         condition: service_healthy
