@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: always
+
+  backend:
+    build:
+      context: ./backend-MD-Hygiene  
+      dockerfile: Dockerfile
+    ports:
+      - "5006:5006"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - ./backend-MD-Hygiene/.env  # ENV dosyasını kullan
+    depends_on:
+      - mongo
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend-MD-Hygiene  
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: always
+
+volumes:
+  mongo_data:
+
