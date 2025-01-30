@@ -2,7 +2,7 @@
 node_modules/
 
 # Ortak Konfigürasyon Dosyaları (Backend ve Frontend)
-.env
+
 .DS_Store
 npm-debug.log
 yarn-debug.log
