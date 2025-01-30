@@ -6,16 +6,14 @@ import cors from 'cors';
 dotenv.config();
 
 // Ortam değişkenlerine göre MongoDB bağlantısını seç
-const mongoURI = process.env.NODE_ENV === 'production'
+const mongoURI = process.env.NODE_ENV === 'production' 
   ? process.env.MONGO_URI_PROD
   : process.env.MONGO_URI_DEV;
 
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log(`✅ MongoDB bağlantısı başarılı: ${mongoURI}`))
   .catch(err => console.error('❌ MongoDB bağlantı hatası:', err));
+
 
 const app = express(); // 🔴 `express` modülü burada tekrar tanımlanmamalı
 

@@ -8,30 +8,39 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=adminpassword
     restart: always
 
   backend:
     build:
       context: ./backend-MD-Hygiene  
       dockerfile: Dockerfile
+    container_name: md-hygiene_backend
     ports:
       - "5006:5006"
     environment:
       - NODE_ENV=production
+      - MONGO_URI=mongodb://admin:adminpassword@mongo:27017/md-hygiene
     env_file:
-      - ./backend-MD-Hygiene/.env  # ENV dosyasını kullan
+      - ./backend-MD-Hygiene/.env  # Backend için .env dosyası kullan
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy  # MongoDB hazır olmadan backend başlamaz
     restart: always
 
   frontend:
     build:
       context: ./frontend-MD-Hygiene  
       dockerfile: Dockerfile
+    container_name: md-hygiene_frontend
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+    depends_on:
+      - backend
     restart: always
 
 volumes:
