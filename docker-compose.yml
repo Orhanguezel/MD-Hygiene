@@ -12,6 +12,12 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=adminpassword
     restart: always
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "mongodb://admin:adminpassword@mongo:27017/admin", "--eval", "db.runCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
 
   backend:
     build:
@@ -24,10 +30,10 @@ services:
       - NODE_ENV=production
       - MONGO_URI=mongodb://admin:adminpassword@mongo:27017/md-hygiene
     env_file:
-      - ./backend-MD-Hygiene/.env  # Backend için .env dosyası kullan
+      - ./backend-MD-Hygiene/.env
     depends_on:
       mongo:
-        condition: service_healthy  # MongoDB hazır olmadan backend başlamaz
+        condition: service_healthy
     restart: always
 
   frontend:
@@ -39,10 +45,10 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+      - VITE_API_URL=http://localhost:5006
     depends_on:
       - backend
     restart: always
 
 volumes:
   mongo_data:
-
