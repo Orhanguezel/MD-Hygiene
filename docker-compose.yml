@@ -52,15 +52,16 @@ services:
       dockerfile: Dockerfile
     container_name: md-hygiene_frontend
     ports:
-      - "3000:80"  # Yerel geliştirme için 3000, prod için 80
+      - "3000:3000"  # Dışarıdan 3000'e yönlendirme
     networks:
       - md-hygiene-network
     environment:
-      - NODE_ENV=${NODE_ENV:-development}
-      - VITE_API_URL=${VITE_API_URL:-http://localhost:5010}  # Yerelde API çağrıları backend'e yönlendirilecek
+      - NODE_ENV=production
+      - VITE_API_URL=http://localhost:5010
     depends_on:
-      - backend
+    - backend
     restart: always
+
 
 volumes:
   mongo_data:

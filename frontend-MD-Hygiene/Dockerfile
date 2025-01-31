@@ -1,16 +1,18 @@
-# Frontend için doğru Node.js sürümü
+# 1️⃣ Node'un en küçük ve hızlı versiyonunu kullan
 FROM node:20-alpine
 
-# Çalışma dizini
+# 2️⃣ Çalışma dizinini ayarla
 WORKDIR /app
 
-# Bağımlılıkları yükle
+# 3️⃣ Bağımlılıkları yükle
 COPY package.json package-lock.json ./
 RUN npm install
 
-# React uygulamasını build et
+# 4️⃣ Kodları kopyala
 COPY . .
+
+# 5️⃣ Production build oluştur
 RUN npm run build
 
-# Frontend’i sunucu olarak çalıştır (React için)
-CMD ["npx", "serve", "-s", "dist"]
+# 6️⃣ Serve kullanarak frontend’i başlat
+CMD ["npx", "serve", "-s", "dist", "-l", "3000"]
