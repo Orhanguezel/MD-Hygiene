@@ -33,7 +33,7 @@ router.post("/", async (req, res) => {
         await transporter.sendMail({
             from: `"MD-Hygienelogistik" <info@md-hygienelogistik.de>`,
             to: "info@md-hygienelogistik.de",
-            subject: `Neue Nachricht von ${name}`,
+            subject: `${name}`,
             html: `
                 <h2>Von Web Seite eine Nachricht</h2>
                 <p><strong>Name:</strong> ${name}</p>

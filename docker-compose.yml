@@ -1,11 +1,16 @@
 version: '3.8'
 
+networks:
+  md-hygiene-network:
+
 services:
   mongo:
     image: mongo:latest
     container_name: mongo
     ports:
       - "27017:27017"
+    networks:
+      - md-hygiene-network
     volumes:
       - mongo_data:/data/db
     environment:
@@ -26,15 +31,18 @@ services:
     container_name: md-hygiene_backend
     ports:
       - "5007:5007"
+    networks:
+      - md-hygiene-network
+    env_file:
+      - ./backend-MD-Hygiene/.env
     environment:
-      - NODE_ENV=production
-      - MONGO_URI=mongodb://admin:adminpassword@mongo:27017/md-hygiene
-      - SMTP_USER=info@md-hygienelogistik.de
-      - SMTP_PASSWORD=AaBb1234,
+      - NODE_ENV=${NODE_ENV}
+      - MONGO_URI=${MONGO_URI}
     depends_on:
       mongo:
         condition: service_healthy
     restart: always
+    entrypoint: ["sh", "-c", "sleep 5 && node server.js"]
 
   frontend:
     build:
@@ -43,12 +51,15 @@ services:
     container_name: md-hygiene_frontend
     ports:
       - "3000:3000"
+    networks:
+      - md-hygiene-network
     environment:
-      - NODE_ENV=production
-      - VITE_API_URL=http://backend:5007  # Backend'in docker ismine yönlendirdik
+      - NODE_ENV=${NODE_ENV}
+      - VITE_API_URL=${VITE_API_URL}
     depends_on:
       - backend
     restart: always
 
 volumes:
   mongo_data:
+
