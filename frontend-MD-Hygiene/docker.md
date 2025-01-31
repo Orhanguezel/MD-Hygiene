@@ -1,9 +1,18 @@
-## docker-compose down
-## docker-compose up --build -d
+## 
+
+```bash 
+docker-compose down
+docker-compose up --build -d
+
+```
 
 # Adım 2: Backend Loglarını Kontrol Et
 
-# docker logs md-hygiene_backend --tail=100
+```bash
+
+docker logs md-hygiene_backend
+
+```
 
 # maili kontrol et. gidip gitmedigini. 
 # sudo docker exec -it md-hygiene_backend sh
