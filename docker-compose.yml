@@ -52,7 +52,7 @@ services:
       dockerfile: Dockerfile
     container_name: md-hygiene_frontend
     ports:
-      - "80:3000"
+      - "3001:80"
     networks:
       - md-hygiene-network
     environment:
