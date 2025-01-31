@@ -6,15 +6,20 @@ const router = express.Router();
 // Nodemailer Konfiguration
 const transporter = nodemailer.createTransport({
     host: "smtp.hostinger.com",
-    port: 465,
-    secure: true,
+    port: 587, // 465 yerine 587 kullan
+    secure: false, // TLS kullanabilmek için secure:false
     auth: {
         user: process.env.SMTP_USER || "info@md-hygienelogistik.de",
         pass: process.env.SMTP_PASSWORD || "AaBb1234,"
     },
-    logger: true,
-    debug: true,
+    tls: {
+        rejectUnauthorized: false
+    },
+    connectionTimeout: 20000,
+    greetingTimeout: 20000,
+    socketTimeout: 20000
 });
+
 
 
 router.post("/", async (req, res) => {
