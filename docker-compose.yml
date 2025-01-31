@@ -35,6 +35,11 @@ services:
       - md-hygiene-network
     env_file:
       - ./backend-MD-Hygiene/.env
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - MONGO_URI=${MONGO_URI}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
     depends_on:
       mongo:
         condition: service_healthy
