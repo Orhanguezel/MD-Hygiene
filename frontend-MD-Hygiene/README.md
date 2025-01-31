@@ -1,8 +1,7 @@
-# React + Vite
+# eger git pull yapinca her turlu uzerine yazsin istiyorsan bu kod.  
+# git reset --hard HEAD
+# git pull
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+📌 En güvenli yöntem: git stash ile değişiklikleri sakla, git pull yap ve git stash pop ile geri yükle.
+📌 Eğer değişiklikleri korumak istiyorsan: git commit yap, sonra git pull --rebase uygula.
+📌 Eğer değişiklikleri tamamen silmek istiyorsan: git reset --hard HEAD kullan.

@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 networks:
   md-hygiene-network:
@@ -8,7 +8,7 @@ services:
     image: mongo:latest
     container_name: mongo
     ports:
-      - "27017:27017"
+      - "27019:27017"  # Local için 27018'e yönlendirildi
     networks:
       - md-hygiene-network
     volumes:
@@ -52,12 +52,12 @@ services:
       dockerfile: Dockerfile
     container_name: md-hygiene_frontend
     ports:
-      - "3001:80"
+      - "3000:80"  # Yerel geliştirme için 3000, prod için 80
     networks:
       - md-hygiene-network
     environment:
-      - NODE_ENV=${NODE_ENV:-production}
-      - VITE_API_URL=${VITE_API_URL:-https://md-hygienelogistik.de}
+      - NODE_ENV=${NODE_ENV:-development}
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:5010}  # Yerelde API çağrıları backend'e yönlendirilecek
     depends_on:
       - backend
     restart: always
