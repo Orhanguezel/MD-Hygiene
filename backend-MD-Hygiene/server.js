@@ -54,5 +54,5 @@ app.get("/", (req, res) => {
 // Rotalar
 app.use("/send-email", MailRouters);
 
-const PORT = process.env.PORT || 5006;
+const PORT = process.env.PORT || 5008;
 app.listen(PORT, () => console.log(`🚀 Server läuft auf Port ${PORT}!`));

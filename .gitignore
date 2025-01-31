@@ -23,3 +23,7 @@ yarn-error.log*
 
 # Temporary dosyalar
 *.swp
+
+
+fullchain.pem
+privkey.pem
