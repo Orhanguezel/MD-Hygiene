@@ -11,8 +11,8 @@ yarn-error.log
 .vscode/
 
 # React veya Vue.js build klasörleri (Eğer frontend React/Vue ise)
-frontend/build/
-frontend/dist/
+#frontend/build/
+#frontend/dist/
 
 # Logs ve Cache Dosyaları
 logs/
