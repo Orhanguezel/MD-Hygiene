@@ -8,26 +8,26 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// `.env` dosyasını yükle
 dotenv.config({ path: path.resolve(__dirname, ".env") });
+
+// Ortama göre doğru MongoDB bağlantısını kullan
+const mongoURI =
+  process.env.NODE_ENV === "production"
+    ? process.env.MONGO_URI_PROD
+    : process.env.MONGO_URI_DEV;
 
 // Debug: `.env` içindeki değişkenleri kontrol et
 console.log("📂 `.env` dosyası yüklendi mi?");
-console.log("🌍 `.env` içindeki MONGO_URI:", process.env.MONGO_URI || "MISSING!");
-console.log("🧐 MONGO_URI'nin gerçek tipi:", typeof process.env.MONGO_URI);
-console.log("📝 MONGO_URI'nin uzunluğu:", process.env.MONGO_URI ? process.env.MONGO_URI.length : "undefined");
+console.log("🌍 Kullanılan MongoDB URI:", mongoURI || "MISSING!");
+console.log("🧐 MONGO_URI'nin gerçek tipi:", typeof mongoURI);
+console.log("📝 MONGO_URI'nin uzunluğu:", mongoURI ? mongoURI.length : "undefined");
 
-
-
-// Ortama göre doğru MongoDB bağlantısını kullan
-const mongoURI = process.env.MONGO_URI?.trim() || "mongodb://192.168.32.2:27017/md-hygiene";
-
-
+// Eğer `mongoURI` yoksa hata ver ve çık
 if (!mongoURI || mongoURI === "undefined") {
-    console.error("❌ HATA: `MONGO_URI` tanımlı değil veya yanlış formatta!");
-    process.exit(1); // Hatalıysa süreci durdur
+  console.error("❌ HATA: `MONGO_URI` tanımlı değil veya yanlış formatta!");
+  process.exit(1);
 }
-
-console.log("🌍 Kullanılan MongoDB URI:", `"${mongoURI}"`);
 
 // MongoDB bağlantısını başlat
 mongoose
@@ -35,7 +35,7 @@ mongoose
   .then(() => console.log(`✅ Erfolgreich mit MongoDB verbunden: ${mongoURI}`))
   .catch((err) => {
     console.error("❌ Fehler bei der MongoDB-Verbindung:", err.message);
-    process.exit(1); // Hatalıysa süreci kapat
+    process.exit(1);
   });
 
 const app = express();
