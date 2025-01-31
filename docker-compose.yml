@@ -30,7 +30,7 @@ services:
       dockerfile: Dockerfile
     container_name: md-hygiene_backend
     ports:
-      - "5010:5007"
+      - "5010:5010"
     networks:
       - md-hygiene-network
     env_file:
