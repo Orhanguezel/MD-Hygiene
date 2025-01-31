@@ -1,5 +1,5 @@
-# Frontend için base image
-FROM node:22.13.1
+# Frontend için doğru Node.js sürümü
+FROM node:20-alpine
 
 # Çalışma dizini
 WORKDIR /app
@@ -13,4 +13,4 @@ COPY . .
 RUN npm run build
 
 # Frontend’i sunucu olarak çalıştır (React için)
-CMD ["npx", "serve", "-s", "build"]
+CMD ["npx", "serve", "-s", "dist"]

@@ -30,7 +30,7 @@ services:
       dockerfile: Dockerfile
     container_name: md-hygiene_backend
     ports:
-      - "5007:5007"
+      - "5010:5007"
     networks:
       - md-hygiene-network
     env_file:
@@ -38,6 +38,8 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV}
       - MONGO_URI=${MONGO_URI}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
     depends_on:
       mongo:
         condition: service_healthy
@@ -50,16 +52,15 @@ services:
       dockerfile: Dockerfile
     container_name: md-hygiene_frontend
     ports:
-      - "3000:3000"
+      - "80:3000"
     networks:
       - md-hygiene-network
     environment:
-      - NODE_ENV=${NODE_ENV}
-      - VITE_API_URL=${VITE_API_URL}
+      - NODE_ENV=production
+      - VITE_API_URL=https://md-hygienelogistik.de
     depends_on:
       - backend
     restart: always
 
 volumes:
   mongo_data:
-
