@@ -10,7 +10,7 @@ import {
 } from "../styles/ContactFormStyles";
 
 // 🟢 Ortama göre API URL’sini al
-const API_URL = `${import.meta.env.VITE_API_URL}/send-email`;
+const API_URL = `${import.meta.env.VITE_API_URL}`;
 
 
 function ContactForm({ formData }) {

@@ -146,3 +146,10 @@ sudo ufw reload
 6️⃣ **Eğer bağlantı başarısızsa, firewall’u kontrol et ve gerekli portları aç.**
 
 🔹 **Yukarıdaki adımları uyguladıktan sonra tekrar mail göndermeyi dene!** 🚀
+
+## logları detaylı inceleme
+```bash
+docker-compose logs backend
+docker-compose logs frontend
+
+``

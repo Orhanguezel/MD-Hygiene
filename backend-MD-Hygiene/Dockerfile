@@ -1,22 +1,20 @@
-# 1️⃣ Production için daha hafif bir Node.js sürümü kullan
+# Node.js Alpine sürümü ile başlat
 FROM node:18-alpine
 
-# 2️⃣ Çalışma dizinini ayarla
+# Çalışma dizini oluştur
 WORKDIR /app
 
-# 3️⃣ Sadece package.json ve package-lock.json dosyalarını kopyala
+# Package.json ve bağımlılıkları kopyala
 COPY package.json package-lock.json ./
 
-# 4️⃣ Production bağımlılıklarını yükle (devDependencies dahil değil)
+# Üretim bağımlılıklarını yükle
 RUN npm install --only=production
 
-# 5️⃣ Tüm kodları kopyala
+# Proje dosyalarını kopyala
 COPY . .
 
-# 6️⃣ Port tanımla (Docker Compose içinde de belirtilecek)
-EXPOSE 5010
-
-# 7️⃣ Backend'i production modda başlat
+# Uygulamayı başlat
 CMD ["node", "server.js"]
+
 
 
