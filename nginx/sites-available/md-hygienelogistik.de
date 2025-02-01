@@ -1,7 +1,6 @@
 server {
     listen 80;
     server_name md-hygienelogistik.de www.md-hygienelogistik.de;
-
     return 301 https://$host$request_uri;
 }
 
@@ -13,16 +12,14 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/md-hygienelogistik.de/privkey.pem;
 
     root /var/www/MD-Hygiene/frontend-MD-Hygiene/dist;
-
     index index.html;
 
     location / {
         try_files $uri $uri/ /index.html;
     }
 
-    # 🔴 **Backend API Reverse Proxy (GÜNCELLENDİ)**
+    # 🟢 **Backend API Reverse Proxy**
     location /api/ {
-        rewrite ^/api(/.*)$ $1 break;
         proxy_pass http://127.0.0.1:5010/;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -31,9 +28,20 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_cache_bypass $http_upgrade;
+
+        # CORS Ayarları
+        add_header Access-Control-Allow-Origin "https://md-hygienelogistik.de, https://www.md-hygienelogistik.de";
+        add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS";
+        add_header Access-Control-Allow-Headers "Authorization, Content-Type, Accept";
+        add_header Access-Control-Allow-Credentials "true";
+
+        # OPTIONS Methodu İçin Destek
+        if ($request_method = OPTIONS) {
+            return 204;
+        }
     }
 
-    # 🔵 **Swagger UI Proxy**
+    # 🔵 **Swagger UI Reverse Proxy**
     location /api-docs/ {
         proxy_pass http://127.0.0.1:5010/api-docs/;
         proxy_http_version 1.1;
@@ -44,6 +52,11 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_cache_bypass $http_upgrade;
     }
+
+    # 🛡️ **Güvenlik Başlıkları**
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
 
     error_page 403 /403.html;
     error_page 404 /404.html;

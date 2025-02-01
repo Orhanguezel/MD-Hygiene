@@ -1,27 +1,33 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
-dotenv.config();
+// ✅ Ortam değişkenlerini doğru yüklemek için
+const envFile = `.env.${process.env.NODE_ENV || "development"}`;
+dotenv.config({ path: envFile });
 
-const MONGO_URI = process.env.MONGO_URI || "mongodb://admin:adminpassword@mongo:27017/md-hygiene?authSource=admin";
+const { MONGO_URI } = process.env;
 
-  process.env.NODE_ENV === "production"
-    ? process.env.MONGO_URI_PROD
-    : process.env.MONGO_URI_DEV;
-
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log(`✅ MongoDB Bağlandı: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`❌ MongoDB Bağlantı Hatası: ${error.message}`);
-    process.exit(1);
+const connectDB = async (retries = 10) => {
+  while (retries) {
+    try {
+      console.log(`⏳ MongoDB'ye bağlanılıyor: ${MONGO_URI}`);
+      const conn = await mongoose.connect(MONGO_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 5000,
+      });
+      console.log(`✅ MongoDB Bağlandı: ${conn.connection.host}`);
+      return;
+    } catch (error) {
+      console.error(`❌ MongoDB Bağlantı Hatası: ${error.message}`);
+      retries -= 1;
+      console.log(`⏳ Yeniden deneme... Kalan deneme sayısı: ${retries}`);
+      await new Promise((res) => setTimeout(res, 5000));
+    }
   }
+  console.error("🚨 MongoDB bağlantısı başarısız oldu. Uygulama kapanıyor.");
+  process.exit(1);
 };
 
 export default connectDB;
-
 

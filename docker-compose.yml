@@ -8,7 +8,7 @@ services:
     image: mongo:latest
     container_name: mongo
     ports:
-      - "27019:27017"  # Local için 27019'a yönlendirildi
+      - "27019:27017"
     networks:
       - md-hygiene-network
     volumes:
@@ -35,11 +35,7 @@ services:
       - md-hygiene-network
     env_file:
       - ./backend-MD-Hygiene/.env
-    environment:
-      - NODE_ENV=production
-      - MONGO_URI=${MONGO_URI_PROD:-mongodb://admin:adminpassword@mongo:27017/md-hygiene?authSource=admin}
-      - SMTP_USER=${SMTP_USER:-info@md-hygienelogistik.de}
-      - SMTP_PASSWORD=${SMTP_PASSWORD:-AaBb1234,}
+      - ./backend-MD-Hygiene/.env.${NODE_ENV:-development}  
     depends_on:
       mongo:
         condition: service_healthy
@@ -52,19 +48,16 @@ services:
       dockerfile: Dockerfile
     container_name: md-hygiene_frontend
     ports:
-      - "3000:3000"
+      - "${VITE_PORT:-3003}:3003"
     networks:
       - md-hygiene-network
     env_file:
-      - ./frontend-MD-Hygiene/.env.${NODE_ENV:-development}
-    environment:
-      - NODE_ENV=${NODE_ENV:-production}
-      - VITE_API_URL=${VITE_API_URL}
+      - ./frontend-MD-Hygiene/.env
+      - ./frontend-MD-Hygiene/.env.${NODE_ENV:-development}  
     depends_on:
       - backend
     restart: always
-    command: ["sh", "-c", "npm run build && npm run preview --port 3000 --host 0.0.0.0"]
-
+    command: ["sh", "-c", "npm run build && npx serve -s dist -l 3003"]
 
 volumes:
   mongo_data:

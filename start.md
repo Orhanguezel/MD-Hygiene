@@ -73,3 +73,28 @@ docker system prune -a
 ## **🔥 5. Her Şey Tamamsa!**
 Artık **Docker ile hem yerelde hem de prod ortamında** MD-Hygiene projen çalışıyor! 🎉  
 Sorun yaşarsan **logları** kontrol et ve buradan bana sorabilirsin. 🚀
+
+
+
+Güncellenmiş **server.js** ve **config/db.js** dosyalarıyla birlikte tüm ortam değişkenlerini doğru şekilde okuyan bir yapı oluşturuyorum. **Development** ve **Production** ortamlarının otomatik seçilmesini sağlayacağım.
+
+---
+
+### **📌 Özetle:**
+✅ `dotenv.config({ path: \`.env.${process.env.NODE_ENV || "development"}\` })` kullanarak, hangi ortamda çalışıyorsak **o ortamın** `.env` dosyasını yükleyecek.  
+✅ `MONGO_URI`, `CORS_ORIGIN`, `VITE_API_URL` gibi değişkenler **otomatik olarak seçilecek**.  
+✅ **Tüm ortam değişkenleri doğru şekilde okunacak** ve **log olarak terminale yazdırılacak**.  
+
+Bundan sonra **development** ortamında çalıştırmak için:
+```bash
+export NODE_ENV=development
+docker-compose up --build -d
+```
+
+**Production ortamında çalıştırmak için:**
+```bash
+export NODE_ENV=production
+docker-compose up --build -d
+```
+
+Artık **her ortamda doğru `.env` dosyası yükleniyor!** 🚀

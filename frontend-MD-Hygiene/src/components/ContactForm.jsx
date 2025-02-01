@@ -9,18 +9,15 @@ import {
   SubmitButton,
 } from "../styles/ContactFormStyles";
 
-// 🟢 Ortama göre API URL’sini dinamik olarak al
-const API_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:5010/api/send-email"
-    : "https://md-hygienelogistik.de/api/send-email";
+// ✅ Ortama göre API URL’sini seç
+const API_URL = import.meta.env.VITE_API_URL;
 
 console.log(`🌍 Çalışan Ortam: ${import.meta.env.MODE}`);
 console.log(`📡 API URL: ${API_URL}`);
 
 function ContactForm({ formData }) {
   const [form, setForm] = useState(formData);
-  const [submitted, setSubmitted] = false;
+  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -35,9 +32,9 @@ function ContactForm({ formData }) {
     setError("");
 
     try {
-      console.log("📩 API isteği gönderiliyor:", API_URL);
+      console.log("📩 API isteği gönderiliyor:", `${API_URL}/mail/send-email`);
 
-      const response = await axios.post(API_URL, form, {
+      const response = await axios.post(`${API_URL}/mail/send-email`, form, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -45,10 +42,21 @@ function ContactForm({ formData }) {
 
       if (response.status === 200) {
         setSubmitted(true);
+      } else {
+        throw new Error(`Sunucu hatası: ${response.status}`);
       }
     } catch (err) {
       console.error("❌ Fehler beim Senden:", err);
-      setError("Es gab ein Problem beim Senden Ihrer Nachricht. Bitte versuchen Sie es später erneut.");
+      
+      if (err.response) {
+        console.error("📡 API Hata Yanıtı:", err.response.data);
+        setError(`Server Error: ${err.response.status} - ${err.response.data.message}`);
+      } else if (err.request) {
+        console.error("🌍 Sunucuya ulaşılmadı:", err.request);
+        setError("Sunucuya ulaşılamadı. Lütfen internet bağlantınızı kontrol edin.");
+      } else {
+        setError("Bilinmeyen bir hata oluştu.");
+      }
     } finally {
       setLoading(false);
     }
@@ -63,37 +71,12 @@ function ContactForm({ formData }) {
           <h2>Kontaktformular</h2>
           {error && <p style={{ color: "red" }}>{error}</p>}
           <Label htmlFor="name">Name:</Label>
-          <Input
-            type="text"
-            id="name"
-            name="name"
-            value={form.name || ""}
-            placeholder="Ihr Name"
-            required
-            onChange={handleChange}
-          />
+          <Input type="text" id="name" name="name" value={form.name || ""} onChange={handleChange} required />
           <Label htmlFor="email">E-Mail:</Label>
-          <Input
-            type="email"
-            id="email"
-            name="email"
-            value={form.email || ""}
-            placeholder="Ihre E-Mail-Adresse"
-            required
-            onChange={handleChange}
-          />
+          <Input type="email" id="email" name="email" value={form.email || ""} onChange={handleChange} required />
           <Label htmlFor="message">Nachricht:</Label>
-          <Textarea
-            id="message"
-            name="message"
-            value={form.message || ""}
-            placeholder="Ihre Nachricht..."
-            required
-            onChange={handleChange}
-          ></Textarea>
-          <SubmitButton type="submit" disabled={loading}>
-            {loading ? "Wird gesendet..." : "Senden"}
-          </SubmitButton>
+          <Textarea id="message" name="message" value={form.message || ""} onChange={handleChange} required></Textarea>
+          <SubmitButton type="submit" disabled={loading}>{loading ? "Wird gesendet..." : "Senden"}</SubmitButton>
         </StyledForm>
       )}
     </FormContainer>
