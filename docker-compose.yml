@@ -54,10 +54,14 @@ services:
     env_file:
       - ./frontend-MD-Hygiene/.env
       - ./frontend-MD-Hygiene/.env.${NODE_ENV:-development}  
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - VITE_API_URL=${VITE_API_URL}
+      - VITE_PORT=${VITE_PORT:-3003}
     depends_on:
       - backend
     restart: always
-    command: ["sh", "-c", "npm run build && npx serve -s dist -l 3003"]
+    command: ["sh", "-c", "npm run build && npx serve -s dist -l ${VITE_PORT:-3003}"]
 
 volumes:
   mongo_data:

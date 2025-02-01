@@ -1,22 +1,16 @@
-import { defineConfig, loadEnv } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
   return {
-    plugins: [react()],
     define: {
-      'import.meta.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL),
+      "process.env.VITE_API_URL": JSON.stringify(
+        mode === "production"
+          ? "https://md-hygienelogistik.de/api"
+          : "http://localhost:5010/api"
+      ),
     },
     server: {
-      host: "0.0.0.0",
-      port: 3003, // ✅ Docker'daki `docker-compose.yml` ile eşleşmesi için 3003
-    },
-    preview: {
-      port: 3003,
-      host: "0.0.0.0",
+      port: process.env.VITE_PORT || 3003,
     },
   };
 });
-
-
