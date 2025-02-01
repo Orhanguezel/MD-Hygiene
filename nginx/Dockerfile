@@ -1,13 +1,19 @@
-# 1️⃣ Nginx’in resmi Docker image’ini kullan
+# Resmi Nginx image kullan
 FROM nginx:latest
 
-# 2️⃣ Varsayılan Nginx yapılandırmasını değiştir
+# Çalışma dizini belirle
+WORKDIR /etc/nginx
+
+# Nginx yapılandırma dosyalarını kopyala
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY sites-available/ /etc/nginx/sites-available/
+COPY sites-available/md-hygienelogistik.de /etc/nginx/conf.d/default.conf
 
-# 3️⃣ Mevcut virtual host yapılandırmalarını ve SSL sertifikalarını bağlamaya gerek kalmadan volume olarak kullanacağız.
+# İçeriği sunabilmesi için frontend dosyalarını kopyala
+COPY ../frontend-MD-Hygiene/dist/ /usr/share/nginx/html/
 
-# 4️⃣ Nginx portunu aç
-EXPOSE 80 443
+# Nginx için varsayılan portu aç
+EXPOSE 80
 
-# 5️⃣ Nginx’i başlat
+# Nginx başlat
 CMD ["nginx", "-g", "daemon off;"]

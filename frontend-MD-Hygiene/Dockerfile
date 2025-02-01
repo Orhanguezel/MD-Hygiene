@@ -19,9 +19,5 @@ RUN npm run build
 # 7️⃣ `dist` klasörünü doğrula (kontrol amaçlı)
 RUN ls -la dist
 
-# 8️⃣ Serve paketi ile statik dosyaları sun
-RUN npm install -g serve
-
-# 9️⃣ `dist` klasörünü root klasör olarak belirle
-CMD ["serve", "-s", "dist", "-l", "3000"]
-
+# 8️⃣ Container başlatıldığında Vite preview kullan
+CMD ["npm", "run", "preview", "--", "--host"]

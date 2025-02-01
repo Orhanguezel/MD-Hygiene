@@ -17,7 +17,15 @@ const app = express();
 
 // ✅ Middleware'leri tanımla
 app.use(express.json());
-app.use(cors({ origin: "*" }));
+app.use(cors({
+  origin: ["http://localhost:3001", "https://md-hygienelogistik.de"],
+  credentials: true,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: "Content-Type, Authorization"
+}));
+
+// Preflight (OPTIONS) isteklerini doğru yönetmek için:
+app.options("*", cors());
 
 // ✅ MongoDB Bağlantısını Başlat
 connectDB();

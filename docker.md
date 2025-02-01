@@ -10,6 +10,13 @@ docker-compose up --build -d
 ```
 ✅ **Ne yapar?**  
 - Tüm Docker containerlarını durdurur ve güncellenmiş yapı ile tekrar başlatır.
+- 
+
+## logları detaylı inceleme
+```bash
+docker-compose logs backend
+docker-compose logs frontend
+
 
 ---
 
@@ -147,9 +154,6 @@ sudo ufw reload
 
 🔹 **Yukarıdaki adımları uyguladıktan sonra tekrar mail göndermeyi dene!** 🚀
 
-## logları detaylı inceleme
-```bash
-docker-compose logs backend
-docker-compose logs frontend
+
 
 ``

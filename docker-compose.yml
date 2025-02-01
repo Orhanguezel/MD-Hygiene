@@ -52,17 +52,33 @@ services:
       dockerfile: Dockerfile
     container_name: md-hygiene_frontend
     ports:
-      - "3000:3000"  # Dışarıdan 3000'e yönlendirme
+      - "3000:3000"
     networks:
       - md-hygiene-network
     env_file:
-      - ./frontend-MD-Hygiene/.env
+      - ./frontend-MD-Hygiene/.env.${NODE_ENV:-development}
     environment:
-      - NODE_ENV=production
-      - VITE_API_URL=https://md-hygienelogistik.de/api  # API URL Production için güncellendi
-    volumes:
-      - /var/www/MD-Hygiene/frontend-MD-Hygiene/dist:/app/dist
+      - NODE_ENV=${NODE_ENV}
     depends_on:
+      - backend
+    restart: always
+    command: ["sh", "-c", "npm run build && npm run preview --port 3000 --host 0.0.0.0"]
+
+
+  nginx:
+    image: nginx:latest
+    container_name: md-hygiene_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - md-hygiene-network
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/letsencrypt:ro
+      - ./frontend-MD-Hygiene/dist:/usr/share/nginx/html
+    depends_on:
+      - frontend
       - backend
     restart: always
 

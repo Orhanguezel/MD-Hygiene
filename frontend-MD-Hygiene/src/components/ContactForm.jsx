@@ -9,13 +9,18 @@ import {
   SubmitButton,
 } from "../styles/ContactFormStyles";
 
-// 🟢 Ortama göre API URL’sini al
-const API_URL = `${import.meta.env.VITE_API_URL}`;
+// 🟢 Ortama göre API URL’sini dinamik olarak al
+const API_URL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:5010/api/send-email"
+    : "https://md-hygienelogistik.de/api/send-email";
 
+console.log(`🌍 Çalışan Ortam: ${import.meta.env.MODE}`);
+console.log(`📡 API URL: ${API_URL}`);
 
 function ContactForm({ formData }) {
   const [form, setForm] = useState(formData);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = false;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -30,14 +35,13 @@ function ContactForm({ formData }) {
     setError("");
 
     try {
-      console.log("📩 API isteği gönderiliyor:", `${API_URL}/send-email`);
+      console.log("📩 API isteği gönderiliyor:", API_URL);
 
       const response = await axios.post(API_URL, form, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-      
 
       if (response.status === 200) {
         setSubmitted(true);
