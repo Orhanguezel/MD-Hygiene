@@ -12,6 +12,16 @@ import invoiceRoutes from "./routes/invoiceRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import mailRouters from "./routes/mailRouters.js";
 
+// 🔹 CORS ayarlarını frontend'e izin verecek şekilde güncelle
+app.use(
+  cors({
+    origin: ["https://md-hygienelogistik.de", "http://localhost:3000"], // 🔹 Hem yerel hem prod için izin ver
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // 🔹 Eğer token kullanıyorsan, credentials'ı aç
+  })
+);
+
 // `.env` dosyasını yükle
 dotenv.config();
 
