@@ -61,7 +61,7 @@ services:
       - NODE_ENV=production
       - VITE_API_URL=https://md-hygienelogistik.de/api  # API URL Production için güncellendi
     volumes:
-      - ./frontend-MD-Hygiene/dist:/app/dist
+      - /var/www/MD-Hygiene/frontend-MD-Hygiene/dist:/app/dist
     depends_on:
       - backend
     restart: always
