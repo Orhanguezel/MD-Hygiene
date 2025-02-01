@@ -1,37 +1,20 @@
 import express from "express";
-import sendEmail from "../config/mail.js"; // 📌 Mail config dosyasını içe aktar
+import sendEmail from "../config/mail.js";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/send-email", async (req, res) => {
     const { name, email, message } = req.body;
 
-    const missingFields = [];
-    if (!name) missingFields.push("Name");
-    if (!email) missingFields.push("E-Mail");
-    if (!message) missingFields.push("Nachricht");
-
-    if (missingFields.length > 0) {
-        return res.status(400).json({ error: `Fehlende Felder: ${missingFields.join(", ")}` });
+    if (!name || !email || !message) {
+        return res.status(400).json({ error: "Fehlende Felder!" });
     }
 
     try {
-        const subject = `${name} - Neue Nachricht von der Website`;
-        const htmlContent = `
-            <h2>Von Web Seite eine Nachricht</h2>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>E-Mail:</strong> ${email}</p>
-            <p><strong>Nachricht:</strong> ${message}</p>
-        `;
-
-        // 📌 **Maili gönder**
-        const info = await sendEmail("info@md-hygienelogistik.de", subject, "", htmlContent);
-
-        console.log("✅ Email sent:", info.response);
+        await sendEmail(email, "Neue Nachricht", message);
         res.status(200).json({ message: "E-Mail wurde erfolgreich gesendet!" });
     } catch (error) {
-        console.error("❌ Fehler beim Senden der E-Mail:", error);
-        res.status(500).json({ message: "Fehler beim Senden der E-Mail.", error: error.message });
+        res.status(500).json({ error: "Fehler beim Senden der E-Mail." });
     }
 });
 

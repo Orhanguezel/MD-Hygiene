@@ -15,7 +15,7 @@ docker-compose up --build -d
 
 ## **📌 2. Backend Loglarını Kontrol Et**
 ```bash
-docker logs md-hygiene_backend --tail=50
+docker logs md-hygiene_backend --tail=20
 ```
 ✅ **Ne yapar?**  
 - **Son 50 satırı göstererek** hata mesajlarını ve süreci kontrol etmeni sağlar.

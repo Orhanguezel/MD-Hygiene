@@ -8,7 +8,7 @@ services:
     image: mongo:latest
     container_name: mongo
     ports:
-      - "27019:27017"  # Local için 27018'e yönlendirildi
+      - "27019:27017"  # Local için 27019'a yönlendirildi
     networks:
       - md-hygiene-network
     volumes:
@@ -44,7 +44,6 @@ services:
       mongo:
         condition: service_healthy
     restart: always
-
     entrypoint: ["sh", "-c", "sleep 5 && node server.js"]
 
   frontend:
@@ -56,13 +55,14 @@ services:
       - "3000:3000"  # Dışarıdan 3000'e yönlendirme
     networks:
       - md-hygiene-network
+    env_file:
+      - ./frontend-MD-Hygiene/.env
     environment:
       - NODE_ENV=production
-      - VITE_API_URL=http://localhost:5010
+      - VITE_API_URL=https://md-hygienelogistik.de/api  # API URL Production için güncellendi
     depends_on:
-    - backend
+      - backend
     restart: always
-
 
 volumes:
   mongo_data:

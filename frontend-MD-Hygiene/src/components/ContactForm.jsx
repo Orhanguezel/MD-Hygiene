@@ -9,7 +9,9 @@ import {
   SubmitButton,
 } from "../styles/ContactFormStyles";
 
-const API_URL = import.meta.env.VITE_API_URL || "https://md-hygienelogistik.de/api";
+// 🟢 Ortama göre API URL’sini al
+const API_URL = `${import.meta.env.VITE_API_URL}/send-email`;
+
 
 function ContactForm({ formData }) {
   const [form, setForm] = useState(formData);
@@ -29,18 +31,19 @@ function ContactForm({ formData }) {
 
     try {
       console.log("📩 API isteği gönderiliyor:", `${API_URL}/send-email`);
-      
-      const response = await axios.post(`${API_URL}/send-email`, form, {
+
+      const response = await axios.post(API_URL, form, {
         headers: {
           "Content-Type": "application/json",
         },
       });
+      
 
       if (response.status === 200) {
         setSubmitted(true);
       }
     } catch (err) {
-      console.error("❌ Fehler beim Senden:", err.response || err);
+      console.error("❌ Fehler beim Senden:", err);
       setError("Es gab ein Problem beim Senden Ihrer Nachricht. Bitte versuchen Sie es später erneut.");
     } finally {
       setLoading(false);
@@ -60,7 +63,7 @@ function ContactForm({ formData }) {
             type="text"
             id="name"
             name="name"
-            value={form.name}
+            value={form.name || ""}
             placeholder="Ihr Name"
             required
             onChange={handleChange}
@@ -70,7 +73,7 @@ function ContactForm({ formData }) {
             type="email"
             id="email"
             name="email"
-            value={form.email}
+            value={form.email || ""}
             placeholder="Ihre E-Mail-Adresse"
             required
             onChange={handleChange}
@@ -79,7 +82,7 @@ function ContactForm({ formData }) {
           <Textarea
             id="message"
             name="message"
-            value={form.message}
+            value={form.message || ""}
             placeholder="Ihre Nachricht..."
             required
             onChange={handleChange}
@@ -94,4 +97,3 @@ function ContactForm({ formData }) {
 }
 
 export default ContactForm;
-
