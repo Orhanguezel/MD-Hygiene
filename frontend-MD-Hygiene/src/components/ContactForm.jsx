@@ -15,6 +15,9 @@ function ContactForm({ formData }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // API URL'yi .env dosyasından al
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5010";
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
@@ -26,10 +29,7 @@ function ContactForm({ formData }) {
     setError("");
 
     try {
-      const response = await axios.post(
-        "http://localhost:5006/send-email", // Backend API adresi
-        form
-      );
+      const response = await axios.post(`${API_URL}/send-email`, form);
       if (response.status === 200) {
         setSubmitted(true);
       }
