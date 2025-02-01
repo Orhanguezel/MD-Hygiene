@@ -37,7 +37,7 @@ app.use("/send-email", mailRouters);
 // 📌 **Swagger Middleware'i Başlat**
 swaggerDocs(app);
 
-const PORT = process.env.PORT || 5009;
+const PORT = process.env.PORT || 5010;
 app.listen(PORT, () => {
   console.log(`🚀 Server ${PORT} portunda çalışıyor - ${process.env.NODE_ENV} ortamında`);
 });

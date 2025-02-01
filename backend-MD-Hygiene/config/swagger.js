@@ -18,7 +18,7 @@ const swaggerDocs = (app) => {
     `📌 Swagger UI çalışıyor: ${
       process.env.NODE_ENV === "production"
         ? `${process.env.VITE_API_URL}/api-docs`
-        : `http://localhost:${process.env.PORT || 5009}/api-docs`
+        : `http://localhost:${process.env.PORT || 5010}/api-docs`
     }`
   );
 };

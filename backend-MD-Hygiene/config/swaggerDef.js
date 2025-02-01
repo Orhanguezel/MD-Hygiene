@@ -1,11 +1,10 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-// Ortama bağlı olarak uygun server URL'sini belirle
-const serverUrl =
-  process.env.NODE_ENV === "production"
-    ? process.env.VITE_API_URL
-    : `http://localhost:${process.env.PORT || 5009}`;
+// Ortama bağlı olarak server URL'sini belirle
+const serverUrl = process.env.NODE_ENV === "production"
+  ? "https://www.md-hygienelogistik.de/api"
+  : `http://localhost:${process.env.PORT || 5010}/api`;
 
 const swaggerDefinition = {
   openapi: "3.0.0",
@@ -17,8 +16,7 @@ const swaggerDefinition = {
   servers: [
     {
       url: serverUrl,
-      description:
-        process.env.NODE_ENV === "production" ? "Production Server" : "Local Server",
+      description: process.env.NODE_ENV === "production" ? "Production Server" : "Local Server",
     },
   ],
   components: {
