@@ -3,7 +3,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const MONGO_URI =
+const MONGO_URI = process.env.MONGO_URI || "mongodb://admin:adminpassword@mongo:27017/md-hygiene?authSource=admin";
+
   process.env.NODE_ENV === "production"
     ? process.env.MONGO_URI_PROD
     : process.env.MONGO_URI_DEV;
