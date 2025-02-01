@@ -58,7 +58,8 @@ services:
     env_file:
       - ./frontend-MD-Hygiene/.env.${NODE_ENV:-development}
     environment:
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV=${NODE_ENV:-production}
+      - VITE_API_URL=${VITE_API_URL}
     depends_on:
       - backend
     restart: always

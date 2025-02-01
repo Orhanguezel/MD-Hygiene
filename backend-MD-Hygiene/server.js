@@ -17,12 +17,27 @@ const app = express();
 
 // ✅ Middleware'leri tanımla
 app.use(express.json());
+
+
+const allowedOrigins = [
+  "http://localhost:3000",  // Yerel geliştirme ortamı
+  "http://localhost:3001",
+  "https://md-hygienelogistik.de",  // Prod ortamı (www olmadan)
+  "https://www.md-hygienelogistik.de" // Prod ortamı (www ile)
+];
+
 app.use(cors({
-  origin: ["http://localhost:3001", "https://md-hygienelogistik.de"],
-  credentials: true,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS policy hatası: Yetkisiz origin!"));
+    }
+  },
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  allowedHeaders: "Content-Type, Authorization"
+  credentials: true,
 }));
+
 
 // Preflight (OPTIONS) isteklerini doğru yönetmek için:
 app.options("*", cors());
