@@ -9,14 +9,13 @@ import {
   SubmitButton,
 } from "../styles/ContactFormStyles";
 
+const API_URL = import.meta.env.VITE_API_URL || "https://md-hygienelogistik.de/api";
+
 function ContactForm({ formData }) {
   const [form, setForm] = useState(formData);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  // API URL'yi .env dosyasından al
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5010";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,12 +28,19 @@ function ContactForm({ formData }) {
     setError("");
 
     try {
-      const response = await axios.post(`${API_URL}/send-email`, form);
+      console.log("📩 API isteği gönderiliyor:", `${API_URL}/send-email`);
+      
+      const response = await axios.post(`${API_URL}/send-email`, form, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
       if (response.status === 200) {
         setSubmitted(true);
       }
     } catch (err) {
-      console.error("Fehler beim Senden:", err);
+      console.error("❌ Fehler beim Senden:", err.response || err);
       setError("Es gab ein Problem beim Senden Ihrer Nachricht. Bitte versuchen Sie es später erneut.");
     } finally {
       setLoading(false);
@@ -88,3 +94,4 @@ function ContactForm({ formData }) {
 }
 
 export default ContactForm;
+
