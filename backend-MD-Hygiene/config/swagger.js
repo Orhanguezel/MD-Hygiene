@@ -1,3 +1,4 @@
+// swagger.js dosyası
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import swaggerDefinition from "./swaggerDef.js";

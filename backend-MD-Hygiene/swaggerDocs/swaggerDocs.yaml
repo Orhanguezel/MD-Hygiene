@@ -1,0 +1,292 @@
+paths:
+  /users/register:
+    post:
+      summary: "Yeni kullanıcı oluştur"
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "201":
+          description: "Kullanıcı başarıyla oluşturuldu"
+        "400":
+          description: "Geçersiz giriş veya eksik alanlar"
+
+  /users/login:
+    post:
+      summary: "Kullanıcı girişi yap"
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: "Giriş başarılı, JWT döndü"
+        "401":
+          description: "Hatalı giriş bilgileri"
+
+  /users/profile:
+    get:
+      summary: "Kullanıcı profilini getir"
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: "Kullanıcı bilgileri döndü"
+        "401":
+          description: "Yetkisiz erişim"
+
+  /orders:
+    post:
+      summary: "Yeni sipariş oluştur"
+      tags:
+        - Orders
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user
+                - products
+                - totalAmount
+                - shippingAddress
+              properties:
+                user:
+                  type: string
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      product:
+                        type: string
+                      quantity:
+                        type: integer
+                totalAmount:
+                  type: number
+                shippingAddress:
+                  type: string
+      responses:
+        "201":
+          description: "Sipariş başarıyla oluşturuldu"
+        "400":
+          description: "Geçersiz giriş veya eksik alanlar"
+
+  /orders/{id}:
+    get:
+      summary: "Sipariş detaylarını getir"
+      tags:
+        - Orders
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Sipariş bilgileri döndü"
+        "404":
+          description: "Sipariş bulunamadı"
+
+  /products:
+    get:
+      summary: "Tüm ürünleri getir"
+      tags:
+        - Products
+      responses:
+        "200":
+          description: "Ürünler başarıyla döndü"
+
+    post:
+      summary: "Yeni ürün ekle"
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - price
+                - category
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+                category:
+                  type: string
+      responses:
+        "201":
+          description: "Ürün başarıyla eklendi"
+        "400":
+          description: "Eksik veya hatalı veri"
+
+  /products/{id}:
+    get:
+      summary: "Ürün detaylarını getir"
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Ürün bilgileri döndü"
+        "404":
+          description: "Ürün bulunamadı"
+
+  /invoices:
+    get:
+      summary: "Tüm faturaları getir"
+      tags:
+        - Invoices
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: "Faturalar başarıyla listelendi"
+        "401":
+          description: "Yetkisiz erişim"
+
+    post:
+      summary: "Yeni fatura oluştur"
+      tags:
+        - Invoices
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - order
+                - totalAmount
+                - status
+              properties:
+                order:
+                  type: string
+                totalAmount:
+                  type: number
+                status:
+                  type: string
+      responses:
+        "201":
+          description: "Fatura başarıyla oluşturuldu"
+        "400":
+          description: "Eksik veya hatalı veri"
+
+  /payments:
+    get:
+      summary: "Tüm ödemeleri getir"
+      tags:
+        - Payments
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: "Ödeme geçmişi başarıyla getirildi"
+        "401":
+          description: "Yetkisiz erişim"
+
+    post:
+      summary: "Yeni ödeme işlemi yap"
+      tags:
+        - Payments
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - order
+                - amount
+                - paymentMethod
+              properties:
+                order:
+                  type: string
+                amount:
+                  type: number
+                paymentMethod:
+                  type: string
+      responses:
+        "201":
+          description: "Ödeme başarıyla yapıldı"
+        "400":
+          description: "Eksik veya hatalı veri"
+
+  /mail/send-email:
+    post:
+      summary: "E-Posta Gönder"
+      tags:
+        - Mail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - message
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                message:
+                  type: string
+      responses:
+        "200":
+          description: "E-Posta başarıyla gönderildi"
+        "400":
+          description: "Eksik alanlar"
+        "500":
+          description: "E-Posta gönderilirken hata oluştu"
