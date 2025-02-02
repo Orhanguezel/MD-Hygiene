@@ -15,15 +15,15 @@ const envFile = `.env.${process.env.NODE_ENV || "development"}`;
 dotenv.config({ path: envFile });
 console.log(`🛠️ Yüklenen ENV Dosyası: ${envFile}`);
 
-
 dotenv.config({ path: envFile });
+
+const { CORS_ORIGIN } = process.env;
 
 // ✅ Ortama göre değişkenleri belirle
 const {
   NODE_ENV,
   PORT,
   MONGO_URI,
-  CORS_ORIGIN,
   SMTP_USER,
   VITE_API_URL,
   VITE_PORT
@@ -43,7 +43,7 @@ const app = express();
 app.use(express.json());
 
 // 🟢 CORS Middleware - Tüm local adreslere izin ver
-const allowedOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",") : [];
+const allowedOrigins = CORS_ORIGIN ? CORS_ORIGIN.split(",").map(origin => origin.trim()) : [];
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -59,9 +59,6 @@ const corsOptions = {
 
 // 🟢 CORS Middleware'i uygula
 app.use(cors(corsOptions));
-
-
-
 app.options("*", cors(corsOptions));
 
 // ✅ MongoDB bağlantısını başlat
