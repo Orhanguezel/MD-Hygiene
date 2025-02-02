@@ -7,12 +7,11 @@ import {
   Input,
   Textarea,
   SubmitButton,
-} from "../styles/ContactFormStyles";
+} from "../styles/ContactFormStyles"; // Stiller ayrı dosyadan çağırılıyor
 
-// ✅ Ortama göre API URL’sini seç
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5010/api";
 
-console.log(`🌍 Çalışan Ortam: ${import.meta.env.MODE}`);
+console.log(`🌍 Aktuelle Umgebung: ${import.meta.env.MODE}`);
 console.log(`📡 API URL: ${API_URL}`);
 
 function ContactForm() {
@@ -34,7 +33,6 @@ function ContactForm() {
     setLoading(true);
     setError("");
 
-    // Boş alan kontrolü
     if (!form.name || !form.email || !form.message) {
       setError("Bitte füllen Sie alle Felder aus.");
       setLoading(false);
@@ -42,30 +40,26 @@ function ContactForm() {
     }
 
     try {
-      console.log("📩 API isteği gönderiliyor:", `${API_URL}/mail/send-email`);
+      console.log("📩 API-Anfrage wird gesendet:", `${API_URL}/mail/send-email`);
 
       const response = await axios.post(`${API_URL}/mail/send-email`, form, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       });
 
       if (response.status === 200) {
         setSubmitted(true);
       } else {
-        throw new Error(`Sunucu hatası: ${response.status}`);
+        throw new Error(`Serverfehler: ${response.status}`);
       }
     } catch (err) {
       console.error("❌ Fehler beim Senden:", err);
 
       if (err.response) {
-        console.error("📡 API Hata Yanıtı:", err.response.data);
-        setError(`Server Error: ${err.response.status} - ${err.response.data.message}`);
+        setError(`Serverfehler: ${err.response.status} - ${err.response.data.message}`);
       } else if (err.request) {
-        console.error("🌍 Sunucuya ulaşılmadı:", err.request);
-        setError("Sunucuya ulaşılamadı. Lütfen internet bağlantınızı kontrol edin.");
+        setError("Server nicht erreichbar. Bitte überprüfen Sie Ihre Internetverbindung.");
       } else {
-        setError("Bilinmeyen bir hata oluştu.");
+        setError("Ein unbekannter Fehler ist aufgetreten.");
       }
     } finally {
       setLoading(false);
@@ -75,7 +69,7 @@ function ContactForm() {
   return (
     <FormContainer>
       {submitted ? (
-        <h2>Danke für Ihre Nachricht! Wir werden uns bald bei Ihnen melden.</h2>
+        <h2>Danke für Ihre Nachricht! Wir melden uns bald bei Ihnen.</h2>
       ) : (
         <StyledForm onSubmit={handleSubmit}>
           <h2>Kontaktformular</h2>
@@ -85,7 +79,7 @@ function ContactForm() {
           <Label htmlFor="email">E-Mail:</Label>
           <Input type="email" id="email" name="email" value={form.email} onChange={handleChange} required />
           <Label htmlFor="message">Nachricht:</Label>
-          <Textarea id="message" name="message" value={form.message} onChange={handleChange} required></Textarea>
+          <Textarea id="message" name="message" value={form.message} onChange={handleChange} required />
           <SubmitButton type="submit" disabled={loading}>{loading ? "Wird gesendet..." : "Senden"}</SubmitButton>
         </StyledForm>
       )}

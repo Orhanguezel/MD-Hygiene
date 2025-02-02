@@ -4,6 +4,7 @@ import {
   NotFoundContainer,
   NotFoundTitle,
   NotFoundMessage,
+  HomeButton,
 } from "../styles/NotFoundStyles";
 
 function NotFound() {
@@ -12,7 +13,7 @@ function NotFound() {
   useEffect(() => {
     const redirectUser = setTimeout(() => {
       navigate("/");
-    }, 5*1000);
+    }, 5000);
 
     return () => {
       clearTimeout(redirectUser);
@@ -21,10 +22,12 @@ function NotFound() {
 
   return (
     <NotFoundContainer>
-      <NotFoundTitle>404 - Not Found</NotFoundTitle>
+      <NotFoundTitle>404 - Seite nicht gefunden</NotFoundTitle>
       <NotFoundMessage>
-      Entschuldigung, diese Seite existiert nicht! Wir leiten Sie zur Startseite weiter...
+        Entschuldigung, diese Seite existiert nicht! <br />
+        Sie werden in <strong>5 Sekunden</strong> zur Startseite weitergeleitet...
       </NotFoundMessage>
+      <HomeButton onClick={() => navigate("/")}>Zur Startseite</HomeButton>
     </NotFoundContainer>
   );
 }

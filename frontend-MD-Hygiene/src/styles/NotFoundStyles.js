@@ -7,34 +7,34 @@ export const NotFoundContainer = styled.div`
   align-items: center;
   height: 100vh;
   text-align: center;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  padding: var(--padding);
+  background-color: #f8f9fa;
+  padding: 20px;
 `;
 
 export const NotFoundTitle = styled.h1`
-  font-size: var(--h1-font-size);
-  color: var(--primary-color);
-  margin-bottom: var(--margin);
-
-  @media (max-width: 768px) {
-    font-size: calc(var(--h1-font-size) - 1rem);
-  }
-
-  @media (max-width: 480px) {
-    font-size: calc(var(--h1-font-size) - 1.5rem);
-  }
+  font-size: 48px;
+  color: #dc3545;
+  font-weight: bold;
+  margin-bottom: 20px;
 `;
 
 export const NotFoundMessage = styled.p`
-  font-size: var(--h3-font-size);
-  color: var(--text-color);
+  font-size: 18px;
+  color: #6c757d;
+  margin-bottom: 20px;
+`;
 
-  @media (max-width: 768px) {
-    font-size: calc(var(--h3-font-size) - 0.2rem);
-  }
+export const HomeButton = styled.button`
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
 
-  @media (max-width: 480px) {
-    font-size: calc(var(--h3-font-size) - 0.4rem);
+  &:hover {
+    background-color: #0056b3;
   }
 `;

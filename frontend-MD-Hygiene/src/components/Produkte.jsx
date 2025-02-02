@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import {
+  ProdukteContainer,
+  ProduktListe,
+  ProduktElement,
+  ProduktTitel,
+  LadeText,
+  FehlerText,
+} from "../styles/ProdukteStyles";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5010/api";
 
@@ -23,18 +31,18 @@ function Produkte() {
   }, []);
 
   return (
-    <div>
-      <h2>Produkte</h2>
-      {loading ? <p>Laden...</p> : error ? <p>{error}</p> : (
-        <ul>
+    <ProdukteContainer>
+      <ProduktTitel>Produkte</ProduktTitel>
+      {loading ? <LadeText>Laden...</LadeText> : error ? <FehlerText>{error}</FehlerText> : (
+        <ProduktListe>
           {produkte.map((produkt) => (
-            <li key={produkt._id}>
-              {produkt.name} - {produkt.price} €
-            </li>
+            <ProduktElement key={produkt._id}>
+              {produkt.name} - <strong>{produkt.price} €</strong>
+            </ProduktElement>
           ))}
-        </ul>
+        </ProduktListe>
       )}
-    </div>
+    </ProdukteContainer>
   );
 }
 

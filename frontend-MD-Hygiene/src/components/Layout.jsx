@@ -20,9 +20,15 @@ function Layout() {
             Kontakt
           </NavLink>
         </NavItem>
+        <NavItem>
+          <NavLink to="/login" className={({ isActive }) => (isActive ? "active-link" : "")}>
+            Login / Registrierung
+          </NavLink>
+        </NavItem>
       </NavList>
     </Navbar>
   );
 }
 
 export default Layout;
+
