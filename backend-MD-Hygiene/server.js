@@ -44,7 +44,7 @@ app.use(express.json());
 
 // 🟢 CORS Middleware - Tüm local adreslere izin ver
 app.use(cors({
-  origin: ["http://localhost:3003", "http://localhost:5173"], // 🛠️ Hem 3003 hem 5173 izinli
+  origin: "*", // 
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
