@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Container, Title, LoadingText, ErrorText, ProductGrid, ProductCard, ProductName, ProductPrice } from "../styles/HomeStyles";
+import { Helmet } from "react-helmet-async";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5010/api";
 
@@ -28,6 +29,14 @@ const Home = () => {
 
   return (
     <Container>
+      <Helmet>
+        <title>MD Hygiene | Startseite</title>
+        <meta name="description" content="Willkommen bei MD Hygiene - Ihre Quelle für Hygieneprodukte" />
+        <meta name="keywords" content="Hygiene, Reinigung, Produkte, Desinfektion" />
+        <meta property="og:title" content="MD Hygiene | Startseite" />
+        <meta property="og:description" content="Willkommen bei MD Hygiene - Ihre Quelle für Hygieneprodukte" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <Title>Unsere Produkte</Title>
 
       {loading && <LoadingText>⏳ Produkte werden geladen...</LoadingText>}
