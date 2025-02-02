@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import connectDB from "./config/db.js";  
+import connectDB from "./config/db.js";  // ✅ Default Export kullanılıyor! 
 import mailRoutes from "./routes/mailRouters.js";
 import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
@@ -13,6 +13,10 @@ import swaggerDocs from "./config/swagger.js";
 // ✅ Ortam değişkenlerini yükle
 const envFile = `.env.${process.env.NODE_ENV || "development"}`;
 dotenv.config({ path: envFile });
+console.log(`🛠️ Yüklenen ENV Dosyası: ${envFile}`);
+
+
+dotenv.config({ path: envFile });
 
 // ✅ Ortama göre değişkenleri belirle
 const {
@@ -21,11 +25,6 @@ const {
   MONGO_URI,
   CORS_ORIGIN,
   SMTP_USER,
-  SMTP_HOST,
-  SMTP_PORT,
-  SMTP_PASSWORD,
-  SMTP_SECURE,
-  SMTP_FROM,
   VITE_API_URL,
   VITE_PORT
 } = process.env;
@@ -43,20 +42,25 @@ console.log(`🌐 CORS_ORIGIN: ${CORS_ORIGIN}`);
 const app = express();
 app.use(express.json());
 
-// 🟢 CORS Middleware
+// 🟢 CORS Middleware - Tüm local adreslere izin ver
 app.use(cors({
-  origin: CORS_ORIGIN,
+  origin: ["http://localhost:3003", "http://localhost:5173"], // 🛠️ Hem 3003 hem 5173 izinli
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
 }));
+
+
 
 app.options("*", cors());
 
 // ✅ MongoDB bağlantısını başlat
 const startServer = async () => {
   try {
-    await connectDB();
+    if (process.env.NODE_ENV !== "test") {
+      await connectDB(); // Test ortamında çalışmasın!
+    }
+    
     console.log("✅ MongoDB bağlantısı başarılı!");
 
     // ✅ API Route'ları ekle
@@ -72,8 +76,8 @@ const startServer = async () => {
 
     // ✅ Sunucuyu başlat
     const serverPort = PORT || 5010;
-    app.listen(serverPort, () => {
-      console.log(`🚀 Server ${serverPort} portunda çalışıyor - ${NODE_ENV || "development"} ortamında`);
+    app.listen(process.env.PORT || 5010, () => {
+      console.log(`🚀 Server ${process.env.PORT || 5010} portunda çalışıyor.`);
     });
 
   } catch (error) {
@@ -83,3 +87,5 @@ const startServer = async () => {
 };
 
 startServer(); // ✅ Asenkron başlatma
+
+export default app; // ✅ Testler için app'i dışa aktar
