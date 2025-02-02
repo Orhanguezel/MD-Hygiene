@@ -1,16 +1,7 @@
-import { defineConfig } from "vite";
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
-export default defineConfig(({ mode }) => {
-  return {
-    define: {
-      "process.env.VITE_API_URL": JSON.stringify(
-        mode === "production"
-          ? "https://md-hygienelogistik.de/api"
-          : "http://localhost:5010/api"
-      ),
-    },
-    server: {
-      port: process.env.VITE_PORT || 3003,
-    },
-  };
-});
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react()],
+})

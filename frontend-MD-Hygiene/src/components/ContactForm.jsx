@@ -10,26 +10,36 @@ import {
 } from "../styles/ContactFormStyles";
 
 // ✅ Ortama göre API URL’sini seç
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5010/api";
 
 console.log(`🌍 Çalışan Ortam: ${import.meta.env.MODE}`);
 console.log(`📡 API URL: ${API_URL}`);
 
-function ContactForm({ formData }) {
-  const [form, setForm] = useState(formData);
+function ContactForm() {
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm((prevForm) => ({
+      ...prevForm,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+
+    // Boş alan kontrolü
+    if (!form.name || !form.email || !form.message) {
+      setError("Bitte füllen Sie alle Felder aus.");
+      setLoading(false);
+      return;
+    }
 
     try {
       console.log("📩 API isteği gönderiliyor:", `${API_URL}/mail/send-email`);
@@ -47,7 +57,7 @@ function ContactForm({ formData }) {
       }
     } catch (err) {
       console.error("❌ Fehler beim Senden:", err);
-      
+
       if (err.response) {
         console.error("📡 API Hata Yanıtı:", err.response.data);
         setError(`Server Error: ${err.response.status} - ${err.response.data.message}`);
@@ -71,11 +81,11 @@ function ContactForm({ formData }) {
           <h2>Kontaktformular</h2>
           {error && <p style={{ color: "red" }}>{error}</p>}
           <Label htmlFor="name">Name:</Label>
-          <Input type="text" id="name" name="name" value={form.name || ""} onChange={handleChange} required />
+          <Input type="text" id="name" name="name" value={form.name} onChange={handleChange} required />
           <Label htmlFor="email">E-Mail:</Label>
-          <Input type="email" id="email" name="email" value={form.email || ""} onChange={handleChange} required />
+          <Input type="email" id="email" name="email" value={form.email} onChange={handleChange} required />
           <Label htmlFor="message">Nachricht:</Label>
-          <Textarea id="message" name="message" value={form.message || ""} onChange={handleChange} required></Textarea>
+          <Textarea id="message" name="message" value={form.message} onChange={handleChange} required></Textarea>
           <SubmitButton type="submit" disabled={loading}>{loading ? "Wird gesendet..." : "Senden"}</SubmitButton>
         </StyledForm>
       )}

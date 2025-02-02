@@ -27,3 +27,12 @@ yarn-error.log*
 
 fullchain.pem
 privkey.pem
+
+
+# .env dosyalarını takip etme
+.env
+.env.production
+.env.development
+.env.local
+.env.test
+
