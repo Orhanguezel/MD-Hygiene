@@ -9,10 +9,17 @@ import orderRoutes from "./routes/orderRoutes.js";
 import invoiceRoutes from "./routes/invoiceRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import swaggerDocs from "./config/swagger.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// ✅ Ortam değişkenlerini yükle
-const envFile = `.env.${process.env.NODE_ENV || "development"}`;
+// ✅ `.env.production` dosyasını doğru şekilde yükle
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const envFile = path.resolve(__dirname, `.env.${process.env.NODE_ENV || "development"}`);
+
 dotenv.config({ path: envFile });
+
+console.log(`🛠️ Yüklenen ENV Dosyası: ${envFile}`);
 
 const { CORS_ORIGIN } = process.env;
 
