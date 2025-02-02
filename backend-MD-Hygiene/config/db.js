@@ -1,18 +1,27 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// ✅ Ortam değişkenlerini yükle
-const envFile = `.env.${process.env.NODE_ENV || "development"}`;
-dotenv.config({ path: envFile });
+// ✅ `.env` dosyasının tam yolunu belirle
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const envPath = path.resolve(__dirname, "../.env");  // ✅ `../.env` ile ana dizine bakıyoruz!
 
+// ✅ `.env` dosyasını yükle
+dotenv.config({ path: envPath });
+
+console.log(`🛠️ ENV Dosyası Yüklendi: ${envPath}`);
+
+// ✅ Ortam değişkenlerini kontrol et
 const { MONGO_URI } = process.env;
 
-const connectDB = async () => {
-  if (!MONGO_URI) {
-    console.error("🚨 MongoDB bağlantısı için MONGO_URI tanımlı değil!");
-    process.exit(1);
-  }
+if (!MONGO_URI) {
+  console.error("❌ MONGO_URI tanımlı değil! `.env` dosyanızı kontrol edin.");
+  process.exit(1);
+}
 
+const connectDB = async () => {
   try {
     console.log(`⏳ MongoDB'ye bağlanılıyor: ${MONGO_URI}`);
     const conn = await mongoose.connect(MONGO_URI, {
