@@ -15,7 +15,7 @@ import { fileURLToPath } from "url";
 // ✅ `.env.production` dosyasını doğru şekilde yükle
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const envFile = path.resolve(__dirname, `.env.${process.env.NODE_ENV || "development"}`);
+const envFile = path.resolve(__dirname, `.env.${process.env.NODE_ENV || "production"}`);
 
 dotenv.config({ path: envFile });
 
@@ -54,8 +54,7 @@ const {
   PORT,
   MONGO_URI,
   SMTP_USER,
-  VITE_API_URL,
-  VITE_PORT
+  VITE_API_URL
 } = process.env;
 
 // ✅ Konsolda log olarak tüm ortam değişkenlerini yazdır (Sorun giderme için)
@@ -64,7 +63,6 @@ console.log(`🌍 NODE_ENV: ${NODE_ENV}`);
 console.log(`🔗 MONGO_URI: ${MONGO_URI}`);
 console.log(`📧 SMTP_USER: ${SMTP_USER}`);
 console.log(`📡 VITE_API_URL: ${VITE_API_URL}`);
-console.log(`🚀 VITE_PORT: ${VITE_PORT}`);
 console.log(`🌐 CORS_ORIGIN: ${CORS_ORIGIN}`);
 
 
