@@ -13,13 +13,35 @@ import swaggerDocs from "./config/swagger.js";
 // ✅ Ortam değişkenlerini yükle
 const envFile = `.env.${process.env.NODE_ENV || "development"}`;
 dotenv.config({ path: envFile });
-console.log(`🛠️ Yüklenen ENV Dosyası: ${envFile}`);
-
-dotenv.config({ path: envFile });
 
 const { CORS_ORIGIN } = process.env;
 
+// ✅ CORS yapılandırmasını dinamik hale getir
+let allowedOrigins = CORS_ORIGIN ? CORS_ORIGIN.split(",").map(origin => origin.trim()) : [];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.error(`❌ CORS policy does not allow this origin: ${origin}`);
+      callback(new Error("CORS policy does not allow this origin."));
+    }
+  },
+  credentials: true,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
+};
+
+// ✅ Express uygulamasını başlat
+const app = express();
+app.use(express.json());
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));  // ✅ Preflight istekler için izin ver
+
 // ✅ Ortama göre değişkenleri belirle
+
+
 const {
   NODE_ENV,
   PORT,
@@ -38,28 +60,7 @@ console.log(`📡 VITE_API_URL: ${VITE_API_URL}`);
 console.log(`🚀 VITE_PORT: ${VITE_PORT}`);
 console.log(`🌐 CORS_ORIGIN: ${CORS_ORIGIN}`);
 
-// ✅ Express uygulamasını başlat
-const app = express();
-app.use(express.json());
 
-// 🟢 CORS Middleware - Tüm local adreslere izin ver
-const allowedOrigins = CORS_ORIGIN ? CORS_ORIGIN.split(",").map(origin => origin.trim()) : [];
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("CORS policy does not allow this origin."));
-    }
-  },
-  credentials: true,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-};
-
-// 🟢 CORS Middleware'i uygula
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
 
 // ✅ MongoDB bağlantısını başlat
 const startServer = async () => {
@@ -95,4 +96,4 @@ const startServer = async () => {
 
 startServer(); // ✅ Asenkron başlatma
 
-export default app; // ✅ Testler için app'i dışa aktar
+
