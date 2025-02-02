@@ -43,16 +43,19 @@ const app = express();
 app.use(express.json());
 
 // 🟢 CORS Middleware - Tüm local adreslere izin ver
-app.use(cors({
-  origin: "*", // 
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",") : "*",
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-}));
+};
+
+// 🟢 CORS Middleware'i uygula
+app.use(cors(corsOptions));
 
 
 
-app.options("*", cors());
+app.options("*", cors(corsOptions));
 
 // ✅ MongoDB bağlantısını başlat
 const startServer = async () => {
