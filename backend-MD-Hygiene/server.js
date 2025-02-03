@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
-import connectDB from "./config/db.js";  // ✅ Default Export kullanılıyor! 
-
+import connectDB from "./config/db.js";
 import mailRoutes from "./routes/mailRouters.js";
 import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
@@ -9,6 +8,10 @@ import orderRoutes from "./routes/orderRoutes.js";
 import invoiceRoutes from "./routes/invoiceRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import swaggerDocs from "./config/swagger.js";
+import dotenv from "dotenv";
+
+// ✅ .env dosyasını yükle
+dotenv.config();
 
 // ✅ Express uygulamasını başlat
 const app = express();
@@ -16,31 +19,17 @@ app.use(express.json());
 
 const { PORT, CORS_ORIGIN } = process.env;
 
-// ✅ CORS Yapılandırması
+// ✅ CORS Yapılandırması (GÜNCELLENDİ)
 const allowedOrigins = CORS_ORIGIN ? CORS_ORIGIN.split(",").map(origin => origin.trim()) : [];
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.error(`❌ CORS policy does not allow this origin: ${origin}`);
-      callback(new Error("CORS policy does not allow this origin."));
-    }
-  },
-  credentials: true,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
-};
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+app.options("*", cors()); // ✅ OPTIONS istekleri için CORS izin verildi
 
 // ✅ MongoDB bağlantısını başlat
 const startServer = async () => {
   try {
     await connectDB();
-
     console.log("✅ MongoDB bağlantısı başarılı!");
 
     // ✅ API Route'ları ekle
@@ -55,9 +44,8 @@ const startServer = async () => {
     swaggerDocs(app);
 
     // ✅ Sunucuyu başlat
-    const serverPort = PORT || 5010;
-    app.listen(serverPort, () => {
-      console.log(`🚀 Server ${serverPort} portunda çalışıyor.`);
+    app.listen(PORT, () => {
+      console.log(`🚀 Server ${PORT} portunda çalışıyor.`);
     });
 
   } catch (error) {

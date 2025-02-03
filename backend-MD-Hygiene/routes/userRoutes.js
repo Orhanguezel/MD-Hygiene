@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.get("/profile", protect, getUserProfile); // Eğer `getUserProfile` yoksa hata verir
+router.get("/profile", protect, getUserProfile); // Kullanıcı profiline erişmek için auth gerektirir
 
 export default router;

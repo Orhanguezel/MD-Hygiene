@@ -12,12 +12,12 @@ const protect = async (req, res, next) => {
 
       next();
     } catch (error) {
-      res.status(401).json({ message: "Yetkisiz! Geçersiz token." });
+      return res.status(401).json({ message: "Yetkisiz! Geçersiz token." });
     }
   }
 
   if (!token) {
-    res.status(401).json({ message: "Yetkilendirme hatası! Token bulunamadı." });
+    return res.status(401).json({ message: "Yetkilendirme hatası! Token bulunamadı." });
   }
 };
 
