@@ -23,21 +23,19 @@ const app = express();
 app.use(express.json());
 
 // ✅ CORS Yapılandırması (Eski Haline Geri Döndürüldü, Dinamik)
-const allowedOrigins = process.env.CORS_ORIGIN || "https://www.md-hygienelogistik.de";
+const allowedOrigins = [process.env.CORS_ORIGIN];
+
 
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS policy does not allow this origin."));
-      }
-    },
+    origin: allowedOrigins[0], // Tek bir değer olarak ayarlıyoruz
     credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
   })
 );
+
 
 app.options("*", cors()); // ✅ OPTIONS istekleri için CORS izin verildi
 
