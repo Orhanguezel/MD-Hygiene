@@ -30,10 +30,11 @@ privkey.pem
 
 
 # .env dosyalarını takip etme
+.env
 
 
-src/services/api.js
-api.js
+#src/services/api.js
+#api.js
 
 
 

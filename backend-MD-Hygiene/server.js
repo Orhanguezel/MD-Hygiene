@@ -1,4 +1,5 @@
 import express from "express";
+dotenv.config();
 import cors from "cors";
 import connectDB from "./config/db.js";
 import mailRoutes from "./routes/mailRouters.js";
@@ -16,7 +17,10 @@ import swaggerDocs from "./config/swagger.js";
 import dotenv from "dotenv";
 
 // ✅ Çevresel değişkenleri yükle
-dotenv.config();
+console.log("✅ ENV YÜKLENDİ!");
+console.log("MONGO_URI:", process.env.MONGO_URI);
+console.log("CORS_ORIGIN:", process.env.CORS_ORIGIN);
+
 
 // ✅ Express uygulamasını başlat
 const app = express();
@@ -44,6 +48,8 @@ const startServer = async () => {
   try {
     await connectDB();
     console.log("✅ MongoDB bağlantısı başarılı!");
+    console.log("🔗 MongoDB URI:", process.env.MONGO_URI);
+
 
     // ✅ API Route'ları ekle
     app.use("/api/mail", mailRoutes);
