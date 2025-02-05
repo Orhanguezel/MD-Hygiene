@@ -4,4 +4,4 @@ services:
     env: static
     rootDir: frontend-MD-Hygiene  # Doğru dizini göster!
     buildCommand: npm install && npm run build
-    staticPublishPath: frontend-MD-Hygiene/build  # Doğru dizini göster!
+    staticPublishPath: frontend-MD-Hygiene/dist # Doğru dizini göster!
