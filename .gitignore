@@ -36,3 +36,7 @@ privkey.pem
 .env.local
 .env.test
 
+frontend-MD-Hygiene/src/services/api.js
+frontend-MD-Hygiene/src/services/*.js
+
+
