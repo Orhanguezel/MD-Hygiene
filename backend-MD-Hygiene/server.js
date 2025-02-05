@@ -64,6 +64,9 @@ const startServer = async () => {
     app.use("/api/sales", saleRoutes);
     app.use("/api/stores", storeRoutes);
 
+    console.log("✅ API Çalışıyor: /api/products endpoint yüklendi.");
+
+
     // ✅ Swagger API Dokümantasyonu
     swaggerDocs(app);
 
