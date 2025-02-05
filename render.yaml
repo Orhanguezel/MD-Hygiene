@@ -2,6 +2,7 @@ services:
   - type: web
     name: md-hygiene-frontend
     env: static
-    rootDir: frontend-MD-Hygiene  # Doğru dizini göster!
+    rootDir: frontend-MD-Hygiene  # Frontend klasörünü doğru belirtiyoruz
     buildCommand: npm install && npm run build
-    staticPublishPath: frontend-MD-Hygiene/dist # Doğru dizini göster!
+    staticPublishPath: dist  # Render bu dizini rootDir içinde arar!
+
