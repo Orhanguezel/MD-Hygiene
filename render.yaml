@@ -3,4 +3,4 @@ services:
     name: md-hygiene-frontend
     env: static
     buildCommand: cd frontend-MD-Hygiene && npm install && npm run build
-    staticPublishPath: frontend-MD-Hygiene/dist
+    staticPublishPath: dist
