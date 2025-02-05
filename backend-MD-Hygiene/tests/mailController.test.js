@@ -2,9 +2,6 @@ import request from "supertest";
 import app from "../server.js";
 import { connectDB, disconnectDB } from "../config/db.js";
 
-
-
-
 beforeAll(async () => {
   console.log("🔹 Jest Testleri için MongoDB bağlantısı kuruluyor...");
   await connectDB();
@@ -15,11 +12,10 @@ afterAll(async () => {
   await disconnectDB();
 });
 
-
 describe("Mail API Tests", () => {
   it("Should send an email successfully", async () => {
     const res = await request(app)
-      .post("/api/mail/send-email")  // ✅ Doğru endpoint
+      .post("/api/mail/send-email") // ✅ Doğru endpoint
       .send({
         name: "Test User",
         email: "test@example.com",
@@ -28,7 +24,10 @@ describe("Mail API Tests", () => {
 
     console.log("🔹 Mail Send Response:", res.body);
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty("message", "E-Mail wurde erfolgreich gesendet!");
+    expect(res.body).toHaveProperty(
+      "message",
+      "E-Mail wurde erfolgreich gesendet!"
+    );
   });
 
   it("Should return 400 if required fields are missing", async () => {

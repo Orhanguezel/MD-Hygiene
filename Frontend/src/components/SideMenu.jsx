@@ -1,92 +1,109 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import {
+  SidebarContainer,
+  NavContainer,
+  NavItem,
+  DropdownContainer,
+  DropdownButton,
+  DropdownMenu,
+  DropdownItem,
+  ToggleButton,
+} from "../styles/SideMenuStyles";
+import {
+  FaUsers, FaShoppingCart, FaBox, FaEuroSign, FaTruck, FaFileAlt, FaClipboardList, FaChartPie, FaChevronRight, FaChevronDown
+} from "react-icons/fa";
 
 function SideMenu() {
-  const localStorageData = JSON.parse(localStorage.getItem("user"));
+  const [isOpen, setIsOpen] = useState(true);
+  const [dropdownOpen, setDropdownOpen] = useState({
+    reports: false,
+    analysis: false
+  });
+
+  const location = useLocation();
 
   return (
-    <div className="h-full flex-col justify-between  bg-white hidden lg:flex ">
-      <div className="px-4 py-6">
-        <nav aria-label="Main Nav" className="mt-6 flex flex-col space-y-1">
-          <Link
-            to="/"
-            className="flex items-center gap-2 rounded-lg hover:bg-gray-100 px-4 py-2 text-gray-700"
-          >
-            <img
-              alt="dashboard-icon"
-              src={require("../assets/dashboard-icon.png")}
-            />
-            <span className="text-sm font-medium"> Dashboard </span>
-          </Link>
+    <SidebarContainer $isOpen={isOpen}>
+      {/* ✅ Menü Aç/Kapa Butonu */}
+      <ToggleButton onClick={() => setIsOpen(!isOpen)}>
+        {isOpen ? "✖️" : "☰"}
+      </ToggleButton>
 
-          <details className="group [&_summary::-webkit-details-marker]:hidden">
-            <summary className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-              <Link to="/inventory">
-                <div className="flex items-center gap-2">
-                  <img
-                    alt="inventory-icon"
-                    src={require("../assets/inventory-icon.png")}
-                  />
-                  <span className="text-sm font-medium"> Inventory </span>
-                </div>
-              </Link>
-            </summary>
-          </details>
+      <NavContainer>
+        <NavItem to="/admin/dashboard" $isOpen={isOpen}>
+          <FaChartPie />
+          {isOpen && <span>Admin-Dashboard</span>}
+        </NavItem>
 
-          <Link
-            to="/purchase-details"
-            className="flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-          >
-            <img
-              alt="purchase-icon"
-              src={require("../assets/supplier-icon.png")}
-            />
-            <span className="text-sm font-medium"> Purchase Details</span>
-          </Link>
-          <Link
-            to="/sales"
-            className="flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-          >
-            <img alt="sale-icon" src={require("../assets/supplier-icon.png")} />
-            <span className="text-sm font-medium"> Sales</span>
-          </Link>
+        <NavItem to="/admin/inventory" $isOpen={isOpen}>
+          <FaBox />
+          {isOpen && <span>Inventar</span>}
+        </NavItem>
 
-          <details className="group [&_summary::-webkit-details-marker]:hidden">
-            <summary className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-              <Link to="/manage-store">
-                <div className="flex items-center gap-2">
-                  <img
-                    alt="store-icon"
-                    src={require("../assets/order-icon.png")}
-                  />
-                  <span className="text-sm font-medium"> Manage Store </span>
-                </div>
-              </Link>
-            </summary>
-          </details>
-        </nav>
-      </div>
+        <NavItem to="/admin/orders" $isOpen={isOpen}>
+          <FaShoppingCart />
+          {isOpen && <span>Bestellungen</span>}
+        </NavItem>
 
-      <div className="sticky inset-x-0 bottom-0 border-t border-gray-100">
-        <div className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50">
-          <img
-            alt="Profile"
-            src={localStorageData.imageUrl}
-            className="h-10 w-10 rounded-full object-cover"
-          />
+        <NavItem to="/admin/products" $isOpen={isOpen}>
+          <FaTruck />
+          {isOpen && <span>Produkte</span>}
+        </NavItem>
 
-          <div>
-            <p className="text-xs">
-              <strong className="block font-medium">
-                {localStorageData.firstName + " " + localStorageData.lastName}
-              </strong>
+        <NavItem to="/admin/users" $isOpen={isOpen}>
+          <FaUsers />
+          {isOpen && <span>Benutzer</span>}
+        </NavItem>
 
-              <span> {localStorageData.email} </span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+        <NavItem to="/admin/sales" $isOpen={isOpen}>
+          <FaEuroSign />
+          {isOpen && <span>Verkäufe</span>}
+        </NavItem>
+
+        {/* ✅ Analizler Dropdown */}
+        <DropdownContainer>
+          <DropdownButton onClick={() => setDropdownOpen({ ...dropdownOpen, analysis: !dropdownOpen.analysis })} $isOpen={isOpen}>
+            <FaClipboardList />
+            {isOpen && <span>Analysen</span>}
+            {dropdownOpen.analysis ? <FaChevronDown /> : <FaChevronRight />}
+          </DropdownButton>
+          <DropdownMenu $isOpen={dropdownOpen.analysis}>
+            <DropdownItem to="/admin/analysis">
+              <FaChartPie />
+              {isOpen && <span>Umsatzanalyse</span>}
+            </DropdownItem>
+            <DropdownItem to="/admin/users">
+              <FaUsers />
+              {isOpen && <span>Kundenanalyse</span>}
+            </DropdownItem>
+          </DropdownMenu>
+        </DropdownContainer>
+
+        {/* ✅ Raporlar Dropdown */}
+        <DropdownContainer>
+          <DropdownButton onClick={() => setDropdownOpen({ ...dropdownOpen, reports: !dropdownOpen.reports })} $isOpen={isOpen}>
+            <FaFileAlt />
+            {isOpen && <span>Berichte</span>}
+            {dropdownOpen.reports ? <FaChevronDown /> : <FaChevronRight />}
+          </DropdownButton>
+          <DropdownMenu $isOpen={dropdownOpen.reports}>
+            <DropdownItem to="/admin/reports">
+              <FaFileAlt />
+              {isOpen && <span>Finanzberichte</span>}
+            </DropdownItem>
+            <DropdownItem to="/admin/invoices">
+              <FaFileAlt />
+              {isOpen && <span>Rechnungen</span>}
+            </DropdownItem>
+            <DropdownItem to="/admin/shipments">
+              <FaTruck />
+              {isOpen && <span>Lieferberichte</span>}
+            </DropdownItem>
+          </DropdownMenu>
+        </DropdownContainer>
+      </NavContainer>
+    </SidebarContainer>
   );
 }
 

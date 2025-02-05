@@ -1,10 +1,19 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { RegisterContainer, RegisterForm, RegisterImage } from "../styles/RegisterStyles";
-import { Input, Button } from "../styles/GlobalStyles";
-import RegisterImageSrc from "../assets/Login.png";
-
-const API_URL = import.meta.env.VITE_API_URL; // ✅ .env dosyasından API URL alınıyor.
+import { FaUser, FaEnvelope, FaLock, FaPhone, FaMapMarkerAlt, FaUserPlus } from "react-icons/fa";
+import { API } from "../services/api";
+import {
+  RegisterContainer,
+  RegisterForm,
+  RegisterImage,
+  Title,
+  InputContainer,
+  InputField,
+  Icon,
+  Button,
+  LoginText,
+} from "../styles/RegisterStyles";
+import RegisterImageSrc from "../assets/login.png"; 
 
 function Register() {
   const [form, setForm] = useState({
@@ -25,23 +34,23 @@ function Register() {
   const registerUser = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.password) {
-      alert("Lütfen gerekli alanları doldurun.");
+      alert("Bitte füllen Sie die erforderlichen Felder aus!");
       return;
     }
 
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/users/register`, {
+      const response = await fetch(`${API.USERS}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
 
       if (!response.ok) {
-        throw new Error("Kayıt başarısız! Email zaten kayıtlı olabilir.");
+        throw new Error("Registrierung fehlgeschlagen! Die E-Mail ist möglicherweise bereits registriert.");
       }
 
-      alert("Kayıt başarılı! Şimdi giriş yapabilirsiniz.");
+      alert("Registrierung erfolgreich! Sie können sich jetzt anmelden.");
       navigate("/login");
     } catch (error) {
       alert(error.message);
@@ -52,56 +61,87 @@ function Register() {
 
   return (
     <RegisterContainer>
+      <RegisterImage src={RegisterImageSrc} alt="Registrieren" />
       <RegisterForm>
-        <h2>Hesap Oluştur</h2>
+        <Title>👤 Registrierung</Title>
         <form onSubmit={registerUser}>
-          <Input
-            name="name"
-            type="text"
-            required
-            placeholder="Tam Adınız"
-            value={form.name}
-            onChange={handleInputChange}
-          />
-          <Input
-            name="email"
-            type="email"
-            required
-            placeholder="Email adresi"
-            value={form.email}
-            onChange={handleInputChange}
-          />
-          <Input
-            name="password"
-            type="password"
-            required
-            placeholder="Şifre"
-            value={form.password}
-            onChange={handleInputChange}
-          />
-          <Input
-            name="phone"
-            type="text"
-            placeholder="Telefon Numarası"
-            value={form.phone}
-            onChange={handleInputChange}
-          />
-          <Input
-            name="address"
-            type="text"
-            placeholder="Adres"
-            value={form.address}
-            onChange={handleInputChange}
-          />
+          <InputContainer>
+            <Icon>
+              <FaUser />
+            </Icon>
+            <InputField
+              name="name"
+              type="text"
+              required
+              placeholder="Vollständiger Name"
+              value={form.name}
+              onChange={handleInputChange}
+            />
+          </InputContainer>
+
+          <InputContainer>
+            <Icon>
+              <FaEnvelope />
+            </Icon>
+            <InputField
+              name="email"
+              type="email"
+              required
+              placeholder="E-Mail-Adresse"
+              value={form.email}
+              onChange={handleInputChange}
+            />
+          </InputContainer>
+
+          <InputContainer>
+            <Icon>
+              <FaLock />
+            </Icon>
+            <InputField
+              name="password"
+              type="password"
+              required
+              placeholder="Passwort"
+              value={form.password}
+              onChange={handleInputChange}
+            />
+          </InputContainer>
+
+          <InputContainer>
+            <Icon>
+              <FaPhone />
+            </Icon>
+            <InputField
+              name="phone"
+              type="text"
+              placeholder="Telefonnummer"
+              value={form.phone}
+              onChange={handleInputChange}
+            />
+          </InputContainer>
+
+          <InputContainer>
+            <Icon>
+              <FaMapMarkerAlt />
+            </Icon>
+            <InputField
+              name="address"
+              type="text"
+              placeholder="Adresse"
+              value={form.address}
+              onChange={handleInputChange}
+            />
+          </InputContainer>
+
           <Button type="submit" disabled={loading}>
-            {loading ? "Kayıt Olunuyor..." : "Kayıt Ol"}
+            {loading ? "Wird registriert..." : "Registrieren"} <FaUserPlus />
           </Button>
         </form>
-        <p>
-          Zaten bir hesabınız var mı? <Link to="/login">Giriş yap</Link>
-        </p>
+
+        <LoginText>
+          Haben Sie bereits ein Konto? <Link to="/login">Jetzt anmelden</Link>
+        </LoginText>
       </RegisterForm>
-      <RegisterImage src={RegisterImageSrc} alt="Register" />
     </RegisterContainer>
   );
 }

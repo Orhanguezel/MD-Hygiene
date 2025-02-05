@@ -1,7 +1,9 @@
 export default {
-    testEnvironment: "node",
-    setupFilesAfterEnv: ["./tests/jest.setup.js"],
-    transform: {},
-    testTimeout: 60000 // Zaman aşımını 10 saniyeye çıkaralım
-  };
-  
+  transform: {},
+  testEnvironment: "node",
+  setupFilesAfterEnv: ["./tests/jest.setup.js"],
+  extensionsToTreatAsEsm: [".ts", ".tsx"], // .js'yi buradan kaldırdık!
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1"
+  }
+};

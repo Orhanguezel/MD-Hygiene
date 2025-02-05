@@ -7,26 +7,30 @@ import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import invoiceRoutes from "./routes/invoiceRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
+import shipmentRoutes from "./routes/shipmentRoutes.js";
+import saleRoutes from "./routes/saleRoutes.js";
+import storeRoutes from "./routes/storeRoutes.js";
 import swaggerDocs from "./config/swagger.js";
 import dotenv from "dotenv";
 
-// ✅ .env dosyasını yükle
+// ✅ Çevresel değişkenleri yükle
 dotenv.config();
 
 // ✅ Express uygulamasını başlat
 const app = express();
 app.use(express.json());
 
-const { PORT, CORS_ORIGIN } = process.env;
-
-// ✅ CORS Yapılandırması (GÜNCELLENDİ)
-const allowedOrigins = CORS_ORIGIN ? CORS_ORIGIN.split(",").map(origin => origin.trim()) : [];
+// ✅ CORS Yapılandırması (Eski Haline Geri Döndürüldü, Dinamik)
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim())
+  : [];
 
 app.use(cors({ origin: allowedOrigins, credentials: true }));
-
 app.options("*", cors()); // ✅ OPTIONS istekleri için CORS izin verildi
 
-// ✅ MongoDB bağlantısını başlat
+// ✅ MongoDB Bağlantısını Başlat
 const startServer = async () => {
   try {
     await connectDB();
@@ -39,15 +43,22 @@ const startServer = async () => {
     app.use("/api/orders", orderRoutes);
     app.use("/api/invoices", invoiceRoutes);
     app.use("/api/payments", paymentRoutes);
+    app.use("/api/categories", categoryRoutes);
+    app.use("/api/reviews", reviewRoutes);
+    app.use("/api/shipments", shipmentRoutes);
+    app.use("/api/sales", saleRoutes);
+    app.use("/api/stores", storeRoutes);
 
     // ✅ Swagger API Dokümantasyonu
     swaggerDocs(app);
 
-    // ✅ Sunucuyu başlat
-    app.listen(PORT, () => {
-      console.log(`🚀 Server ${PORT} portunda çalışıyor.`);
-    });
-
+    // ✅ Jest test ortamında sunucuyu başlatma
+    if (process.env.NODE_ENV !== "test") {
+      const PORT = process.env.PORT || 5010;
+      app.listen(PORT, () => {
+        console.log(`🚀 Server ${PORT} portunda çalışıyor.`);
+      });
+    }
   } catch (error) {
     console.error("❌ Sunucu başlatılamadı:", error.message);
     process.exit(1);
@@ -55,3 +66,5 @@ const startServer = async () => {
 };
 
 startServer();
+
+export default app;

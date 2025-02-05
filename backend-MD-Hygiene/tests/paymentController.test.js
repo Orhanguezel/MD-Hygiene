@@ -39,7 +39,8 @@ describe("Payment API Tests", () => {
       });
 
     productId = productRes.body._id;
-    if (!productId) throw new Error("❌ Ürün oluşturulamadı, test devam edemez!");
+    if (!productId)
+      throw new Error("❌ Ürün oluşturulamadı, test devam edemez!");
 
     console.log("📌 Test için sipariş ekleniyor...");
     const orderRes = await request(app)
@@ -53,7 +54,8 @@ describe("Payment API Tests", () => {
       });
 
     orderId = orderRes.body._id;
-    if (!orderId) throw new Error("❌ Sipariş oluşturulamadı, test devam edemez!");
+    if (!orderId)
+      throw new Error("❌ Sipariş oluşturulamadı, test devam edemez!");
   });
 
   it("✅ Should create a payment for an order", async () => {

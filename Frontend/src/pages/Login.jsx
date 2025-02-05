@@ -1,10 +1,21 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { LoginContainer, LoginForm, LoginImage } from "../styles/LoginStyles";
-import { Input, Button } from "../styles/GlobalStyles";
+import { FaEnvelope, FaLock, FaSignInAlt } from "react-icons/fa";
 import AuthContext from "../AuthContext";
-import LoginImageSrc from "../assets/signup.jpg";
-
+import { API } from "../services/api";
+import {
+  LoginContainer,
+  LoginWrapper,
+  LoginImage,
+  LoginForm,
+  Title,
+  InputContainer,
+  InputField,
+  Icon,
+  Button,
+  RegisterText,
+} from "../styles/LoginStyles";
+import LoginImageSrc from "../assets/login.png"; 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
@@ -18,20 +29,20 @@ function Login() {
   const loginUser = async (e) => {
     e.preventDefault();
     if (!form.email || !form.password) {
-      alert("Lütfen e-posta ve şifre girin.");
+      alert("Bitte geben Sie Ihre E-Mail und Ihr Passwort ein!");
       return;
     }
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5010/api/users/login", {
+      const response = await fetch(`${API.USERS}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
 
       if (!response.ok) {
-        throw new Error("Giriş başarısız! Email veya şifre hatalı.");
+        throw new Error("Anmeldung fehlgeschlagen! Falsche E-Mail oder Passwort.");
       }
 
       const data = await response.json();
@@ -52,32 +63,47 @@ function Login() {
 
   return (
     <LoginContainer>
-      <LoginImage src={LoginImageSrc} alt="Login" />
-      <LoginForm>
-        <h2>Hesabınıza Giriş Yapın</h2>
-        <form onSubmit={loginUser}>
-          <Input
-            type="email"
-            name="email"
-            placeholder="Email adresi"
-            value={form.email}
-            onChange={handleInputChange}
-          />
-          <Input
-            type="password"
-            name="password"
-            placeholder="Şifre"
-            value={form.password}
-            onChange={handleInputChange}
-          />
-          <Button type="submit" disabled={loading}>
-            {loading ? "Giriş Yapılıyor..." : "Giriş Yap"}
-          </Button>
-        </form>
-        <p>
-          Henüz hesabınız yok mu? <Link to="/register">Kayıt ol</Link>
-        </p>
-      </LoginForm>
+      <LoginWrapper>
+        <LoginImage src={LoginImageSrc} alt="Anmeldung" />
+        <LoginForm>
+          <Title>🔑 Anmeldung</Title>
+          <form onSubmit={loginUser}>
+            <InputContainer>
+              <Icon>
+                <FaEnvelope />
+              </Icon>
+              <InputField
+                type="email"
+                name="email"
+                placeholder="E-Mail-Adresse"
+                value={form.email}
+                onChange={handleInputChange}
+              />
+            </InputContainer>
+
+            <InputContainer>
+              <Icon>
+                <FaLock />
+              </Icon>
+              <InputField
+                type="password"
+                name="password"
+                placeholder="Passwort"
+                value={form.password}
+                onChange={handleInputChange}
+              />
+            </InputContainer>
+
+            <Button type="submit" disabled={loading}>
+              {loading ? "Wird angemeldet..." : "Anmelden"} <FaSignInAlt />
+            </Button>
+          </form>
+
+          <RegisterText>
+            Noch kein Konto? <Link to="/register">Jetzt registrieren</Link>
+          </RegisterText>
+        </LoginForm>
+      </LoginWrapper>
     </LoginContainer>
   );
 }

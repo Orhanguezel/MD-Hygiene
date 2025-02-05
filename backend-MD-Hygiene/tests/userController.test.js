@@ -6,13 +6,11 @@ describe("User API Tests", () => {
   let token;
 
   it("Should register a new user", async () => {
-    const res = await request(app)
-      .post("/api/users/register")
-      .send({
-        name: "Test User",
-        email: "testuser@example.com",
-        password: "password123",
-      });
+    const res = await request(app).post("/api/users/register").send({
+      name: "Test User",
+      email: "testuser@example.com",
+      password: "password123",
+    });
 
     console.log("🔹 Register Response:", res.body); // HATA LOGU EKLENDİ
     expect(res.statusCode).toEqual(201);
@@ -20,12 +18,10 @@ describe("User API Tests", () => {
   });
 
   it("Should login and return a token", async () => {
-    const res = await request(app)
-      .post("/api/users/login")
-      .send({
-        email: "testuser@example.com",
-        password: "password123",
-      });
+    const res = await request(app).post("/api/users/login").send({
+      email: "testuser@example.com",
+      password: "password123",
+    });
 
     console.log("🔹 Login Response:", res.body); // HATA LOGU EKLENDİ
     expect(res.statusCode).toEqual(200);

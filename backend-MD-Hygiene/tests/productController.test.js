@@ -6,15 +6,13 @@ describe("Product API Tests", () => {
   let productId;
 
   it("Should create a new product", async () => {
-    const res = await request(app)
-      .post("/api/products")
-      .send({
-        name: "Test Product",
-        description: "A test product",
-        price: 19.99,
-        stock: 10,
-        category: "Test Category",
-      });
+    const res = await request(app).post("/api/products").send({
+      name: "Test Product",
+      description: "A test product",
+      price: 19.99,
+      stock: 10,
+      category: "Test Category",
+    });
 
     console.log("🔹 Create Product Response:", res.body); // Hata logu eklendi
     expect(res.statusCode).toEqual(201);

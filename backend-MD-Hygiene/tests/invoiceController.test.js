@@ -39,7 +39,8 @@ describe("Invoice API Tests", () => {
       });
 
     productId = productRes.body._id; // ✅ Ürün ID'sini al
-    if (!productId) throw new Error("❌ Ürün oluşturulamadı, test devam edemez!");
+    if (!productId)
+      throw new Error("❌ Ürün oluşturulamadı, test devam edemez!");
 
     console.log("📌 Test için sipariş ekleniyor...");
     const orderRes = await request(app)
@@ -53,7 +54,8 @@ describe("Invoice API Tests", () => {
       });
 
     orderId = orderRes.body._id;
-    if (!orderId) throw new Error("❌ Sipariş oluşturulamadı, test devam edemez!");
+    if (!orderId)
+      throw new Error("❌ Sipariş oluşturulamadı, test devam edemez!");
   });
 
   it("✅ Should create an invoice for an order", async () => {

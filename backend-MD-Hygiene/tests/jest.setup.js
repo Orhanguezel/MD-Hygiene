@@ -9,7 +9,6 @@ beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
 
-  // Eğer zaten bağlantı varsa, eski bağlantıyı kapat
   if (mongoose.connection.readyState !== 0) {
     await mongoose.connection.close();
   }

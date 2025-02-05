@@ -1,11 +1,12 @@
 import express from "express";
-import { registerUser, loginUser, getUserProfile } from "../controllers/userController.js";
+import { registerUser, loginUser, getUserProfile, getUsers } from "../controllers/userController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.get("/profile", protect, getUserProfile); // Kullanıcı profiline erişmek için auth gerektirir
+router.get("/profile", protect, getUserProfile);
+router.get("/", getUsers); 
 
 export default router;

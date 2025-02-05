@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+
 // Sayfanın genel düzeni
 export const PageContainer = styled.div`
   display: flex;

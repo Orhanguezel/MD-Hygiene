@@ -86,3 +86,13 @@ export const getUserProfile = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getUsers = async (req, res) => {
+  try {
+    const users = await User.find(); // 🔥 MongoDB'den tüm kullanıcıları getir
+    res.json(users);
+  } catch (error) {
+    console.error("❌ Kullanıcıları alırken hata:", error);
+    res.status(500).json({ error: "Kullanıcıları alırken hata oluştu!" });
+  }
+};
