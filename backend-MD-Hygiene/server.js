@@ -23,11 +23,22 @@ const app = express();
 app.use(express.json());
 
 // ✅ CORS Yapılandırması (Eski Haline Geri Döndürüldü, Dinamik)
-const allowedOrigins = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim())
-  : [];
+const allowedOrigins = process.env.CORS_ORIGIN || "https://www.md-hygienelogistik.de";
 
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS policy does not allow this origin."));
+      }
+    },
+    credentials: true,
+  })
+);
+
 app.options("*", cors()); // ✅ OPTIONS istekleri için CORS izin verildi
 
 // ✅ MongoDB Bağlantısını Başlat
