@@ -1,41 +1,46 @@
 import styled from "styled-components";
+import { NavLink } from "react-router-dom";
 
-
-const FooterContainer = styled.footer`
-  background-color: #222;
-  color: #fff;
-  padding: 20px 0;
+// ✅ Footer Konteyneri
+export const FooterContainer = styled.footer`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #1f2937;
+  color: white;
   text-align: center;
-  margin-top: 30px;
+  padding: 15px 0;
+  font-size: 14px;
 `;
 
-const FooterContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+// ✅ Footer İçeriği
+export const FooterContent = styled.div`
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 20px;
 `;
 
-const FooterLinks = styled.div`
-  display: flex;
-  gap: 15px;
-  justify-content: center;
+// ✅ Başlık Stili
+export const FooterTitle = styled.h2`
+  font-size: 18px;
+  color: white;
+  margin-bottom: 15px;
 `;
 
-const LinkItem = styled.a`
-  color: #ddd;
-  font-size: 1.5rem;
-  transition: color 0.3s;
+// ✅ Copyright Metni
+export const CopyrightText = styled.p`
+  font-size: 14px;
+  margin: 5px 0;
+`;
+
+// ✅ Link Stili
+export const FooterLink = styled(NavLink)`
+  color: #facc15;
+  font-weight: bold;
+  text-decoration: none;
 
   &:hover {
-    color: #f8b400;
+    text-decoration: underline;
   }
 `;
-
-const Copyright = styled.p`
-  font-size: 0.9rem;
-  color: #bbb;
-  margin-top: 10px;
-`;
-
-export { FooterContainer, FooterContent, FooterLinks, LinkItem, Copyright };

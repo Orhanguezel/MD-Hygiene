@@ -1,34 +1,44 @@
-import { NavLink } from "react-router-dom";
-import { Navbar, NavList, NavItem } from "../styles/LayoutStyles";
+import { Outlet } from "react-router-dom";
+import Header from "./Header";
+import SideMenu from "./SideMenu";
+import Footer from "./Footer";
+import styled from "styled-components";
+
+const LayoutContainer = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 10fr;
+  background-color: #f3f4f6;
+  min-height: 100vh;
+`;
+
+const Sidebar = styled.div`
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  display: flex;
+`;
+
+const Content = styled.div`
+  padding: 20px;
+`;
 
 function Layout() {
   return (
-    <Navbar>
-      <NavList>
-        <NavItem>
-          <NavLink to="/" className={({ isActive }) => (isActive ? "active-link" : "")}>
-            Startseite
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink to="/produkte" className={({ isActive }) => (isActive ? "active-link" : "")}>
-            Produkte
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink to="/contact" className={({ isActive }) => (isActive ? "active-link" : "")}>
-            Kontakt
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink to="/login" className={({ isActive }) => (isActive ? "active-link" : "")}>
-            Login / Registrierung
-          </NavLink>
-        </NavItem>
-      </NavList>
-    </Navbar>
+    <>
+      <div className="md:h-16">
+        <Header />
+      </div>
+      <LayoutContainer>
+        <Sidebar>
+          <SideMenu />
+        </Sidebar>
+        <Content>
+          <Outlet />
+        </Content>
+      </LayoutContainer>
+      <Footer/>
+    </>
   );
 }
 
 export default Layout;
-

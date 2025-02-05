@@ -1,0 +1,5 @@
+.active-link {
+  font-weight: bold;
+  color: rgb(140, 25, 102);
+  text-decoration: underline;
+}

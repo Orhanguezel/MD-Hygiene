@@ -1,27 +1,14 @@
-import { FaFacebook, FaInstagram, FaLinkedin, FaEnvelope } from "react-icons/fa";
-import { FooterContainer, FooterContent, FooterLinks, LinkItem, Copyright } from "../styles/FooterStyles";
-
+import { FooterContainer, FooterContent, FooterTitle, CopyrightText, FooterLink } from "../styles/FooterStyles";
 
 const Footer = () => {
   return (
     <FooterContainer>
       <FooterContent>
-        <p>© {new Date().getFullYear()} MD Hygiene - Alle Rechte vorbehalten</p>
-        <FooterLinks>
-          <LinkItem href="https://facebook.com" target="_blank">
-            <FaFacebook />
-          </LinkItem>
-          <LinkItem href="https://instagram.com" target="_blank">
-            <FaInstagram />
-          </LinkItem>
-          <LinkItem href="https://linkedin.com" target="_blank">
-            <FaLinkedin />
-          </LinkItem>
-          <LinkItem href="mailto:info@md-hygiene.de">
-            <FaEnvelope />
-          </LinkItem>
-        </FooterLinks>
-        <Copyright>Datenschutz | Impressum | AGB</Copyright>
+        <FooterTitle>Inventory Management</FooterTitle>
+        <CopyrightText>© 2025 MD-Hygienelogistik - Alle Rechte vorbehalten</CopyrightText>
+        <CopyrightText>
+          Designed by <FooterLink to="https://www.guezelwebdesign.com" target="_blank">OG</FooterLink>
+        </CopyrightText>
       </FooterContent>
     </FooterContainer>
   );
