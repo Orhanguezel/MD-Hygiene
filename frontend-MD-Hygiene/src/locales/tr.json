@@ -1,0 +1,110 @@
+{
+  "dashboard": {
+    "title": "Yönetim Paneli",
+    "users": "Kullanıcılar",
+    "orders": "Siparişler",
+    "invoices": "Faturalar",
+    "notifications": "Bildirimler"
+  },
+  "login": {
+    "title": "Giriş Yap",
+    "email": "Email",
+    "password": "Şifre",
+    "submit": "Giriş Yap",
+    "error": "Giriş başarısız. Lütfen bilgilerinizi kontrol edin."
+  },
+  "users": {
+    "title": "Kullanıcı Yönetimi",
+    "name": "Ad Soyad",
+    "email": "E-posta",
+    "role": "Rol",
+    "actions": "İşlemler",
+    "edit": "Düzenle"
+  },
+  "orders": {
+    "title": "Sipariş Yönetimi",
+    "orderNumber": "Sipariş No",
+    "customer": "Müşteri",
+    "status": "Durum",
+    "total": "Toplam",
+    "actions": "İşlemler",
+    "viewDetails": "Detayları Gör"
+  },
+  "invoices": {
+    "title": "Fatura Yönetimi",
+    "invoiceNumber": "Fatura No",
+    "customer": "Müşteri",
+    "date": "Tarih",
+    "total": "Toplam",
+    "actions": "İşlemler",
+    "viewDetails": "Detayları Gör"
+  },
+  "notifications": {
+    "title": "Bildirim Yönetimi",
+    "markAsRead": "Okundu Olarak İşaretle"
+  },
+  "reports": {
+    "title": "Raporlar",
+    "totalSales": "Toplam Satış",
+    "totalUsers": "Toplam Kullanıcı",
+    "totalOrders": "Toplam Sipariş",
+    "totalRevenue": "Toplam Gelir",
+    "salesChart": "Satış Grafiği"
+  },
+  "auditLogs": {
+    "title": "Sistem Logları",
+    "eventType": "Olay Türü",
+    "user": "Kullanıcı",
+    "date": "Tarih",
+    "status": "Durum"
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "profileSettings": "Profil Ayarları",
+    "appSettings": "Uygulama Ayarları",
+    "passwordSettings": "Parola Ayarları",
+    "name": "Ad Soyad",
+    "email": "E-posta",
+    "updateProfile": "Profili Güncelle",
+    "theme": "Tema",
+    "darkMode": "Karanlık Mod",
+    "lightMode": "Aydınlık Mod",
+    "language": "Dil",
+    "newPassword": "Yeni Parola",
+    "confirmPassword": "Parolayı Onayla",
+    "updatePassword": "Parolayı Güncelle"
+  },
+
+  "sidebar": {
+    "dashboard": "Yönetim Paneli",
+    "users": "Kullanıcılar",
+    "orders": "Siparişler",
+    "invoices": "Faturalar",
+    "notifications": "Bildirimler",
+    "reports": "Raporlar",
+    "auditLogs": "Sistem Logları",
+    "settings": "Ayarlar",
+    "products": "Ürünler",
+    "sales": "Satışlar",
+    "shipments": "Kargolar",
+    "offers": "Teklifler",
+    "stores": "Mağazalar"
+  },
+
+  "users": {
+      "title": "Kullanıcı Yönetimi",
+      "avatar": "Profil",
+      "name": "Ad Soyad",
+      "email": "E-posta",
+      "role": "Rol",
+      "status": "Durum",
+      "active": "Aktif",
+      "blocked": "Engelli",
+      "actions": "İşlemler",
+      "edit": "Düzenle",
+      "block": "Engelle",
+      "unblock": "Engeli Kaldır",
+      "delete": "Sil",
+      "addUser": "Yeni Kullanıcı Ekle"
+    }
+}

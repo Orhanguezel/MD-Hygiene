@@ -1,19 +1,32 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useReducer, useContext } from "react";
 
-// ✅ Context oluştur
 const UIContext = createContext();
 
-// ✅ Provider (Menü ve dropdown durumlarını yönetecek)
+const uiReducer = (state, action) => {
+  switch (action.type) {
+    case "TOGGLE_SIDEBAR":
+      return { sidebarOpen: !state.sidebarOpen };
+    default:
+      return state;
+  }
+};
+
 export const UIProvider = ({ children }) => {
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [state, dispatch] = useReducer(uiReducer, { sidebarOpen: true });
+
+  const toggleSidebar = () => {
+    dispatch({ type: "TOGGLE_SIDEBAR" });
+  };
 
   return (
-    <UIContext.Provider value={{ isSidebarOpen, setSidebarOpen, isDropdownOpen, setDropdownOpen }}>
+    <UIContext.Provider value={{ sidebarOpen: state.sidebarOpen, toggleSidebar }}>
       {children}
     </UIContext.Provider>
   );
 };
 
-// ✅ Custom Hook ile erişimi kolaylaştır
-export const useUI = () => useContext(UIContext);
+export const useUI = () => {
+  return useContext(UIContext);
+};
+
+export default UIContext;
