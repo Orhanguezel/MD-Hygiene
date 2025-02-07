@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../api/authApi";
+import { login } from "@/api/authApi";
 import styled from "styled-components";
 
+// ✅ Stiller
 const LoginContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -47,6 +48,7 @@ const ErrorMessage = styled.p`
   margin-bottom: 10px;
 `;
 
+// ✅ Login Component
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -61,10 +63,10 @@ const Login = () => {
     try {
       const userData = await login(email, password);
       signin(userData);
-      localStorage.setItem("token", userData.token);
       navigate("/dashboard"); // Başarılı giriş sonrası yönlendirme
     } catch (err) {
-      setError("Giriş başarısız. Lütfen bilgilerinizi kontrol edin.");
+      console.error("Giriş hatası:", err.message);
+      setError(err.message);
     }
   };
 

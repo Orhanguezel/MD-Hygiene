@@ -1,37 +1,13 @@
 import mongoose from "mongoose";
 
-const saleSchema = new mongoose.Schema(
-  {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    ProductID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      required: true,
-    },
-    StoreID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Store",
-      required: true,
-    },
-    StockSold: {
-      type: Number,
-      required: true,
-    },
-    SaleDate: {
-      type: Date,
-      default: Date.now,
-    },
-    TotalSaleAmount: {
-      type: Number,
-      required: true,
-    },
-  },
-  { timestamps: true }
-);
+const saleSchema = new mongoose.Schema({
+  order: { type: mongoose.Schema.Types.ObjectId, ref: "Order", required: true },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  totalAmount: { type: Number, required: true },
+  taxAmount: { type: Number, required: true },
+  paymentMethod: { type: String, enum: ["credit_card", "paypal", "bank_transfer"], required: true },
+  saleDate: { type: Date, default: Date.now }, // Satış tarihi
+}, { timestamps: true });
 
 const Sale = mongoose.model("Sale", saleSchema);
 export default Sale;

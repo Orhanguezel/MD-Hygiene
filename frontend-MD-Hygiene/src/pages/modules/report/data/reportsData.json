@@ -1,0 +1,31 @@
+[
+    {
+      "date": "2024-04-01",
+      "sales": 1500,
+      "orders": 45,
+      "revenue": 4500,
+      "newUsers": 10
+    },
+    {
+      "date": "2024-04-02",
+      "sales": 1200,
+      "orders": 38,
+      "revenue": 3900,
+      "newUsers": 8
+    },
+    {
+      "date": "2024-04-03",
+      "sales": 1800,
+      "orders": 50,
+      "revenue": 5200,
+      "newUsers": 12
+    },
+    {
+      "date": "2024-04-04",
+      "sales": 2000,
+      "orders": 55,
+      "revenue": 6000,
+      "newUsers": 15
+    }
+  ]
+  

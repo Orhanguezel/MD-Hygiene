@@ -1,0 +1,103 @@
+[
+  {
+    "id": "1",
+    "adminUser": "64f1a5b1c1234e01a12b4567",
+    "action": "Kullanıcı Eklendi",
+    "targetModel": "User",
+    "targetId": "64f1a5b1c1234e01a12b4568",
+    "timestamp": "2024-04-01T09:15:00Z"
+  },
+  {
+    "id": "2",
+    "adminUser": "64f1a5b1c1234e01a12b4569",
+    "action": "Sipariş Güncellendi",
+    "targetModel": "Order",
+    "targetId": "64f1a5b1c1234e01a12b4570",
+    "timestamp": "2024-04-02T11:30:00Z"
+  },
+  {
+    "id": "3",
+    "adminUser": "64f1a5b1c1234e01a12b4571",
+    "action": "Fatura Silindi",
+    "targetModel": "Invoice",
+    "targetId": "64f1a5b1c1234e01a12b4572",
+    "timestamp": "2024-04-03T14:45:00Z"
+  },
+  {
+    "id": "4",
+    "adminUser": "64f1a5b1c1234e01a12b4573",
+    "action": "Yetki Güncellendi",
+    "targetModel": "Role",
+    "targetId": "64f1a5b1c1234e01a12b4574",
+    "timestamp": "2024-04-04T16:00:00Z"
+  },
+  {
+    "id": "5",
+    "adminUser": "64f1a5b1c1234e01a12b4575",
+    "action": "Kullanıcı Girişi",
+    "targetModel": "Session",
+    "targetId": "64f1a5b1c1234e01a12b4576",
+    "timestamp": "2024-04-05T08:30:00Z"
+  },
+  {
+    "id": "6",
+    "adminUser": "64f1a5b1c1234e01a12b4577",
+    "action": "Şifre Sıfırlandı",
+    "targetModel": "User",
+    "targetId": "64f1a5b1c1234e01a12b4578",
+    "timestamp": "2024-04-06T12:45:00Z"
+  },
+  {
+    "id": "7",
+    "adminUser": "64f1a5b1c1234e01a12b4579",
+    "action": "Ürün Eklendi",
+    "targetModel": "Product",
+    "targetId": "64f1a5b1c1234e01a12b4580",
+    "timestamp": "2024-04-07T10:00:00Z"
+  },
+  {
+    "id": "8",
+    "adminUser": "64f1a5b1c1234e01a12b4581",
+    "action": "Stok Güncellendi",
+    "targetModel": "Inventory",
+    "targetId": "64f1a5b1c1234e01a12b4582",
+    "timestamp": "2024-04-08T13:20:00Z"
+  },
+  {
+    "id": "9",
+    "adminUser": "64f1a5b1c1234e01a12b4583",
+    "action": "Bildirim Gönderildi",
+    "targetModel": "Notification",
+    "targetId": "64f1a5b1c1234e01a12b4584",
+    "timestamp": "2024-04-09T15:10:00Z"
+  },
+  {
+    "id": "10",
+    "adminUser": "64f1a5b1c1234e01a12b4585",
+    "action": "Rapor İndirildi",
+    "targetModel": "Report",
+    "targetId": "64f1a5b1c1234e01a12b4586",
+    "timestamp": "2024-04-10T17:25:00Z"
+  },
+  {
+    "_id": "1",
+    "adminUser": { "name": "Orhan Admin" },
+    "action": "Giriş Yapıldı",
+    "timestamp": "2024-05-01T10:00:00Z",
+    "status": "Bilgi"
+  },
+  {
+    "_id": "2",
+    "adminUser": { "name": "Ali Veli" },
+    "action": "Veri Güncellendi",
+    "timestamp": "2024-05-02T14:30:00Z",
+    "status": "Uyarı"
+  },
+  {
+    "_id": "3",
+    "adminUser": { "name": "Ayşe Yılmaz" },
+    "action": "Silme İşlemi",
+    "timestamp": "2024-05-03T08:15:00Z",
+    "status": "Hata"
+  }
+]

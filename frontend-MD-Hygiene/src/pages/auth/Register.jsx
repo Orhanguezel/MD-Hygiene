@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { register } from "../../api/authApi";
+import { register } from "../api/authApi";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -61,7 +61,8 @@ export default function Register() {
       await register(name, email, password);
       navigate("/login"); // Başarılı kayıt sonrası login sayfasına yönlendirme
     } catch (err) {
-      setError("Kayıt başarısız. Lütfen bilgilerinizi kontrol edin.");
+      console.error("Kayıt hatası:", err.message);
+      setError(err.message);
     }
   };
 

@@ -1,62 +1,69 @@
 import Sale from "../models/Sale.js";
-import Product from "../models/Product.js";
-import Store from "../models/Store.js";
+import Order from "../models/Order.js";
 
-// ✅ Kullanıcıya ait satışları getir
-export const getSalesByUser = async (req, res) => {
+// ✅ Sipariş tamamlandığında satış olarak kaydet
+export const recordSale = async (orderId) => {
   try {
-    const { userId } = req.params;
-    const sales = await Sale.find({ user: userId })
-      .populate("ProductID", "name")
-      .populate("StoreID", "name");
-    res.json(sales);
-  } catch (error) {
-    console.error("❌ Satışları getirirken hata:", error);
-    res.status(500).json({ error: "Satışları getirirken hata oluştu!" });
-  }
-};
-
-// ✅ Yeni satış ekleme
-export const addSale = async (req, res) => {
-  try {
-    const { user, ProductID, StoreID, StockSold, TotalSaleAmount } = req.body;
-
-    const product = await Product.findById(ProductID);
-    if (!product) {
-      return res.status(404).json({ error: "Ürün bulunamadı!" });
-    }
-
-    const store = await Store.findById(StoreID);
-    if (!store) {
-      return res.status(404).json({ error: "Mağaza bulunamadı!" });
+    const order = await Order.findById(orderId).populate("user");
+    if (!order) {
+      console.error("Hata: Sipariş bulunamadı!");
+      return;
     }
 
     const newSale = new Sale({
-      user,
-      ProductID,
-      StoreID,
-      StockSold,
-      TotalSaleAmount,
+      order: order._id,
+      user: order.user._id,
+      totalAmount: order.totalAmount,
+      taxAmount: (order.totalAmount * 19) / 100, // %19 KDV
+      paymentMethod: order.paymentMethod,
+      saleDate: new Date(),
     });
 
     await newSale.save();
-    res.status(201).json(newSale);
+    console.log(`✅ Satış başarıyla kaydedildi: ${newSale._id}`);
   } catch (error) {
-    console.error("❌ Satış eklenirken hata:", error);
-    res.status(500).json({ error: "Satış eklenirken hata oluştu!" });
+    console.error("❌ Satış kaydedilemedi:", error);
   }
 };
 
-// ✅ Tüm satışları getir (Admin için)
-export const getAllSales = async (req, res) => {
+// ✅ Tüm satışları getir
+export const getSales = async (req, res) => {
   try {
-    const sales = await Sale.find()
-      .populate("ProductID", "name")
-      .populate("StoreID", "name")
-      .populate("user", "name email");
-    res.json(sales);
+    const sales = await Sale.find().populate("user", "name email").populate("order", "totalAmount saleDate");
+    res.status(200).json(sales);
   } catch (error) {
-    console.error("❌ Tüm satışları getirirken hata:", error);
-    res.status(500).json({ error: "Tüm satışları getirirken hata oluştu!" });
+    res.status(500).json({ message: "Satışlar alınamadı!", error: error.message });
+  }
+};
+
+// ✅ Belirli bir satış kaydını getir
+export const getSaleById = async (req, res) => {
+  try {
+    const sale = await Sale.findById(req.params.id).populate("user", "name email").populate("order");
+    if (!sale) return res.status(404).json({ message: "Satış bulunamadı!" });
+
+    res.status(200).json(sale);
+  } catch (error) {
+    res.status(500).json({ message: "Satış getirilemedi!", error: error.message });
+  }
+};
+
+// ✅ Aylık satış analizini getir
+export const getMonthlySales = async (req, res) => {
+  try {
+    const sales = await Sale.aggregate([
+      {
+        $group: {
+          _id: { month: { $month: "$saleDate" }, year: { $year: "$saleDate" } },
+          totalSales: { $sum: "$totalAmount" },
+          saleCount: { $sum: 1 },
+        }
+      },
+      { $sort: { "_id.year": -1, "_id.month": -1 } }
+    ]);
+
+    res.status(200).json(sales);
+  } catch (error) {
+    res.status(500).json({ message: "Aylık satış raporu alınamadı!", error: error.message });
   }
 };

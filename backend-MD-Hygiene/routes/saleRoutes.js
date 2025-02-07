@@ -1,16 +1,11 @@
 import express from "express";
-import { getSalesByUser, addSale, getAllSales } from "../controllers/saleController.js";
-import { protect, admin } from "../middleware/authMiddleware.js";
+import { getSales, getSaleById, getMonthlySales } from "../controllers/saleController.js";
 
 const router = express.Router();
 
-// ✅ Kullanıcıya ait satışları getir
-router.get("/get/:userId", protect, getSalesByUser);
-
-// ✅ Yeni satış ekleme
-router.post("/add", protect, addSale);
-
-// ✅ Tüm satışları getir (Admin)
-router.get("/all", protect, admin, getAllSales);
+router.get("/", getSales);
+router.get("/:id", getSaleById);
+router.get("/monthly-report", getMonthlySales);
 
 export default router;
+

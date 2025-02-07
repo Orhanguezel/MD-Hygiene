@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// ✅ `.env` Dosyasını Yükle
+// ✅ `.env` Dosyasını Doğru Yükle
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const envPath = path.resolve(__dirname, "../.env");
@@ -21,6 +21,7 @@ if (!MONGO_URI) {
 // ✅ MongoDB Bağlantısını Kur
 const connectDB = async () => {
   try {
+    console.log(`⏳ MongoDB'ye bağlanıyor: ${MONGO_URI}`);
     await mongoose.connect(MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,

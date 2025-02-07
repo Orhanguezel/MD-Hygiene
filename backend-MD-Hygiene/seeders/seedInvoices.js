@@ -1,32 +1,47 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 import connectDB from "./dbConnect.js";
 import Invoice from "../models/Invoice.js";
 import Order from "../models/Order.js";
 
+dotenv.config();
+await connectDB();
+
 const seedInvoices = async () => {
-  await connectDB();
-  await Invoice.deleteMany();
+  try {
+    console.log("🔄 Fatura verileri temizleniyor...");
+    await Invoice.deleteMany();
+    console.log("✅ Fatura verileri temizlendi.");
 
-  const order = await Order.findOne();
-  if (!order) {
-    console.error("❌ Sipariş bulunamadı!");
-    mongoose.connection.close();
-    return;
+    console.log("📌 Siparişler yükleniyor...");
+    const orders = await Order.find();
+
+    if (orders.length === 0) {
+      throw new Error("⚠️ Önce siparişleri eklemelisiniz!");
+    }
+
+    const invoices = orders.map(order => ({
+      order: order._id,
+      user: order.user,
+      items: order.products.map(product => ({
+        product: product.product,
+        quantity: product.quantity,
+        unitPrice: product.unitPrice
+      })),
+      totalAmount: order.totalAmount,
+      taxAmount: order.taxAmount,
+      taxRate: 19,
+      invoiceNumber: `INV-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      status: order.paymentStatus === "paid" ? "paid" : "pending",
+    }));
+
+    await Invoice.insertMany(invoices);
+    console.log("✅ Faturalar başarıyla eklendi!");
+    process.exit();
+  } catch (error) {
+    console.error("❌ Fatura ekleme hatası:", error);
+    process.exit(1);
   }
-
-  const invoice = {
-    order: order._id,
-    user: order.user,
-    totalAmount: order.totalAmount,
-    taxAmount: (order.totalAmount * 19) / 100,
-    invoiceNumber: `INV-${Date.now()}`,
-    status: "pending",
-  };
-
-  await Invoice.create(invoice);
-  console.log("✅ Fatura verileri başarıyla eklendi.");
-  mongoose.connection.close();
 };
 
 seedInvoices();
-

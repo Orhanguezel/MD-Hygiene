@@ -1,29 +1,37 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 import connectDB from "./dbConnect.js";
 import Product from "../models/Product.js";
+import Category from "../models/Category.js";
 
-const products = [
-  { name: "Toilettenpapier", description: "Hochwertiges Toilettenpapier", price: 4.99, stock: 100, category: "Toilettenpapier", brand: "Tork", unit: "Packung", weight: "1kg", volume: "N/A" },
-  { name: "Handpapiertücher", description: "Hochwertige Papierhandtücher", price: 3.49, stock: 150, category: "Handpapiertücher", brand: "Katrin", unit: "Packung", weight: "1.2kg", volume: "N/A" },
-  { name: "Seife", description: "Flüssige Handseife", price: 2.99, stock: 200, category: "Seife", brand: "Dove", unit: "Stück", weight: "500g", volume: "500ml" },
-  { name: "Handschuhe", description: "Einweg-Handschuhe aus Latex", price: 9.99, stock: 300, category: "Handschuhe", brand: "MediCare", unit: "Packung", weight: "500g", volume: "N/A" },
-  { name: "Glasreiniger", description: "Reiniger für streifenfreie Fenster", price: 5.49, stock: 120, category: "Glasreiniger", brand: "Ajax", unit: "Liter", weight: "N/A", volume: "750ml" },
-  { name: "Toilettenreiniger", description: "Effektiver WC-Reiniger", price: 6.99, stock: 110, category: "Toilettenreiniger", brand: "Bref", unit: "Liter", weight: "N/A", volume: "1L" },
-  { name: "Allzweckreiniger", description: "Vielseitiger Universalreiniger", price: 4.99, stock: 130, category: "Allzweckreiniger", brand: "Frosch", unit: "Liter", weight: "N/A", volume: "1.5L" },
-  { name: "SC Gel", description: "Spezialgel für hygienische Reinigung", price: 7.49, stock: 80, category: "SC Gel", brand: "SanitClean", unit: "Kilogramm", weight: "1kg", volume: "N/A" },
-  { name: "SC Flüssig", description: "Flüssiges Reinigungskonzentrat", price: 8.99, stock: 90, category: "SC Flüssig", brand: "SanitClean", unit: "Liter", weight: "N/A", volume: "2L" },
-];
+dotenv.config();
+await connectDB();
 
 const seedProducts = async () => {
   try {
-    await connectDB();
+    console.log("🔄 Ürün verileri temizleniyor...");
     await Product.deleteMany();
+    console.log("✅ Ürün verileri temizlendi.");
+
+    console.log("📌 Yeni ürünler ekleniyor...");
+    const categories = await Category.find();
+    if (!categories || categories.length === 0) {
+      throw new Error("❌ Kategoriler bulunamadı! Önce kategorileri ekleyin.");
+    }
+
+    const products = [
+      { name: "El Dezenfektanı 500ml", description: "Alkol bazlı el dezenfektanı", price: 9.99, stock: 100, category: categories[0]._id, brand: "Dettol", unit: "Liter", weight: "0.5kg", gtin_ean: "1234567890123", reach_compliance: true, images: ["dezenfektan1.jpg"] },
+      { name: "Sıvı Sabun 500ml", description: "Antibakteriyel sıvı sabun", price: 5.99, stock: 200, category: categories[1]._id, brand: "Palmolive", unit: "Liter", weight: "0.5kg", gtin_ean: "1234567890124", reach_compliance: true, images: ["sabun1.jpg"] },
+      { name: "Bulaşık Deterjanı 1L", description: "Güçlü yağ sökücü bulaşık deterjanı", price: 7.49, stock: 150, category: categories[1]._id, brand: "Fairy", unit: "Liter", weight: "1kg", gtin_ean: "1234567890125", reach_compliance: true, images: ["bulasik1.jpg"] },
+      { name: "Şampuan 750ml", description: "Saç dökülmesini önleyen şampuan", price: 12.99, stock: 50, category: categories[2]._id, brand: "Head & Shoulders", unit: "Liter", weight: "0.75kg", gtin_ean: "1234567890126", reach_compliance: true, images: ["sampuan1.jpg"] }
+    ];
+
     await Product.insertMany(products);
-    console.log("✅ Produktdaten erfolgreich eingefügt.");
+    console.log("✅ Ürünler başarıyla eklendi!");
+    process.exit();
   } catch (error) {
-    console.error("❌ Fehler beim Einfügen der Produkte:", error.message);
-  } finally {
-    mongoose.connection.close();
+    console.error("❌ Ürün ekleme hatası:", error);
+    process.exit(1);
   }
 };
 

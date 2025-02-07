@@ -5,27 +5,16 @@ const productSchema = new mongoose.Schema({
   description: { type: String },
   price: { type: Number, required: true },
   stock: { type: Number, required: true },
-  category: {
-    type: String,
-    enum: [
-      "Toilettenpapier",
-      "Handpapiertücher",
-      "Seife",
-      "Handschuhe",
-      "Glasreiniger",
-      "Toilettenreiniger",
-      "Allzweckreiniger",
-      "SC Gel",
-      "SC Flüssig"
-    ],
-    required: true
-  },
+  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
   brand: { type: String, required: true },
   unit: { type: String, enum: ["Stück", "Liter", "Kilogramm", "Packung"], required: true },
-  weight: { type: String },  // 🔹 Als String gespeichert, um Einheiten zu unterstützen
-  volume: { type: String },  // 🔹 "N/A" erlaubt für Produkte ohne Volumen
+  weight: { type: String },
+  volume: { type: String },
+  gtin_ean: { type: String, unique: true }, // 🔹 Barkod numarası eklendi
+  reach_compliance: { type: Boolean, default: false }, // 🔹 REACH uyumu eklendi
+  images: [{ type: String }], // 🔹 Ürün görselleri eklendi
 }, { timestamps: true });
 
 const Product = mongoose.model("Product", productSchema);
-export default Product;
 
+export default Product;
