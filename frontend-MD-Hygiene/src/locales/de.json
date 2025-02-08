@@ -1,88 +1,121 @@
 {
   "dashboard": {
-    "title": "Yönetim Paneli",
-    "users": "Kullanıcılar",
-    "orders": "Siparişler",
-    "invoices": "Faturalar",
-    "notifications": "Bildirimler"
+    "title": "Verwaltungsbereich",
+    "users": "Benutzer",
+    "orders": "Bestellungen",
+    "invoices": "Rechnungen",
+    "notifications": "Benachrichtigungen"
   },
   "login": {
-    "title": "Giriş Yap",
-    "email": "Email",
-    "password": "Şifre",
-    "submit": "Giriş Yap",
-    "error": "Giriş başarısız. Lütfen bilgilerinizi kontrol edin."
+    "title": "Anmelden",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "submit": "Anmelden",
+    "error": "Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Daten."
   },
   "users": {
-    "title": "Kullanıcı Yönetimi",
-    "name": "Ad Soyad",
-    "email": "E-posta",
-    "role": "Rol",
-    "actions": "İşlemler",
-    "edit": "Düzenle"
+    "title": "Benutzerverwaltung",
+    "avatar": "Profil",
+    "name": "Vollständiger Name",
+    "email": "E-Mail",
+    "role": "Rolle",
+    "status": "Status",
+    "active": "Aktiv",
+    "blocked": "Gesperrt",
+    "actions": "Aktionen",
+    "edit": "Bearbeiten",
+    "block": "Sperren",
+    "unblock": "Entsperren",
+    "delete": "Löschen",
+    "addUser": "Neuen Benutzer hinzufügen"
   },
   "orders": {
-    "title": "Sipariş Yönetimi",
-    "orderNumber": "Sipariş No",
-    "customer": "Müşteri",
-    "status": "Durum",
-    "total": "Toplam",
-    "actions": "İşlemler",
-    "viewDetails": "Detayları Gör"
+    "title": "Bestellverwaltung",
+    "orderNumber": "Bestell-Nr.",
+    "customer": "Kunde",
+    "status": "Status",
+    "total": "Gesamt",
+    "actions": "Aktionen",
+    "viewDetails": "Details anzeigen"
   },
   "invoices": {
-    "title": "Fatura Yönetimi",
-    "invoiceNumber": "Fatura No",
-    "customer": "Müşteri",
-    "date": "Tarih",
-    "total": "Toplam",
-    "actions": "İşlemler",
-    "viewDetails": "Detayları Gör"
+    "title": "Rechnungsverwaltung",
+    "invoiceNumber": "Rechnungs-Nr.",
+    "customer": "Kunde",
+    "date": "Datum",
+    "total": "Gesamt",
+    "actions": "Aktionen",
+    "viewDetails": "Details anzeigen"
   },
   "notifications": {
-    "title": "Bildirim Yönetimi",
-    "markAsRead": "Okundu Olarak İşaretle"
+    "title": "Benachrichtigungsverwaltung",
+    "markAsRead": "Als gelesen markieren"
   },
   "reports": {
-    "title": "Raporlar",
-    "totalSales": "Toplam Satış",
-    "totalUsers": "Toplam Kullanıcı",
-    "totalOrders": "Toplam Sipariş",
-    "totalRevenue": "Toplam Gelir",
-    "salesChart": "Satış Grafiği"
+    "title": "Berichte",
+    "totalSales": "Gesamtumsatz",
+    "totalUsers": "Gesamtbenutzer",
+    "totalOrders": "Gesamtbestellungen",
+    "totalRevenue": "Gesamteinnahmen",
+    "salesChart": "Verkaufsdiagramm"
   },
   "auditLogs": {
-    "title": "Sistem Logları",
-    "eventType": "Olay Türü",
-    "user": "Kullanıcı",
-    "date": "Tarih",
-    "status": "Durum"
+    "title": "Systemprotokolle",
+    "eventType": "Ereignistyp",
+    "user": "Benutzer",
+    "date": "Datum",
+    "status": "Status"
   },
   "settings": {
-    "title": "Ayarlar",
-    "profileSettings": "Profil Ayarları",
-    "appSettings": "Uygulama Ayarları",
-    "passwordSettings": "Parola Ayarları",
-    "name": "Ad Soyad",
-    "email": "E-posta",
-    "updateProfile": "Profili Güncelle",
-    "theme": "Tema",
-    "darkMode": "Karanlık Mod",
-    "lightMode": "Aydınlık Mod",
-    "language": "Dil",
-    "newPassword": "Yeni Parola",
-    "confirmPassword": "Parolayı Onayla",
-    "updatePassword": "Parolayı Güncelle"
+    "title": "Einstellungen",
+    "profileSettings": "Profileinstellungen",
+    "appSettings": "App-Einstellungen",
+    "passwordSettings": "Passworteinstellungen",
+    "name": "Vollständiger Name",
+    "email": "E-Mail",
+    "updateProfile": "Profil aktualisieren",
+    "theme": "Design",
+    "darkMode": "Dunkelmodus",
+    "lightMode": "Hellmodus",
+    "language": "Sprache",
+    "newPassword": "Neues Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "updatePassword": "Passwort aktualisieren"
   },
-  
   "sidebar": {
-    "dashboard": "Yönetim Paneli",
-    "users": "Kullanıcılar",
-    "orders": "Siparişler",
-    "invoices": "Faturalar",
-    "notifications": "Bildirimler",
-    "reports": "Raporlar",
-    "auditLogs": "Sistem Logları",
-    "settings": "Ayarlar"
-  }
+    "dashboard": "Dashboard",
+    "users": "Benutzer",
+    "orders": "Bestellungen",
+    "invoices": "Rechnungen",
+    "notifications": "Benachrichtigungen",
+    "reports": "Berichte",
+    "auditLogs": "Audit-Logs",
+    "settings": "Einstellungen",
+    "products": "Produkte",
+    "sales": "Verkäufe",
+    "shipments": "Lieferungen",
+    "offers": "Angebote",
+    "stores": "Filialen"
+  },
+  "offers": {
+  "title": "Angebotsverwaltung",
+  "id": "Angebots-ID",
+  "customer": "Kunde",
+  "total": "Gesamtbetrag",
+  "status": "Status",
+  "actions": "Aktionen",
+  "approve": "Genehmigen",
+  "reject": "Ablehnen",
+  "delete": "Löschen",
+  "details": "Angebotsdetails",
+  "notFound": "Angebot nicht gefunden",
+  "items": "Angebotsartikel",
+  "create": "Neues Angebot erstellen",
+  "addItem": "Artikel hinzufügen",
+  "save": "Speichern",
+  "product": "Produkt",
+  "quantity": "Menge",
+  "unitPrice": "Stückpreis"
+}
+
 }

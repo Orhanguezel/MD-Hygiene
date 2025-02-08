@@ -1,30 +1,39 @@
-import { createRoot } from 'react-dom/client';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import App from './App';
-import './index.css';
-import { UIProvider } from "./context/UIContext";
-import { AuthProvider } from "./context/AuthContext";
-import { ThemeProvider } from "./context/ThemeContext";
-import { LanguageProvider } from "./context/LanguageContext";
-import { AuditLogsProvider } from "./context/AuditLogsContext";
-import { NotificationProvider } from "./context/NotificationContext";
-import { OrdersProvider } from "./context/OrdersContext";
-import 'leaflet/dist/leaflet.css';
+import { GlobalProvider } from './context/GlobalProvider';
+import { ThemeProvider } from './context/ThemeContext';  
+import { LanguageProvider } from './context/LanguageContext';
+import { AuthProvider } from './context/AuthContext';
+import { UIProvider } from './context/UIContext';
+import { OrdersProvider } from './context/OrdersContext';
+import { NotificationProvider } from './context/NotificationContext';
+import { AuditLogsProvider } from './context/AuditLogsContext';
+import { InvoicesProvider } from './context/InvoicesContext';
+import { OfferProvider } from './context/OfferContext'; // ✅ Buraya eklenmesi gerekiyor
 
-
-createRoot(document.getElementById('root')).render(
-  <UIProvider>
-    <AuthProvider>
-      <ThemeProvider>
-        <LanguageProvider>
-          <AuditLogsProvider>
-            <NotificationProvider>
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <GlobalProvider>
+      <LanguageProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <UIProvider>
               <OrdersProvider>
-                <App />
+                <NotificationProvider>
+                  <AuditLogsProvider>
+                    <InvoicesProvider> {/* ✅ Buraya eklenmesi gerekiyor */}
+                      <OfferProvider> {/* ✅ Buraya eklenmesi gerekiyor */}
+                      <App />
+                      </OfferProvider>
+                    </InvoicesProvider>
+                  </AuditLogsProvider>
+                </NotificationProvider>
               </OrdersProvider>
-            </NotificationProvider>
-          </AuditLogsProvider>
-        </LanguageProvider>
-      </ThemeProvider>
-    </AuthProvider>
-  </UIProvider>
+            </UIProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </LanguageProvider>
+    </GlobalProvider>
+  </React.StrictMode>
 );

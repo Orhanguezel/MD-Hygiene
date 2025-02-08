@@ -1,6 +1,13 @@
-import { SettingsContainer, Section, Label, Input, Select, Button } from "../../styles/settingsStyles";
-import { useLanguage } from "../../context/LanguageContext";
-import { useTheme } from "../../context/ThemeContext";
+import {
+  SettingsContainer,
+  Section,
+  Label,
+  Input,
+  Select,
+  Button,
+} from "@/styles/settingsStyles";
+import { useLanguage } from "@/context/LanguageContext";
+import { useTheme } from "@/context/ThemeContext";
 
 const Settings = () => {
   const { texts, language, setLanguage } = useLanguage();
@@ -25,7 +32,9 @@ const Settings = () => {
         <h2>{texts.settings.appSettings}</h2>
         <Label>{texts.settings.theme}</Label>
         <Button onClick={toggleTheme}>
-          {theme === "light" ? texts.settings.darkMode : texts.settings.lightMode}
+          {theme === "light"
+            ? texts.settings.darkMode
+            : texts.settings.lightMode}
         </Button>
 
         <Label>{texts.settings.language}</Label>

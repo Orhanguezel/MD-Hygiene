@@ -1,21 +1,13 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import { createWebSocketConnection } from "../services/WebSocketService"; // ✅ WebSocket dosyanı buraya ekle
+// ✅ AuditLogsContext.js
+import { createContext, useContext, useReducer, useEffect } from "react";
+import auditLogsData from "../data/auditLogsData.json"; // ✅ JSON dosyasından import
+import { createWebSocketConnection } from "../services/WebSocketService";
+import { auditLogsReducer } from "./auditLogsReducer"; // ✅ Reducer dosyasından import
 
 const AuditLogsContext = createContext();
 
 export const AuditLogsProvider = ({ children }) => {
-  const [logs, setLogs] = useState([
-    { id: 1, eventType: "Giriş", user: "Orhan Admin", date: "2024-04-01", status: "Bilgi" },
-    { id: 2, eventType: "Veri Güncelleme", user: "Ali Veli", date: "2024-04-02", status: "Uyarı" },
-    { id: 3, eventType: "Silme İşlemi", user: "Ayşe Yılmaz", date: "2024-04-03", status: "Hata" },
-  ]);
-
-  const STATUS = {
-    INFO: "Bilgi",
-    WARNING: "Uyarı",
-    ERROR: "Hata",
-  };
-  
+  const [logs, dispatch] = useReducer(auditLogsReducer, auditLogsData || []); // ✅ Varsayılan değer eklendi
 
   const addLog = (eventType, user, status = "Bilgi") => {
     const newLog = {
@@ -25,20 +17,26 @@ export const AuditLogsProvider = ({ children }) => {
       date: new Date().toLocaleString(),
       status,
     };
-    setLogs((prev) => [newLog, ...prev]);
+    dispatch({ type: "ADD_LOG", payload: newLog });
+  };
+
+  const clearLogs = () => {
+    dispatch({ type: "CLEAR_LOGS" });
   };
 
   // ✅ WebSocket bağlantısını başlat
   useEffect(() => {
     const unsubscribe = createWebSocketConnection((data) => {
-      addLog(data.title, data.user, data.status || STATUS.INFO)
+      addLog(data.title, data.user, data.status || "Bilgi");
     });
 
-    return () => unsubscribe(); // ✅ Bağlantıyı temizle
+    return () => {
+      if (unsubscribe) unsubscribe(); // ✅ Güvenli bağlantı kapatma
+    };
   }, []);
 
   return (
-    <AuditLogsContext.Provider value={{ logs, addLog }}>
+    <AuditLogsContext.Provider value={{ logs, addLog, clearLogs }}>
       {children}
     </AuditLogsContext.Provider>
   );

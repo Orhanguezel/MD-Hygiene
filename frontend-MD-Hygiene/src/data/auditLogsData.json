@@ -1,0 +1,6 @@
+[
+    { "id": 1, "eventType": "Giriş", "user": "Orhan Admin", "date": "2024-04-01", "status": "Bilgi" },
+    { "id": 2, "eventType": "Veri Güncelleme", "user": "Ali Veli", "date": "2024-04-02", "status": "Uyarı" },
+    { "id": 3, "eventType": "Silme İşlemi", "user": "Ayşe Yılmaz", "date": "2024-04-03", "status": "Hata" }
+  ]
+  

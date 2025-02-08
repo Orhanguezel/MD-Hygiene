@@ -1,11 +1,10 @@
-import { createContext, useReducer, useContext } from "react";
+import { createContext, useContext, useReducer } from "react";
 import { languageReducer, initialLanguage } from "./languageReducer";
 import tr from "../locales/tr.json";
 import en from "../locales/en.json";
 import de from "../locales/de.json";
 
 const LanguageContext = createContext();
-
 const languages = { tr, en, de };
 
 export const LanguageProvider = ({ children }) => {
@@ -15,7 +14,7 @@ export const LanguageProvider = ({ children }) => {
     dispatch({ type: "CHANGE_LANGUAGE", payload: lang });
   };
 
-  const texts = languages[language];
+  const texts = languages[language] || languages.tr;
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, texts }}>
@@ -24,7 +23,10 @@ export const LanguageProvider = ({ children }) => {
   );
 };
 
-// ✅ Eksik olan export default eklendi
-export default LanguageContext;
-
-export const useLanguage = () => useContext(LanguageContext);
+export const useLanguage = () => {
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error("useLanguage must be used within a LanguageProvider");
+  }
+  return context;
+};

@@ -1,88 +1,123 @@
 {
   "dashboard": {
-    "title": "Yönetim Paneli",
-    "users": "Kullanıcılar",
-    "orders": "Siparişler",
-    "invoices": "Faturalar",
-    "notifications": "Bildirimler"
+    "title": "Admin Panel",
+    "users": "Users",
+    "orders": "Orders",
+    "invoices": "Invoices",
+    "notifications": "Notifications"
   },
   "login": {
-    "title": "Giriş Yap",
+    "title": "Login",
     "email": "Email",
-    "password": "Şifre",
-    "submit": "Giriş Yap",
-    "error": "Giriş başarısız. Lütfen bilgilerinizi kontrol edin."
+    "password": "Password",
+    "submit": "Login",
+    "error": "Login failed. Please check your credentials."
   },
   "users": {
-    "title": "Kullanıcı Yönetimi",
-    "name": "Ad Soyad",
-    "email": "E-posta",
-    "role": "Rol",
-    "actions": "İşlemler",
-    "edit": "Düzenle"
+    "title": "User Management",
+    "avatar": "Profile",
+    "name": "Full Name",
+    "email": "Email",
+    "role": "Role",
+    "status": "Status",
+    "active": "Active",
+    "blocked": "Blocked",
+    "actions": "Actions",
+    "edit": "Edit",
+    "block": "Block",
+    "unblock": "Unblock",
+    "delete": "Delete",
+    "addUser": "Add New User"
   },
   "orders": {
-    "title": "Sipariş Yönetimi",
-    "orderNumber": "Sipariş No",
-    "customer": "Müşteri",
-    "status": "Durum",
-    "total": "Toplam",
-    "actions": "İşlemler",
-    "viewDetails": "Detayları Gör"
+    "title": "Order Management",
+    "orderNumber": "Order No",
+    "customer": "Customer",
+    "status": "Status",
+    "total": "Total",
+    "actions": "Actions",
+    "viewDetails": "View Details"
   },
   "invoices": {
-    "title": "Fatura Yönetimi",
-    "invoiceNumber": "Fatura No",
-    "customer": "Müşteri",
-    "date": "Tarih",
-    "total": "Toplam",
-    "actions": "İşlemler",
-    "viewDetails": "Detayları Gör"
+    "title": "Invoice Management",
+    "invoiceNumber": "Invoice No",
+    "customer": "Customer",
+    "date": "Date",
+    "total": "Total",
+    "actions": "Actions",
+    "viewDetails": "View Details"
   },
   "notifications": {
-    "title": "Bildirim Yönetimi",
-    "markAsRead": "Okundu Olarak İşaretle"
+    "title": "Notification Management",
+    "markAsRead": "Mark as Read"
   },
   "reports": {
-    "title": "Raporlar",
-    "totalSales": "Toplam Satış",
-    "totalUsers": "Toplam Kullanıcı",
-    "totalOrders": "Toplam Sipariş",
-    "totalRevenue": "Toplam Gelir",
-    "salesChart": "Satış Grafiği"
+    "title": "Reports",
+    "totalSales": "Total Sales",
+    "totalUsers": "Total Users",
+    "totalOrders": "Total Orders",
+    "totalRevenue": "Total Revenue",
+    "salesChart": "Sales Chart"
   },
   "auditLogs": {
-    "title": "Sistem Logları",
-    "eventType": "Olay Türü",
-    "user": "Kullanıcı",
-    "date": "Tarih",
-    "status": "Durum"
+    "title": "System Logs",
+    "eventType": "Event Type",
+    "user": "User",
+    "date": "Date",
+    "status": "Status"
   },
   "settings": {
-    "title": "Ayarlar",
-    "profileSettings": "Profil Ayarları",
-    "appSettings": "Uygulama Ayarları",
-    "passwordSettings": "Parola Ayarları",
-    "name": "Ad Soyad",
-    "email": "E-posta",
-    "updateProfile": "Profili Güncelle",
-    "theme": "Tema",
-    "darkMode": "Karanlık Mod",
-    "lightMode": "Aydınlık Mod",
-    "language": "Dil",
-    "newPassword": "Yeni Parola",
-    "confirmPassword": "Parolayı Onayla",
-    "updatePassword": "Parolayı Güncelle"
+    "title": "Settings",
+    "profileSettings": "Profile Settings",
+    "appSettings": "App Settings",
+    "passwordSettings": "Password Settings",
+    "name": "Full Name",
+    "email": "Email",
+    "updateProfile": "Update Profile",
+    "theme": "Theme",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode",
+    "language": "Language",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "updatePassword": "Update Password"
   },
-  
   "sidebar": {
-    "dashboard": "Yönetim Paneli",
-    "users": "Kullanıcılar",
-    "orders": "Siparişler",
-    "invoices": "Faturalar",
-    "notifications": "Bildirimler",
-    "reports": "Raporlar",
-    "auditLogs": "Sistem Logları",
-    "settings": "Ayarlar"
-  }
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "orders": "Orders",
+    "invoices": "Invoices",
+    "notifications": "Notifications",
+    "reports": "Reports",
+    "auditLogs": "Audit Logs",
+    "settings": "Settings",
+    "products": "Products",
+    "sales": "Sales",
+    "shipments": "Shipments",
+    "offers": "Offers",
+    "stores": "Stores"
+  },
+ "offers": {
+  "title": "Offer Management",
+  "id": "Offer ID",
+  "customer": "Customer",
+  "total": "Total Amount",
+  "status": "Status",
+  "actions": "Actions",
+  "approve": "Approve",
+  "reject": "Reject",
+  "delete": "Delete",
+  "details": "Offer Details",
+  "notFound": "Offer not found",
+  "items": "Offer Items",
+  "create": "Create New Offer",
+  "addItem": "Add Item",
+  "save": "Save",
+  "product": "Product",
+  "quantity": "Quantity",
+  "unitPrice": "Unit Price"
+}
+
+
+
 }

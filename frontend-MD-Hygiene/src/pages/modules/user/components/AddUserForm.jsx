@@ -2,19 +2,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/context/LanguageContext";
-import { addUser } from "@/api/userApi";
-import { useAuth } from "@/context/AuthContext";
+import dummyUsers from "../data/users.json";
 import { UsersContainer, ActionButton } from "../styles/usersStyles";
 
 const AddUserForm = () => {
   const { texts } = useLanguage();
-  const { token } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    role: "user",
+    role: "customer",
+    isActive: true,
   });
   const [error, setError] = useState("");
 
@@ -22,16 +21,19 @@ const AddUserForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
-    try {
-      await addUser(formData, token);
-      navigate("/users");
-    } catch (err) {
-      console.error("Error adding user:", err);
-      setError(texts.users.addError || "Kullanıcı eklenirken bir hata oluştu.");
-    }
+
+    // ✅ Kullanıcı ID'si oluştur
+    const newUser = {
+      ...formData,
+      id: `USR-${Date.now()}`,
+      profileImage: "https://via.placeholder.com/150",
+    };
+
+    dummyUsers.push(newUser); // ✅ Dummy veriye ekle
+    navigate("/users"); // ✅ Kullanıcılar sayfasına yönlendir
   };
 
   return (
@@ -64,8 +66,10 @@ const AddUserForm = () => {
           required
         />
         <select name="role" value={formData.role} onChange={handleChange}>
-          <option value="user">{texts.users.userRole}</option>
+          <option value="customer">{texts.users.userRole}</option>
           <option value="admin">{texts.users.adminRole}</option>
+          <option value="moderator">{texts.users.moderatorRole}</option>
+          <option value="staff">{texts.users.staffRole}</option>
         </select>
         <ActionButton type="submit">{texts.users.save}</ActionButton>
       </form>

@@ -1,6 +1,12 @@
-
 // ✅ Notifications.jsx
-import { NotificationsContainer, NotificationsList, NotificationItem, NotificationText, StatusBadge, ActionButton } from "./styles/notificationsStyles";
+import {
+  NotificationsContainer,
+  NotificationsList,
+  NotificationItem,
+  NotificationText,
+  StatusBadge,
+  ActionButton,
+} from "./styles/notificationsStyles";
 import { useLanguage } from "@/context/LanguageContext";
 import { useNotifications } from "@/context/NotificationContext";
 
@@ -13,7 +19,9 @@ const Notifications = () => {
       <h1>{texts.notifications.title}</h1>
       <NotificationsList>
         {notifications.length === 0 ? (
-          <p>{texts.notifications.noNotifications}</p>
+          <p style={{ textAlign: "center", color: "gray" }}>
+            {texts.notifications.noNotifications || "Henüz bildirim yok."}
+          </p>
         ) : (
           notifications.map((notification) => (
             <NotificationItem key={notification.id}>
@@ -24,12 +32,12 @@ const Notifications = () => {
               </NotificationText>
               <StatusBadge status={notification.status}>
                 {notification.status === "Unread"
-                  ? texts.notifications.unread
-                  : texts.notifications.read}
+                  ? texts.notifications.unread || "Okunmadı"
+                  : texts.notifications.read || "Okundu"}
               </StatusBadge>
               {notification.status === "Unread" && (
                 <ActionButton onClick={() => markAsRead(notification.id)}>
-                  {texts.notifications.markAsRead}
+                  {texts.notifications.markAsRead || "Okundu Olarak İşaretle"}
                 </ActionButton>
               )}
             </NotificationItem>

@@ -92,19 +92,40 @@
   },
 
   "users": {
-      "title": "Kullanıcı Yönetimi",
-      "avatar": "Profil",
-      "name": "Ad Soyad",
-      "email": "E-posta",
-      "role": "Rol",
-      "status": "Durum",
-      "active": "Aktif",
-      "blocked": "Engelli",
-      "actions": "İşlemler",
-      "edit": "Düzenle",
-      "block": "Engelle",
-      "unblock": "Engeli Kaldır",
-      "delete": "Sil",
-      "addUser": "Yeni Kullanıcı Ekle"
-    }
+    "title": "Kullanıcı Yönetimi",
+    "avatar": "Profil",
+    "name": "Ad Soyad",
+    "email": "E-posta",
+    "role": "Rol",
+    "status": "Durum",
+    "active": "Aktif",
+    "blocked": "Engelli",
+    "actions": "İşlemler",
+    "edit": "Düzenle",
+    "block": "Engelle",
+    "unblock": "Engeli Kaldır",
+    "delete": "Sil",
+    "addUser": "Yeni Kullanıcı Ekle"
+  },
+  "offers": {
+  "title": "Teklif Yönetimi",
+  "id": "Teklif ID",
+  "customer": "Müşteri",
+  "total": "Toplam Tutar",
+  "status": "Durum",
+  "actions": "İşlemler",
+  "approve": "Onayla",
+  "reject": "Reddet",
+  "delete": "Sil",
+  "details": "Teklif Detayları",
+  "notFound": "Teklif bulunamadı",
+  "items": "Teklif Ürünleri",
+  "create": "Yeni Teklif Oluştur",
+  "addItem": "Ürün Ekle",
+  "save": "Kaydet",
+  "product": "Ürün",
+  "quantity": "Adet",
+  "unitPrice": "Birim Fiyat"
+}
+
 }

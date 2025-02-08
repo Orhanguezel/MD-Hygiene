@@ -1,193 +1,82 @@
 [
-    {
-      "name": "Orhan Admin",
-      "email": "orhan.admin@mdhygiene.com",
-      "password": "123456",
-      "role": "admin",
-      "addresses": ["Berlin, Germany", "Hamburg, Germany"],
-      "phone": "+49 123 456 789",
-      "orders": ["65a1f9f6e8d91c23b1d4f001", "65a1f9f6e8d91c23b1d4f002"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "Ali Müşteri",
-      "email": "ali.musteri@mdhygiene.com",
-      "password": "abcdef",
-      "role": "customer",
-      "addresses": ["Ankara, Turkey"],
-      "phone": "+90 312 555 4444",
-      "orders": ["65a1f9f6e8d91c23b1d4f003"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "Elif Yılmaz",
-      "email": "elif.yilmaz@mdhygiene.com",
-      "password": "password1",
-      "role": "customer",
-      "addresses": ["Istanbul, Turkey"],
-      "phone": "+90 212 123 4567",
-      "orders": ["65a1f9f6e8d91c23b1d4f004"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "Mehmet Can",
-      "email": "mehmet.can@mdhygiene.com",
-      "password": "pass2023",
-      "role": "admin",
-      "addresses": ["Munich, Germany"],
-      "phone": "+49 987 654 321",
-      "orders": ["65a1f9f6e8d91c23b1d4f005"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "Ayşe Demir",
-      "email": "ayse.demir@mdhygiene.com",
-      "password": "qwerty",
-      "role": "customer",
-      "addresses": ["Izmir, Turkey"],
-      "phone": "+90 232 987 6543",
-      "orders": ["65a1f9f6e8d91c23b1d4f006"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "John Doe",
-      "email": "john.doe@mdhygiene.com",
-      "password": "john1234",
-      "role": "customer",
-      "addresses": ["New York, USA"],
-      "phone": "+1 555 123 4567",
-      "orders": ["65a1f9f6e8d91c23b1d4f007"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "Maria Garcia",
-      "email": "maria.garcia@mdhygiene.com",
-      "password": "maria2024",
-      "role": "admin",
-      "addresses": ["Madrid, Spain"],
-      "phone": "+34 600 123 456",
-      "orders": ["65a1f9f6e8d91c23b1d4f008"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "Emma Smith",
-      "email": "emma.smith@mdhygiene.com",
-      "password": "emmaPass",
-      "role": "customer",
-      "addresses": ["London, UK"],
-      "phone": "+44 20 7946 0958",
-      "orders": ["65a1f9f6e8d91c23b1d4f009"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "Fatih Kılıç",
-      "email": "fatih.kilic@mdhygiene.com",
-      "password": "kilicpass",
-      "role": "admin",
-      "addresses": ["Antalya, Turkey"],
-      "phone": "+90 242 333 5566",
-      "orders": ["65a1f9f6e8d91c23b1d4f010"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "Laura Rossi",
-      "email": "laura.rossi@mdhygiene.com",
-      "password": "rossi123",
-      "role": "customer",
-      "addresses": ["Rome, Italy"],
-      "phone": "+39 06 555 7890",
-      "orders": ["65a1f9f6e8d91c23b1d4f011"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "Carlos Sanchez",
-      "email": "carlos.sanchez@mdhygiene.com",
-      "password": "carlosPass",
-      "role": "admin",
-      "addresses": ["Barcelona, Spain"],
-      "phone": "+34 932 123 456",
-      "orders": ["65a1f9f6e8d91c23b1d4f012"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "Sophie Müller",
-      "email": "sophie.muller@mdhygiene.com",
-      "password": "sophieM2024",
-      "role": "customer",
-      "addresses": ["Berlin, Germany"],
-      "phone": "+49 30 123 4567",
-      "orders": ["65a1f9f6e8d91c23b1d4f013"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "Ahmet Yıldız",
-      "email": "ahmet.yildiz@mdhygiene.com",
-      "password": "ahmetY",
-      "role": "admin",
-      "addresses": ["Konya, Turkey"],
-      "phone": "+90 332 123 4567",
-      "orders": ["65a1f9f6e8d91c23b1d4f014"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "Isabella Lopez",
-      "email": "isabella.lopez@mdhygiene.com",
-      "password": "bella2024",
-      "role": "customer",
-      "addresses": ["Lisbon, Portugal"],
-      "phone": "+351 21 123 4567",
-      "orders": ["65a1f9f6e8d91c23b1d4f015"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "David Johnson",
-      "email": "david.johnson@mdhygiene.com",
-      "password": "davidPass",
-      "role": "admin",
-      "addresses": ["Dublin, Ireland"],
-      "phone": "+353 1 234 5678",
-      "orders": ["65a1f9f6e8d91c23b1d4f016"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "Mehmet Çelik",
-      "email": "mehmet.celik@mdhygiene.com",
-      "password": "celikpass",
-      "role": "customer",
-      "addresses": ["Bursa, Turkey"],
-      "phone": "+90 224 123 4567",
-      "orders": ["65a1f9f6e8d91c23b1d4f017"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "Anna Schmidt",
-      "email": "anna.schmidt@mdhygiene.com",
-      "password": "anna1234",
-      "role": "admin",
-      "addresses": ["Vienna, Austria"],
-      "phone": "+43 1 123 4567",
-      "orders": ["65a1f9f6e8d91c23b1d4f018"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "Mustafa Aydın",
-      "email": "mustafa.aydin@mdhygiene.com",
-      "password": "mustafaA",
-      "role": "customer",
-      "addresses": ["Eskisehir, Turkey"],
-      "phone": "+90 222 987 6543",
-      "orders": ["65a1f9f6e8d91c23b1d4f019"],
-      "profileImage": "https://via.placeholder.com/50"
-    },
-    {
-      "name": "Emily Clark",
-      "email": "emily.clark@mdhygiene.com",
-      "password": "emilyPass",
-      "role": "admin",
-      "addresses": ["Sydney, Australia"],
-      "phone": "+61 2 9876 5432",
-      "orders": ["65a1f9f6e8d91c23b1d4f020"],
-      "profileImage": "https://via.placeholder.com/50"
-    }
-  ]
-  
+  {
+    "id": "USR-001",
+    "name": "Orhan Admin",
+    "email": "orhan.admin@example.com",
+    "password": "hashed_password_1",
+    "role": "admin",
+    "addresses": [
+      {
+        "street": "Atatürk Cd.",
+        "city": "Istanbul",
+        "postalCode": "34000",
+        "country": "Turkey",
+        "isDefault": true
+      }
+    ],
+    "phone": "+905321234567",
+    "orders": ["ORD-001", "ORD-002"],
+    "profileImage": "https://via.placeholder.com/150",
+    "isActive": true
+  },
+  {
+    "id": "USR-002",
+    "name": "Ayşe Yılmaz",
+    "email": "ayse.yilmaz@example.com",
+    "password": "hashed_password_2",
+    "role": "customer",
+    "addresses": [
+      {
+        "street": "Cumhuriyet Mah.",
+        "city": "Ankara",
+        "postalCode": "06000",
+        "country": "Turkey",
+        "isDefault": true
+      }
+    ],
+    "phone": "+905551234567",
+    "orders": ["ORD-003"],
+    "profileImage": "https://via.placeholder.com/150",
+    "isActive": false
+  },
+  {
+    "id": "USR-003",
+    "name": "Mehmet Demir",
+    "email": "mehmet.demir@example.com",
+    "password": "hashed_password_3",
+    "role": "moderator",
+    "addresses": [
+      {
+        "street": "Barbaros Blv.",
+        "city": "Izmir",
+        "postalCode": "35000",
+        "country": "Turkey",
+        "isDefault": false
+      }
+    ],
+    "phone": "+905301234567",
+    "orders": [],
+    "profileImage": "https://via.placeholder.com/150",
+    "isActive": true
+  },
+  {
+    "id": "USR-004",
+    "name": "Zeynep Kaya",
+    "email": "zeynep.kaya@example.com",
+    "password": "hashed_password_4",
+    "role": "staff",
+    "addresses": [
+      {
+        "street": "Gazi Cd.",
+        "city": "Bursa",
+        "postalCode": "16000",
+        "country": "Turkey",
+        "isDefault": true
+      }
+    ],
+    "phone": "+905401234567",
+    "orders": ["ORD-004"],
+    "profileImage": "https://via.placeholder.com/150",
+    "isActive": true
+  }
+]

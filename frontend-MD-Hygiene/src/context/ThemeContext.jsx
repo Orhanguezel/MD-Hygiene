@@ -1,4 +1,4 @@
-import { createContext, useReducer, useContext } from "react";
+import { createContext, useContext, useReducer } from "react";
 import { themeReducer, initialTheme } from "./themeReducer";
 
 const ThemeContext = createContext();
@@ -6,9 +6,7 @@ const ThemeContext = createContext();
 export const ThemeProvider = ({ children }) => {
   const [theme, dispatch] = useReducer(themeReducer, initialTheme);
 
-  const toggleTheme = () => {
-    dispatch({ type: "TOGGLE_THEME" });
-  };
+  const toggleTheme = () => dispatch({ type: "TOGGLE_THEME" });
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
@@ -17,7 +15,10 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
-// ✅ Eksik olan export default eklendi
-export default ThemeContext;
-
-export const useTheme = () => useContext(ThemeContext);
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error("useTheme must be used within a ThemeProvider");
+  }
+  return context;
+};

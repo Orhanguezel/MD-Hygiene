@@ -1,55 +1,46 @@
-// ✅ NotificationContext.jsx
-import { createContext, useContext, useState, useEffect } from "react";
-import { createWebSocketConnection } from "@/services/WebSocketService";
+import { createContext, useContext, useReducer, useEffect } from "react";
+import { notificationReducer, initialNotificationState } from "./notificationReducer";
 
 const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      title: "Hoş Geldiniz!",
-      message: "Platforma giriş yaptınız.",
-      date: new Date().toLocaleString(),
-      status: "Unread",
-      type: "info",
-    },
-  ]);
+  const [notifications, dispatch] = useReducer(notificationReducer, initialNotificationState);
 
-  const addNotification = (title, message, type = "info") => {
-    const newNotification = {
-      id: Date.now(),
-      title,
-      message,
-      date: new Date().toLocaleString(),
-      status: "Unread",
-      type,
-    };
-    setNotifications((prev) => [newNotification, ...prev]);
+  const addNotification = (notification) => {
+    dispatch({ type: "ADD_NOTIFICATION", payload: notification });
   };
 
   const markAsRead = (id) => {
-    setNotifications((prev) =>
-      prev.map((notif) =>
-        notif.id === id ? { ...notif, status: "Read" } : notif
-      )
-    );
+    dispatch({ type: "MARK_AS_READ", payload: id });
   };
 
-  useEffect(() => {
-    const cleanup = createWebSocketConnection(
-      (data) => addNotification(data.title, data.message, data.type),
-      (error) => console.error("WebSocket Error:", error)
-    );
+  const deleteNotification = (id) => {
+    dispatch({ type: "DELETE_NOTIFICATION", payload: id });
+  };
 
-    return cleanup;
+  // ✅ Dummy Bildirim Ekleme (sayfa yüklenince)
+  useEffect(() => {
+    const dummyNotification = {
+      id: Date.now(),
+      title: "Sistem Güncellemesi",
+      message: "Sistem başarıyla güncellendi!",
+      date: new Date().toLocaleString(),
+      status: "Unread",
+    };
+    addNotification(dummyNotification);
   }, []);
 
   return (
-    <NotificationContext.Provider value={{ notifications, addNotification, markAsRead }}>
+    <NotificationContext.Provider value={{ notifications, addNotification, markAsRead, deleteNotification }}>
       {children}
     </NotificationContext.Provider>
   );
 };
 
-export const useNotifications = () => useContext(NotificationContext);
+export const useNotifications = () => {
+  const context = useContext(NotificationContext);
+  if (!context) {
+    throw new Error("useNotifications must be used within a NotificationProvider");
+  }
+  return context;
+};

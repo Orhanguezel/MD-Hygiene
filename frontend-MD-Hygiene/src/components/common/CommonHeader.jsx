@@ -1,15 +1,14 @@
-import { useContext } from "react";
+import { useLanguage } from "@/context/LanguageContext";  // ✅ useLanguage ile düzeltildi
+import { useTheme } from "@/context/ThemeContext";
+import { useAuth } from "@/context/AuthContext";
 import { Link } from "react-router-dom";
-import LanguageContext from "../../context/LanguageContext";
-import ThemeContext from "../../context/ThemeContext"; // ✅ Artık hata vermez
-import { useAuth } from "../../context/AuthContext";
-import { HeaderContainer, Logo, Nav, NavItem, Button, ProfileSection, NotificationIcon } from "../../styles/headerStyles";
+import { HeaderContainer, Logo, Nav, NavItem, Button, ProfileSection, NotificationIcon } from "@/styles/headerStyles";
 import { FaBell, FaUserCircle } from "react-icons/fa";
-import logo from "../../assets/logo.png";
+import logo from "@/assets/logo.png";
 
 export default function CommonHeader() {
-  const { language, setLanguage, texts } = useContext(LanguageContext);
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { language, setLanguage, texts } = useLanguage(); // ✅ useLanguage Hook'u kullanılıyor
+  const { theme, toggleTheme } = useTheme();
   const { signout } = useAuth();
 
   return (

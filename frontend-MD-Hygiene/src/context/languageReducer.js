@@ -1,3 +1,4 @@
+// ✅ languageReducer.js
 export const initialLanguage = localStorage.getItem("language") || "tr";
 
 export const languageReducer = (state, action) => {
@@ -9,3 +10,4 @@ export const languageReducer = (state, action) => {
       return state;
   }
 };
+
