@@ -1,77 +1,101 @@
-// src/routes/AdminRoutes.jsx
 import { Routes, Route, Outlet } from "react-router-dom";
-import ProtectedWrapper from "../pages/auth/ProtectedWrapper";
+import ProtectedWrapper from "../pages/auth/ProtectedWrapper"; // ✅ GÜNCEL YOL
 import Dashboard from "../pages/admin/Dashboard";
-import Users from "../pages/modules/user/Users";
-import Orders from "../pages/modules/order/Orders";
-import Invoices from "../pages/modules/invoices/Invoices.jsx";
-import Notifications from "../pages/modules/notification/Notifications.jsx";
-import Reports from "../pages/modules/report/Reports.jsx";
-import AuditLogs from "../pages/modules/authlog/AuditLogs.jsx";
-import Settings from "../pages/modules/settings/Settings.jsx";
-import NotFound from "../components/common/NotFound";
-import UserDetails from "../pages/modules/user/components/UserDetails.jsx";
-import AddUserForm from "../pages/modules/user/components/AddUserForm.jsx";
-import OrderDetails from "../pages/modules/order/components/OrderDetails";
-import InvoiceDetails from "../pages/modules/invoices/components/InvoiceDetails.jsx";
-import Offers from "../pages/modules/offer/Offer.jsx";
-import Products from "../pages/modules/products/Products.jsx";
-// import OfferDetails from "../pages/modules/offer/components/OfferDetails.jsx";
 
-// ✅ AdminLayout import edildi
+// ✅ Users Modülü
+import Users from "../pages/modules/user/Users";
+import UserDetails from "../pages/modules/user/components/UserDetails";
+import AddUserForm from "../pages/modules/user/components/AddUserForm";
+
+// ✅ Orders Modülü
+import Orders from "../pages/modules/order/Orders";
+import OrderDetails from "../pages/modules/order/components/OrderDetails";
+
+// ✅ Invoices Modülü
+import Invoices from "../pages/modules/invoices/Invoices";
+import InvoiceDetails from "../pages/modules/invoices/components/InvoiceDetails";
+
+// ✅ Diğer Modüller
+import Notifications from "../pages/modules/notification/Notifications";
+import Reports from "../pages/modules/report/Reports";
+import AuditLogs from "../pages/modules/authlog/AuditLogs";
+import Settings from "../pages/modules/settings/Settings";
+import NotFound from "../components/common/NotFound";
+
+// ✅ Offers Modülü
+import Offers from "../pages/modules/offer/Offer";
+import OfferDetails from "../pages/modules/offer/components/OfferDetails";
+import OfferCreate from "../pages/modules/offer/components/OfferCreate";
+import OfferList from "../pages/modules/offer/components/OfferList";
+
+// ✅ Products Modülü
+import Products from "../pages/modules/products/Products";
+import AddProduct from "../pages/modules/products/components/AddProduct";
+import EditProduct from "../pages/modules/products/components/EditProduct";
+import ProductDetails from "../pages/modules/products/components/ProductDetails";
+
+// ✅ AdminLayout
 import AdminLayout from "../layouts/AdminLayout";
 
 const AdminRoutes = () => {
   return (
-    <ProtectedWrapper>
-      <Routes>
-        <Route path="/" element={<AdminLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <ProtectedWrapper role="admin"> {/* ✅ Yalnızca admin erişebilir */}
+            <AdminLayout />
+          </ProtectedWrapper>
+        }
+      >
+        <Route path="dashboard" element={<Dashboard />} />
 
-          {/* ✅ Users Modülü */}
-          <Route path="users" element={<Outlet />}>
-            <Route index element={<Users />} />
-            <Route path="add" element={<AddUserForm />} />
-            <Route path="edit/:id" element={<AddUserForm />} />
-            <Route path=":id" element={<UserDetails />} />
-          </Route>
-
-          {/* ✅ Orders Modülü */}
-          <Route path="orders" element={<Outlet />}>
-            <Route index element={<Orders />} />
-            <Route path=":id" element={<OrderDetails />} />
-          </Route>
-
-          {/* ✅ Invoices Modülü */}
-          <Route path="invoices" element={<Outlet />}>
-            <Route index element={<Invoices />} /> {/* /invoices */}
-            <Route path=":id" element={<InvoiceDetails />} />{" "}
-            {/* /invoices/:id */}
-          </Route>
-
-          {/* ✅ Offers Modülü */}
-          <Route path="offers" element={<Outlet />}>
-            <Route index element={<Offers />} />
-            {/*<Route path=":id" element={<OfferDetails />} />*/}
-          </Route>
-
-          {/* ✅ Product Modülü */}
-          <Route path="products" element={<Outlet />}>
-            <Route index element={<Products />} />
-            {/*<Route path=":id" element={<OfferDetails />} />*/}
-          </Route>
-
-          {/* ✅ Diğer Modüller */}
-          <Route path="notifications" element={<Notifications />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="audit-logs" element={<AuditLogs />} />
-          <Route path="settings" element={<Settings />} />
-
-          {/* ✅ 404 Sayfası */}
-          <Route path="*" element={<NotFound />} />
+        {/* ✅ Users Modülü */}
+        <Route path="users" element={<Outlet />}>
+          <Route index element={<Users />} />
+          <Route path="add" element={<AddUserForm />} />
+          <Route path="edit/:id" element={<AddUserForm />} />
+          <Route path=":id" element={<UserDetails />} />
         </Route>
-      </Routes>
-    </ProtectedWrapper>
+
+        {/* ✅ Orders Modülü */}
+        <Route path="orders" element={<Outlet />}>
+          <Route index element={<Orders />} />
+          <Route path=":id" element={<OrderDetails />} />
+        </Route>
+
+        {/* ✅ Invoices Modülü */}
+        <Route path="invoices" element={<Outlet />}>
+          <Route index element={<Invoices />} />
+          <Route path=":id" element={<InvoiceDetails />} />
+        </Route>
+
+        {/* ✅ Offers Modülü */}
+        <Route path="offers" element={<Outlet />}>
+          <Route index element={<Offers />} />
+          <Route path="create" element={<OfferCreate />} />
+          <Route path="edit/:id" element={<OfferList />} />
+          <Route path=":id" element={<OfferDetails />} />
+        </Route>
+
+        {/* ✅ Products Modülü */}
+        <Route path="products" element={<Outlet />}>
+          <Route index element={<Products />} />
+          <Route path="add" element={<AddProduct />} />
+          <Route path="edit/:id" element={<EditProduct />} />
+          <Route path=":id" element={<ProductDetails />} />
+        </Route>
+
+        {/* ✅ Diğer Modüller */}
+        <Route path="notifications" element={<Notifications />} />
+        <Route path="reports" element={<Reports />} />
+        <Route path="audit-logs" element={<AuditLogs />} />
+        <Route path="settings" element={<Settings />} />
+
+        {/* ✅ 404 Sayfası */}
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   );
 };
 

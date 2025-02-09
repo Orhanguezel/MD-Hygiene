@@ -1,19 +1,13 @@
-// ✅ UserDetails.js
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useLanguage } from "@/context/LanguageContext";
-import users from "../data/users.json";
+import { useSelector } from "react-redux";
 import { UsersContainer, UserImage } from "../styles/usersStyles";
 
 const UserDetails = () => {
   const { id } = useParams();
-  const { texts } = useLanguage();
-  const [user, setUser] = useState(null);
+  const texts = useSelector((state) => state.language.texts); // ✅ RTK'dan dil desteği
+  const users = useSelector((state) => state.auth.users); // ✅ RTK'dan kullanıcı verisi
 
-  useEffect(() => {
-    const foundUser = users.find((u) => u.id === id);
-    setUser(foundUser);
-  }, [id]);
+  const user = users.find((u) => u.id === id);
 
   if (!user) {
     return (
@@ -32,7 +26,8 @@ const UserDetails = () => {
       <p><strong>{texts.users.email}:</strong> {user.email}</p>
       <p><strong>{texts.users.role}:</strong> {user.role}</p>
       <p><strong>{texts.users.phone}:</strong> {user.phone || "-"}</p>
-      <p><strong>{texts.users.addresses}:</strong> {user.addresses && user.addresses.length > 0
+      <p><strong>{texts.users.addresses}:</strong> 
+        {user.addresses && user.addresses.length > 0
           ? user.addresses.map((address) => `${address.street}, ${address.city}, ${address.country}`).join(", ")
           : texts.users.noAddress}
       </p>

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "USR-001",
+    "name": "Orhan Admin",
+    "email": "orhan.admin@example.com",
+    "password": "hashed_password_1",
+    "role": "admin",
+    "addresses": [
+      {
+        "street": "Atatürk Cd.",
+        "city": "Istanbul",
+        "postalCode": "34000",
+        "country": "Turkey",
+        "isDefault": true
+      }
+    ],
+    "phone": "+905321234567",
+    "orders": ["ORD-001", "ORD-002"],
+    "profileImage": "https://via.placeholder.com/150",
+    "isActive": true
+  },
+  {
+    "id": "USR-002",
+    "name": "Ayşe Yılmaz",
+    "email": "ayse.yilmaz@example.com",
+    "password": "hashed_password_2",
+    "role": "customer",
+    "addresses": [
+      {
+        "street": "Cumhuriyet Mah.",
+        "city": "Ankara",
+        "postalCode": "06000",
+        "country": "Turkey",
+        "isDefault": true
+      }
+    ],
+    "phone": "+905551234567",
+    "orders": ["ORD-003"],
+    "profileImage": "https://via.placeholder.com/150",
+    "isActive": false
+  },
+  {
+    "id": "USR-003",
+    "name": "Mehmet Demir",
+    "email": "mehmet.demir@example.com",
+    "password": "hashed_password_3",
+    "role": "moderator",
+    "addresses": [
+      {
+        "street": "Barbaros Blv.",
+        "city": "Izmir",
+        "postalCode": "35000",
+        "country": "Turkey",
+        "isDefault": false
+      }
+    ],
+    "phone": "+905301234567",
+    "orders": [],
+    "profileImage": "https://via.placeholder.com/150",
+    "isActive": true
+  },
+  {
+    "id": "USR-004",
+    "name": "Zeynep Kaya",
+    "email": "zeynep.kaya@example.com",
+    "password": "hashed_password_4",
+    "role": "staff",
+    "addresses": [
+      {
+        "street": "Gazi Cd.",
+        "city": "Bursa",
+        "postalCode": "16000",
+        "country": "Turkey",
+        "isDefault": true
+      }
+    ],
+    "phone": "+905401234567",
+    "orders": ["ORD-004"],
+    "profileImage": "https://via.placeholder.com/150",
+    "isActive": true
+  }
+]

@@ -1,36 +1,67 @@
 import React, { useState } from "react";
-import { useProducts } from "../context/ProductContext";
+import { useLanguage } from "@/features/language/useLanguage";
+import { useTheme } from "@/features/theme/useTheme";
+import { FormContainer, FormInput, SubmitButton } from "../styles/productStyles";
 
 const ProductForm = () => {
-  const { addProduct } = useProducts();
-  const [newProduct, setNewProduct] = useState({
-    id: "",
+  const { texts } = useLanguage();
+  const { theme } = useTheme();
+
+  const [product, setProduct] = useState({
     name: "",
-    brand: "",
     price: "",
-    stock: ""
+    stock: "",
   });
 
   const handleChange = (e) => {
-    setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
+    setProduct({ ...product, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addProduct({ ...newProduct, id: Date.now().toString() });
-    setNewProduct({ id: "", name: "", brand: "", price: "", stock: "" });
+    console.log("Ürün Eklendi:", product);
+    alert(texts.products.addSuccess || "Ürün başarıyla eklendi!");
+    setProduct({ name: "", price: "", stock: "" });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Yeni Ürün Ekle</h3>
-      <input type="text" name="name" placeholder="Ürün Adı" value={newProduct.name} onChange={handleChange} required />
-      <input type="text" name="brand" placeholder="Marka" value={newProduct.brand} onChange={handleChange} required />
-      <input type="number" name="price" placeholder="Fiyat" value={newProduct.price} onChange={handleChange} required />
-      <input type="number" name="stock" placeholder="Stok" value={newProduct.stock} onChange={handleChange} required />
-      <button type="submit">Ürün Ekle</button>
-    </form>
+    <FormContainer theme={theme} onSubmit={handleSubmit}>
+      <label>{texts.products.productName || "Ürün Adı"}:</label>
+      <FormInput
+        theme={theme}
+        type="text"
+        name="name"
+        value={product.name}
+        onChange={handleChange}
+        required
+      />
+
+      <label>{texts.products.price || "Fiyat (₺)"}:</label>
+      <FormInput
+        theme={theme}
+        type="number"
+        name="price"
+        value={product.price}
+        onChange={handleChange}
+        required
+      />
+
+      <label>{texts.products.stock || "Stok Adedi"}:</label>
+      <FormInput
+        theme={theme}
+        type="number"
+        name="stock"
+        value={product.stock}
+        onChange={handleChange}
+        required
+      />
+
+      <SubmitButton theme={theme} type="submit">
+        {texts.products.submit || "Kaydet"}
+      </SubmitButton>
+    </FormContainer>
   );
 };
 
 export default ProductForm;
+

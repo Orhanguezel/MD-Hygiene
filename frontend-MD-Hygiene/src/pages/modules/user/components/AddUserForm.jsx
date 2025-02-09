@@ -1,13 +1,14 @@
-// ✅ AddUserForm.js
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLanguage } from "@/context/LanguageContext";
-import dummyUsers from "../data/users.json";
+import { useDispatch, useSelector } from "react-redux";
+import { addUser } from "@/features/auth/authSlice"; // ✅ Redux Toolkit'ten addUser action'ı
 import { UsersContainer, ActionButton } from "../styles/usersStyles";
 
 const AddUserForm = () => {
-  const { texts } = useLanguage();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const texts = useSelector((state) => state.language.texts); // ✅ RTK'dan dil desteği
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -25,14 +26,13 @@ const AddUserForm = () => {
     e.preventDefault();
     setError("");
 
-    // ✅ Kullanıcı ID'si oluştur
     const newUser = {
       ...formData,
       id: `USR-${Date.now()}`,
       profileImage: "https://via.placeholder.com/150",
     };
 
-    dummyUsers.push(newUser); // ✅ Dummy veriye ekle
+    dispatch(addUser(newUser)); // ✅ Redux'a ekleme
     navigate("/users"); // ✅ Kullanıcılar sayfasına yönlendir
   };
 

@@ -1,50 +1,16 @@
 import { useState } from "react";
-import { register } from "../api/authApi";
+import { register } from "@/api/authApi";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-
-const RegisterContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f5f5f5;
-`;
-
-const RegisterForm = styled.form`
-  background: white;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-`;
-
-const Button = styled.button`
-  padding: 10px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #45a049;
-  }
-`;
-
-const ErrorMessage = styled.p`
-  color: red;
-  margin-bottom: 10px;
-`;
+import { useLanguage } from "@/features/language/useLanguage";
+import { useTheme } from "@/features/theme/useTheme";
+import {
+  AuthContainer,
+  AuthForm,
+  Input,
+  Button,
+  ErrorMessage,
+  Title,
+} from "@/styles/authStyles"; // ✅ Ortak stil dosyası
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -52,6 +18,8 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { texts } = useLanguage();
+  const { theme } = useTheme();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,7 +27,7 @@ export default function Register() {
 
     try {
       await register(name, email, password);
-      navigate("/login"); // Başarılı kayıt sonrası login sayfasına yönlendirme
+      navigate("/login");
     } catch (err) {
       console.error("Kayıt hatası:", err.message);
       setError(err.message);
@@ -67,33 +35,38 @@ export default function Register() {
   };
 
   return (
-    <RegisterContainer>
-      <RegisterForm onSubmit={handleSubmit}>
-        <h2>Kayıt Ol</h2>
+    <AuthContainer theme={theme}>
+      <AuthForm theme={theme} onSubmit={handleSubmit}>
+        <Title theme={theme}>{texts?.auth?.registerTitle || "Kayıt Ol"}</Title>
         {error && <ErrorMessage>{error}</ErrorMessage>}
         <Input
+          theme={theme}
           type="text"
-          placeholder="Ad Soyad"
+          placeholder={texts?.auth?.namePlaceholder || "Ad Soyad"}
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
         />
         <Input
+          theme={theme}
           type="email"
-          placeholder="Email"
+          placeholder={texts?.auth?.emailPlaceholder || "Email"}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
         <Input
+          theme={theme}
           type="password"
-          placeholder="Şifre"
+          placeholder={texts?.auth?.passwordPlaceholder || "Şifre"}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <Button type="submit">Kayıt Ol</Button>
-      </RegisterForm>
-    </RegisterContainer>
+        <Button theme={theme} type="submit">
+          {texts?.auth?.registerButton || "Kayıt Ol"}
+        </Button>
+      </AuthForm>
+    </AuthContainer>
   );
 }

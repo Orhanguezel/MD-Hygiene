@@ -1,10 +1,10 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "@/features/auth/useAuth"; // RTK hook kullanımı
 
-const ProtectedWrapper = ({ children }) => {
+const ProtectedWrapper = ({ children, role = "admin" }) => {
   const { user } = useAuth();
 
-  if (!user || user.role !== "admin") {
+  if (!user || (role && user.role !== role)) {
     return <Navigate to="/login" replace />;
   }
 

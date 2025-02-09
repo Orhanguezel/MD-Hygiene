@@ -5,7 +5,7 @@ import { notificationReducer } from "./notificationReducer";
 import { ordersReducer } from "./orderReducer";
 import { uiReducer } from "./uiReducer";
 import { auditLogsReducer } from "./auditLogsReducer";
-import {offerReducer} from "./offerReducer";
+
 
 export const rootReducer = (state, action) => ({
   auth: authReducer(state.auth, action),
@@ -15,7 +15,6 @@ export const rootReducer = (state, action) => ({
   orders: ordersReducer(state.orders, action),
   ui: uiReducer(state.ui, action),
   auditLogs: auditLogsReducer(state.auditLogs, action),
-  offers: offerReducer(state.offers, action),
 });
 
 export const initialState = {
@@ -26,5 +25,5 @@ export const initialState = {
   orders: [],
   ui: { sidebarOpen: true, modalOpen: false, loading: false },
   auditLogs: [],
-  offers: [],
+
 };

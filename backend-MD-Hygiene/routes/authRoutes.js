@@ -9,7 +9,7 @@ import {
   changePassword,
   updateUserRole,
 } from '../controllers/authController.js';
-import { authenticate, authorizeRoles } from '../middlewares/authMiddleware.js';
+import { authenticate, authorizeRoles } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 

@@ -4,7 +4,15 @@
     "users": "Users",
     "orders": "Orders",
     "invoices": "Invoices",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "reports": "Reports",
+    "auditLogs": "System Logs",
+    "settings": "Settings",
+    "products": "Products",
+    "sales": "Sales",
+    "shipments": "Shipments",
+    "offers": "Offers",
+    "stores": "Stores"
   },
   "login": {
     "title": "Login",
@@ -49,7 +57,10 @@
   },
   "notifications": {
     "title": "Notification Management",
-    "markAsRead": "Mark as Read"
+    "markAsRead": "Mark as Read",
+    "noNotifications": "No notifications yet.",
+    "unread": "Unread",
+    "read": "Read"
   },
   "reports": {
     "title": "Reports",
@@ -82,6 +93,37 @@
     "confirmPassword": "Confirm Password",
     "updatePassword": "Update Password"
   },
+  "offers": {
+    "title": "Offer Management",
+    "id": "Offer ID",
+    "customer": "Customer",
+    "total": "Total Amount",
+    "status": "Status",
+    "actions": "Actions",
+    "approve": "Approve",
+    "reject": "Reject",
+    "delete": "Delete",
+    "details": "Offer Details",
+    "notFound": "Offer not found",
+    "items": "Offer Items",
+    "create": "Create New Offer",
+    "addItem": "Add Item",
+    "save": "Save",
+    "product": "Product",
+    "quantity": "Quantity",
+    "unitPrice": "Unit Price",
+    "netTotal": "Net Total",
+    "taxTotal": "Tax Amount",
+    "shippingCost": "Shipping Cost",
+    "grandTotal": "Grand Total",
+    "update": "Update",
+    "selectProduct": "Select Product",
+    "chooseProduct": "Choose Product",
+    "validationError": "Please fill all required fields and select at least one product.",
+    "updateSuccess": "Offer Updated!",
+    "saveSuccess": "Offer Saved!",
+    "downloadPDF": "Download PDF"
+  },
   "sidebar": {
     "dashboard": "Dashboard",
     "users": "Users",
@@ -89,35 +131,12 @@
     "invoices": "Invoices",
     "notifications": "Notifications",
     "reports": "Reports",
-    "auditLogs": "Audit Logs",
+    "auditLogs": "System Logs",
     "settings": "Settings",
     "products": "Products",
     "sales": "Sales",
     "shipments": "Shipments",
     "offers": "Offers",
     "stores": "Stores"
-  },
- "offers": {
-  "title": "Offer Management",
-  "id": "Offer ID",
-  "customer": "Customer",
-  "total": "Total Amount",
-  "status": "Status",
-  "actions": "Actions",
-  "approve": "Approve",
-  "reject": "Reject",
-  "delete": "Delete",
-  "details": "Offer Details",
-  "notFound": "Offer not found",
-  "items": "Offer Items",
-  "create": "Create New Offer",
-  "addItem": "Add Item",
-  "save": "Save",
-  "product": "Product",
-  "quantity": "Quantity",
-  "unitPrice": "Unit Price"
-}
-
-
-
+  }
 }

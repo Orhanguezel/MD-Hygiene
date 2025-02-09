@@ -1,59 +1,35 @@
-import {
-  SettingsContainer,
-  Section,
-  Label,
-  Input,
-  Select,
-  Button,
-} from "@/styles/settingsStyles";
-import { useLanguage } from "@/context/LanguageContext";
-import { useTheme } from "@/context/ThemeContext";
+// ✅ src/pages/modules/settings/Settings.jsx
+import { useSelector, useDispatch } from 'react-redux';
+import { SettingsContainer, Section, Label, Input, Button } from "./styles/settingsStyles";
 
 const Settings = () => {
-  const { texts, language, setLanguage } = useLanguage();
-  const { theme, toggleTheme } = useTheme();
+  const dispatch = useDispatch();
+  const { texts, language } = useSelector((state) => state.settings || { texts: {}, language: 'tr' });
 
   return (
     <SettingsContainer>
-      <h1>{texts.settings.title}</h1>
+      <h1>{texts.settings?.title || "Ayarlar"}</h1>
 
       <Section>
-        <h2>{texts.settings.profileSettings}</h2>
-        <Label>{texts.settings.name}</Label>
+        <h2>{texts.settings?.profileSettings || "Profil Ayarları"}</h2>
+        <Label>{texts.settings?.name || "Ad Soyad"}</Label>
         <Input type="text" placeholder="Ad Soyad" />
 
-        <Label>{texts.settings.email}</Label>
+        <Label>{texts.settings?.email || "E-posta"}</Label>
         <Input type="email" placeholder="E-posta" />
 
-        <Button>{texts.settings.updateProfile}</Button>
+        <Button>{texts.settings?.updateProfile || "Profili Güncelle"}</Button>
       </Section>
 
       <Section>
-        <h2>{texts.settings.appSettings}</h2>
-        <Label>{texts.settings.theme}</Label>
-        <Button onClick={toggleTheme}>
-          {theme === "light"
-            ? texts.settings.darkMode
-            : texts.settings.lightMode}
-        </Button>
+        <h2>{texts.settings?.passwordSettings || "Şifre Ayarları"}</h2>
+        <Label>{texts.settings?.newPassword || "Yeni Şifre"}</Label>
+        <Input type="password" placeholder={texts.settings?.newPassword || "Yeni Şifre"} />
 
-        <Label>{texts.settings.language}</Label>
-        <Select value={language} onChange={(e) => setLanguage(e.target.value)}>
-          <option value="tr">Türkçe</option>
-          <option value="en">English</option>
-          <option value="de">Deutsch</option>
-        </Select>
-      </Section>
+        <Label>{texts.settings?.confirmPassword || "Şifreyi Onayla"}</Label>
+        <Input type="password" placeholder={texts.settings?.confirmPassword || "Şifreyi Onayla"} />
 
-      <Section>
-        <h2>{texts.settings.passwordSettings}</h2>
-        <Label>{texts.settings.newPassword}</Label>
-        <Input type="password" placeholder={texts.settings.newPassword} />
-
-        <Label>{texts.settings.confirmPassword}</Label>
-        <Input type="password" placeholder={texts.settings.confirmPassword} />
-
-        <Button>{texts.settings.updatePassword}</Button>
+        <Button>{texts.settings?.updatePassword || "Şifreyi Güncelle"}</Button>
       </Section>
     </SettingsContainer>
   );

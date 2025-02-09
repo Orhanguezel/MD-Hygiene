@@ -1,12 +1,20 @@
-import React from "react";
+
+import { useLanguage } from "@/features/language/useLanguage";
+import { SidebarContainer, SidebarButton } from "../styles/productStyles";
 
 const ProductSidebar = ({ setActiveSection }) => {
+  const { texts } = useLanguage();
+
   return (
-    <div style={{ width: "200px", background: "#4CAF50", padding: "10px", color: "white" }}>
-      <h3>Ürün Yönetimi</h3>
-      <button onClick={() => setActiveSection("list")}>📦 Ürün Listesi</button>
-      <button onClick={() => setActiveSection("create")}>➕ Yeni Ürün Ekle</button>
-    </div>
+    <SidebarContainer>
+      <h3>{texts?.products?.sidebar || "Ürün Paneli"}</h3>
+      <SidebarButton onClick={() => setActiveSection("list")}>
+        📋 {texts?.products?.list || "Ürün Listesi"}
+      </SidebarButton>
+      <SidebarButton onClick={() => setActiveSection("create")}>
+        ➕ {texts?.products?.add || "Ürün Ekle"}
+      </SidebarButton>
+    </SidebarContainer>
   );
 };
 

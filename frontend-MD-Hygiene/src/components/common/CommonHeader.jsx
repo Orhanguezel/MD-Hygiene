@@ -1,15 +1,15 @@
-import { useLanguage } from "@/context/LanguageContext";  // ✅ useLanguage ile düzeltildi
-import { useTheme } from "@/context/ThemeContext";
-import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/features/language/useLanguage";  // ✅ Redux Toolkit hook
+import { useTheme } from "@/features/theme/useTheme";           // ✅ Redux Toolkit hook
+import { useAuth } from "@/features/auth/useAuth";              // ✅ Redux Toolkit hook
 import { Link } from "react-router-dom";
 import { HeaderContainer, Logo, Nav, NavItem, Button, ProfileSection, NotificationIcon } from "@/styles/headerStyles";
 import { FaBell, FaUserCircle } from "react-icons/fa";
 import logo from "@/assets/logo.png";
 
 export default function CommonHeader() {
-  const { language, setLanguage, texts } = useLanguage(); // ✅ useLanguage Hook'u kullanılıyor
-  const { theme, toggleTheme } = useTheme();
-  const { signout } = useAuth();
+  const { language, setLanguage, texts } = useLanguage();      // ✅ useLanguage Hook
+  const { theme, toggleTheme } = useTheme();                   // ✅ useTheme Hook
+  const { user, signout } = useAuth();                         // ✅ useAuth Hook
 
   return (
     <HeaderContainer>
@@ -24,10 +24,10 @@ export default function CommonHeader() {
           </NotificationIcon>
         </NavItem>
 
-        <NavItem to="/settings">⚙️ {texts.sidebar.settings}</NavItem>
+        <NavItem to="/settings">⚙️ {texts?.sidebar?.settings || "Ayarlar"}</NavItem>
 
         <Button onClick={toggleTheme}>
-          🌓 {theme === "light" ? texts.settings.darkMode : texts.settings.lightMode}
+          🌓 {theme === "light" ? texts?.settings?.darkMode || "Karanlık Mod" : texts?.settings?.lightMode || "Aydınlık Mod"}
         </Button>
 
         <Button onClick={() => setLanguage("tr")} disabled={language === "tr"}>🇹🇷</Button>
@@ -36,9 +36,10 @@ export default function CommonHeader() {
 
         <ProfileSection>
           <FaUserCircle size={24} />
-          <span>Orhan Admin</span>
+          <span>{user?.name || "Kullanıcı"}</span> {/* ✅ Kullanıcı adını dinamik gösterir */}
         </ProfileSection>
-        <Button onClick={signout}>🚪 Çıkış Yap</Button>
+
+        <Button onClick={signout}>🚪 {texts?.sidebar?.logout || "Çıkış Yap"}</Button>
       </Nav>
     </HeaderContainer>
   );

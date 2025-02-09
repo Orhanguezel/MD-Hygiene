@@ -69,3 +69,43 @@ export const logout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
 };
+
+// ✅ Tüm kullanıcıları getir
+export const getUsers = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Token bulunamadı!");
+
+    const response = await axios.get(`${API_URL}/auth/users`, {
+      headers: { 
+        Authorization: `Bearer ${token}` 
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Kullanıcıları getirme hatası:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || "Kullanıcılar getirilemedi!");
+  }
+};
+
+
+
+// ✅ Kullanıcı Durumunu Güncelle (Aktif/Pasif)
+export const toggleUserStatusAPI = async (userId, isActive) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.put(
+      `${API_URL}/auth/users/${userId}/status`,
+      { isActive },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Kullanıcı durumu güncelleme hatası:", error);
+    throw new Error("Kullanıcı durumu güncellenemedi!");
+  }
+};
+
+

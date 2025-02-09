@@ -1,8 +1,15 @@
-// ✅ OfferDetails.jsx (PDF Oluşturma Butonu Eklendi)
+// ✅ OfferDetails.jsx (Redux Toolkit ile Güncellendi)
 import { useParams } from "react-router-dom";
-import { useOffers } from "@/context/OfferContext";
-import { useLanguage } from "@/context/LanguageContext";
-import { OfferDetailsContainer, OfferInfo, ProductList, ProductItem, StatusBadge, ActionButton } from "../../offeröööö/styles/offerStyles";
+import { useOffers } from "@/features/offers/useOffers";
+import { useLanguage } from "@/features/language/useLanguage";
+import {
+  OfferDetailsContainer,
+  OfferInfo,
+  ProductList,
+  ProductItem,
+  StatusBadge,
+  ActionButton
+} from "../styles/offerStyles";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
@@ -20,13 +27,18 @@ const OfferDetails = () => {
     doc.text(`${texts.offers.details} - ${offer.id}`, 10, 10);
 
     doc.autoTable({
-      head: [[texts.offers.product, texts.offers.quantity, texts.offers.unitPrice, texts.offers.total]],
+      head: [[
+        texts.offers.product,
+        texts.offers.quantity,
+        texts.offers.unitPrice,
+        texts.offers.total
+      ]],
       body: offer.items.map((item) => [
         item.product,
         item.quantity,
         `${item.unitPrice} ₺`,
-        `${item.unitPrice * item.quantity} ₺`,
-      ]),
+        `${item.unitPrice * item.quantity} ₺`
+      ])
     });
 
     doc.text(`${texts.offers.total}: ${offer.totalAmount} ₺`, 10, doc.lastAutoTable.finalY + 10);

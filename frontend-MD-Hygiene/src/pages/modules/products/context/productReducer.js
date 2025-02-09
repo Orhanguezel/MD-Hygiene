@@ -1,4 +1,3 @@
-// ✅ productReducer.js
 export const initialProductState = [];
 
 export const productReducer = (state, action) => {
@@ -9,7 +8,7 @@ export const productReducer = (state, action) => {
       return [...state, action.payload];
     case "UPDATE_PRODUCT":
       return state.map((product) =>
-        product.id === action.payload.id ? action.payload : product
+        product.id === action.payload.id ? { ...product, ...action.payload } : product
       );
     case "DELETE_PRODUCT":
       return state.filter((product) => product.id !== action.payload);

@@ -1,10 +1,18 @@
 {
   "dashboard": {
-    "title": "Verwaltungsbereich",
+    "title": "Verwaltungsdashboard",
     "users": "Benutzer",
     "orders": "Bestellungen",
     "invoices": "Rechnungen",
-    "notifications": "Benachrichtigungen"
+    "notifications": "Benachrichtigungen",
+    "reports": "Berichte",
+    "auditLogs": "Systemprotokolle",
+    "settings": "Einstellungen",
+    "products": "Produkte",
+    "sales": "Verkäufe",
+    "shipments": "Lieferungen",
+    "offers": "Angebote",
+    "stores": "Geschäfte"
   },
   "login": {
     "title": "Anmelden",
@@ -16,7 +24,7 @@
   "users": {
     "title": "Benutzerverwaltung",
     "avatar": "Profil",
-    "name": "Vollständiger Name",
+    "name": "Name",
     "email": "E-Mail",
     "role": "Rolle",
     "status": "Status",
@@ -24,14 +32,14 @@
     "blocked": "Gesperrt",
     "actions": "Aktionen",
     "edit": "Bearbeiten",
-    "block": "Sperren",
+    "block": "Blockieren",
     "unblock": "Entsperren",
     "delete": "Löschen",
     "addUser": "Neuen Benutzer hinzufügen"
   },
   "orders": {
     "title": "Bestellverwaltung",
-    "orderNumber": "Bestell-Nr.",
+    "orderNumber": "Bestellnummer",
     "customer": "Kunde",
     "status": "Status",
     "total": "Gesamt",
@@ -40,7 +48,7 @@
   },
   "invoices": {
     "title": "Rechnungsverwaltung",
-    "invoiceNumber": "Rechnungs-Nr.",
+    "invoiceNumber": "Rechnungsnummer",
     "customer": "Kunde",
     "date": "Datum",
     "total": "Gesamt",
@@ -49,14 +57,17 @@
   },
   "notifications": {
     "title": "Benachrichtigungsverwaltung",
-    "markAsRead": "Als gelesen markieren"
+    "markAsRead": "Als gelesen markieren",
+    "noNotifications": "Noch keine Benachrichtigungen.",
+    "unread": "Ungelesen",
+    "read": "Gelesen"
   },
   "reports": {
     "title": "Berichte",
     "totalSales": "Gesamtumsatz",
     "totalUsers": "Gesamtbenutzer",
     "totalOrders": "Gesamtbestellungen",
-    "totalRevenue": "Gesamteinnahmen",
+    "totalRevenue": "Gesamterlös",
     "salesChart": "Verkaufsdiagramm"
   },
   "auditLogs": {
@@ -71,16 +82,47 @@
     "profileSettings": "Profileinstellungen",
     "appSettings": "App-Einstellungen",
     "passwordSettings": "Passworteinstellungen",
-    "name": "Vollständiger Name",
+    "name": "Name",
     "email": "E-Mail",
     "updateProfile": "Profil aktualisieren",
-    "theme": "Design",
-    "darkMode": "Dunkelmodus",
-    "lightMode": "Hellmodus",
+    "theme": "Thema",
+    "darkMode": "Dunkler Modus",
+    "lightMode": "Heller Modus",
     "language": "Sprache",
     "newPassword": "Neues Passwort",
     "confirmPassword": "Passwort bestätigen",
     "updatePassword": "Passwort aktualisieren"
+  },
+  "offers": {
+    "title": "Angebotsverwaltung",
+    "id": "Angebots-ID",
+    "customer": "Kunde",
+    "total": "Gesamtbetrag",
+    "status": "Status",
+    "actions": "Aktionen",
+    "approve": "Genehmigen",
+    "reject": "Ablehnen",
+    "delete": "Löschen",
+    "details": "Angebotsdetails",
+    "notFound": "Angebot nicht gefunden",
+    "items": "Angebotsartikel",
+    "create": "Neues Angebot erstellen",
+    "addItem": "Artikel hinzufügen",
+    "save": "Speichern",
+    "product": "Produkt",
+    "quantity": "Menge",
+    "unitPrice": "Stückpreis",
+    "netTotal": "Nettobetrag",
+    "taxTotal": "Steuerbetrag",
+    "shippingCost": "Versandkosten",
+    "grandTotal": "Gesamtbetrag",
+    "update": "Aktualisieren",
+    "selectProduct": "Produkt auswählen",
+    "chooseProduct": "Produkt auswählen",
+    "validationError": "Bitte füllen Sie alle Pflichtfelder aus und wählen Sie mindestens ein Produkt aus.",
+    "updateSuccess": "Angebot aktualisiert!",
+    "saveSuccess": "Angebot gespeichert!",
+    "downloadPDF": "PDF herunterladen"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -89,33 +131,12 @@
     "invoices": "Rechnungen",
     "notifications": "Benachrichtigungen",
     "reports": "Berichte",
-    "auditLogs": "Audit-Logs",
+    "auditLogs": "Systemprotokolle",
     "settings": "Einstellungen",
     "products": "Produkte",
     "sales": "Verkäufe",
     "shipments": "Lieferungen",
     "offers": "Angebote",
-    "stores": "Filialen"
-  },
-  "offers": {
-  "title": "Angebotsverwaltung",
-  "id": "Angebots-ID",
-  "customer": "Kunde",
-  "total": "Gesamtbetrag",
-  "status": "Status",
-  "actions": "Aktionen",
-  "approve": "Genehmigen",
-  "reject": "Ablehnen",
-  "delete": "Löschen",
-  "details": "Angebotsdetails",
-  "notFound": "Angebot nicht gefunden",
-  "items": "Angebotsartikel",
-  "create": "Neues Angebot erstellen",
-  "addItem": "Artikel hinzufügen",
-  "save": "Speichern",
-  "product": "Produkt",
-  "quantity": "Menge",
-  "unitPrice": "Stückpreis"
-}
-
+    "stores": "Geschäfte"
+  }
 }

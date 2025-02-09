@@ -1,12 +1,12 @@
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "@/features/auth/useAuth";  // ✅ RTK Hook kullanımı
 import CommonSidebar from "./CommonSidebar";
 import CommonHeader from "./CommonHeader";
 
 const Layout = ({ children }) => {
-  const { user } = useAuth();
+  const { user } = useAuth(); // ✅ RTK üzerinden kullanıcı bilgisi çekiliyor
 
   if (!user) {
-    return children; // Giriş yapılmamışsa sadece çocukları render et
+    return children; // 🚩 Giriş yapılmamışsa sadece çocukları göster
   }
 
   return (

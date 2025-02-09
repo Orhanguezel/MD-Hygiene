@@ -1,32 +1,34 @@
 import { AuditLogsContainer, LogsTable, Th, Td, StatusBadge } from "./styles/auditLogsStyles";
-import { useLanguage } from "@/context/LanguageContext";
-import { useAuditLogs } from "@/context/AuditLogsContext";
+import { useLanguage } from "@/features/language/useLanguage";  // ✅ RTK Dil Yönetimi
+import { useTheme } from "@/features/theme/useTheme";           // ✅ RTK Tema Yönetimi
+import { useAuditLogs } from "@/features/auditLogs/useAuditLogs"; // ✅ RTK Audit Logs Yönetimi
 
 const AuditLogs = () => {
   const { texts } = useLanguage();
+  const { theme } = useTheme();
   const { logs } = useAuditLogs();
 
   return (
-    <AuditLogsContainer>
-      <h1>{texts.auditLogs.title}</h1>
+    <AuditLogsContainer theme={theme}>
+      <h1>{texts?.auditLogs?.title || "Denetim Kayıtları"}</h1>
 
-      <LogsTable>
+      <LogsTable theme={theme}>
         <thead>
           <tr>
-            <Th>{texts.auditLogs.eventType}</Th>
-            <Th>{texts.auditLogs.user}</Th>
-            <Th>{texts.auditLogs.date}</Th>
-            <Th>{texts.auditLogs.status}</Th>
+            <Th theme={theme}>{texts?.auditLogs?.eventType || "Olay Türü"}</Th>
+            <Th theme={theme}>{texts?.auditLogs?.user || "Kullanıcı"}</Th>
+            <Th theme={theme}>{texts?.auditLogs?.date || "Tarih"}</Th>
+            <Th theme={theme}>{texts?.auditLogs?.status || "Durum"}</Th>
           </tr>
         </thead>
         <tbody>
           {logs.map((log) => (
             <tr key={log.id}>
-              <Td>{log.eventType || "Olay Yok"}</Td>  {/* ✅ eventType gösteriliyor */}
-              <Td>{log.user || "Bilinmiyor"}</Td>     {/* ✅ user gösteriliyor */}
-              <Td>{log.date || "Tarih Yok"}</Td>      {/* ✅ date gösteriliyor */}
-              <Td>
-                <StatusBadge $status={log.status || "Bilinmiyor"}>
+              <Td theme={theme}>{log.eventType || "Olay Yok"}</Td>
+              <Td theme={theme}>{log.user || "Bilinmiyor"}</Td>
+              <Td theme={theme}>{log.date || "Tarih Yok"}</Td>
+              <Td theme={theme}>
+                <StatusBadge theme={theme} $status={log.status || "Bilinmiyor"}>
                   {log.status || "Bilinmiyor"}
                 </StatusBadge>
               </Td>

@@ -4,7 +4,15 @@
     "users": "Kullanıcılar",
     "orders": "Siparişler",
     "invoices": "Faturalar",
-    "notifications": "Bildirimler"
+    "notifications": "Bildirimler",
+    "reports": "Raporlar",
+    "auditLogs": "Sistem Logları",
+    "settings": "Ayarlar",
+    "products": "Ürünler",
+    "sales": "Satışlar",
+    "shipments": "Kargolar",
+    "offers": "Teklifler",
+    "stores": "Mağazalar"
   },
   "login": {
     "title": "Giriş Yap",
@@ -15,11 +23,19 @@
   },
   "users": {
     "title": "Kullanıcı Yönetimi",
+    "avatar": "Profil",
     "name": "Ad Soyad",
     "email": "E-posta",
     "role": "Rol",
+    "status": "Durum",
+    "active": "Aktif",
+    "blocked": "Engelli",
     "actions": "İşlemler",
-    "edit": "Düzenle"
+    "edit": "Düzenle",
+    "block": "Engelle",
+    "unblock": "Engeli Kaldır",
+    "delete": "Sil",
+    "addUser": "Yeni Kullanıcı Ekle"
   },
   "orders": {
     "title": "Sipariş Yönetimi",
@@ -41,7 +57,10 @@
   },
   "notifications": {
     "title": "Bildirim Yönetimi",
-    "markAsRead": "Okundu Olarak İşaretle"
+    "markAsRead": "Okundu Olarak İşaretle",
+    "noNotifications": "Henüz bildirim yok.",
+    "unread": "Okunmadı",
+    "read": "Okundu"
   },
   "reports": {
     "title": "Raporlar",
@@ -74,7 +93,37 @@
     "confirmPassword": "Parolayı Onayla",
     "updatePassword": "Parolayı Güncelle"
   },
-
+  "offers": {
+    "title": "Teklif Yönetimi",
+    "id": "Teklif ID",
+    "customer": "Müşteri",
+    "total": "Toplam Tutar",
+    "status": "Durum",
+    "actions": "İşlemler",
+    "approve": "Onayla",
+    "reject": "Reddet",
+    "delete": "Sil",
+    "details": "Teklif Detayları",
+    "notFound": "Teklif bulunamadı",
+    "items": "Teklif Ürünleri",
+    "create": "Yeni Teklif Oluştur",
+    "addItem": "Ürün Ekle",
+    "save": "Kaydet",
+    "product": "Ürün",
+    "quantity": "Adet",
+    "unitPrice": "Birim Fiyat",
+    "netTotal": "Net Tutar",
+    "taxTotal": "KDV Tutarı",
+    "shippingCost": "Nakliye Ücreti",
+    "grandTotal": "Genel Toplam",
+    "update": "Güncelle",
+    "selectProduct": "Ürün Seç",
+    "chooseProduct": "Ürün Seçin",
+    "validationError": "Lütfen tüm zorunlu alanları doldurun ve en az bir ürün seçin.",
+    "updateSuccess": "Teklif Güncellendi!",
+    "saveSuccess": "Teklif Kaydedildi!",
+    "downloadPDF": "PDF İndir"
+  },
   "sidebar": {
     "dashboard": "Yönetim Paneli",
     "users": "Kullanıcılar",
@@ -89,43 +138,5 @@
     "shipments": "Kargolar",
     "offers": "Teklifler",
     "stores": "Mağazalar"
-  },
-
-  "users": {
-    "title": "Kullanıcı Yönetimi",
-    "avatar": "Profil",
-    "name": "Ad Soyad",
-    "email": "E-posta",
-    "role": "Rol",
-    "status": "Durum",
-    "active": "Aktif",
-    "blocked": "Engelli",
-    "actions": "İşlemler",
-    "edit": "Düzenle",
-    "block": "Engelle",
-    "unblock": "Engeli Kaldır",
-    "delete": "Sil",
-    "addUser": "Yeni Kullanıcı Ekle"
-  },
-  "offers": {
-  "title": "Teklif Yönetimi",
-  "id": "Teklif ID",
-  "customer": "Müşteri",
-  "total": "Toplam Tutar",
-  "status": "Durum",
-  "actions": "İşlemler",
-  "approve": "Onayla",
-  "reject": "Reddet",
-  "delete": "Sil",
-  "details": "Teklif Detayları",
-  "notFound": "Teklif bulunamadı",
-  "items": "Teklif Ürünleri",
-  "create": "Yeni Teklif Oluştur",
-  "addItem": "Ürün Ekle",
-  "save": "Kaydet",
-  "product": "Ürün",
-  "quantity": "Adet",
-  "unitPrice": "Birim Fiyat"
-}
-
+  }
 }

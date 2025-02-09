@@ -1,37 +1,26 @@
+// ✅ src/pages/products/ProductList.jsx
 import React from "react";
-import { useProducts } from "../context/ProductContext";
+import { useProducts } from "@/features/products/useProducts";
+import { useLanguage } from "@/features/language/useLanguage";
+import { ListContainer, ProductItem } from "../styles/productStyles";
 
 const ProductList = () => {
-  const { products, deleteProduct } = useProducts();
+  const { products } = useProducts();
+  const { texts } = useLanguage();
 
   return (
-    <div>
-      <h2>Ürün Listesi</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Ürün Adı</th>
-            <th>Marka</th>
-            <th>Fiyat (₺)</th>
-            <th>Stok</th>
-            <th>İşlemler</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product) => (
-            <tr key={product.id}>
-              <td>{product.name}</td>
-              <td>{product.brand}</td>
-              <td>{product.price}</td>
-              <td>{product.stock}</td>
-              <td>
-                <button onClick={() => deleteProduct(product.id)}>Sil</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <ListContainer>
+      <h2>{texts?.products?.list || "Ürün Listesi"}</h2>
+      {products.length === 0 ? (
+        <p>{texts?.products?.noProducts || "Ürün bulunamadı."}</p>
+      ) : (
+        products.map((product) => (
+          <ProductItem key={product.id}>
+            <strong>{product.name}</strong> - {product.price} ₺ ({product.stock} adet stokta)
+          </ProductItem>
+        ))
+      )}
+    </ListContainer>
   );
 };
 
