@@ -1,4 +1,3 @@
-// ✅ src/features/offer/components/OfferCreate.jsx
 import { useState, useEffect } from "react";
 import { useProducts } from "@/features/products/useProducts";
 import { useOffers } from "@/features/offers/useOffers";
@@ -40,18 +39,15 @@ const OfferCreate = ({ existingOffer, onOfferCreated }) => {
 
   const handleProductSelect = (productId) => {
     const selectedProduct = products.find((p) => p.id === productId);
-    if (selectedProduct && !formData.selectedProducts.some((p) => p.id === selectedProduct.id)) {
+    if (selectedProduct && !formData.selectedProducts.some(p => p.id === selectedProduct.id)) {
       setFormData((prev) => ({
         ...prev,
-        selectedProducts: [
-          ...prev.selectedProducts,
-          {
-            ...selectedProduct,
-            quantity: 1,
-            customPrice: selectedProduct.price,
-            taxRate: 19,
-          },
-        ],
+        selectedProducts: [...prev.selectedProducts, { 
+          ...selectedProduct, 
+          quantity: 1, 
+          customPrice: selectedProduct.price,
+          taxRate: 19 
+        }]
       }));
     }
   };
@@ -74,7 +70,7 @@ const OfferCreate = ({ existingOffer, onOfferCreated }) => {
       0
     );
     const taxTotal = formData.selectedProducts.reduce(
-      (acc, item) => acc + item.customPrice * item.quantity * (item.taxRate / 100),
+      (acc, item) => acc + (item.customPrice * item.quantity * (item.taxRate / 100)),
       0
     );
     const grandTotal = netTotal + taxTotal + Number(formData.shippingCost);

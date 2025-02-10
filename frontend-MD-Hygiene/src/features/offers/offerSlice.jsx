@@ -1,14 +1,16 @@
-// ✅ src/features/offer/offerSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 import offersData from '@/data/offers.json';
 
-const initialState = JSON.parse(localStorage.getItem("offers")) || offersData;
+const offersFromStorage = JSON.parse(localStorage.getItem("offers")) || [];
+const initialState = offersFromStorage.length ? offersFromStorage : offersData;
 
 const offerSlice = createSlice({
   name: 'offer',
   initialState,
   reducers: {
-    setOffers: (state, action) => action.payload,
+    setOffers: (state, action) => {
+      return [...action.payload];
+    },
     addOffer: (state, action) => {
       state.push(action.payload);
     },
@@ -21,14 +23,22 @@ const offerSlice = createSlice({
     deleteOffer: (state, action) => {
       return state.filter((offer) => offer.id !== action.payload);
     },
-    changeStatus: (state, action) => {
-      const offer = state.find((offer) => offer.id === action.payload.id);
+    updateStatus: (state, action) => {
+      const { id, status, isActive } = action.payload;
+      const offer = state.find((o) => o.id === id);
       if (offer) {
-        offer.status = action.payload.status;
+        if (status) offer.status = status;
+        if (typeof isActive !== "undefined") offer.isActive = isActive;
+      }
+    },
+    archiveOffer: (state, action) => {
+      const offer = state.find((o) => o.id === action.payload);
+      if (offer) {
+        offer.isArchived = true;
       }
     },
   },
 });
 
-export const { setOffers, addOffer, updateOffer, deleteOffer, changeStatus } = offerSlice.actions;
+export const { setOffers, addOffer, updateOffer, deleteOffer, updateStatus, archiveOffer } = offerSlice.actions;
 export default offerSlice.reducer;

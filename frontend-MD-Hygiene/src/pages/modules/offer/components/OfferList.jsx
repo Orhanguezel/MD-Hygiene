@@ -2,11 +2,15 @@ import { useOffers } from "@/features/offers/useOffers";    // ✅ RTK Hook
 import { useLanguage } from "@/features/language/useLanguage";
 import { useTheme } from "@/features/theme/useTheme";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import {
   OfferListContainer,
   OfferTable,
   OfferButton,
   StatusBadge,
+  FilterContainer,
+  SearchInput,
+  FilterButton,
 } from "../styles/offerStyles";  // ✅ Stil dosyası
 
 const OfferList = () => {
@@ -15,9 +19,45 @@ const OfferList = () => {
   const { theme } = useTheme();
   const navigate = useNavigate();
 
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // ✅ Filtreleme ve Arama Fonksiyonu
+  const filteredOffers = offers.filter((offer) => {
+    const status = offer.status || "draft";  // ✅ Varsayılan olarak "draft"
+    const matchesStatus = statusFilter === "all" || status === statusFilter;
+    const matchesSearch = 
+      (offer.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) || "") ||
+      (offer.companyName?.toLowerCase().includes(searchTerm.toLowerCase()) || "");
+
+    return matchesStatus && matchesSearch;
+  });
+
   return (
     <OfferListContainer theme={theme}>
       <h2>{texts?.offers?.listTitle || "📋 Teklif Listesi"}</h2>
+
+      {/* ✅ Filtreleme ve Arama Alanı */}
+      <FilterContainer>
+        <SearchInput
+          type="text"
+          placeholder={texts?.offers?.searchPlaceholder || "Ara..."}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          theme={theme}
+        />
+
+        {['all', 'approved', 'rejected', 'draft'].map((status) => (
+          <FilterButton
+            key={status}
+            onClick={() => setStatusFilter(status)}
+            active={statusFilter === status}
+            theme={theme}
+          >
+            {texts?.offers?.[status] || status.charAt(0).toUpperCase() + status.slice(1)}
+          </FilterButton>
+        ))}
+      </FilterContainer>
 
       <OfferTable theme={theme}>
         <thead>
@@ -32,7 +72,7 @@ const OfferList = () => {
         </thead>
 
         <tbody>
-          {offers.map((offer) => {
+          {filteredOffers.map((offer) => {
             const totalShipping = (offer.selectedProducts || []).reduce(
               (acc, item) => acc + (item.shippingCost || 0),
               0
@@ -49,8 +89,8 @@ const OfferList = () => {
                 <td>{offer.customerName}</td>
                 <td>{totalAmount.toFixed(2)} ₺</td>
                 <td>
-                  <StatusBadge status={offer.status || "Taslak"}>
-                    {offer.status || texts?.offers?.draft || "Taslak"}
+                  <StatusBadge $status={offer.status || "draft"}>
+                    {texts?.offers?.[offer.status] || offer.status || "Taslak"}
                   </StatusBadge>
                 </td>
                 <td>

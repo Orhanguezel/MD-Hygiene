@@ -238,8 +238,8 @@ export const OfferButton = styled.button`
 `;
 
 export const StatusBadge = styled.span`
-  background-color: ${({ status }) => {
-    switch (status) {
+  background-color: ${({ $status }) => {
+    switch ($status) {
       case "Onaylandı":
         return "#28a745";
       case "Beklemede":
@@ -251,6 +251,10 @@ export const StatusBadge = styled.span`
   color: white;
   padding: 5px 10px;
   border-radius: 4px;
+`;
+
+export const MainContent = styled.div`
+  display: flex;
 `;
 
 export const Th = styled.th`
@@ -385,6 +389,74 @@ export const ProductFormButton = styled.button`
 
 export const ProductList = styled.div`
   margin-top: 20px;
+`;
+
+export const ProductListItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background: ${({ theme }) => (theme === "dark" ? "#444" : "#f1f1f1")};
+  border-radius: 4px;
+  margin-bottom: 5px;
+`;
+
+export const FilterButton = styled.button`
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background: #0056b3;
+  }
+`;
+
+export const FilterContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+
+export const FilterInput = styled.input`
+  padding: 10px;
+  margin-right: 10px;
+`;
+
+export const FilterSelect = styled.select`
+  padding: 10px;
+`;
+
+export const FilterLabel = styled.label`
+  margin-right: 10px;
+`;
+
+export const FilterForm = styled.form`
+  display: flex;
+  align-items: center;
+`;
+
+export const SearchInput = styled.input`
+  padding: 10px;
+  margin-bottom: 20px;
+`;
+
+export const TaxSelect = styled.select`
+  padding: 10px;
+`;
+
+
+export const toggleOfferActive = styled.button`
+  padding: 10px 20px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background: #c82333;
+  }
 `;
 
 

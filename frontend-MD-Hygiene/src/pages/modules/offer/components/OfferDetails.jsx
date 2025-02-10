@@ -1,74 +1,45 @@
-// ✅ OfferDetails.jsx (Redux Toolkit ile Güncellendi)
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useOffers } from "@/features/offers/useOffers";
-import { useLanguage } from "@/features/language/useLanguage";
-import {
-  OfferDetailsContainer,
-  OfferInfo,
-  ProductList,
-  ProductItem,
-  StatusBadge,
-  ActionButton
-} from "../styles/offerStyles";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
+import { useSelector, useDispatch } from "react-redux";
+import { updateOffer } from "@/features/offers/offerSlice";
 
 const OfferDetails = () => {
   const { id } = useParams();
-  const { offers } = useOffers();
-  const { texts } = useLanguage();
+  const dispatch = useDispatch();
+  const offers = useSelector((state) => state.offer);
+  const [offer, setOffer] = useState(null);
 
-  const offer = offers.find((o) => o.id === id);
+  useEffect(() => {
+    const foundOffer = offers.find((o) => o.id === id);
+    setOffer(foundOffer);
+  }, [offers, id]);
 
-  if (!offer) return <p>{texts?.offers?.notFound || "Teklif bulunamadı."}</p>;
-
-  const generatePDF = () => {
-    const doc = new jsPDF();
-    doc.text(`${texts.offers.details} - ${offer.id}`, 10, 10);
-
-    doc.autoTable({
-      head: [[
-        texts.offers.product,
-        texts.offers.quantity,
-        texts.offers.unitPrice,
-        texts.offers.total
-      ]],
-      body: offer.items.map((item) => [
-        item.product,
-        item.quantity,
-        `${item.unitPrice} ₺`,
-        `${item.unitPrice * item.quantity} ₺`
-      ])
-    });
-
-    doc.text(`${texts.offers.total}: ${offer.totalAmount} ₺`, 10, doc.lastAutoTable.finalY + 10);
-    doc.save(`Teklif_${offer.id}.pdf`);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setOffer((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleUpdate = () => {
+    dispatch(updateOffer(offer));
+    alert("Teklif güncellendi!");
+  };
+
+  if (!offer) return <p>Teklif bulunamadı.</p>;
+
   return (
-    <OfferDetailsContainer>
-      <h1>{texts.offers.details}</h1>
-      <OfferInfo>
-        <p><strong>{texts.offers.id}:</strong> {offer.id}</p>
-        <p><strong>{texts.offers.customer}:</strong> {offer.user}</p>
-        <p><strong>{texts.offers.status}:</strong> <StatusBadge status={offer.status}>{offer.status}</StatusBadge></p>
-        <p><strong>{texts.offers.total}:</strong> {offer.totalAmount} ₺</p>
-      </OfferInfo>
+    <div>
+      <h2>📋 Teklif Detayları</h2>
+      <label>Firma:</label>
+      <input type="text" name="companyName" value={offer.companyName} onChange={handleInputChange} />
 
-      <h2>{texts.offers.items}</h2>
-      <ProductList>
-        {offer.items.map((item, index) => (
-          <ProductItem key={index}>
-            <p>{item.product}</p>
-            <p>{texts.offers.quantity}: {item.quantity}</p>
-            <p>{texts.offers.unitPrice}: {item.unitPrice} ₺</p>
-            <p>{texts.offers.total}: {item.unitPrice * item.quantity} ₺</p>
-          </ProductItem>
-        ))}
-      </ProductList>
+      <label>Müşteri:</label>
+      <input type="text" name="customerName" value={offer.customerName} onChange={handleInputChange} />
 
-      <ActionButton onClick={generatePDF}>{texts.offers.downloadPDF || "PDF İndir"}</ActionButton>
-    </OfferDetailsContainer>
+      <label>Durum:</label>
+      <input type="text" name="status" value={offer.status} onChange={handleInputChange} />
+
+      <button onClick={handleUpdate}>Güncelle</button>
+    </div>
   );
 };
 

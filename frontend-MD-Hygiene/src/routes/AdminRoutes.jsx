@@ -1,5 +1,5 @@
 import { Routes, Route, Outlet } from "react-router-dom";
-import ProtectedWrapper from "@/pages/auth/ProtectedWrapper"; 
+import ProtectedWrapper from "@/pages/auth/ProtectedWrapper";
 import Dashboard from "@/pages/admin/Dashboard";
 
 // ✅ Users Modülü
@@ -24,9 +24,9 @@ import NotFound from "@/components/NotFound";
 
 // ✅ Offers Modülü
 import Offers from "@/pages/modules/offer/Offer";
-import OfferDetails from "@/pages/modules/offer/components/OfferDetails";
+import OfferDetailForm from "@/pages/modules/offer/components/OfferDetailForm";
 import OfferCreate from "@/pages/modules/offer/components/OfferCreate";
-import OfferList from "@/pages/modules/offer/components/OfferList";
+
 
 // ✅ Products Modülü
 import Products from "@/pages/modules/products/Products";
@@ -43,7 +43,9 @@ const AdminRoutes = () => {
       <Route
         path="/"
         element={
-          <ProtectedWrapper role="admin"> {/* ✅ Yalnızca admin erişebilir */}
+          <ProtectedWrapper role="admin">
+            {" "}
+            {/* ✅ Yalnızca admin erişebilir */}
             <AdminLayout />
           </ProtectedWrapper>
         }
@@ -70,12 +72,19 @@ const AdminRoutes = () => {
           <Route path=":id" element={<InvoiceDetails />} />
         </Route>
 
-        {/* ✅ Offers Modülü */}
         <Route path="offers" element={<Outlet />}>
-          <Route index element={<Offers />} />
-          <Route path="create" element={<OfferCreate />} />
-          <Route path="edit/:id" element={<OfferList />} />
-          <Route path=":id" element={<OfferDetails />} />
+          <Route index element={<Offers />} /> {/* ✅ Teklif Ana Sayfası */}
+          <Route path="create" element={<OfferCreate />} />{" "}
+          {/* ✅ Yeni Teklif */}
+          <Route path="edit/:id" element={<OfferCreate />} />{" "}
+          {/* ✅ Düzenleme */}
+          <Route path=":id" element={<OfferDetailForm />} />{" "}
+          {/* ✅ Teklif Detayı */}
+          {/* ✅ Teklif İşlemleri */}
+          <Route path=":id/approve" element={<OfferDetailForm />} />{" "}
+          {/* ✅ Onaylama */}
+          <Route path=":id/reject" element={<OfferDetailForm />} />{" "}
+          {/* ✅ Reddetme */}
         </Route>
 
         {/* ✅ Products Modülü */}
