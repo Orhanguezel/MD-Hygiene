@@ -1,41 +1,41 @@
 import { Routes, Route, Outlet } from "react-router-dom";
-import ProtectedWrapper from "../pages/auth/ProtectedWrapper"; // ✅ GÜNCEL YOL
-import Dashboard from "../pages/admin/Dashboard";
+import ProtectedWrapper from "@/pages/auth/ProtectedWrapper"; 
+import Dashboard from "@/pages/admin/Dashboard";
 
 // ✅ Users Modülü
-import Users from "../pages/modules/user/Users";
-import UserDetails from "../pages/modules/user/components/UserDetails";
-import AddUserForm from "../pages/modules/user/components/AddUserForm";
+import Users from "@/pages/modules/user/Users";
+import UserDetails from "@/pages/modules/user/components/UserDetails";
+import AddUserForm from "@/pages/modules/user/components/AddUserForm";
 
 // ✅ Orders Modülü
-import Orders from "../pages/modules/order/Orders";
-import OrderDetails from "../pages/modules/order/components/OrderDetails";
+import Orders from "@/pages/modules/order/Orders";
+import OrderDetails from "@/pages/modules/order/components/OrderDetails";
 
 // ✅ Invoices Modülü
-import Invoices from "../pages/modules/invoices/Invoices";
-import InvoiceDetails from "../pages/modules/invoices/components/InvoiceDetails";
+import Invoices from "@/pages/modules/invoices/Invoices";
+import InvoiceDetails from "@/pages/modules/invoices/components/InvoiceDetails";
 
 // ✅ Diğer Modüller
-import Notifications from "../pages/modules/notification/Notifications";
-import Reports from "../pages/modules/report/Reports";
-import AuditLogs from "../pages/modules/authlog/AuditLogs";
-import Settings from "../pages/modules/settings/Settings";
-import NotFound from "../components/common/NotFound";
+import Notifications from "@/pages/modules/notification/Notifications";
+import Reports from "@/pages/modules/report/Reports";
+import AuditLogs from "@/pages/modules/authlog/AuditLogs";
+import Settings from "@/pages/modules/settings/Settings";
+import NotFound from "@/components/NotFound";
 
 // ✅ Offers Modülü
-import Offers from "../pages/modules/offer/Offer";
-import OfferDetails from "../pages/modules/offer/components/OfferDetails";
-import OfferCreate from "../pages/modules/offer/components/OfferCreate";
-import OfferList from "../pages/modules/offer/components/OfferList";
+import Offers from "@/pages/modules/offer/Offer";
+import OfferDetails from "@/pages/modules/offer/components/OfferDetails";
+import OfferCreate from "@/pages/modules/offer/components/OfferCreate";
+import OfferList from "@/pages/modules/offer/components/OfferList";
 
 // ✅ Products Modülü
-import Products from "../pages/modules/products/Products";
-import AddProduct from "../pages/modules/products/components/AddProduct";
-import EditProduct from "../pages/modules/products/components/EditProduct";
-import ProductDetails from "../pages/modules/products/components/ProductDetails";
+import Products from "@/pages/modules/products/Products";
+import AddProduct from "@/pages/modules/products/components/AddProduct";
+import EditProduct from "@/pages/modules/products/components/EditProduct";
+import ProductDetails from "@/pages/modules/products/components/ProductDetails";
 
 // ✅ AdminLayout
-import AdminLayout from "../layouts/AdminLayout";
+import AdminLayout from "@/layouts/AdminLayout";
 
 const AdminRoutes = () => {
   return (

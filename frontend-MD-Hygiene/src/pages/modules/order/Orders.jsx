@@ -1,13 +1,11 @@
-// ✅ Orders.jsx
 import { OrdersContainer, OrdersTable, Th, Td, StatusBadge, ActionButton } from "./styles/ordersStyles";
-import { useLanguage } from "@/context/LanguageContext";
-import { useOrders } from "@/context/OrdersContext";
-import { useNavigate } from "react-router-dom"; // ✅ Navigate ekleniyor
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom"; 
 
 const Orders = () => {
-  const { texts } = useLanguage();
-  const { orders } = useOrders();
-  const navigate = useNavigate(); // ✅ Navigate hook'u tanımlandı
+  const navigate = useNavigate();
+  const texts = useSelector((state) => state.language.texts);  // ✅ Dil verisini RTK'dan al
+  const orders = useSelector((state) => state.orders) || [];   // ✅ Sipariş verisini RTK'dan al
 
   return (
     <OrdersContainer>
@@ -23,21 +21,27 @@ const Orders = () => {
           </tr>
         </thead>
         <tbody>
-          {orders.map((order) => (
-            <tr key={order.id}>
-              <Td>{order.id}</Td>
-              <Td>{order.customer}</Td>
-              <Td>
-                <StatusBadge status={order.status}>{order.status}</StatusBadge>
-              </Td>
-              <Td>{order.totalAmount} ₺</Td>
-              <Td>
-                <ActionButton onClick={() => navigate(`/orders/${order.id}`)}> {/* ✅ Detaylara yönlendirme */}
-                  {texts.orders.viewDetails}
-                </ActionButton>
-              </Td>
+          {orders.length > 0 ? (
+            orders.map((order) => (
+              <tr key={order.id}>
+                <Td>{order.id}</Td>
+                <Td>{order.customer}</Td>
+                <Td>
+                  <StatusBadge status={order.status}>{texts.orders[order.status] || order.status}</StatusBadge>
+                </Td>
+                <Td>{order.totalAmount} ₺</Td>
+                <Td>
+                  <ActionButton onClick={() => navigate(`/orders/${order.id}`)}>
+                    {texts.orders.viewDetails}
+                  </ActionButton>
+                </Td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <Td colSpan="5">{texts.orders.noOrders || "Henüz sipariş yok."}</Td>
             </tr>
-          ))}
+          )}
         </tbody>
       </OrdersTable>
     </OrdersContainer>

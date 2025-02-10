@@ -1,13 +1,13 @@
 // src/layouts/AdminLayout.jsx
 import { Outlet } from "react-router-dom";
-import CommonSidebar from "@/components/common/CommonSidebar";
-import CommonHeader from "@/components/common/CommonHeader";
+import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminHeader from "@/components/admin/AdminHeader";
 
 const AdminLayout = () => (
   <div style={{ display: "flex" }}>
-    <CommonSidebar />
+    <AdminSidebar />
     <div style={{ flex: 1, marginLeft: "250px" }}>
-      <CommonHeader />
+      <AdminHeader />
       <main style={{ padding: "20px" }}>
         <Outlet /> {/* ✅ Dinamik içerik burada gösterilir */}
       </main>

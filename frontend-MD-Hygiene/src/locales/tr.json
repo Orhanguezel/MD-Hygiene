@@ -44,7 +44,22 @@
     "status": "Durum",
     "total": "Toplam",
     "actions": "İşlemler",
-    "viewDetails": "Detayları Gör"
+    "viewDetails": "Detayları Gör",
+    "details": "Sipariş Detayları",
+    "paymentStatus": "Ödeme Durumu",
+    "shippingAddress": "Teslimat Adresi",
+    "products": "Ürünler",
+    "quantity": "Adet",
+    "unitPrice": "Birim Fiyat",
+    "notFound": "Sipariş bulunamadı.",
+    "noAddress": "Adres bilgisi bulunamadı.",
+    "noProducts": "Bu siparişte ürün bulunmamaktadır.",
+    "pending": "Beklemede",
+    "completed": "Tamamlandı",
+    "cancelled": "İptal Edildi",
+    "processing": "İşleniyor",
+    "paid": "Ödendi",
+    "unpaid": "Ödenmedi"
   },
   "invoices": {
     "title": "Fatura Yönetimi",

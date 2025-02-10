@@ -11,7 +11,7 @@ import invoicesReducer from '../features/invoices/invoicesSlice';
 import offerReducer from '../features/offers/offerSlice';
 import productReducer from '../features/products/productSlice';
 import settingsReducer from '../features/settings/settingsSlice';
-import reportsReducer from '../features/reports/reportsSlice'; // ✅ Import reportsReducer
+import reportsReducer from '../features/reports/reportsSlice'; 
 
 export const store = configureStore({
   reducer: {
@@ -26,6 +26,6 @@ export const store = configureStore({
     offer: offerReducer,
     product: productReducer,
     settings: settingsReducer,
-    reports: reportsReducer, // ✅ Include reportsReducer in store
+    reports: reportsReducer, 
   },
 });

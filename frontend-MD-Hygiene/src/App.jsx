@@ -4,10 +4,10 @@ import AdminRoutes from "./routes/AdminRoutes";
 import { GlobalStyles } from "./styles/globalStyles";
 import { lightTheme, darkTheme } from "./styles/themes";
 import styled, { ThemeProvider as StyledThemeProvider } from "styled-components";
-import { useSelector } from "react-redux";
 import { useAuth } from "./features/auth/useAuth";
 import { useTheme } from "./features/theme/useTheme";
 import { useLanguage } from "./features/language/useLanguage";
+import Home from "./pages/user/Home";
 
 const App = () => {
   const { user, loading } = useAuth();             // ✅ Redux'tan kullanıcı verisi
@@ -25,6 +25,7 @@ const App = () => {
             <Route path="/*" element={<AdminRoutes />} /> // ✅ Giriş yapılmışsa admin sayfalarına yönlendir
           ) : (
             <>
+            <Route path="/home" element={<Home />} />
               <Route path="/login" element={<Login />} /> 
               <Route path="*" element={<Navigate to="/login" />} />
             </>

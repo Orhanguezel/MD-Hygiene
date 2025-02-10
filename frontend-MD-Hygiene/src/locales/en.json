@@ -44,8 +44,24 @@
     "status": "Status",
     "total": "Total",
     "actions": "Actions",
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "details": "Order Details",
+    "paymentStatus": "Payment Status",
+    "shippingAddress": "Shipping Address",
+    "products": "Products",
+    "quantity": "Quantity",
+    "unitPrice": "Unit Price",
+    "notFound": "Order not found.",
+    "noAddress": "No address information available.",
+    "noProducts": "No products in this order.",
+    "pending": "Pending",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "processing": "Processing",
+    "paid": "Paid",
+    "unpaid": "Unpaid"
   },
+
   "invoices": {
     "title": "Invoice Management",
     "invoiceNumber": "Invoice No",
