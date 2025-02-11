@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useLanguage } from "@/features/language/useLanguage";
-import { useTheme } from "@/features/theme/useTheme";
+import { useAuth } from "@/features/auth/useAuth"; // ✅ RTK uyumlu Auth
+import { useLanguage } from "@/features/language/useLanguage"; // ✅ Dil desteği
+import { useTheme } from "@/features/theme/useTheme"; // ✅ Tema desteği
 import { useNavigate } from "react-router-dom";
-import { login } from "@/features/auth/authSlice"; // ✅ Redux Toolkit login işlemi
+import { login } from "@/api/authApi";
 import {
   AuthContainer,
   AuthForm,
@@ -11,28 +11,28 @@ import {
   Button,
   ErrorMessage,
   Title,
-  LoadingSpinner,
-} from "@/styles/authStyles";
+} from "@/styles/authStyles"; // ✅ Ortak stil dosyası
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
+  const [error, setError] = useState("");
+  const { signin } = useAuth();
   const { texts } = useLanguage();
   const { theme } = useTheme();
-  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+
     try {
-      const result = await dispatch(login({ email, password }));
-      if (result.meta.requestStatus === "fulfilled") {
-        navigate("/dashboard"); // ✅ Giriş başarılıysa yönlendir
-      }
+      const userData = await login(email, password);
+      signin(userData);
+      navigate("/dashboard");
     } catch (err) {
-      console.error("Giriş hatası:", err);
+      console.error("Giriş hatası:", err.message);
+      setError(err.message);
     }
   };
 
@@ -40,9 +40,7 @@ const Login = () => {
     <AuthContainer theme={theme}>
       <AuthForm theme={theme} onSubmit={handleSubmit}>
         <Title theme={theme}>{texts?.auth?.loginTitle || "Giriş Yap"}</Title>
-
-        {error && <ErrorMessage>{error}</ErrorMessage>} {/* ✅ Hata mesajı */}
-
+        {error && <ErrorMessage>{error}</ErrorMessage>}
         <Input
           theme={theme}
           type="email"
@@ -51,7 +49,6 @@ const Login = () => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-
         <Input
           theme={theme}
           type="password"
@@ -60,14 +57,9 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
-        <Button theme={theme} type="submit" disabled={loading}>
-          {loading
-            ? texts?.auth?.loading || "Giriş Yapılıyor..."
-            : texts?.auth?.loginButton || "Giriş Yap"}
+        <Button theme={theme} type="submit">
+          {texts?.auth?.loginButton || "Giriş Yap"}
         </Button>
-
-        {loading && <LoadingSpinner />} {/* ✅ Yüklenme animasyonu */}
       </AuthForm>
     </AuthContainer>
   );

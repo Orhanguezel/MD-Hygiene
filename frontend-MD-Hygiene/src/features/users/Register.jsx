@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { register } from "@/api/authApi";
+import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/features/language/useLanguage";
 import { useTheme } from "@/features/theme/useTheme";
-import { useNavigate } from "react-router-dom";
-import { login } from "@/features/auth/authSlice"; // ✅ Redux Toolkit login işlemi
 import {
   AuthContainer,
   AuthForm,
@@ -11,38 +10,43 @@ import {
   Button,
   ErrorMessage,
   Title,
-  LoadingSpinner,
-} from "@/styles/authStyles";
+} from "@/styles/authStyles"; // ✅ Ortak stil dosyası
 
-const Login = () => {
+export default function Register() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const dispatch = useDispatch();
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-
   const { texts } = useLanguage();
   const { theme } = useTheme();
-  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+
     try {
-      const result = await dispatch(login({ email, password }));
-      if (result.meta.requestStatus === "fulfilled") {
-        navigate("/dashboard"); // ✅ Giriş başarılıysa yönlendir
-      }
+      await register(name, email, password);
+      navigate("/login");
     } catch (err) {
-      console.error("Giriş hatası:", err);
+      console.error("Kayıt hatası:", err.message);
+      setError(err.message);
     }
   };
 
   return (
     <AuthContainer theme={theme}>
       <AuthForm theme={theme} onSubmit={handleSubmit}>
-        <Title theme={theme}>{texts?.auth?.loginTitle || "Giriş Yap"}</Title>
-
-        {error && <ErrorMessage>{error}</ErrorMessage>} {/* ✅ Hata mesajı */}
-
+        <Title theme={theme}>{texts?.auth?.registerTitle || "Kayıt Ol"}</Title>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
+        <Input
+          theme={theme}
+          type="text"
+          placeholder={texts?.auth?.namePlaceholder || "Ad Soyad"}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
         <Input
           theme={theme}
           type="email"
@@ -51,7 +55,6 @@ const Login = () => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-
         <Input
           theme={theme}
           type="password"
@@ -60,17 +63,10 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
-        <Button theme={theme} type="submit" disabled={loading}>
-          {loading
-            ? texts?.auth?.loading || "Giriş Yapılıyor..."
-            : texts?.auth?.loginButton || "Giriş Yap"}
+        <Button theme={theme} type="submit">
+          {texts?.auth?.registerButton || "Kayıt Ol"}
         </Button>
-
-        {loading && <LoadingSpinner />} {/* ✅ Yüklenme animasyonu */}
       </AuthForm>
     </AuthContainer>
   );
-};
-
-export default Login;
+}

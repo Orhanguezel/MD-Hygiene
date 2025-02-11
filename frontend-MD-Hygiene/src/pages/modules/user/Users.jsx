@@ -1,9 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchUsers, toggleUserStatus } from "@/features/auth/authSlice";
+import { getAllUsers, addUser, updateUser, deleteUser, toggleUserStatus } from '@/features/users/userSlice';
 import { useLanguage } from "@/features/language/useLanguage";
-import { toggleTheme } from "@/features/theme/themeSlice"; // ✅ Tema toggle
 
 import {
   UsersContainer,
@@ -23,17 +22,43 @@ const Users = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { texts } = useLanguage();
-  const users = useSelector((state) => state.auth.users);
-  const themeMode = useSelector((state) => state.theme.mode);
+  const { users, loading, error } = useSelector((state) => state.user);
+  const [newUser, setNewUser] = useState({ name: '', email: '' });
+  const [editUser, setEditUser] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchUsers());
+    dispatch(getAllUsers());
   }, [dispatch]);
 
-  const handleToggleStatus = (userId, currentStatus, e) => {
-    e.stopPropagation();
-    dispatch(toggleUserStatus({ userId, currentStatus: !currentStatus }));
+  // Kullanıcı Ekleme
+  const handleAddUser = (e) => {
+    e.preventDefault();
+    if (newUser.name && newUser.email) {
+      dispatch(addUser(newUser));
+      setNewUser({ name: '', email: '' });
+    }
   };
+
+  // Kullanıcı Güncelleme
+  const handleUpdateUser = (e) => {
+    e.preventDefault();
+    dispatch(updateUser(editUser));
+    setEditUser(null);
+  };
+
+  // Kullanıcı Silme
+  const handleDelete = (id) => {
+    dispatch(deleteUser(id));
+  };
+
+  // Aktif/Pasif Durumunu Değiştirme
+  const handleToggleStatus = (userId, isActive, event) => {
+    event.stopPropagation(); // Kart tıklamasını engellemek için
+    dispatch(toggleUserStatus(userId));
+  };
+
+  if (loading) return <p>Yükleniyor...</p>;
+  if (error) return <p>Hata: {error}</p>;
 
   return (
     <UsersContainer>
@@ -50,18 +75,22 @@ const Users = () => {
             <UserInfo>
               <UserName>{user.name}</UserName>
               <UserEmail>{user.email}</UserEmail>
-              <UserRole>{texts.users.role}: {user.role}</UserRole>
+              <UserRole>{texts.users.role}: {user.role || 'User'}</UserRole>
               <UserStatus isActive={user.isActive}>
                 {user.isActive ? texts.users.active : texts.users.inactive}
               </UserStatus>
+
               <div>
                 <ActionButton onClick={(e) => { e.stopPropagation(); navigate(`/users/edit/${user.id}`); }}>
                   {texts.users.edit}
                 </ActionButton>
-                <ActionButton
-                  onClick={(e) => handleToggleStatus(user.id, user.isActive, e)}
-                >
+
+                <ActionButton onClick={(e) => handleToggleStatus(user.id, user.isActive, e)}>
                   {user.isActive ? texts.users.deactivate : texts.users.activate}
+                </ActionButton>
+
+                <ActionButton onClick={(e) => { e.stopPropagation(); handleDelete(user.id); }}>
+                  {texts.users.delete}
                 </ActionButton>
               </div>
             </UserInfo>

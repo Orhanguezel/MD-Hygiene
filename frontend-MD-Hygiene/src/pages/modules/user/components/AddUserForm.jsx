@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser } from "@/features/auth/authSlice";
+import { addUser } from "@/features/users/userSlice";
 import { useLanguage } from "@/features/language/useLanguage";
 import { toggleTheme } from "@/features/theme/themeSlice";
 import {
@@ -12,6 +12,7 @@ import {
   Select,
   ErrorMessage,
   SectionTitle,
+  ImagePreview, // ✅ Resim önizleme için yeni bir stil
 } from "../styles/usersStyles";
 
 const AddUserForm = () => {
@@ -26,11 +27,28 @@ const AddUserForm = () => {
     password: "",
     role: "customer",
     isActive: true,
+    profileImage: "", // ✅ Base64 resim verisi burada tutulacak
   });
   const [error, setError] = useState("");
 
+  // ✅ Form alanları için değişiklik işleyici
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // ✅ Resim yükleme işleyici
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({
+          ...prev,
+          profileImage: reader.result, // Base64 olarak kaydet
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -45,7 +63,9 @@ const AddUserForm = () => {
     const newUser = {
       ...formData,
       id: `USR-${Date.now()}`,
-      profileImage: "https://via.placeholder.com/150",
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      profileImage: formData.profileImage || "/assets/auth-image.png", // Varsayılan resim
     };
 
     dispatch(addUser(newUser));
@@ -55,11 +75,9 @@ const AddUserForm = () => {
   return (
     <UsersContainer>
       <SectionTitle>{texts.users.addUser}</SectionTitle>
-      <ActionButton onClick={() => dispatch(toggleTheme())}>
-        {themeMode === "light" ? "🌙 Dark Mode" : "☀️ Light Mode"}
-      </ActionButton>
 
       {error && <ErrorMessage>{error}</ErrorMessage>}
+
       <Form onSubmit={handleSubmit}>
         <Input
           type="text"
@@ -85,12 +103,26 @@ const AddUserForm = () => {
           onChange={handleChange}
           required
         />
+
         <Select name="role" value={formData.role} onChange={handleChange}>
           <option value="customer">{texts.users.userRole}</option>
           <option value="admin">{texts.users.adminRole}</option>
           <option value="moderator">{texts.users.moderatorRole}</option>
           <option value="staff">{texts.users.staffRole}</option>
         </Select>
+
+        {/* ✅ Resim Yükleme Alanı */}
+        <Input
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+        />
+
+        {/* ✅ Resim Önizlemesi */}
+        {formData.profileImage && (
+          <ImagePreview src={formData.profileImage} alt="Profile Preview" />
+        )}
+
         <ActionButton type="submit">{texts.users.save}</ActionButton>
       </Form>
     </UsersContainer>

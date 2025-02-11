@@ -1,5 +1,8 @@
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import ProtectedWrapper from "@/pages/auth/ProtectedWrapper";
+import AdminLayout from "@/layouts/AdminLayout";
+
+// ✅ Dashboard
 import Dashboard from "@/pages/admin/Dashboard";
 
 // ✅ Users Modülü
@@ -15,13 +18,6 @@ import OrderDetails from "@/pages/modules/order/components/OrderDetails";
 import Invoices from "@/pages/modules/invoices/Invoices";
 import InvoiceDetails from "@/pages/modules/invoices/components/InvoiceDetails";
 
-// ✅ Diğer Modüller
-import Notifications from "@/pages/modules/notification/Notifications";
-import Reports from "@/pages/modules/report/Reports";
-import AuditLogs from "@/pages/modules/authlog/AuditLogs";
-import Settings from "@/pages/modules/settings/Settings";
-import NotFound from "@/components/NotFound";
-
 // ✅ Offers Modülü
 import Offers from "@/pages/modules/offer/Offer";
 import OfferDetailForm from "@/pages/modules/offer/components/OfferDetailForm";
@@ -35,8 +31,12 @@ import AddProduct from "@/pages/modules/products/components/AddProduct";
 import EditProduct from "@/pages/modules/products/components/EditProduct";
 import ProductDetails from "@/pages/modules/products/components/ProductDetails";
 
-// ✅ AdminLayout
-import AdminLayout from "@/layouts/AdminLayout";
+// ✅ Diğer Modüller
+import Notifications from "@/pages/modules/notification/Notifications";
+import Reports from "@/pages/modules/report/Reports";
+import AuditLogs from "@/pages/modules/authlog/AuditLogs";
+import Settings from "@/pages/modules/settings/Settings";
+import NotFound from "@/components/NotFound";
 
 const AdminRoutes = () => {
   return (
@@ -44,14 +44,14 @@ const AdminRoutes = () => {
       <Route
         path="/"
         element={
-          <ProtectedWrapper role="admin">
+          <ProtectedWrapper role="admin"> {/* ✅ Yalnızca admin erişimi */}
             <AdminLayout />
           </ProtectedWrapper>
         }
       >
-        <Route index element={<Dashboard />} />
+        {/* ✅ Dashboard */}
+        <Route index element={<Navigate to="dashboard" />} />
         <Route path="dashboard" element={<Dashboard />} />
-
 
         {/* ✅ Users Modülü */}
         <Route path="users" element={<Outlet />}>
@@ -75,14 +75,14 @@ const AdminRoutes = () => {
 
         {/* ✅ Offers Modülü */}
         <Route path="offers" element={<Outlet />}>
-          <Route index element={<Offers />} /> {/* ✅ Teklif Ana Sayfası */}
-          <Route path="create" element={<OfferCreate />} /> {/* ✅ Yeni Teklif Oluştur */}
-          <Route path="edit/:id" element={<OfferCreate />} /> {/* ✅ Teklif Düzenleme */}
-          <Route path=":id" element={<OfferDetailForm />} /> {/* ✅ Teklif Detayları */}
-          <Route path=":id/approve" element={<OfferDetailForm />} /> {/* ✅ Onaylama */}
-          <Route path=":id/reject" element={<OfferDetailForm />} /> {/* ✅ Reddetme */}
-          <Route path=":id/pdf" element={<OfferPDF />} /> {/* ✅ PDF Oluşturma */}
-         <Route path="archive" element={<OfferArchive />} /> {/* ✅ Arşivlenmiş */}
+          <Route index element={<Offers />} />
+          <Route path="create" element={<OfferCreate />} />
+          <Route path="edit/:id" element={<OfferCreate />} />
+          <Route path=":id" element={<OfferDetailForm />} />
+          <Route path=":id/approve" element={<OfferDetailForm />} />
+          <Route path=":id/reject" element={<OfferDetailForm />} />
+          <Route path=":id/pdf" element={<OfferPDF />} />
+          <Route path="archive" element={<OfferArchive />} />
         </Route>
 
         {/* ✅ Products Modülü */}
@@ -99,7 +99,7 @@ const AdminRoutes = () => {
         <Route path="audit-logs" element={<AuditLogs />} />
         <Route path="settings" element={<Settings />} />
 
-        {/* ✅ 404 Sayfası */}
+        {/* ✅ 404 Not Found */}
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

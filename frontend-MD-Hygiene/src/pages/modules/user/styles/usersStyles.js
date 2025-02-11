@@ -191,3 +191,14 @@ export const ErrorMessage = styled.p`
   text-align: center;
   margin: 0;
 `;
+
+
+// ✅ Resim Önizleme Stili
+export const ImagePreview = styled.img`
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 10px auto;
+  border: 2px solid #4caf50;
+`;

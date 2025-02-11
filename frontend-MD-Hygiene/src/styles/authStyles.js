@@ -1,61 +1,75 @@
-// ✅ src/styles/authStyles.js
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const AuthContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: ${({ theme }) => (theme === "dark" ? "#1e1e1e" : "#f5f5f5")};
-  color: ${({ theme }) => (theme === "dark" ? "#ffffff" : "#000000")};
+  background-color: ${({ theme }) => (theme === "light" ? "#f9f9f9" : "#222")};
 `;
 
 export const AuthForm = styled.form`
-  background: ${({ theme }) => (theme === "dark" ? "#2c2c2c" : "white")};
-  padding: 40px;
+  background-color: ${({ theme }) => (theme === "light" ? "#fff" : "#333")};
+  padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 300px;
   display: flex;
   flex-direction: column;
+  gap: 15px;
 `;
 
 export const Input = styled.input`
   padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid ${({ theme }) => (theme === "dark" ? "#555" : "#ccc")};
-  background-color: ${({ theme }) => (theme === "dark" ? "#333" : "#fff")};
-  color: ${({ theme }) => (theme === "dark" ? "#fff" : "#000")};
+  border: 1px solid #ccc;
   border-radius: 4px;
+  background-color: ${({ theme }) => (theme === "light" ? "#fff" : "#444")};
+  color: ${({ theme }) => (theme === "light" ? "#000" : "#fff")};
 `;
 
 export const Button = styled.button`
+  background-color: #007bff;
+  color: #fff;
   padding: 10px;
-  background-color: ${({ theme }) => (theme === "dark" ? "#4caf50" : "#4caf50")};
-  color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background 0.3s;
 
   &:hover {
-    background-color: ${({ theme }) => (theme === "dark" ? "#45a049" : "#45a049")};
+    background-color: #0056b3;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
   }
 `;
 
-export const ErrorMessage = styled.p`
+export const ErrorMessage = styled.div`
   color: red;
-  margin-bottom: 10px;
+  font-weight: bold;
   text-align: center;
 `;
 
 export const Title = styled.h2`
   text-align: center;
-  margin-bottom: 20px;
-  color: ${({ theme }) => (theme === "dark" ? "#ffffff" : "#000000")};
+  color: ${({ theme }) => (theme === "light" ? "#333" : "#fff")};
 `;
 
-export const LoadingMessage = styled.p`
-  text-align: center;
-  color: ${({ theme }) => (theme === "dark" ? "#cccccc" : "#333333")};
-  margin-top: 20px;
+// ✅ Yüklenme Animasyonu
+const spin = keyframes`
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+export const LoadingSpinner = styled.div`
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: ${spin} 1s linear infinite;
+  margin: 10px auto;
 `;

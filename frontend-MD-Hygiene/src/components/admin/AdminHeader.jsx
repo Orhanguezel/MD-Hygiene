@@ -1,8 +1,9 @@
-import { useUI } from "@/features/ui/useUI";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLanguage } from "@/features/language/useLanguage";
 import { useTheme } from "@/features/theme/useTheme";
-import { useAuth } from "@/features/auth/useAuth";
-import { Link } from "react-router-dom";
+import { logout } from "@/features/auth/authSlice"; // ✅ Doğrudan authSlice'tan logout
+import { Link, useNavigate } from "react-router-dom";
 import {
   HeaderContainer,
   Logo,
@@ -10,17 +11,30 @@ import {
   NavItem,
   Button,
   ProfileSection,
-  Tooltip,
+  ProfileDropdown,
+  ProfileImage,
   ThemeToggleButton,
 } from "@/styles/headerStyles";
-import { FaBell, FaUserCircle, FaCog, FaSun, FaMoon } from "react-icons/fa";
+import { FaBell, FaUserCircle, FaCog, FaSun, FaMoon, FaSignOutAlt } from "react-icons/fa";
 import logo from "@/assets/logo.png";
 
 export default function AdminHeader() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { language, setLanguage, texts } = useLanguage();
   const { theme, toggleTheme } = useTheme();
-  const { user, signout } = useAuth();
-  const { toggleSidebar } = useUI();
+  const { user } = useSelector((state) => state.auth); // ✅ Kullanıcı bilgisi authSlice'tan
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleProfileClick = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout()); // ✅ Logout işlemi
+    navigate("/login"); // ✅ Çıkış sonrası login sayfasına yönlendirme
+  };
 
   return (
     <HeaderContainer>
@@ -29,11 +43,12 @@ export default function AdminHeader() {
       </Link>
 
       <Nav>
-
+        {/* ✅ Tema Toggle */}
         <ThemeToggleButton onClick={toggleTheme}>
           {theme === "light" ? <FaMoon size={18} /> : <FaSun size={18} />}
         </ThemeToggleButton>
 
+        {/* ✅ Dil Seçimi */}
         <Button onClick={() => setLanguage("tr")} disabled={language === "tr"}>
           🇹🇷
         </Button>
@@ -44,21 +59,37 @@ export default function AdminHeader() {
           🇬🇧
         </Button>
 
+        {/* ✅ Bildirim İkonu */}
         <NavItem>
           <Button>
-            <FaUserCircle size={18} />
-            <span className="nav-text">{user?.name || "Kullanıcı"}</span>
+            <FaBell size={18} />
           </Button>
         </NavItem>
 
-        <NavItem>
-          <Button onClick={signout}>
-            🚪
-            <span className="nav-text">
-              {texts?.sidebar?.logout || "Çıkış Yap"}
-            </span>
-          </Button>
-        </NavItem>
+        {/* ✅ Kullanıcı Profil */}
+        <ProfileSection onClick={handleProfileClick}>
+          {user?.profileImage ? (
+            <ProfileImage src={user.profileImage} alt={user.name} />
+          ) : (
+            <FaUserCircle size={24} />
+          )}
+          <span>{user?.name || "Kullanıcı"}</span>
+
+          {/* ✅ Dropdown Menü */}
+          {dropdownOpen && (
+            <ProfileDropdown>
+              <Link to="/profile">
+                <FaUserCircle /> {texts?.profile || "Profilim"}
+              </Link>
+              <Link to="/settings">
+                <FaCog /> {texts?.settings || "Ayarlar"}
+              </Link>
+              <Button onClick={handleLogout}>
+                <FaSignOutAlt /> {texts?.logout || "Çıkış Yap"}
+              </Button>
+            </ProfileDropdown>
+          )}
+        </ProfileSection>
       </Nav>
     </HeaderContainer>
   );

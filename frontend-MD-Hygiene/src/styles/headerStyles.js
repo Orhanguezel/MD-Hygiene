@@ -1,90 +1,106 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 
+// ✅ Header Konteyneri
 export const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  background-color: #1f2937;
-  color: white;
+  padding: 10px 20px;
+  background-color: ${({ theme }) => (theme === "light" ? "#fff" : "#333")};
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
+// ✅ Logo
 export const Logo = styled.img`
   height: 40px;
 `;
 
+// ✅ Navigation Menüsü
 export const Nav = styled.nav`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
 `;
 
-
-
+// ✅ Navigation Item
 export const NavItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
   position: relative;
+`;
 
-  @media (max-width: 768px) {
-
-  .nav-text {
-    display: none;
-  }
-}
-}`;
-
+// ✅ Butonlar
 export const Button = styled.button`
-  background: transparent;
+  background: none;
   border: none;
-  color: inherit;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  transition: color 0.3s ease;
+  padding: 8px;
+  color: ${({ theme }) => (theme === "light" ? "#333" : "#fff")};
+  transition: 0.3s;
 
   &:hover {
-    color: ${({ theme }) => theme.secondary || "#ffcc00"};
+    color: #007bff;
   }
 
   &:disabled {
     opacity: 0.5;
-    cursor: default;
+    cursor: not-allowed;
   }
 `;
 
-export const ThemeToggleButton = styled(Button)`
-  background-color: ${({ theme }) => theme.buttonBackground || "#4CAF50"};
-  border-radius: 50%;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s ease;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.buttonHover || "#388e3c"};
-  }
-`;
-
+// ✅ Profil Alanı
 export const ProfileSection = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
+  position: relative;
+
+  span {
+    font-weight: bold;
+    color: ${({ theme }) => (theme === "light" ? "#333" : "#fff")};
+  }
 `;
 
-export const Tooltip = styled.div`
+// ✅ Profil Resmi
+export const ProfileImage = styled.img`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #007bff;
+`;
+
+// ✅ Dropdown Menü
+export const ProfileDropdown = styled.div`
   position: absolute;
-  top: 100%;
+  top: 40px;
   right: 0;
-  background-color:{({ theme }) => theme.tooltipBackground || "#333"};
-  color: black;
-  padding: 10px;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: ${({ theme }) => (theme === "light" ? "#fff" : "#444")};
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+  z-index: 100;
+
+  a,
+  button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: ${({ theme }) => (theme === "light" ? "#333" : "#fff")};
+    cursor: pointer;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+
+    &:hover {
+      background-color: ${({ theme }) => (theme === "light" ? "#f0f0f0" : "#555")};
+    }
+  }
 `;
 
+// ✅ Tema Değiştirme Butonu
+export const ThemeToggleButton = styled(Button)`
+  font-size: 18px;
+`;

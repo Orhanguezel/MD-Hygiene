@@ -1,102 +1,70 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { login as loginAPI, getUserProfile } from '@/api/authApi';
-import usersData from "@/data/users.json"; // JSON verileri
+import API from '@/services/api';
 
-// ✅ Kullanıcı Profilini Getirme (AsyncThunk)
-export const fetchUserProfile = createAsyncThunk(
-  'auth/fetchUserProfile',
-  async (_, { rejectWithValue }) => {
-    try {
-      const data = await getUserProfile();
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.message);
+// 🔑 Giriş Yapma (Login)
+export const login = createAsyncThunk('auth/login', async (credentials, { rejectWithValue }) => {
+  try {
+    const response = await API.get('/users', {
+      params: { email: credentials.email, password: credentials.password },
+    });
+
+    if (response.data.length === 0) {
+      return rejectWithValue('Geçersiz email veya şifre!');
     }
-  }
-);
 
-// ✅ Login İşlemi (AsyncThunk)
-export const loginUser = createAsyncThunk(
-  'auth/loginUser',
-  async ({ email, password }, { rejectWithValue }) => {
-    try {
-      const data = await loginAPI(email, password);
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.message);
+    const user = response.data[0];
+
+    if (!user.isActive) {
+      return rejectWithValue('Hesabınız aktif değil!');
     }
-  }
-);
 
-export const toggleUserStatus = createAsyncThunk(
-  'auth/toggleUserStatus',
-  async ({ userId, currentStatus }) => {
-    // Burada API'ye istek atarak kullanıcının durumunu değiştir
-    return { userId, currentStatus };
+    localStorage.setItem('user', JSON.stringify(user));
+    return { user };
+  } catch (error) {
+    return rejectWithValue('Giriş başarısız! Lütfen tekrar deneyin.');
   }
-);
+});
 
-// ✅ Kullanıcıları JSON'dan Getirme
-export const fetchUsers = createAsyncThunk(
-  'auth/fetchUsers',
-  async () => {
-    return usersData; // JSON'dan verileri döner
-  }
-);
-
-const initialState = {
-  user: JSON.parse(localStorage.getItem("user")) || null,
-  token: localStorage.getItem("token") || null,
-  users: [],
-  loading: false,
-  error: null,
-};
+// 🚪 Çıkış Yapma (Logout)
+export const logout = createAsyncThunk('auth/logout', async () => {
+  localStorage.removeItem('user');
+  return true;
+});
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState,
+  initialState: {
+    user: JSON.parse(localStorage.getItem('user')) || null,
+    isAuthenticated: !!localStorage.getItem('user'),
+    loading: false,
+    error: null,
+  },
   reducers: {
-    logoutUser: (state) => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      state.user = null;
-      state.token = null;
-      state.loading = false;
+    clearError: (state) => {
       state.error = null;
     },
-    setUser: (state, action) => {
-      state.user = action.payload;
-    },
-    setAuthError: (state, action) => {
-      state.error = action.payload;
-    },
-
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUserProfile.pending, (state) => {
+      .addCase(login.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
-      .addCase(fetchUserProfile.fulfilled, (state, action) => {
-        state.user = action.payload;
+      .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-      })
-      .addCase(fetchUserProfile.rejected, (state, action) => {
-        state.error = action.payload;
-        state.loading = false;
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
+        state.isAuthenticated = true;
         state.user = action.payload.user;
-        state.token = action.payload.token;
-        localStorage.setItem("token", action.payload.token);
-        localStorage.setItem("user", JSON.stringify(action.payload.user));
       })
-      .addCase(fetchUsers.fulfilled, (state, action) => {
-        state.users = action.payload;
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.isAuthenticated = false;
+        state.user = null;
       });
   },
 });
 
-// ✅ Eksiksiz Exportlar
-export const { logoutUser, setUser, setAuthError, addUser } = authSlice.actions;
+export const { clearError } = authSlice.actions;
 export default authSlice.reducer;
