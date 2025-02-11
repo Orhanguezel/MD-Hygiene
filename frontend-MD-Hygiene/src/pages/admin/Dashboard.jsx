@@ -1,5 +1,5 @@
-import { useLanguage } from "@/features/language/useLanguage";  // ✅ RTK Dil Yönetimi
-import { useTheme } from "@/features/theme/useTheme";            // ✅ RTK Tema Yönetimi
+import { useLanguage } from "@/features/language/useLanguage";
+import { useTheme } from "@/features/theme/useTheme";
 import { useNavigate } from "react-router-dom";
 import {
   DashboardContainer,
@@ -10,8 +10,8 @@ import {
 } from "@/styles/dashboardStyles";
 
 const Dashboard = () => {
-  const { texts } = useLanguage();  // ✅ Dil desteği
-  const { theme } = useTheme();     // ✅ Tema desteği
+  const { texts } = useLanguage();
+  const { theme } = useTheme();
   const navigate = useNavigate();
 
   const modules = [
@@ -30,24 +30,18 @@ const Dashboard = () => {
   ];
 
   return (
-    <DashboardContainer style={{ backgroundColor: theme === "dark" ? "#1e1e1e" : "#f9f9f9" }}>
+    <DashboardContainer theme={theme}>
       <h1>{texts?.dashboard?.title || "Kontrol Paneli"}</h1>
 
       <CardGrid>
         {modules.map((module, index) => (
           <StatCard
             key={index}
+            theme={theme}
             onClick={() => navigate(module.route)}
-            style={{
-              backgroundColor: theme === "dark" ? "#333" : "#fff",
-              color: theme === "dark" ? "#f1f1f1" : "#333",
-              border: theme === "dark" ? "1px solid #444" : "1px solid #ddd",
-              cursor: "pointer",
-              transition: "all 0.3s ease",
-            }}
           >
             <CardTitle>{module.title}</CardTitle>
-            <CardCount>{module.count}</CardCount>
+            <CardCount theme={theme}>{module.count}</CardCount>
           </StatCard>
         ))}
       </CardGrid>

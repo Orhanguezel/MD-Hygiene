@@ -1,4 +1,4 @@
-import { useOffers } from "@/features/offers/useOffers";    // ✅ RTK Hook
+import { useOffers } from "@/features/offer/useOffers";    // ✅ RTK Hook
 import { useLanguage } from "@/features/language/useLanguage";
 import { useTheme } from "@/features/theme/useTheme";
 import { useNavigate } from "react-router-dom";
@@ -15,8 +15,8 @@ import {
 
 const OfferList = () => {
   const { offers, deleteOffer } = useOffers();
-  const { texts } = useLanguage();
-  const { theme } = useTheme();
+  const { texts } = useLanguage(); // ✅ Dil desteği eklendi
+  const { theme } = useTheme();    // ✅ Tema desteği eklendi
   const navigate = useNavigate();
 
   const [statusFilter, setStatusFilter] = useState("all");
@@ -34,7 +34,7 @@ const OfferList = () => {
   });
 
   return (
-    <OfferListContainer theme={theme}>
+    <OfferListContainer theme={theme} style={{ backgroundColor: theme === "dark" ? "#1e1e1e" : "#fff", color: theme === "dark" ? "#fff" : "#000" }}>
       <h2>{texts?.offers?.listTitle || "📋 Teklif Listesi"}</h2>
 
       {/* ✅ Filtreleme ve Arama Alanı */}
@@ -47,7 +47,7 @@ const OfferList = () => {
           theme={theme}
         />
 
-        {['all', 'approved', 'rejected', 'draft'].map((status) => (
+        {["all", "approved", "rejected", "draft"].map((status) => (
           <FilterButton
             key={status}
             onClick={() => setStatusFilter(status)}
@@ -97,9 +97,6 @@ const OfferList = () => {
                   <OfferButton theme={theme} onClick={() => navigate(`/offers/${offer.id}`)}>
                     {texts?.offers?.view || "Görüntüle"}
                   </OfferButton>
-                  <OfferButton theme={theme} onClick={() => navigate(`/offers/create?id=${offer.id}`)}>
-                    {texts?.offers?.edit || "Düzenle"}
-                  </OfferButton>
                   <OfferButton theme={theme} onClick={() => deleteOffer(offer.id)}>
                     {texts?.offers?.delete || "Sil"}
                   </OfferButton>
@@ -113,4 +110,4 @@ const OfferList = () => {
   );
 };
 
-export default OfferList;
+export default OfferList; 

@@ -1,10 +1,10 @@
 // ✅ src/features/offer/components/OfferCreate.jsx
 import { useState, useEffect } from "react";
 import { useProducts } from "@/features/products/useProducts";
-import { useOffers } from "@/features/offers/useOffers";
+import { useOffers } from "@/features/offer/useOffers";
 import { v4 as uuidv4 } from "uuid";
-import { useLanguage } from "@/features/language/useLanguage";
-import { useTheme } from "@/features/theme/useTheme";
+import { useLanguage } from "@/features/language/useLanguage"; // ✅ Dil desteği eklendi
+import { useTheme } from "@/features/theme/useTheme";         // ✅ Tema desteği eklendi
 import {
   OfferFormContainer,
   FormInput,
@@ -17,8 +17,8 @@ import {
 const OfferCreate = ({ existingOffer, onOfferCreated }) => {
   const { products } = useProducts();
   const { addOffer, updateOffer } = useOffers();
-  const { texts } = useLanguage();
-  const { theme } = useTheme();
+  const { texts } = useLanguage(); // ✅ Dil kullanımı
+  const { theme } = useTheme();    // ✅ Tema kullanımı
 
   const [formData, setFormData] = useState({
     companyName: "",
@@ -103,7 +103,7 @@ const OfferCreate = ({ existingOffer, onOfferCreated }) => {
   };
 
   return (
-    <OfferFormContainer theme={theme}>
+    <OfferFormContainer theme={theme} style={{ backgroundColor: theme === "dark" ? "#1e1e1e" : "#fff", color: theme === "dark" ? "#fff" : "#000" }}>
       <h2>{existingOffer ? texts?.offers?.edit || "✏️ Teklif Düzenle" : texts?.offers?.create || "➕ Yeni Teklif Oluştur"}</h2>
 
       <label>{texts?.offers?.companyName || "🏢 Firma Adı"}:</label>
@@ -216,4 +216,4 @@ const OfferCreate = ({ existingOffer, onOfferCreated }) => {
   );
 };
 
-export default OfferCreate;
+export default OfferCreate; 

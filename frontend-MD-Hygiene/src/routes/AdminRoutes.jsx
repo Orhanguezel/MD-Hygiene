@@ -26,7 +26,8 @@ import NotFound from "@/components/NotFound";
 import Offers from "@/pages/modules/offer/Offer";
 import OfferDetailForm from "@/pages/modules/offer/components/OfferDetailForm";
 import OfferCreate from "@/pages/modules/offer/components/OfferCreate";
-
+import OfferArchive from "@/pages/modules/offer/components/OfferArchive";
+import OfferPDF from "@/pages/modules/offer/components/OfferPDF";
 
 // ✅ Products Modülü
 import Products from "@/pages/modules/products/Products";
@@ -44,13 +45,13 @@ const AdminRoutes = () => {
         path="/"
         element={
           <ProtectedWrapper role="admin">
-            {" "}
-            {/* ✅ Yalnızca admin erişebilir */}
             <AdminLayout />
           </ProtectedWrapper>
         }
       >
+        <Route index element={<Dashboard />} />
         <Route path="dashboard" element={<Dashboard />} />
+
 
         {/* ✅ Users Modülü */}
         <Route path="users" element={<Outlet />}>
@@ -72,19 +73,16 @@ const AdminRoutes = () => {
           <Route path=":id" element={<InvoiceDetails />} />
         </Route>
 
+        {/* ✅ Offers Modülü */}
         <Route path="offers" element={<Outlet />}>
           <Route index element={<Offers />} /> {/* ✅ Teklif Ana Sayfası */}
-          <Route path="create" element={<OfferCreate />} />{" "}
-          {/* ✅ Yeni Teklif */}
-          <Route path="edit/:id" element={<OfferCreate />} />{" "}
-          {/* ✅ Düzenleme */}
-          <Route path=":id" element={<OfferDetailForm />} />{" "}
-          {/* ✅ Teklif Detayı */}
-          {/* ✅ Teklif İşlemleri */}
-          <Route path=":id/approve" element={<OfferDetailForm />} />{" "}
-          {/* ✅ Onaylama */}
-          <Route path=":id/reject" element={<OfferDetailForm />} />{" "}
-          {/* ✅ Reddetme */}
+          <Route path="create" element={<OfferCreate />} /> {/* ✅ Yeni Teklif Oluştur */}
+          <Route path="edit/:id" element={<OfferCreate />} /> {/* ✅ Teklif Düzenleme */}
+          <Route path=":id" element={<OfferDetailForm />} /> {/* ✅ Teklif Detayları */}
+          <Route path=":id/approve" element={<OfferDetailForm />} /> {/* ✅ Onaylama */}
+          <Route path=":id/reject" element={<OfferDetailForm />} /> {/* ✅ Reddetme */}
+          <Route path=":id/pdf" element={<OfferPDF />} /> {/* ✅ PDF Oluşturma */}
+         <Route path="archive" element={<OfferArchive />} /> {/* ✅ Arşivlenmiş */}
         </Route>
 
         {/* ✅ Products Modülü */}

@@ -1,13 +1,17 @@
+// Güncellenmiş dosya: OfferDetails.jsx
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { updateOffer } from "@/features/offers/offerSlice";
+import { useSelector } from "react-redux";
+import { useLanguage } from "@/features/language/useLanguage"; // ✅ Dil desteği eklendi
+import { useTheme } from "@/features/theme/useTheme";           // ✅ Tema desteği eklendi
 
 const OfferDetails = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
   const offers = useSelector((state) => state.offer);
   const [offer, setOffer] = useState(null);
+  const { texts } = useLanguage(); // ✅ Dil kullanımı
+  const { theme } = useTheme();    // ✅ Tema kullanımı
 
   useEffect(() => {
     const foundOffer = offers.find((o) => o.id === id);
@@ -19,28 +23,40 @@ const OfferDetails = () => {
     setOffer((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleUpdate = () => {
-    dispatch(updateOffer(offer));
-    alert("Teklif güncellendi!");
-  };
-
-  if (!offer) return <p>Teklif bulunamadı.</p>;
+  if (!offer) return <p>{texts?.offers?.notFound || "Teklif bulunamadı."}</p>;
 
   return (
-    <div>
-      <h2>📋 Teklif Detayları</h2>
-      <label>Firma:</label>
-      <input type="text" name="companyName" value={offer.companyName} onChange={handleInputChange} />
+    <div style={{ backgroundColor: theme === "dark" ? "#1e1e1e" : "#fff", padding: "20px", color: theme === "dark" ? "#fff" : "#000" }}>
+      <h2>{texts?.offers?.detailsTitle || "📋 Teklif Detayları"}</h2>
 
-      <label>Müşteri:</label>
-      <input type="text" name="customerName" value={offer.customerName} onChange={handleInputChange} />
+      <label>{texts?.offers?.companyName || "🏢 Firma Adı"}:</label>
+      <input
+        type="text"
+        name="companyName"
+        value={offer.companyName}
+        onChange={handleInputChange}
+        style={{ backgroundColor: theme === "dark" ? "#333" : "#fff", color: theme === "dark" ? "#fff" : "#000", border: "1px solid #ccc", padding: "8px", marginBottom: "10px" }}
+      />
 
-      <label>Durum:</label>
-      <input type="text" name="status" value={offer.status} onChange={handleInputChange} />
+      <label>{texts?.offers?.customerName || "👤 Müşteri Adı"}:</label>
+      <input
+        type="text"
+        name="customerName"
+        value={offer.customerName}
+        onChange={handleInputChange}
+        style={{ backgroundColor: theme === "dark" ? "#333" : "#fff", color: theme === "dark" ? "#fff" : "#000", border: "1px solid #ccc", padding: "8px", marginBottom: "10px" }}
+      />
 
-      <button onClick={handleUpdate}>Güncelle</button>
+      <label>{texts?.offers?.status || "📊 Durum"}:</label>
+      <input
+        type="text"
+        name="status"
+        value={offer.status}
+        onChange={handleInputChange}
+        style={{ backgroundColor: theme === "dark" ? "#333" : "#fff", color: theme === "dark" ? "#fff" : "#000", border: "1px solid #ccc", padding: "8px", marginBottom: "10px" }}
+      />
     </div>
   );
 };
 
-export default OfferDetails;
+export default OfferDetails; 

@@ -1,13 +1,24 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser } from "@/features/auth/authSlice"; // ✅ Redux Toolkit'ten addUser action'ı
-import { UsersContainer, ActionButton } from "../styles/usersStyles";
+import { addUser } from "@/features/auth/authSlice";
+import { useLanguage } from "@/features/language/useLanguage";
+import { toggleTheme } from "@/features/theme/themeSlice";
+import {
+  UsersContainer,
+  ActionButton,
+  Form,
+  Input,
+  Select,
+  ErrorMessage,
+  SectionTitle,
+} from "../styles/usersStyles";
 
 const AddUserForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const texts = useSelector((state) => state.language.texts); // ✅ RTK'dan dil desteği
+  const { texts } = useLanguage();
+  const themeMode = useSelector((state) => state.theme.mode);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -26,22 +37,31 @@ const AddUserForm = () => {
     e.preventDefault();
     setError("");
 
+    if (!formData.name || !formData.email || !formData.password) {
+      setError(texts.users.formError);
+      return;
+    }
+
     const newUser = {
       ...formData,
       id: `USR-${Date.now()}`,
       profileImage: "https://via.placeholder.com/150",
     };
 
-    dispatch(addUser(newUser)); // ✅ Redux'a ekleme
-    navigate("/users"); // ✅ Kullanıcılar sayfasına yönlendir
+    dispatch(addUser(newUser));
+    navigate("/users");
   };
 
   return (
     <UsersContainer>
-      <h1>{texts.users.addUser}</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
+      <SectionTitle>{texts.users.addUser}</SectionTitle>
+      <ActionButton onClick={() => dispatch(toggleTheme())}>
+        {themeMode === "light" ? "🌙 Dark Mode" : "☀️ Light Mode"}
+      </ActionButton>
+
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+      <Form onSubmit={handleSubmit}>
+        <Input
           type="text"
           name="name"
           placeholder={texts.users.name}
@@ -49,7 +69,7 @@ const AddUserForm = () => {
           onChange={handleChange}
           required
         />
-        <input
+        <Input
           type="email"
           name="email"
           placeholder={texts.users.email}
@@ -57,7 +77,7 @@ const AddUserForm = () => {
           onChange={handleChange}
           required
         />
-        <input
+        <Input
           type="password"
           name="password"
           placeholder={texts.users.password}
@@ -65,14 +85,14 @@ const AddUserForm = () => {
           onChange={handleChange}
           required
         />
-        <select name="role" value={formData.role} onChange={handleChange}>
+        <Select name="role" value={formData.role} onChange={handleChange}>
           <option value="customer">{texts.users.userRole}</option>
           <option value="admin">{texts.users.adminRole}</option>
           <option value="moderator">{texts.users.moderatorRole}</option>
           <option value="staff">{texts.users.staffRole}</option>
-        </select>
+        </Select>
         <ActionButton type="submit">{texts.users.save}</ActionButton>
-      </form>
+      </Form>
     </UsersContainer>
   );
 };

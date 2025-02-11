@@ -2,81 +2,72 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUsers, toggleUserStatus } from "@/features/auth/authSlice";
+import { useLanguage } from "@/features/language/useLanguage";
+import { toggleTheme } from "@/features/theme/themeSlice"; // ✅ Tema toggle
+
 import {
   UsersContainer,
-  Table,
-  Th,
-  Td,
-  ActionButton,
+  UserCard,
   UserImage,
+  UserInfo,
+  UserName,
+  UserEmail,
+  UserRole,
+  UserStatus,
+  ActionButton,
   AddUserButton,
+  ResponsiveGrid,
 } from "./styles/usersStyles";
 
 const Users = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { texts } = useSelector((state) => state.settings);
-  const users = useSelector((state) => state.auth.users); // ✅ RTK'den kullanıcıları çekiyoruz
+  const { texts } = useLanguage();
+  const users = useSelector((state) => state.auth.users);
+  const themeMode = useSelector((state) => state.theme.mode);
 
   useEffect(() => {
-    dispatch(fetchUsers()); // ✅ Kullanıcıları JSON'dan yükle
+    dispatch(fetchUsers());
   }, [dispatch]);
 
   const handleToggleStatus = (userId, currentStatus, e) => {
     e.stopPropagation();
-    dispatch(toggleUserStatus({ userId, currentStatus: !currentStatus })); // ✅ Aktif/Pasif durumu değiştir
+    dispatch(toggleUserStatus({ userId, currentStatus: !currentStatus }));
   };
 
   return (
     <UsersContainer>
-      <h1>{texts?.users?.title || "Kullanıcı Yönetimi"}</h1>
+      <h1>{texts.users.title}</h1>
+
       <AddUserButton onClick={() => navigate("/users/add")}>
-        ➕ {texts?.users?.addUser || "Yeni Kullanıcı Ekle"}
+        ➕ {texts.users.addUser}
       </AddUserButton>
-      <Table>
-        <thead>
-          <tr>
-            <Th>{texts?.users?.avatar || "Profil"}</Th>
-            <Th>{texts?.users?.name || "Ad Soyad"}</Th>
-            <Th>{texts?.users?.email || "E-posta"}</Th>
-            <Th>{texts?.users?.role || "Rol"}</Th>
-            <Th>{texts?.users?.status || "Durum"}</Th>
-            <Th>{texts?.users?.actions || "İşlemler"}</Th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id} onClick={() => navigate(`/users/${user.id}`)}>
-              <Td>
-                <UserImage
-                  src={user.profileImage || "/default-avatar.png"}
-                  alt={user.name}
-                />
-              </Td>
-              <Td>{user.name}</Td>
-              <Td>{user.email}</Td>
-              <Td>{user.role}</Td>
-              <Td>
-                {user.isActive
-                  ? texts?.users?.active || "Aktif"
-                  : texts?.users?.inactive || "Pasif"}
-              </Td>
-              <Td>
-                <ActionButton onClick={(e) => navigate(`/users/edit/${user.id}`)}>
-                  {texts?.users?.edit || "Düzenle"}
+
+      <ResponsiveGrid>
+        {users.map((user) => (
+          <UserCard key={user.id} onClick={() => navigate(`/users/${user.id}`)}>
+            <UserImage src={user.profileImage || "/default-avatar.png"} alt={user.name} />
+            <UserInfo>
+              <UserName>{user.name}</UserName>
+              <UserEmail>{user.email}</UserEmail>
+              <UserRole>{texts.users.role}: {user.role}</UserRole>
+              <UserStatus isActive={user.isActive}>
+                {user.isActive ? texts.users.active : texts.users.inactive}
+              </UserStatus>
+              <div>
+                <ActionButton onClick={(e) => { e.stopPropagation(); navigate(`/users/edit/${user.id}`); }}>
+                  {texts.users.edit}
                 </ActionButton>
                 <ActionButton
                   onClick={(e) => handleToggleStatus(user.id, user.isActive, e)}
                 >
-                  {user.isActive
-                    ? texts?.users?.deactivate || "Devre Dışı Bırak"
-                    : texts?.users?.activate || "Aktif Et"}
+                  {user.isActive ? texts.users.deactivate : texts.users.activate}
                 </ActionButton>
-              </Td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+              </div>
+            </UserInfo>
+          </UserCard>
+        ))}
+      </ResponsiveGrid>
     </UsersContainer>
   );
 };

@@ -8,7 +8,7 @@ import ordersReducer from '../features/orders/ordersSlice';
 import notificationReducer from '../features/notification/notificationSlice';
 import auditLogsReducer from '../features/auditLogs/auditLogsSlice';
 import invoicesReducer from '../features/invoices/invoicesSlice';
-import offerReducer from '../features/offers/offerSlice';
+import offerReducer from '../features/offer/offerSlice';
 import productReducer from '../features/products/productSlice';
 import settingsReducer from '../features/settings/settingsSlice';
 import reportsReducer from '../features/reports/reportsSlice'; 

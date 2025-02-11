@@ -5,9 +5,9 @@ export const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: ${({ theme }) => theme.primary};
+  padding: 10px;
+  background-color: #1f2937;
   color: white;
-  padding: 10px 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
@@ -18,57 +18,73 @@ export const Logo = styled.img`
 export const Nav = styled.nav`
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
 `;
 
-export const NavItem = styled(Link)`
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
 
-  &:hover {
-    text-decoration: underline;
+
+export const NavItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+
+  @media (max-width: 768px) {
+
+  .nav-text {
+    display: none;
   }
-`;
+}
+}`;
 
 export const Button = styled.button`
   background: transparent;
   border: none;
-  color: white;
+  color: inherit;
   cursor: pointer;
-  font-size: 1rem;
-  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.3s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+    color: ${({ theme }) => theme.secondary || "#ffcc00"};
   }
 
   &:disabled {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: default;
+  }
+`;
+
+export const ThemeToggleButton = styled(Button)`
+  background-color: ${({ theme }) => theme.buttonBackground || "#4CAF50"};
+  border-radius: 50%;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.buttonHover || "#388e3c"};
   }
 `;
 
 export const ProfileSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 5px 10px;
-  border-radius: 4px;
+  gap: 10px;
 `;
 
-export const NotificationIcon = styled.div`
-  position: relative;
-  cursor: pointer;
-
-  svg {
-    font-size: 1.2rem;
-  }
-
-  &:hover {
-    color: yellow;
-  }
+export const Tooltip = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color:{({ theme }) => theme.tooltipBackground || "#333"};
+  color: black;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 

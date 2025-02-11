@@ -1,18 +1,22 @@
-// src/layouts/AdminLayout.jsx
 import { Outlet } from "react-router-dom";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
+import Footer from "@/components/admin/Footer";
+import { LayoutContainer, MainContent } from "@/styles/adminLayoutStyles";
 
-const AdminLayout = () => (
-  <div style={{ display: "flex" }}>
-    <AdminSidebar />
-    <div style={{ flex: 1, marginLeft: "250px" }}>
+const AdminLayout = () => {
+  return (
+    <LayoutContainer>
       <AdminHeader />
-      <main style={{ padding: "20px" }}>
-        <Outlet /> {/* ✅ Dinamik içerik burada gösterilir */}
-      </main>
-    </div>
-  </div>
-);
+      <div style={{ display: "flex", flex: 1 }}>
+        <AdminSidebar />
+        <MainContent>
+          <Outlet />
+        </MainContent>
+      </div>
+      <Footer />
+    </LayoutContainer>
+  );
+};
 
 export default AdminLayout;

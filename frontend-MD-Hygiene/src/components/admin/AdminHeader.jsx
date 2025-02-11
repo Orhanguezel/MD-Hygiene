@@ -1,15 +1,26 @@
-import { useLanguage } from "@/features/language/useLanguage";  // ✅ Redux Toolkit hook
-import { useTheme } from "@/features/theme/useTheme";           // ✅ Redux Toolkit hook
-import { useAuth } from "@/features/auth/useAuth";              // ✅ Redux Toolkit hook
+import { useUI } from "@/features/ui/useUI";
+import { useLanguage } from "@/features/language/useLanguage";
+import { useTheme } from "@/features/theme/useTheme";
+import { useAuth } from "@/features/auth/useAuth";
 import { Link } from "react-router-dom";
-import { HeaderContainer, Logo, Nav, NavItem, Button, ProfileSection, NotificationIcon } from "@/styles/headerStyles";
-import { FaBell, FaUserCircle } from "react-icons/fa";
+import {
+  HeaderContainer,
+  Logo,
+  Nav,
+  NavItem,
+  Button,
+  ProfileSection,
+  Tooltip,
+  ThemeToggleButton,
+} from "@/styles/headerStyles";
+import { FaBell, FaUserCircle, FaCog, FaSun, FaMoon } from "react-icons/fa";
 import logo from "@/assets/logo.png";
 
-export default function CommonHeader() {
-  const { language, setLanguage, texts } = useLanguage();      // ✅ useLanguage Hook
-  const { theme, toggleTheme } = useTheme();                   // ✅ useTheme Hook
-  const { user, signout } = useAuth();                         // ✅ useAuth Hook
+export default function AdminHeader() {
+  const { language, setLanguage, texts } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
+  const { user, signout } = useAuth();
+  const { toggleSidebar } = useUI();
 
   return (
     <HeaderContainer>
@@ -18,28 +29,36 @@ export default function CommonHeader() {
       </Link>
 
       <Nav>
-        <NavItem to="/notifications">
-          <NotificationIcon>
-            <FaBell />
-          </NotificationIcon>
-        </NavItem>
 
-        <NavItem to="/settings">⚙️ {texts?.sidebar?.settings || "Ayarlar"}</NavItem>
+        <ThemeToggleButton onClick={toggleTheme}>
+          {theme === "light" ? <FaMoon size={18} /> : <FaSun size={18} />}
+        </ThemeToggleButton>
 
-        <Button onClick={toggleTheme}>
-          🌓 {theme === "light" ? texts?.settings?.darkMode || "Karanlık Mod" : texts?.settings?.lightMode || "Aydınlık Mod"}
+        <Button onClick={() => setLanguage("tr")} disabled={language === "tr"}>
+          🇹🇷
+        </Button>
+        <Button onClick={() => setLanguage("de")} disabled={language === "de"}>
+          🇩🇪
+        </Button>
+        <Button onClick={() => setLanguage("en")} disabled={language === "en"}>
+          🇬🇧
         </Button>
 
-        <Button onClick={() => setLanguage("tr")} disabled={language === "tr"}>🇹🇷</Button>
-        <Button onClick={() => setLanguage("de")} disabled={language === "de"}>🇩🇪</Button>
-        <Button onClick={() => setLanguage("en")} disabled={language === "en"}>🇬🇧</Button>
+        <NavItem>
+          <Button>
+            <FaUserCircle size={18} />
+            <span className="nav-text">{user?.name || "Kullanıcı"}</span>
+          </Button>
+        </NavItem>
 
-        <ProfileSection>
-          <FaUserCircle size={24} />
-          <span>{user?.name || "Kullanıcı"}</span> {/* ✅ Kullanıcı adını dinamik gösterir */}
-        </ProfileSection>
-
-        <Button onClick={signout}>🚪 {texts?.sidebar?.logout || "Çıkış Yap"}</Button>
+        <NavItem>
+          <Button onClick={signout}>
+            🚪
+            <span className="nav-text">
+              {texts?.sidebar?.logout || "Çıkış Yap"}
+            </span>
+          </Button>
+        </NavItem>
       </Nav>
     </HeaderContainer>
   );

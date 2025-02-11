@@ -7,6 +7,7 @@ import {
   NotFoundTitle,
   NotFoundMessage,
   HomeButton,
+  Emoji,
 } from "@/styles/NotFoundStyles";
 
 function NotFound() {
@@ -23,22 +24,23 @@ function NotFound() {
   }, [navigate]);
 
   return (
-    <NotFoundContainer style={{ backgroundColor: theme === "dark" ? "#1e1e1e" : "#f9f9f9" }}>
+    <NotFoundContainer>
+      <Emoji>🚫</Emoji> {/* ✅ Eğlenceli ikon */}
       <NotFoundTitle>
-        {texts?.notFound?.title || "404 - Sayfa Bulunamadı"} {/* ✅ Dinamik başlık */}
+        {texts?.notFound?.title || "404 - Sayfa Bulunamadı"}
       </NotFoundTitle>
 
       <NotFoundMessage>
         {texts?.notFound?.message || "Üzgünüz, bu sayfa mevcut değil!"} <br />
         {texts?.notFound?.redirectMessage || (
-          <> 
+          <>
             <strong>5 saniye</strong> içinde ana sayfaya yönlendirileceksiniz...
           </>
         )}
       </NotFoundMessage>
 
       <HomeButton onClick={() => navigate("/")}>
-        {texts?.notFound?.homeButton || "Ana Sayfaya Dön"} {/* ✅ Dinamik buton */}
+        {texts?.notFound?.homeButton || "Ana Sayfaya Dön"}
       </HomeButton>
     </NotFoundContainer>
   );

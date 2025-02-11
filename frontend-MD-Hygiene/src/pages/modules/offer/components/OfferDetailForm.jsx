@@ -1,6 +1,11 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useOffers } from "@/features/offers/useOffers"; // RTK'dan verileri alıyoruz
+import { useOffers } from "@/features/offer/useOffers";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import OfferPDF from "./OfferPDF";
+import { useLanguage } from "@/features/language/useLanguage"; // ✅ Dil desteği eklendi
+import { useTheme } from "@/features/theme/useTheme";         // ✅ Tema desteği eklendi
+
 import {
   OfferFormContainer,
   FormInput,
@@ -15,8 +20,9 @@ const OfferDetailForm = () => {
   const navigate = useNavigate();
   const { offers, updateOffer, updateStatus } = useOffers();
   const [formData, setFormData] = useState(null);
+  const { texts } = useLanguage(); // ✅ Dil kullanımı
+  const { theme } = useTheme();    // ✅ Tema kullanımı
 
-  // ✅ Redux Toolkit'ten gelen veriyi çekiyoruz
   useEffect(() => {
     const offer = offers.find((o) => o.id === id);
     if (offer) {
@@ -24,7 +30,7 @@ const OfferDetailForm = () => {
     }
   }, [id, offers]);
 
-  if (!formData) return <p>Teklif bulunamadı!</p>;
+  if (!formData) return <p>{texts?.offers?.notFound || "Teklif bulunamadı!"}</p>;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -56,28 +62,32 @@ const OfferDetailForm = () => {
 
   const handleSave = () => {
     updateOffer(formData);
-    localStorage.setItem("offers", JSON.stringify(offers)); // ✅ localStorage'a kaydediyoruz
-    alert("Teklif başarıyla güncellendi!");
-    navigate("/offers"); // ✅ Onay sonrası listeye dön
+    localStorage.setItem("offers", JSON.stringify(offers));
+    alert(texts?.offers?.updateSuccess || "Teklif başarıyla güncellendi!");
   };
 
   const handleApprove = () => {
     updateStatus(formData.id, "approved");
-    alert("Teklif onaylandı!");
-    navigate("/offers"); // ✅ Onay sonrası listeye dön
+    alert(texts?.offers?.approved || "Teklif onaylandı!");
   };
 
   const handleReject = () => {
     updateStatus(formData.id, "rejected");
-    alert("Teklif reddedildi!");
-    navigate("/offers"); // ✅ Reddetme sonrası listeye dön
+    alert(texts?.offers?.rejected || "Teklif reddedildi!");
+    navigate("/offers");
+  };
+
+  const handleArchive = () => {
+    updateStatus(formData.id, "archived");
+    alert(texts?.offers?.archived || "Teklif arşivlendi!");
+    navigate("/offers");
   };
 
   return (
-    <OfferFormContainer>
-      <h2>📋 Teklif Detayları</h2>
+    <OfferFormContainer style={{ backgroundColor: theme === "dark" ? "#1e1e1e" : "#fff", color: theme === "dark" ? "#fff" : "#000" }}>
+      <h2>{texts?.offers?.detailsTitle || "📋 Teklif Detayları"}</h2>
 
-      <label>🏢 Firma Adı:</label>
+      <label>{texts?.offers?.companyName || "🏢 Firma Adı"}:</label>
       <FormInput
         type="text"
         name="companyName"
@@ -85,7 +95,7 @@ const OfferDetailForm = () => {
         onChange={handleInputChange}
       />
 
-      <label>👤 Müşteri Adı:</label>
+      <label>{texts?.offers?.customerName || "👤 Müşteri Adı"}:</label>
       <FormInput
         type="text"
         name="customerName"
@@ -96,11 +106,11 @@ const OfferDetailForm = () => {
       <ProductTable>
         <thead>
           <tr>
-            <th>Ürün Adı</th>
-            <th>Birim Fiyat (₺)</th>
-            <th>Adet</th>
-            <th>KDV (%)</th>
-            <th>Toplam (₺)</th>
+            <th>{texts?.offers?.productName || "Ürün Adı"}</th>
+            <th>{texts?.offers?.unitPrice || "Birim Fiyat (₺)"}</th>
+            <th>{texts?.offers?.quantity || "Adet"}</th>
+            <th>{texts?.offers?.taxRate || "KDV (%)"}</th>
+            <th>{texts?.offers?.total || "Toplam (₺)"}</th>
           </tr>
         </thead>
         <tbody>
@@ -111,26 +121,20 @@ const OfferDetailForm = () => {
                 <FormInput
                   type="number"
                   value={product.customPrice}
-                  onChange={(e) =>
-                    handleProductChange(product.id, "customPrice", e.target.value)
-                  }
+                  onChange={(e) => handleProductChange(product.id, "customPrice", e.target.value)}
                 />
               </td>
               <td>
                 <FormInput
                   type="number"
                   value={product.quantity}
-                  onChange={(e) =>
-                    handleProductChange(product.id, "quantity", e.target.value)
-                  }
+                  onChange={(e) => handleProductChange(product.id, "quantity", e.target.value)}
                 />
               </td>
               <td>
                 <TaxSelect
                   value={product.taxRate}
-                  onChange={(e) =>
-                    handleProductChange(product.id, "taxRate", e.target.value)
-                  }
+                  onChange={(e) => handleProductChange(product.id, "taxRate", e.target.value)}
                 >
                   <option value="19">%19</option>
                   <option value="7">%7</option>
@@ -143,22 +147,43 @@ const OfferDetailForm = () => {
       </ProductTable>
 
       <TotalSection>
-        <p>💰 Net Tutar: <strong>{totals.netTotal.toFixed(2)} ₺</strong></p>
-        <p>💸 KDV Tutarı: <strong>{totals.taxTotal.toFixed(2)} ₺</strong></p>
-        <p>🚚 Nakliye Ücreti: <strong>{formData.shippingCost} ₺</strong></p>
+        <p>💰 {texts?.offers?.netTotal || "Net Tutar"}: <strong>{totals.netTotal.toFixed(2)} ₺</strong></p>
+        <p>💸 {texts?.offers?.taxTotal || "KDV Tutarı"}: <strong>{totals.taxTotal.toFixed(2)} ₺</strong></p>
+        <p>🚚 {texts?.offers?.shippingCost || "Nakliye Ücreti"}: <strong>{formData.shippingCost} ₺</strong></p>
         <hr />
-        <h3>🔢 Genel Toplam: {totals.grandTotal.toFixed(2)} ₺</h3>
+        <h3>🔢 {texts?.offers?.grandTotal || "Genel Toplam"}: {totals.grandTotal.toFixed(2)} ₺</h3>
       </TotalSection>
 
-      <ActionButton onClick={handleSave}>💾 Güncelle ve Kaydet</ActionButton>
+      <ActionButton onClick={handleSave}>{texts?.offers?.update || "💾 Güncelle ve Kaydet"}</ActionButton>
       <ActionButton onClick={handleApprove} style={{ backgroundColor: "green" }}>
-        ✅ Onayla
+        ✅ {texts?.offers?.approve || "Onayla"}
       </ActionButton>
       <ActionButton onClick={handleReject} style={{ backgroundColor: "red" }}>
-        ❌ Reddet
+        ❌ {texts?.offers?.reject || "Reddet"}
       </ActionButton>
+      <ActionButton onClick={handleArchive} style={{ backgroundColor: "gray" }}>
+        📦 {texts?.offers?.archive || "Arşivle"}
+      </ActionButton>
+
+      {formData.status === "approved" && (
+        <PDFDownloadLink
+          document={<OfferPDF offer={formData} />}
+          fileName={`teklif-${formData.id}.pdf`}
+          style={{
+            marginTop: "10px",
+            padding: "10px",
+            backgroundColor: "#4CAF50",
+            color: "#fff",
+            textDecoration: "none",
+            borderRadius: "5px",
+            display: "inline-block",
+          }}
+        >
+          📄 {texts?.offers?.generatePDF || "PDF Oluştur"}
+        </PDFDownloadLink>
+      )}
     </OfferFormContainer>
   );
 };
 
-export default OfferDetailForm;
+export default OfferDetailForm; 
