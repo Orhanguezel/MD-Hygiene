@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import UserSidebar from "@/components/user/UserSidebar";
 import UserHeader from "@/components/user/UserHeader";
 import Footer from "@/components/user/Footer";
 import { LayoutContainer, MainContent } from "@/styles/userLayoutStyles.js";
@@ -9,7 +8,6 @@ const UserLayout = () => {
     <LayoutContainer>
       <UserHeader />
       <div style={{ display: "flex", flex: 1 }}>
-        <UserSidebar />
         <MainContent>
           <Outlet />
         </MainContent>

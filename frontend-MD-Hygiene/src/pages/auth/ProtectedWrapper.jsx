@@ -1,42 +1,29 @@
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
 
 const ProtectedWrapper = ({ children, role }) => {
-  const { user, token, isAuthenticated } = useSelector((state) => state.auth);
-  const [loading, setLoading] = useState(true);
+  const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    // Token kontrolü
-    const verifyToken = async () => {
-      if (token) {
-        try {
-          // Burada opsiyonel olarak token doğrulama isteği yapılabilir
-          setLoading(false);
-        } catch (error) {
-          console.error("Token doğrulama hatası:", error);
-          setLoading(false);
-        }
-      } else {
-        setLoading(false);
-      }
-    };
-
-    verifyToken();
-  }, [token]);
-
+  // 1️⃣ Yüklenme kontrolü
   if (loading) {
-    return <p>Yükleniyor...</p>;
+    return (
+      <div style={{ textAlign: "center", marginTop: "50px" }}>
+        <p>⏳ Yükleniyor, lütfen bekleyin...</p>
+      </div>
+    );
   }
 
+  // 2️⃣ Giriş yapılmamışsa login sayfasına yönlendir
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  if (role && user?.role !== role) {
+  // 3️⃣ Yetkisiz rol kontrolü
+  if (role && (!user || (Array.isArray(role) ? !role.includes(user.role) : user.role !== role))) {
     return <Navigate to="/unauthorized" replace />;
   }
 
+  // 4️⃣ Yetkili kullanıcılar için içerik gösterimi
   return children;
 };
 

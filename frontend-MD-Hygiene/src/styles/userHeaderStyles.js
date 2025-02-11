@@ -5,7 +5,7 @@ export const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 10px;
+  padding: 10px;
   background-color: #1f2937;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
@@ -17,21 +17,17 @@ export const Logo = styled.img`
 
 // ✅ Firma Adı (Span) Stili
 export const Name = styled.span`
-  color: #fff;
+  text-decoration: none !important; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
   font-size: 20px;
-  margin-left: 10px;
   font-weight: bold;
-  text-decoration: none;
-  transition: 0.3s;
-  padding: 15px;
+  color: ${({ theme }) => (theme === "light" ? "#333" : "#fff")};
 
   &:hover {
-    color: #007bff;
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    color: #00bcd4; 
   }
 `;
 
@@ -41,7 +37,6 @@ export const Nav = styled.nav`
   align-items: center;
   gap: 15px;
 `;
-
 
 // ✅ Navigation Item
 export const NavItem = styled.div`

@@ -69,7 +69,8 @@ export default function AdminHeader() {
         {/* ✅ Kullanıcı Profil */}
         <ProfileSection onClick={handleProfileClick}>
           {user?.profileImage ? (
-            <ProfileImage src={user.profileImage} alt={user.name} />
+            <ProfileImage src={`/${user.profileImage.replace(/^\\/, '')}`} alt={user.name} />
+
           ) : (
             <FaUserCircle size={24} />
           )}
@@ -79,10 +80,10 @@ export default function AdminHeader() {
           {dropdownOpen && (
             <ProfileDropdown>
               <Link to="/profile">
-                <FaUserCircle /> {texts?.profile || "Profilim"}
+                <FaUserCircle /> {texts?.profile?.title || "Profilim"}
               </Link>
               <Link to="/settings">
-                <FaCog /> {texts?.settings || "Ayarlar"}
+                <FaCog /> {texts?.settings?.title || "Ayarlar"}
               </Link>
               <Button onClick={handleLogout}>
                 <FaSignOutAlt /> {texts?.logout || "Çıkış Yap"}
@@ -90,6 +91,13 @@ export default function AdminHeader() {
             </ProfileDropdown>
           )}
         </ProfileSection>
+
+        {/* ✅ Çıkış Yap Butonu */}
+        {!dropdownOpen && (
+          <Button onClick={handleLogout}>
+            <FaSignOutAlt size={18} /> {texts?.logout || "Çıkış Yap"}
+          </Button>
+        )}
       </Nav>
     </HeaderContainer>
   );

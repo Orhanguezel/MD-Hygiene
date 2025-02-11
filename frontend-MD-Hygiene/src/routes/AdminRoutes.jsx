@@ -6,37 +6,37 @@ import AdminLayout from "@/layouts/AdminLayout";
 import Dashboard from "@/pages/admin/Dashboard";
 
 // ✅ Users Modülü
-import Users from "@/pages/modules/user/Users";
-import UserDetails from "@/pages/modules/user/components/UserDetails";
-import AddUserForm from "@/pages/modules/user/components/AddUserForm";
+import Users from "@/pages/admin/modules/user/Users";
+import UserDetails from "@/pages/admin/modules/user/components/UserDetails";
+import AddUserForm from "@/pages/admin/modules/user/components/AddUserForm";
 
 // ✅ Orders Modülü
-import Orders from "@/pages/modules/order/Orders";
-import OrderDetails from "@/pages/modules/order/components/OrderDetails";
+import Orders from "@/pages/admin/modules/order/Orders";
+import OrderDetails from "@/pages/admin/modules/order/components/OrderDetails";
 
 // ✅ Invoices Modülü
-import Invoices from "@/pages/modules/invoices/Invoices";
-import InvoiceDetails from "@/pages/modules/invoices/components/InvoiceDetails";
+import Invoices from "@/pages/admin/modules/invoices/Invoices";
+import InvoiceDetails from "@/pages/admin/modules/invoices/components/InvoiceDetails";
 
 // ✅ Offers Modülü
-import Offers from "@/pages/modules/offer/Offer";
-import OfferDetailForm from "@/pages/modules/offer/components/OfferDetailForm";
-import OfferCreate from "@/pages/modules/offer/components/OfferCreate";
-import OfferArchive from "@/pages/modules/offer/components/OfferArchive";
-import OfferPDF from "@/pages/modules/offer/components/OfferPDF";
+import Offers from "@/pages/admin/modules/offer/Offer";
+import OfferDetailForm from "@/pages/admin/modules/offer/components/OfferDetailForm";
+import OfferCreate from "@/pages/admin/modules/offer/components/OfferCreate";
+import OfferArchive from "@/pages/admin/modules/offer/components/OfferArchive";
+import OfferPDF from "@/pages/admin/modules/offer/components/OfferPDF";
 
 // ✅ Products Modülü
-import Products from "@/pages/modules/products/Products";
-import AddProduct from "@/pages/modules/products/components/AddProduct";
-import EditProduct from "@/pages/modules/products/components/EditProduct";
-import ProductDetails from "@/pages/modules/products/components/ProductDetails";
+import Products from "@/pages/admin/modules/products/Products";
+import AddProduct from "@/pages/admin/modules/products/components/AddProduct";
+import EditProduct from "@/pages/admin/modules/products/components/EditProduct";
+import ProductDetails from "@/pages/admin/modules/products/components/ProductDetails";
 
 // ✅ Diğer Modüller
-import Notifications from "@/pages/modules/notification/Notifications";
-import Reports from "@/pages/modules/report/Reports";
-import AuditLogs from "@/pages/modules/authlog/AuditLogs";
-import Settings from "@/pages/modules/settings/Settings";
-import NotFound from "@/components/NotFound";
+import Notifications from "@/pages/admin/modules/notification/Notifications";
+import Reports from "@/pages/admin/modules/report/Reports";
+import AuditLogs from "@/pages/admin/modules/auditlog/AuditLogs";
+import Settings from "@/pages/admin/modules/settings/Settings";
+import NotFound from "@/components/common/NotFound";
 
 const AdminRoutes = () => {
   return (
@@ -44,13 +44,15 @@ const AdminRoutes = () => {
       <Route
         path="/"
         element={
-          <ProtectedWrapper role="admin"> {/* ✅ Yalnızca admin erişimi */}
+          <ProtectedWrapper role="admin">
             <AdminLayout />
           </ProtectedWrapper>
         }
       >
+        {/* ✅ Ana Sayfa Yönlendirmesi */}
+        <Route index element={<Navigate to="/dashboard" replace />} />
+
         {/* ✅ Dashboard */}
-        <Route index element={<Navigate to="dashboard" />} />
         <Route path="dashboard" element={<Dashboard />} />
 
         {/* ✅ Users Modülü */}

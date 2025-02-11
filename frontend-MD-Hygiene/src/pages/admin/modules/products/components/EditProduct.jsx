@@ -1,6 +1,6 @@
 // src/pages/modules/products/components/EditProduct.jsx
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useProducts } from "../context/ProductContext";
 import "../styles/productStyles.js";

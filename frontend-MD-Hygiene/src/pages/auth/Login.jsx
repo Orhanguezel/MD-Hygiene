@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLanguage } from "@/features/language/useLanguage";
 import { useTheme } from "@/features/theme/useTheme";
-import { useNavigate } from "react-router-dom";
-import { login } from "@/features/auth/authSlice"; // ✅ Redux Toolkit login işlemi
+import { useNavigate, Link } from "react-router-dom";
+import { login } from "@/features/auth/authSlice";
 import {
   AuthContainer,
   AuthForm,
@@ -19,20 +19,15 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { texts } = useLanguage();
   const { theme } = useTheme();
-  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+  const { loading, error } = useSelector((state) => state.auth);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const result = await dispatch(login({ email, password }));
-      if (result.meta.requestStatus === "fulfilled") {
-        navigate("/dashboard"); // ✅ Giriş başarılıysa yönlendir
-      }
-    } catch (err) {
-      console.error("Giriş hatası:", err);
+    const result = await dispatch(login({ email, password }));
+    if (result.meta.requestStatus === "fulfilled") {
+      navigate("/dashboard");
     }
   };
 
@@ -41,7 +36,7 @@ const Login = () => {
       <AuthForm theme={theme} onSubmit={handleSubmit}>
         <Title theme={theme}>{texts?.auth?.loginTitle || "Giriş Yap"}</Title>
 
-        {error && <ErrorMessage>{error}</ErrorMessage>} {/* ✅ Hata mesajı */}
+        {error && <ErrorMessage>{error}</ErrorMessage>}
 
         <Input
           theme={theme}
@@ -62,12 +57,14 @@ const Login = () => {
         />
 
         <Button theme={theme} type="submit" disabled={loading}>
-          {loading
-            ? texts?.auth?.loading || "Giriş Yapılıyor..."
-            : texts?.auth?.loginButton || "Giriş Yap"}
+          {loading ? "Giriş Yapılıyor..." : "Giriş Yap"}
         </Button>
 
-        {loading && <LoadingSpinner />} {/* ✅ Yüklenme animasyonu */}
+        <p>
+          {texts?.auth?.noAccount || "Hesabınız yok mu?"} <Link to="/register">Kayıt Ol</Link>
+        </p>
+
+        {loading && <LoadingSpinner />}
       </AuthForm>
     </AuthContainer>
   );
