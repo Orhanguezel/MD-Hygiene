@@ -1,0 +1,25 @@
+{
+  "home": {
+    "heroTitle": "Welcome to Our Store",
+    "heroSubtitle": "Discover the best products with exclusive offers.",
+    "shopNow": "Shop Now",
+    "women fashion": "Women Fashion",
+    "men fashion": "Men Fashion",
+    "kids": "Kids",
+    "accessories": "Accessories",
+    "featuredProducts": "Featured Products",
+    "buyNow": "Buy Now",
+    "testimonials": "What Our Customers Say",
+    "newsletterTitle": "Join Our Newsletter",
+    "enterEmail": "Enter your email",
+    "subscribe": "Subscribe",
+    "thankYou": "Thank you for subscribing!",
+    "heroTitle": "Hoş Geldiniz",
+    "heroSubtitle": "Harika ürünleri keşfedin!",
+    "featuredProducts": "Öne Çıkan Ürünler",
+    "loading": "Ürünler yükleniyor...",
+    "newsletterTitle": "Bültenimize Abone Olun",
+    "enterEmail": "E-posta adresinizi girin",
+    "subscribe": "Abone Ol"
+  }
+}

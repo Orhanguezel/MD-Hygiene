@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: md-hygiene-frontend
+    name: frontend
     env: static
-    buildCommand: cd frontend-MD-Hygiene && npm install && npm run build
+    buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: dist
