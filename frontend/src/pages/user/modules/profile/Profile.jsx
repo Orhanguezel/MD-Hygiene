@@ -1,34 +1,51 @@
-// ✅ Profile.jsx
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { fetchUserOrders } from "@/features/orders/ordersSlice";
+import { fetchUserInvoices } from "@/features/invoices/invoicesSlice";
 import { Link } from "react-router-dom";
-import { getAllUsers } from "@/features/users/userSlice";
-import { useLanguage } from "@/features/language/useLanguage";
-import { HomeContainer, Button } from "./styles/profileStyles";
+import { ProfileContainer, Section, Button, Info } from "./styles/profileStyles";
+import InvoiceList from "./components/InvoiceList";
+import AddressInfo from "./components/AddressInfo";
+import OrderHistory from "./components/OrderHistory";
+import CartInfo from "./components/CartInfo";
 
 const Profile = () => {
   const state = useSelector((state) => state.auth);
+  const user = useSelector((state) => state.auth.user);
+  const orders = useSelector((state) => state.orders.userOrders);
+  const invoices = useSelector((state) => state.invoices.userInvoices);
   const dispatch = useDispatch();
-  const { texts } = useLanguage();
 
   useEffect(() => {
-    dispatch(getAllUsers());
-  }, [dispatch]);
+    dispatch(fetchUserOrders(user.id));
+    dispatch(fetchUserInvoices(user.id));
+  }, [dispatch, user.id]);
+
 
   return (
-    <HomeContainer>
-      <h1>{texts.users.title || "Profil Bilgileri"}</h1>
-      <p>Email: {state.user.email}</p>
-      <p>Role: {state.user.role}</p>
+    <ProfileContainer>
+      <h1>📋 Profil Bilgileri</h1>
 
-      <p>
-        {texts?.user?.hallo || "Hoşgeldiniz! Buradan tüm işlemlerinizi yönetebilirsiniz."}
-      </p>
+      <Section>
+        <Info>Email: {state.user.email}</Info>
+        <Info>Rol: {state.user.role}</Info>
+        <Link to={`/profile/${state.user.id}`}>
+          <Button>Profil Düzenle</Button>
+        </Link>
+      </Section>
 
-      <Link to={`/profile/${state.user.id}`}>
-        <Button>Profil Düzenle</Button>
-      </Link>
-    </HomeContainer>
+      {/* ✅ Fatura Listesi */}
+      <InvoiceList userId={state.user.id} />
+
+      {/* ✅ Sipariş Geçmişi */}
+      <OrderHistory userId={state.user.id} />
+
+      {/* ✅ Sepet Yönetimi */}
+      <CartInfo />
+
+      {/* ✅ Adres Bilgisi */}
+      <AddressInfo />
+    </ProfileContainer>
   );
 };
 

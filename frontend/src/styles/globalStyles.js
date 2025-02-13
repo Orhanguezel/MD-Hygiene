@@ -13,7 +13,7 @@ export const GlobalStyles = createGlobalStyle`
     padding: 0;
     font-family: 'Poppins', sans-serif;
     background-color: var(--background);
-    color: var(--text);
+    color: black;
     transition: background-color 0.3s ease, color 0.3s ease;
     overflow-x: hidden;  /* ✅ Sadece body'ye */
   }

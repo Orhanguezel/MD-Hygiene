@@ -542,11 +542,11 @@
   ],
   "users": [
     {
-      "id": "USR-002",
+      "id": "USR-001",
       "name": "Ayşe Yılmaz",
       "email": "ayse.yilmaz@example.com",
       "password": "hashed_password_2",
-      "role": "customer",
+      "role": "user",
       "addresses": [
         {
           "street": "Cumhuriyet Mah.",
@@ -558,7 +558,8 @@
       ],
       "phone": "+905551234567",
       "orders": [
-        "ORD-003"
+        "ORD-001",
+        "ORD-002"
       ],
       "profileImage": "https://randomuser.me/api/portraits/women/1.jpg",
       "isActive": true
@@ -579,7 +580,9 @@
         }
       ],
       "phone": "+905301234567",
-      "orders": [],
+      "orders": [
+        "ORD-003"
+      ],
       "profileImage": "https://randomuser.me/api/portraits/men/4.jpg",
       "isActive": true
     },
@@ -599,9 +602,7 @@
         }
       ],
       "phone": "+905401234567",
-      "orders": [
-        "ORD-004"
-      ],
+      "orders": [],
       "profileImage": "https://randomuser.me/api/portraits/women/5.jpg",
       "isActive": true
     },
@@ -621,11 +622,11 @@
         }
       ],
       "phone": "+905401234567",
-      "orders": [
-        "ORD-004"
-      ],
+      "orders": [],
       "profileImage": "/profil2.jpeg",
-      "isActive": true
+      "isActive": true,
+      "surname": "",
+      "address": "Grevenbroich"
     },
     {
       "id": "USR-006",
@@ -643,9 +644,7 @@
         }
       ],
       "phone": "+905401234567",
-      "orders": [
-        "ORD-004"
-      ],
+      "orders": [],
       "profileImage": "/profil-orhan.jpeg",
       "isActive": true
     }
@@ -822,133 +821,6 @@
       "id": "354a"
     }
   ],
-  "invoices": [
-    {
-      "id": "INV-001",
-      "order": "ORD-001",
-      "user": "USR-001",
-      "items": [
-        {
-          "product": "Product A",
-          "quantity": 2,
-          "unitPrice": 100
-        },
-        {
-          "product": "Product B",
-          "quantity": 1,
-          "unitPrice": 150
-        }
-      ],
-      "totalAmount": 350,
-      "taxRate": 19,
-      "taxAmount": 66.5,
-      "issuedAt": "2024-05-01",
-      "status": "paid",
-      "invoiceNumber": "INV-001"
-    },
-    {
-      "id": "INV-002",
-      "order": "ORD-002",
-      "user": "USR-002",
-      "items": [
-        {
-          "product": "Product C",
-          "quantity": 3,
-          "unitPrice": 200
-        }
-      ],
-      "totalAmount": 600,
-      "taxRate": 19,
-      "taxAmount": 114,
-      "issuedAt": "2024-05-02",
-      "status": "pending",
-      "invoiceNumber": "INV-002"
-    }
-  ],
-  "orders": [
-    {
-      "id": "ORD-001",
-      "customer": "Ali Veli",
-      "status": "delivered",
-      "totalAmount": 250,
-      "taxAmount": 20,
-      "paymentStatus": "paid",
-      "shippingAddress": {
-        "street": "Ataturk Cad. 123",
-        "city": "Istanbul",
-        "postalCode": "34000",
-        "country": "Turkey"
-      },
-      "products": [
-        {
-          "product": "Product A",
-          "quantity": 2,
-          "unitPrice": 100
-        },
-        {
-          "product": "Product B",
-          "quantity": 1,
-          "unitPrice": 50
-        }
-      ]
-    },
-    {
-      "id": "ORD-002",
-      "customer": "Ayşe Yılmaz",
-      "status": "pending",
-      "totalAmount": 150,
-      "taxAmount": 15,
-      "paymentStatus": "pending",
-      "shippingAddress": {
-        "street": "Cumhuriyet Mah. 45",
-        "city": "Ankara",
-        "postalCode": "06000",
-        "country": "Turkey"
-      },
-      "products": [
-        {
-          "product": "Product C",
-          "quantity": 3,
-          "unitPrice": 50
-        }
-      ]
-    }
-  ],
-  "offers": [
-    {
-      "id": "OFF-001",
-      "customer": "John Doe",
-      "totalAmount": 2000,
-      "status": "pending",
-      "products": [
-        {
-          "name": "Ürün A",
-          "quantity": 5,
-          "unitPrice": 400
-        }
-      ],
-      "shippingCost": 150
-    },
-    {
-      "id": "OFF-002",
-      "customer": "Jane Smith",
-      "totalAmount": 3500,
-      "status": "approved",
-      "products": [
-        {
-          "name": "Ürün B",
-          "quantity": 10,
-          "unitPrice": 300
-        },
-        {
-          "name": "Ürün C",
-          "quantity": 3,
-          "unitPrice": 500
-        }
-      ],
-      "shippingCost": 200
-    }
-  ],
   "reports": [
     {
       "month": "Ocak",
@@ -1047,27 +919,129 @@
       "id": "484c"
     }
   ],
-  "auditlog": [
+  "auditlog": [],
+  "offer": [],
+  "orders": [
     {
-      "id": "1",
-      "eventType": "Giriş",
-      "user": "Orhan Admin",
-      "date": "2024-04-01",
-      "status": "Bilgi"
+      "id": "ORD-1739409150534",
+      "userId": "USR-005",
+      "userName": "Orhan Güzel",
+      "date": "2025-02-13T01:12:30.534Z",
+      "items": [
+        {
+          "productId": "26",
+          "title": "Sleek Mirror Finish Phone Case",
+          "quantity": 1,
+          "unitPrice": 27,
+          "taxRate": 19
+        },
+        {
+          "productId": "27",
+          "title": "Sleek Smartwatch with Vibrant Display",
+          "quantity": 1,
+          "unitPrice": 16,
+          "taxRate": 19
+        },
+        {
+          "productId": "23",
+          "title": "Sleek Modern Laptop with Ambient Lighting",
+          "quantity": 1,
+          "unitPrice": 43,
+          "taxRate": 19
+        }
+      ],
+      "totalAmount": 86,
+      "shippingCost": 20,
+      "status": "archived",
+      "paymentStatus": "pending",
+      "orderDate": "2025-02-13T01:12:30.535Z",
+      "shippedDate": "2025-02-13T01:22:10.622Z",
+      "deliveredDate": "2025-02-13T01:22:19.349Z"
     },
     {
-      "id": "2",
-      "eventType": "Veri Güncelleme",
-      "user": "Ali Veli",
-      "date": "2024-04-02",
-      "status": "Uyarı"
+      "id": "ORD-1739410075634",
+      "userId": "USR-005",
+      "userName": "Orhan Güzel",
+      "date": "2025-02-13T01:27:55.634Z",
+      "items": [
+        {
+          "productId": "27",
+          "title": "Sleek Smartwatch with Vibrant Display",
+          "quantity": 1,
+          "unitPrice": 16,
+          "taxRate": 19
+        }
+      ],
+      "totalAmount": 16,
+      "shippingCost": 20,
+      "status": "archived",
+      "paymentStatus": "pending",
+      "orderDate": "2025-02-13T01:27:55.635Z",
+      "shippedDate": "2025-02-13T01:31:03.314Z",
+      "deliveredDate": "2025-02-13T01:31:10.875Z"
     },
     {
-      "id": "3",
-      "eventType": "Silme İşlemi",
-      "user": "Ayşe Yılmaz",
-      "date": "2024-04-03",
-      "status": "Hata"
+      "id": "ORD-1739414589360",
+      "userId": "USR-005",
+      "userName": "Orhan Güzel",
+      "date": "2025-02-13T02:43:09.360Z",
+      "items": [
+        {
+          "productId": "27",
+          "title": "Sleek Smartwatch with Vibrant Display",
+          "quantity": 1,
+          "unitPrice": 16,
+          "taxRate": 19
+        }
+      ],
+      "totalAmount": 16,
+      "shippingCost": 20,
+      "status": "archived",
+      "paymentStatus": "pending",
+      "orderDate": "2025-02-13T02:43:09.360Z",
+      "shippedDate": "2025-02-13T02:43:42.289Z",
+      "deliveredDate": "2025-02-13T02:43:46.402Z"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "0ef3",
+      "invoiceNumber": "INV-1739410296234",
+      "orderId": "ORD-1739410075634",
+      "userId": "USR-005",
+      "userName": "Orhan Güzel",
+      "items": [
+        {
+          "product": "Sleek Smartwatch with Vibrant Display",
+          "quantity": 1,
+          "unitPrice": 16,
+          "taxRate": 19
+        }
+      ],
+      "totalAmount": 16,
+      "taxRate": 19,
+      "taxAmount": "3.04",
+      "shippingCost": 20,
+      "issuedAt": "2025-02-13T01:31:36.234Z",
+      "status": "paid"
+    },
+    {
+      "id": "3f01",
+      "invoiceNumber": "INV-1739414622297",
+      "orderId": "ORD-1739414589360",
+      "userId": "USR-005",
+      "userName": "Orhan Güzel",
+      "items": [
+        {
+          "product": "Sleek Smartwatch with Vibrant Display",
+          "quantity": 1,
+          "unitPrice": 16,
+          "taxRate": 19
+        }
+      ],
+      "totalAmount": 16,
+      "issuedAt": "2025-02-13T02:43:42.297Z",
+      "status": "paid"
     }
   ]
 }

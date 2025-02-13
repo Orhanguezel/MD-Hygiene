@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { clearCart } from "@/features/cart/cartSlice";
+import { addOrder } from "@/features/orders/ordersSlice";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import {
@@ -16,10 +17,11 @@ import {
 
 const Checkout = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const user = useSelector((state) => state.auth.user);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
   const dispatch = useDispatch();
 
-  const VAT_RATE = 0.18;
+  const VAT_RATE = 0.19; // Almanya standart vergi oranı (%19)
   const SHIPPING_COST = 20;
   const vatAmount = totalPrice * VAT_RATE;
   const grandTotal = totalPrice + vatAmount + SHIPPING_COST;
@@ -36,17 +38,39 @@ const Checkout = () => {
     setPaymentDetails((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePayment = (e) => {
+  const handleCheckout = (e) => {
     e.preventDefault();
-    toast.success("Ödeme başarılı! Siparişiniz alındı ✅");
+  
+    const newOrder = {
+      id: `ORD-${Date.now()}`,
+      userId: user.id,
+      userName: user.name,
+      date: new Date().toISOString(),
+      items: cartItems.map((item) => ({
+        productId: item.id,
+        title: item.title,
+        quantity: item.quantity,
+        unitPrice: item.price,
+        taxRate: 19, // Almanya vergi oranı
+      })),
+      totalAmount: totalPrice,
+      shippingCost: SHIPPING_COST,
+      status: "pending",
+      paymentStatus: "pending",
+      orderDate: new Date().toISOString(),
+    };
+  
+    dispatch(addOrder(newOrder));
+    toast.success("✅ Sipariş başarıyla oluşturuldu!");
     dispatch(clearCart());
   };
+  
 
   return (
     <CheckoutContainer>
       <Title>💳 Ödeme Sayfası</Title>
 
-      <PaymentForm onSubmit={handlePayment}>
+      <PaymentForm onSubmit={handleCheckout}>
         <CardDetails>
           <Label>Kart Sahibi Adı</Label>
           <Input
@@ -57,7 +81,7 @@ const Checkout = () => {
             required
           />
 
-          <label>Kart Numarası</label>
+          <Label>Kart Numarası</Label>
           <Input
             type="text"
             name="cardNumber"
@@ -67,7 +91,7 @@ const Checkout = () => {
             required
           />
 
-          <label>Son Kullanma Tarihi (MM/YY)</label>
+          <Label>Son Kullanma Tarihi (MM/YY)</Label>
           <Input
             type="text"
             name="expiryDate"
@@ -77,7 +101,7 @@ const Checkout = () => {
             required
           />
 
-          <label>CVV</label>
+          <Label>CVV</Label>
           <Input
             type="password"
             name="cvv"
@@ -90,7 +114,7 @@ const Checkout = () => {
 
         <Summary>
           <SummaryItem>Toplam Fiyat: ${totalPrice.toFixed(2)}</SummaryItem>
-          <SummaryItem>KDV (%18): ${vatAmount.toFixed(2)}</SummaryItem>
+          <SummaryItem>KDV (%19): ${vatAmount.toFixed(2)}</SummaryItem>
           <SummaryItem>Kargo Ücreti: ${SHIPPING_COST.toFixed(2)}</SummaryItem>
           <SummaryItem style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
             Genel Toplam: ${grandTotal.toFixed(2)}

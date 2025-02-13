@@ -8,19 +8,20 @@ import ProtectedWrapper from "@/pages/auth/ProtectedWrapper";
 // ✅ Kullanıcı Sayfaları
 import Profile from "@/pages/user/modules/profile/Profile";
 import ProfileUpdate from "@/pages/user/modules/profile/components/ProfileUpdate";
+import Invoices from "@/pages/user/modules/profile/components/InvoiceList";
+import Orders from "@/pages/user/modules/profile/components/OrderHistory";
+import AddressBook from "@/pages/user/modules/profile/components/AddressInfo";
+import Favorites from "@/pages/user/Favorites";
+import Notifications from "@/pages/user/Notifications";
+import Support from "@/pages/user/Support";
 import Product from "@/pages/visitor/Products";
 import Cart from "@/pages/user/modules/cart/Cart";
 import Checkout from "@/pages/user/modules/cart/Checkout";
-import Favorites from "@/pages/user/Favorites";
-import Notifications from "@/pages/user/Notifications";
-import AddressBook from "@/pages/user/AddressBook";
-import Support from "@/pages/user/Support";
 import Category from "@/pages/user/Category";
 
 const UserRoutes = () => (
   <Routes>
     <Route path="/" element={<UserLayout />}>
-
       {/* ✅ Genel Sayfalar */}
       <Route index element={<Home />} />
       <Route path="home" element={<Home />} />
@@ -39,8 +40,14 @@ const UserRoutes = () => (
           </ProtectedWrapper>
         }
       >
+        
         <Route index element={<Profile />} />
-        <Route path="edit" element={<ProfileUpdate />} />
+        <Route path=":id" element={<ProfileUpdate />} />{" "}
+        {/* ✅ Dinamik ID ile düzenleme */}
+        <Route path="invoices" element={<Invoices />} />
+
+
+        <Route path="address-book" element={<AddressBook />} />
       </Route>
 
       {/* ✅ Favoriler */}
@@ -63,16 +70,6 @@ const UserRoutes = () => (
         }
       />
 
-      {/* ✅ Adres Defteri */}
-      <Route
-        path="address-book"
-        element={
-          <ProtectedWrapper>
-            <AddressBook />
-          </ProtectedWrapper>
-        }
-      />
-
       {/* ✅ Destek Merkezi */}
       <Route
         path="support"
@@ -83,7 +80,7 @@ const UserRoutes = () => (
         }
       />
 
-      {/* ✅ 404 - Bulunamadı */}
+      {/* ✅ 404 */}
       <Route path="*" element={<NotFound />} />
     </Route>
   </Routes>

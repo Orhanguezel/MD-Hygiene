@@ -50,7 +50,6 @@ const AdminRoutes = () => {
         }
       >
         {/* ✅ Ana Sayfa Yönlendirmesi */}
-    
 
         {/* ✅ Dashboard */}
         <Route path="dashboard" element={<AdminDashboard />} />
