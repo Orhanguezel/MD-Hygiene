@@ -6,11 +6,11 @@ export const SidebarContainer = styled.div`
   width: ${({ $isOpen }) => ($isOpen ? "250px" : "60px")};
   background-color: ${({ theme }) => theme.navBackground};
   color: ${({ theme }) => theme.text};
-  box-shadow: 0 0 1px ${({ theme }) => theme.shadow};
+  box-shadow: ${({ $isOpen, theme }) => ($isOpen ? `4px 0 10px ${theme.shadow}` : "none")};
   position: sticky;
   top: 0;
   left: 0;
-  transition: width 0.3s ease-in-out;
+  transition: width 0.4s ease-in-out, box-shadow 0.3s ease-in-out;
   display: flex;
   flex-direction: column; 
   
@@ -20,7 +20,7 @@ export const SidebarContainer = styled.div`
 
 // ✅ Sidebar Toggle Butonu (Hamburger Menü)
 export const ToggleSidebarButton = styled.button`
-  background: ${({ theme }) => theme.sidebarToggleHoverBackground};
+  background: ${({ theme }) => theme.sidebarToggleHover};
   border: none;
   cursor: pointer;
   padding: 12px;
@@ -28,11 +28,11 @@ export const ToggleSidebarButton = styled.button`
   align-items: center;
   justify-content: center;
   transition: background 0.3s ease, color 0.3s ease;
-  color: ${({ theme }) => theme.sidebarToggle}; 
+  color: ${({ theme }) => theme.sidebarToggle};
 
   &:hover {
-    background: ${({ theme }) => theme.sidebarToggleHoverBackground}; /* 🔥 Hover Arkaplan */
-    color: ${({ theme }) => theme.sidebarToggleHover}; /* 🔥 Hover İkon Rengi */
+    background: ${({ theme }) => theme.sidebarToggleHoverBackground};
+    color: ${({ theme }) => theme.sidebarToggleHover};
   }
 `;
 
@@ -64,22 +64,22 @@ export const NavItem = styled(NavLink)`
   text-decoration: none;
   font-size: 16px;
   border-radius: 6px;
-  transition: background 0.3s ease, padding 0.3s ease, color 0.3s ease;
+  transition: background 0.3s ease, padding 0.3s ease, color 0.3s ease; 
   position: relative;
 
-   &:hover {
-    background-color: ${({ theme }) => theme.primaryHover};
-    color: ${({ theme }) => theme.buttonText};
+  &:hover {
+    background: ${({ theme }) => theme.sidebarHover};
+    color: ${({ theme }) => theme.sidebarTextHover};
   }
 
   &.active {
     background: ${({ theme }) => theme.sidebarActive};
     color: ${({ theme }) => theme.sidebarActiveText};
-    font-weight: bold;
   }
 
   span {
     display: ${({ $isOpen }) => ($isOpen ? "inline" : "none")};
+    transition: opacity 0.3s ease-in-out;
   }
 `;
 

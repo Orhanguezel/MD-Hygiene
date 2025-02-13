@@ -128,6 +128,7 @@ export const ProfileDropdown = styled.div`
   box-shadow: ${({ theme }) => theme.shadow};
   z-index: 1000;
   padding: 10px;
+  min-width: 230px;
   display: flex;
   flex-direction: column;
 

@@ -3,14 +3,15 @@ import styled from "styled-components";
 // ✅ Tüm layout için flex yapısı
 export const LayoutContainer = styled.div`
   display: flex;
+  justify-content: space-between;
   flex-direction: column;
-  min-height: 100vh; /* Ekran yüksekliği kadar uzanır */
+  min-height: 100vh; 
   overflow-x: hidden;
 `;
 
 export const MainContent = styled.main`
-  flex: 1; /* Ana içerik alanı tüm boşluğu kaplar */
-
+  flex: 1;
+  width: 100%;
   padding: 80px 20px 20px 40px; 
   color: white;
   overflow: auto;

@@ -1,52 +1,57 @@
-// ✅ src/pages/products/AddProduct.jsx
 import { useState } from "react";
-import { useProducts } from "@/features/products/useProducts";
+import { useDispatch } from "react-redux";
+import { addProduct } from "@/features/products/productSlice";
 import { useLanguage } from "@/features/language/useLanguage";
-import { FormContainer, ErrorMessage, SubmitButton } from "../styles/productStyles";
+import { useTheme } from "@/features/theme/useTheme";
+import { toast } from "react-toastify";
+import { FormContainer, FormInput, SubmitButton } from "../styles/productStyles";
 
-const AddProduct = () => {
-  const { addProduct } = useProducts();
+const ProductForm = () => {
+  const dispatch = useDispatch();
   const { texts } = useLanguage();
-  const [formData, setFormData] = useState({
-    id: "",
+  const { theme } = useTheme();
+
+  const [product, setProduct] = useState({
     name: "",
     brand: "",
     price: "",
     stock: "",
+    image: "",
   });
-  const [error, setError] = useState("");
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setProduct({ ...product, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.brand || !formData.price || !formData.stock) {
-      setError(texts?.products?.error || "Lütfen tüm alanları doldurun.");
-      return;
-    }
-    addProduct(formData);
-    setFormData({ id: "", name: "", brand: "", price: "", stock: "" });
-    setError("");
+    dispatch(addProduct(product));
+    toast.success(texts.products.addSuccess || "✅ Ürün başarıyla eklendi!");
+    setProduct({ name: "", brand: "", price: "", stock: "", image: "" });
   };
 
   return (
-    <FormContainer>
-      <h2>{texts?.products?.addProduct || "🛒 Yeni Ürün Ekle"}</h2>
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+    <FormContainer theme={theme} onSubmit={handleSubmit}>
+      <h2>{texts.products.addProduct || "🛒 Yeni Ürün Ekle"}</h2>
 
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="id" placeholder="Ürün ID" value={formData.id} onChange={handleChange} required />
-        <input type="text" name="name" placeholder="Ürün Adı" value={formData.name} onChange={handleChange} required />
-        <input type="text" name="brand" placeholder="Marka" value={formData.brand} onChange={handleChange} required />
-        <input type="number" name="price" placeholder="Fiyat (€)" value={formData.price} onChange={handleChange} required />
-        <input type="number" name="stock" placeholder="Stok" value={formData.stock} onChange={handleChange} required />
+      <label>{texts.products.productName || "Ürün Adı"}:</label>
+      <FormInput theme={theme} type="text" name="name" value={product.name} onChange={handleChange} required />
 
-        <SubmitButton type="submit">💾 {texts?.products?.save || "Kaydet"}</SubmitButton>
-      </form>
+      <label>{texts.products.brand || "Marka"}:</label>
+      <FormInput theme={theme} type="text" name="brand" value={product.brand} onChange={handleChange} required />
+
+      <label>{texts.products.price || "Fiyat (₺)"}:</label>
+      <FormInput theme={theme} type="number" name="price" value={product.price} onChange={handleChange} required />
+
+      <label>{texts.products.stock || "Stok Adedi"}:</label>
+      <FormInput theme={theme} type="number" name="stock" value={product.stock} onChange={handleChange} required />
+
+      <label>{texts.products.image || "Ürün Resmi URL"}:</label>
+      <FormInput theme={theme} type="text" name="image" value={product.image} onChange={handleChange} required />
+
+      <SubmitButton theme={theme} type="submit">{texts.products.submit || "Kaydet"}</SubmitButton>
     </FormContainer>
   );
 };
 
-export default AddProduct;
+export default ProductForm;

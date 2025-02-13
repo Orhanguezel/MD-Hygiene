@@ -1,6 +1,6 @@
 // ✅ src/features/offer/components/OfferCreate.jsx
 import { useState, useEffect } from "react";
-import { useProducts } from "@/features/products/useProducts";
+//import { useProducts } from "@/features/products/useProducts";
 import { useOffers } from "@/features/offer/useOffers";
 import { v4 as uuidv4 } from "uuid";
 import { useLanguage } from "@/features/language/useLanguage"; // ✅ Dil desteği eklendi
@@ -15,7 +15,7 @@ import {
 } from "../styles/offerStyles";
 
 const OfferCreate = ({ existingOffer, onOfferCreated }) => {
-  const { products } = useProducts();
+  //const { products } = useProducts();
   const { addOffer, updateOffer } = useOffers();
   const { texts } = useLanguage(); // ✅ Dil kullanımı
   const { theme } = useTheme();    // ✅ Tema kullanımı

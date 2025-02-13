@@ -127,3 +127,5 @@ export const GlobalStyles = createGlobalStyle`
     box-shadow: 0 6px 10px ${({ theme }) => theme.shadow};
   }
 `;
+
+

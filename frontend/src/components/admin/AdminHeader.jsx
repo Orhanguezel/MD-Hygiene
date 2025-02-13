@@ -69,9 +69,6 @@ export default function AdminHeader() {
         <NavItem as={Link} to="/">
           <FaHome size={22} />
         </NavItem>
-        <NavItem as={Link} to="/settings">
-          <FaCog size={22} />
-        </NavItem>
       </Nav>
 
       {/* ✅ Profil Alanı */}

@@ -30,6 +30,7 @@ import Products from "@/pages/admin/modules/products/Products";
 import AddProduct from "@/pages/admin/modules/products/components/AddProduct";
 import EditProduct from "@/pages/admin/modules/products/components/EditProduct";
 import ProductDetails from "@/pages/admin/modules/products/components/ProductDetails";
+import ManageStock from "@/pages/admin/modules/products/components/ManageStock";
 
 // ✅ Diğer Modüller
 import Notifications from "@/pages/admin/modules/notification/Notifications";
@@ -92,6 +93,8 @@ const AdminRoutes = () => {
           <Route path="add" element={<AddProduct />} />
           <Route path="edit/:id" element={<EditProduct />} />
           <Route path=":id" element={<ProductDetails />} />
+          <Route path="manageStock" element={<ManageStock />} />
+
         </Route>
 
         {/* ✅ Diğer Modüller */}

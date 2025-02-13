@@ -1,4 +1,3 @@
-
 import { useLanguage } from "@/features/language/useLanguage";
 import { SidebarContainer, SidebarButton } from "../styles/productStyles";
 
@@ -13,6 +12,9 @@ const ProductSidebar = ({ setActiveSection }) => {
       </SidebarButton>
       <SidebarButton onClick={() => setActiveSection("create")}>
         ➕ {texts?.products?.add || "Ürün Ekle"}
+      </SidebarButton>
+      <SidebarButton onClick={() => setActiveSection("manageStock")}>
+        📦 {texts?.products?.manageStock || "Fiyat ve Stok Yönetimi"}
       </SidebarButton>
     </SidebarContainer>
   );

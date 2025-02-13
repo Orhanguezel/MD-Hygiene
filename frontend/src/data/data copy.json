@@ -557,7 +557,10 @@
         }
       ],
       "phone": "+905551234567",
-      "orders": ["ORD-001", "ORD-002"],
+      "orders": [
+        "ORD-001",
+        "ORD-002"
+      ],
       "profileImage": "https://randomuser.me/api/portraits/women/1.jpg",
       "isActive": true
     },
@@ -577,7 +580,9 @@
         }
       ],
       "phone": "+905301234567",
-      "orders": ["ORD-003"],
+      "orders": [
+        "ORD-003"
+      ],
       "profileImage": "https://randomuser.me/api/portraits/men/4.jpg",
       "isActive": true
     },
@@ -657,7 +662,9 @@
       "volume": "1.5 L",
       "gtin_ean": "4006381333931",
       "reach_compliance": true,
-      "images": ["surface-cleaner-1.jpg"],
+      "images": [
+        "surface-cleaner-1.jpg"
+      ],
       "id": "1bba"
     },
     {
@@ -672,7 +679,9 @@
       "volume": "500 ml",
       "gtin_ean": "4006381333932",
       "reach_compliance": true,
-      "images": ["hand-soap.jpg"],
+      "images": [
+        "hand-soap.jpg"
+      ],
       "id": "6bfd"
     },
     {
@@ -687,7 +696,9 @@
       "volume": "-",
       "gtin_ean": "4006381333933",
       "reach_compliance": false,
-      "images": ["paper-towel.jpg"],
+      "images": [
+        "paper-towel.jpg"
+      ],
       "id": "78e7"
     },
     {
@@ -702,7 +713,9 @@
       "volume": "750 ml",
       "gtin_ean": "4006381333934",
       "reach_compliance": true,
-      "images": ["glass-cleaner.jpg"],
+      "images": [
+        "glass-cleaner.jpg"
+      ],
       "id": "af58"
     },
     {
@@ -717,7 +730,9 @@
       "volume": "1 L",
       "gtin_ean": "4006381333935",
       "reach_compliance": true,
-      "images": ["disinfectant-spray.jpg"],
+      "images": [
+        "disinfectant-spray.jpg"
+      ],
       "id": "cfd4"
     },
     {
@@ -732,7 +747,9 @@
       "volume": "-",
       "gtin_ean": "4006381333936",
       "reach_compliance": false,
-      "images": ["mop-cloth.jpg"],
+      "images": [
+        "mop-cloth.jpg"
+      ],
       "id": "66a8"
     },
     {
@@ -747,7 +764,9 @@
       "volume": "4 L",
       "gtin_ean": "4006381333937",
       "reach_compliance": true,
-      "images": ["industrial-detergent.jpg"],
+      "images": [
+        "industrial-detergent.jpg"
+      ],
       "id": "d83a"
     },
     {
@@ -762,7 +781,9 @@
       "volume": "-",
       "gtin_ean": "4006381333938",
       "reach_compliance": false,
-      "images": ["toilet-paper.jpg"],
+      "images": [
+        "toilet-paper.jpg"
+      ],
       "id": "8a79"
     },
     {
@@ -777,7 +798,9 @@
       "volume": "1 L",
       "gtin_ean": "4006381333939",
       "reach_compliance": true,
-      "images": ["dish-detergent.jpg"],
+      "images": [
+        "dish-detergent.jpg"
+      ],
       "id": "b8a2"
     },
     {
@@ -792,7 +815,9 @@
       "volume": "-",
       "gtin_ean": "4006381333940",
       "reach_compliance": false,
-      "images": ["garbage-bag.jpg"],
+      "images": [
+        "garbage-bag.jpg"
+      ],
       "id": "354a"
     }
   ],
@@ -930,5 +955,5 @@
     }
   ],
   "invoices": [],
-  "category": []
+  "category":[]
 }
