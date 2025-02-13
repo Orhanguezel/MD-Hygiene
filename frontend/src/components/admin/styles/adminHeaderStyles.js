@@ -1,127 +1,147 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
-// ✅ Header Konteyneri
 export const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 10px;
-  background-color: #1f2937;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  background-color: ${({ theme }) => theme.navBackground};
+  color: ${({ theme }) => theme.text};
+  box-shadow: 0 2px 4px ${({ theme }) => theme.shadow};
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
 `;
 
-// ✅ Logo
+
+export const LogoLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+`;
+
 export const Logo = styled.img`
   height: 40px;
+  margin-right: 10px;
 `;
 
-// ✅ Firma Adı (Span) Stili
 export const Name = styled.span`
-  color: #fff;
   font-size: 20px;
-  margin-left: 10px;
   font-weight: bold;
-  text-decoration: none;
-  transition: 0.3s;
-  padding: 15px;
-
-  &:hover {
-    color: #007bff;
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  color: ${({ theme }) => theme.text};
 `;
 
-// ✅ Navigation Menüsü
 export const Nav = styled.nav`
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
 `;
 
-
-// ✅ Navigation Item
-export const NavItem = styled.div`
-  position: relative;
-`;
-
-// ✅ Butonlar
-export const Button = styled.button`
-  background: none;
-  border: none;
+export const NavItem = styled(Link)`
+  padding: 10px;
   cursor: pointer;
-  padding: 8px;
-  color: ${({ theme }) => (theme === "light" ? "#333" : "#fff")};
-  transition: 0.3s;
+  color: ${({ theme }) => theme.text};
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 6px;
+  transition: background 0.3s ease, color 0.3s ease;
 
   &:hover {
-    color: #007bff;
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    background-color: ${({ theme }) => theme.primaryHover};
+    color: ${({ theme }) => theme.buttonText};
   }
 `;
 
-// ✅ Profil Alanı
-export const ProfileSection = styled.div`
+export const ControlContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  cursor: pointer;
-  position: relative;
+`;
 
-  span {
-    font-weight: bold;
-    color: ${({ theme }) => (theme === "light" ? "#333" : "#fff")};
+export const LanguageSelect = styled.select`
+  background: ${({ theme }) => theme.inputBackground};
+  color: ${({ theme }) => theme.text};
+  border: 1px solid ${({ theme }) => theme.border};
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.primary};
+  }
+
+  option {
+    background: ${({ theme }) => theme.cardBackground};
+    color: ${({ theme }) => theme.text};
   }
 `;
 
-// ✅ Profil Resmi
-export const ProfileImage = styled.img`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #007bff;
+
+export const HamburgerButton = styled.button`
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: ${({ theme }) => theme.text};
+
+  @media (max-width: 768px) {
+    display: block;
+  }
 `;
 
-// ✅ Dropdown Menü
+
+export const ThemeToggleButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: ${({ theme }) => theme.text};
+  font-size: 18px;
+  transition: color 0.3s ease-in-out;
+`;
+
+export const ProfileSection = styled.div`
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
+
+export const ProfileImage = styled.img`
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+`;
+
 export const ProfileDropdown = styled.div`
   position: absolute;
   top: 40px;
   right: 0;
-  background: ${({ theme }) => (theme === "light" ? "#fff" : "#444")};
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background: ${({ theme }) => theme.cardBackground};
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 6px;
-  overflow: hidden;
-  z-index: 100;
+  box-shadow: ${({ theme }) => theme.shadow};
+  z-index: 1000;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
 
-  a,
-  button {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 15px;
-    text-decoration: none;
-    color: ${({ theme }) => (theme === "light" ? "#333" : "#fff")};
-    cursor: pointer;
-    background: none;
+  a, button {
+    padding: 8px 12px;
     border: none;
-    width: 100%;
+    background: none;
+    color: ${({ theme }) => theme.text};
     text-align: left;
+    cursor: pointer;
+    transition: color 0.3s ease;
 
     &:hover {
-      background-color: ${({ theme }) => (theme === "light" ? "#f0f0f0" : "#555")};
+      color: ${({ theme }) => theme.primary};
     }
   }
-`;
-
-// ✅ Tema Değiştirme Butonu
-export const ThemeToggleButton = styled(Button)`
-  font-size: 18px;
 `;

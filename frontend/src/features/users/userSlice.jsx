@@ -3,11 +3,12 @@ import API from "@/services/api"; // ✅ API Merkezi Yönetim
 
 const initialState = {
   users: [],
+  selectedUser: null, // ✅ Belirli bir kullanıcıyı saklar
   loading: false,
   error: null,
 };
 
-// 📥 Tüm Kullanıcıları Getir
+// 📥 **Tüm Kullanıcıları Getir**
 export const getAllUsers = createAsyncThunk(
   "users/getAllUsers",
   async (_, { rejectWithValue }) => {
@@ -20,7 +21,20 @@ export const getAllUsers = createAsyncThunk(
   }
 );
 
-// ➕ Yeni Kullanıcı Ekle
+// 📥 **Belirli Bir Kullanıcıyı Getir (ID ile)**
+export const fetchUserById = createAsyncThunk(
+  "users/fetchUserById",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await API.get(`/users/${userId}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Kullanıcı bulunamadı!");
+    }
+  }
+);
+
+// ➕ **Yeni Kullanıcı Ekle**
 export const addUser = createAsyncThunk(
   "users/addUser",
   async (newUser, { rejectWithValue }) => {
@@ -33,7 +47,7 @@ export const addUser = createAsyncThunk(
   }
 );
 
-// ✏️ Kullanıcıyı Güncelle
+// ✏️ **Kullanıcıyı Güncelle**
 export const updateUser = createAsyncThunk(
   "users/updateUser",
   async (updatedUser, { rejectWithValue }) => {
@@ -46,7 +60,7 @@ export const updateUser = createAsyncThunk(
   }
 );
 
-// ❌ Kullanıcıyı Sil
+// ❌ **Kullanıcıyı Sil**
 export const deleteUser = createAsyncThunk(
   "users/deleteUser",
   async (userId, { rejectWithValue }) => {
@@ -59,7 +73,7 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
-// ✅ Kullanıcının Aktiflik Durumunu Değiştir
+// ✅ **Kullanıcının Aktiflik Durumunu Değiştir**
 export const toggleUserStatus = createAsyncThunk(
   "users/toggleUserStatus",
   async (userId, { getState, rejectWithValue }) => {
@@ -74,7 +88,7 @@ export const toggleUserStatus = createAsyncThunk(
   }
 );
 
-// ✅ Adres Güncelleme
+// ✅ **Adres Güncelleme**
 export const updateAddress = createAsyncThunk(
   "users/updateAddress",
   async ({ userId, address }, { rejectWithValue }) => {
@@ -93,6 +107,7 @@ export const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // 📥 **Tüm Kullanıcıları Getir**
       .addCase(getAllUsers.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -106,6 +121,21 @@ export const userSlice = createSlice({
         state.error = action.payload;
       })
 
+      // 📥 **Belirli Kullanıcıyı Getir (ID ile)**
+      .addCase(fetchUserById.pending, (state) => {
+        state.loading = true;
+        state.selectedUser = null;
+      })
+      .addCase(fetchUserById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.selectedUser = action.payload;
+      })
+      .addCase(fetchUserById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // ➕ **Yeni Kullanıcı Ekle**
       .addCase(addUser.fulfilled, (state, action) => {
         state.users.push(action.payload);
       })
@@ -113,6 +143,7 @@ export const userSlice = createSlice({
         state.error = action.payload;
       })
 
+      // ✏️ **Kullanıcı Güncelleme**
       .addCase(updateUser.fulfilled, (state, action) => {
         const index = state.users.findIndex((user) => user.id === action.payload.id);
         if (index !== -1) {
@@ -123,6 +154,7 @@ export const userSlice = createSlice({
         state.error = action.payload;
       })
 
+      // ❌ **Kullanıcı Silme**
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.users = state.users.filter((user) => user.id !== action.payload);
       })
@@ -130,6 +162,7 @@ export const userSlice = createSlice({
         state.error = action.payload;
       })
 
+      // ✅ **Kullanıcı Durumunu Değiştir**
       .addCase(toggleUserStatus.fulfilled, (state, action) => {
         const index = state.users.findIndex((user) => user.id === action.payload.id);
         if (index !== -1) {
@@ -140,6 +173,7 @@ export const userSlice = createSlice({
         state.error = action.payload;
       })
 
+      // ✅ **Adres Güncelleme**
       .addCase(updateAddress.fulfilled, (state, action) => {
         const index = state.users.findIndex((user) => user.id === action.payload.id);
         if (index !== -1) {

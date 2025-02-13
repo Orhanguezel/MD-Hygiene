@@ -1,4 +1,4 @@
-// ✅ src/pages/visitor/home/components/Testimonials.jsx
+import { useLanguage } from "@/features/language/useLanguage"; // ✅ Dil Desteği
 import {
   TestimonialsContainer,
   TestimonialCard,
@@ -11,21 +11,23 @@ const testimonialsData = [
   {
     id: 1,
     name: "John Doe",
-    feedback: "This product has changed my life!",
+    feedback: "✨ Bu ürün hayatımı değiştirdi!",
     avatar: "https://randomuser.me/api/portraits/men/1.jpg",
   },
   {
     id: 2,
     name: "Jane Smith",
-    feedback: "Excellent service and great quality.",
+    feedback: "🔥 Mükemmel hizmet ve harika kalite.",
     avatar: "https://randomuser.me/api/portraits/women/2.jpg",
   },
 ];
 
 const Testimonials = () => {
+  const { texts } = useLanguage();
+
   return (
     <TestimonialsContainer>
-      <h2>Müşteri Yorumları</h2>
+      <h2>{texts.home.testimonials}</h2>
       {testimonialsData.map((testimonial) => (
         <TestimonialCard key={testimonial.id}>
           <Avatar src={testimonial.avatar} alt={testimonial.name} />

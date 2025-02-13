@@ -97,3 +97,41 @@ export const CarouselNavButton = styled.button`
     background: rgba(0, 0, 0, 0.8);
   }
 `;
+
+export const HeroButton = styled.button`
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+
+  &:hover {
+    background-color: var(--highlight-color);
+  }
+`;
+
+export const HeroContainer = styled.section`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--background-color);
+  color: white;
+`;
+
+export const HeroContent = styled.div`
+  text-align: center;
+`;
+
+export const HeroTitle = styled.h1`
+  font-size: 3rem;
+  margin-bottom: 20px;
+`;
+
+export const HeroSubtitle = styled.p`
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+`;
+

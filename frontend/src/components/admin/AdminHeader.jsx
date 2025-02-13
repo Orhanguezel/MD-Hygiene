@@ -2,20 +2,23 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLanguage } from "@/features/language/useLanguage";
 import { useTheme } from "@/features/theme/useTheme";
-import { logout } from "@/features/auth/authSlice"; // ✅ Doğrudan authSlice'tan logout
+import { logout } from "@/features/auth/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import {
   HeaderContainer,
+  LogoLink,
   Logo,
+  Name,
   Nav,
   NavItem,
-  Button,
-  ProfileSection,
-  ProfileDropdown,
-  ProfileImage,
+  LanguageSelect,
   ThemeToggleButton,
+  ControlContainer,
+  ProfileSection,
+  ProfileImage,
+  ProfileDropdown
 } from "./styles/adminHeaderStyles";
-import { FaBell, FaUserCircle, FaCog, FaSun, FaMoon, FaSignOutAlt } from "react-icons/fa";
+import { FaHome, FaUserCircle, FaCog, FaSignOutAlt, FaSun, FaMoon, FaBell } from "react-icons/fa";
 import logo from "@/assets/logo.png";
 
 export default function AdminHeader() {
@@ -23,7 +26,7 @@ export default function AdminHeader() {
   const navigate = useNavigate();
   const { language, setLanguage, texts } = useLanguage();
   const { theme, toggleTheme } = useTheme();
-  const { user } = useSelector((state) => state.auth); // ✅ Kullanıcı bilgisi authSlice'tan
+  const { user } = useSelector((state) => state.auth);
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -32,73 +35,67 @@ export default function AdminHeader() {
   };
 
   const handleLogout = () => {
-    dispatch(logout()); // ✅ Logout işlemi
-    navigate("/login"); // ✅ Çıkış sonrası login sayfasına yönlendirme
+    dispatch(logout());
+    navigate("/login");
   };
 
   return (
     <HeaderContainer>
-      <Link to="/">
+      {/* ✅ Logo */}
+      <LogoLink to="/">
         <Logo src={logo} alt="MD-Hygienelogistik" />
-      </Link>
+        <Name>MD-HL</Name>
+      </LogoLink>
 
-      <Nav>
-        {/* ✅ Tema Toggle */}
+      {/* ✅ Kontroller (Dil, Tema, Bildirim) */}
+      <ControlContainer>
+        <LanguageSelect value={language} onChange={(e) => setLanguage(e.target.value)}>
+          <option value="tr">🇹🇷</option>
+          <option value="en">🇬🇧</option>
+          <option value="de">🇩🇪</option>
+        </LanguageSelect>
+
         <ThemeToggleButton onClick={toggleTheme}>
           {theme === "light" ? <FaMoon size={18} /> : <FaSun size={18} />}
         </ThemeToggleButton>
 
-        {/* ✅ Dil Seçimi */}
-        <Button onClick={() => setLanguage("tr")} disabled={language === "tr"}>
-          🇹🇷
-        </Button>
-        <Button onClick={() => setLanguage("de")} disabled={language === "de"}>
-          🇩🇪
-        </Button>
-        <Button onClick={() => setLanguage("en")} disabled={language === "en"}>
-          🇬🇧
-        </Button>
-
-        {/* ✅ Bildirim İkonu */}
-        <NavItem>
-          <Button>
-            <FaBell size={18} />
-          </Button>
+        <NavItem as={Link} to="/notifications">
+          <FaBell size={18} />
         </NavItem>
+      </ControlContainer>
 
-        {/* ✅ Kullanıcı Profil */}
-        <ProfileSection onClick={handleProfileClick}>
-          {user?.profileImage ? (
-            <ProfileImage src={`/${user.profileImage.replace(/^\\/, '')}`} alt={user.name} />
-
-          ) : (
-            <FaUserCircle size={24} />
-          )}
-          <span>{user?.name || "Kullanıcı"}</span>
-
-          {/* ✅ Dropdown Menü */}
-          {dropdownOpen && (
-            <ProfileDropdown>
-              <Link to="/profile">
-                <FaUserCircle /> {texts?.profile?.title || "Profilim"}
-              </Link>
-              <Link to="/settings">
-                <FaCog /> {texts?.settings?.title || "Ayarlar"}
-              </Link>
-              <Button onClick={handleLogout}>
-                <FaSignOutAlt /> {texts?.logout || "Çıkış Yap"}
-              </Button>
-            </ProfileDropdown>
-          )}
-        </ProfileSection>
-
-        {/* ✅ Çıkış Yap Butonu */}
-        {!dropdownOpen && (
-          <Button onClick={handleLogout}>
-            <FaSignOutAlt size={18} /> {texts?.logout || "Çıkış Yap"}
-          </Button>
-        )}
+      {/* ✅ Navbar (Mobilde Sadece İkonlar Gösteriliyor) */}
+      <Nav>
+        <NavItem as={Link} to="/">
+          <FaHome size={22} />
+        </NavItem>
+        <NavItem as={Link} to="/settings">
+          <FaCog size={22} />
+        </NavItem>
       </Nav>
+
+      {/* ✅ Profil Alanı */}
+      <ProfileSection onClick={handleProfileClick}>
+        {user?.profileImage ? (
+          <ProfileImage src={`/${user.profileImage.replace(/^\\/, '')}`} alt={user.name} />
+        ) : (
+          <FaUserCircle size={24} />
+        )}
+        {/* ✅ Dropdown Menü */}
+        {dropdownOpen && (
+          <ProfileDropdown>
+            <Link to="/profile">
+              <FaUserCircle /> {texts?.profile?.title || "Profilim"}
+            </Link>
+            <Link to="/settings">
+              <FaCog /> {texts?.settings?.title || "Ayarlar"}
+            </Link>
+            <button onClick={handleLogout}>
+              <FaSignOutAlt /> {texts?.logout || "Çıkış Yap"}
+            </button>
+          </ProfileDropdown>
+        )}
+      </ProfileSection>
     </HeaderContainer>
   );
 }

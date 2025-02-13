@@ -623,7 +623,7 @@
       ],
       "phone": "+905401234567",
       "orders": [],
-      "profileImage": "/profil2.jpeg",
+      "profileImage": "http://localhost:3000/profil-orhan.jpeg",
       "isActive": true,
       "surname": "",
       "address": "Grevenbroich"
@@ -645,7 +645,7 @@
       ],
       "phone": "+905401234567",
       "orders": [],
-      "profileImage": "/profil-orhan.jpeg",
+      "profileImage": "http://localhost:3000/profil-orhan.jpeg",
       "isActive": true
     }
   ],
@@ -923,10 +923,12 @@
   "offer": [],
   "orders": [
     {
-      "id": "ORD-1739409150534",
+      "id": "ORD-1739456958754",
       "userId": "USR-005",
       "userName": "Orhan Güzel",
-      "date": "2025-02-13T01:12:30.534Z",
+      "userEmail": "orhanguzell@gmail.com",
+      "userAddress": "Grevenbroich",
+      "date": "2025-02-13T14:29:18.754Z",
       "items": [
         {
           "productId": "26",
@@ -941,107 +943,16 @@
           "quantity": 1,
           "unitPrice": 16,
           "taxRate": 19
-        },
-        {
-          "productId": "23",
-          "title": "Sleek Modern Laptop with Ambient Lighting",
-          "quantity": 1,
-          "unitPrice": 43,
-          "taxRate": 19
         }
       ],
-      "totalAmount": 86,
+      "subtotal": "0.00",
+      "taxAmount": "0.00",
+      "totalAmount": "20.00",
       "shippingCost": 20,
-      "status": "archived",
+      "status": "pending",
       "paymentStatus": "pending",
-      "orderDate": "2025-02-13T01:12:30.535Z",
-      "shippedDate": "2025-02-13T01:22:10.622Z",
-      "deliveredDate": "2025-02-13T01:22:19.349Z"
-    },
-    {
-      "id": "ORD-1739410075634",
-      "userId": "USR-005",
-      "userName": "Orhan Güzel",
-      "date": "2025-02-13T01:27:55.634Z",
-      "items": [
-        {
-          "productId": "27",
-          "title": "Sleek Smartwatch with Vibrant Display",
-          "quantity": 1,
-          "unitPrice": 16,
-          "taxRate": 19
-        }
-      ],
-      "totalAmount": 16,
-      "shippingCost": 20,
-      "status": "archived",
-      "paymentStatus": "pending",
-      "orderDate": "2025-02-13T01:27:55.635Z",
-      "shippedDate": "2025-02-13T01:31:03.314Z",
-      "deliveredDate": "2025-02-13T01:31:10.875Z"
-    },
-    {
-      "id": "ORD-1739414589360",
-      "userId": "USR-005",
-      "userName": "Orhan Güzel",
-      "date": "2025-02-13T02:43:09.360Z",
-      "items": [
-        {
-          "productId": "27",
-          "title": "Sleek Smartwatch with Vibrant Display",
-          "quantity": 1,
-          "unitPrice": 16,
-          "taxRate": 19
-        }
-      ],
-      "totalAmount": 16,
-      "shippingCost": 20,
-      "status": "archived",
-      "paymentStatus": "pending",
-      "orderDate": "2025-02-13T02:43:09.360Z",
-      "shippedDate": "2025-02-13T02:43:42.289Z",
-      "deliveredDate": "2025-02-13T02:43:46.402Z"
+      "orderDate": "2025-02-13T14:29:18.755Z"
     }
   ],
-  "invoices": [
-    {
-      "id": "0ef3",
-      "invoiceNumber": "INV-1739410296234",
-      "orderId": "ORD-1739410075634",
-      "userId": "USR-005",
-      "userName": "Orhan Güzel",
-      "items": [
-        {
-          "product": "Sleek Smartwatch with Vibrant Display",
-          "quantity": 1,
-          "unitPrice": 16,
-          "taxRate": 19
-        }
-      ],
-      "totalAmount": 16,
-      "taxRate": 19,
-      "taxAmount": "3.04",
-      "shippingCost": 20,
-      "issuedAt": "2025-02-13T01:31:36.234Z",
-      "status": "paid"
-    },
-    {
-      "id": "3f01",
-      "invoiceNumber": "INV-1739414622297",
-      "orderId": "ORD-1739414589360",
-      "userId": "USR-005",
-      "userName": "Orhan Güzel",
-      "items": [
-        {
-          "product": "Sleek Smartwatch with Vibrant Display",
-          "quantity": 1,
-          "unitPrice": 16,
-          "taxRate": 19
-        }
-      ],
-      "totalAmount": 16,
-      "issuedAt": "2025-02-13T02:43:42.297Z",
-      "status": "paid"
-    }
-  ]
+  "invoices": []
 }

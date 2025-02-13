@@ -2,11 +2,12 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "@/services/api"; // ✅ API Bağlantısı
 
 const initialState = {
-  invoices: [],          // ✅ Tüm faturalar
-  userInvoices: [],      // ✅ Kullanıcının faturaları
-  selectedInvoice: null, // ✅ Seçilen fatura detayları
-  status: "idle",        // ✅ API çağrı durumu
-  error: null,           // ✅ Hata yönetimi
+  invoices: [],         // ✅ Tüm faturalar
+  userInvoices: [],     // ✅ Kullanıcının faturaları
+  selectedInvoice: null,// ✅ Seçilen fatura detayları
+  selectedUser: null,   // ✅ Kullanıcı bilgisi
+  status: "idle",       // ✅ API çağrı durumu
+  error: null,          // ✅ Hata yönetimi
 };
 
 // 📥 **Tüm faturaları getir**
@@ -17,26 +18,20 @@ export const fetchInvoices = createAsyncThunk(
       const response = await API.get("/invoices");
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Faturalar yüklenirken hata oluştu!");
+      return rejectWithValue(error.response?.data || "🚨 Faturalar yüklenirken hata oluştu!");
     }
   }
 );
 
-// 📥 **Belirli bir faturayı getir ve kullanıcı bilgisiyle birlikte al**
+// 📥 **Belirli bir faturayı getir**
 export const fetchInvoiceById = createAsyncThunk(
   "invoices/fetchInvoiceById",
   async (invoiceId, { rejectWithValue }) => {
     try {
       const response = await API.get(`/invoices/${invoiceId}`);
-      const invoiceData = response.data;
-
-      // ✅ Kullanıcı bilgilerini de al
-      const userResponse = await API.get(`/users/${invoiceData.userId}`);
-      const userData = userResponse.data;
-
-      return { invoiceData, userData };
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Fatura veya kullanıcı bilgisi bulunamadı!");
+      return rejectWithValue(error.response?.data || "🚨 Fatura bulunamadı!");
     }
   }
 );
@@ -49,7 +44,7 @@ export const fetchUserInvoices = createAsyncThunk(
       const response = await API.get(`/invoices?userId=${userId}`);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Kullanıcı faturaları yüklenirken hata oluştu!");
+      return rejectWithValue(error.response?.data || "🚨 Kullanıcı faturaları yüklenirken hata oluştu!");
     }
   }
 );
@@ -62,7 +57,7 @@ export const createInvoice = createAsyncThunk(
       const response = await API.post("/invoices", invoiceData);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Fatura oluşturulamadı!");
+      return rejectWithValue(error.response?.data || "🚨 Fatura oluşturulamadı!");
     }
   }
 );
@@ -75,7 +70,7 @@ export const updateInvoice = createAsyncThunk(
       const response = await API.put(`/invoices/${updatedInvoice.id}`, updatedInvoice);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Fatura güncellenemedi!");
+      return rejectWithValue(error.response?.data || "🚨 Fatura güncellenemedi!");
     }
   }
 );
@@ -88,24 +83,19 @@ export const deleteInvoice = createAsyncThunk(
       await API.delete(`/invoices/${invoiceId}`);
       return invoiceId;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Fatura silinemedi!");
+      return rejectWithValue(error.response?.data || "🚨 Fatura silinemedi!");
     }
   }
 );
 
+// ✅ **Redux Slice Tanımlaması**
 const invoicesSlice = createSlice({
   name: "invoices",
-  initialState: {
-    invoices: [],
-    selectedInvoice: null,
-    selectedUser: null, // ✅ Kullanıcı bilgisi eklendi
-    status: "idle",
-    error: null,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // 📌 Fatura Listeleme İşlemleri
+      // 📌 **Tüm faturaları getir**
       .addCase(fetchInvoices.pending, (state) => {
         state.status = "loading";
       })
@@ -118,7 +108,7 @@ const invoicesSlice = createSlice({
         state.error = action.payload;
       })
 
-      // 📌 Kullanıcıya Ait Faturaları Listeleme
+      // 📌 **Kullanıcının faturalarını getir**
       .addCase(fetchUserInvoices.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.userInvoices = action.payload;
@@ -128,22 +118,21 @@ const invoicesSlice = createSlice({
         state.error = action.payload;
       })
 
-      // 📌 Tekil Fatura Detayı Getirme
+      // 📌 **Tek bir faturayı getir**
       .addCase(fetchInvoiceById.pending, (state) => {
         state.status = "loading";
         state.selectedInvoice = null;
       })
       .addCase(fetchInvoiceById.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.selectedInvoice = action.payload.invoiceData;
-        state.selectedUser = action.payload.userData; // ✅ Kullanıcı bilgisi de eklendi
+        state.selectedInvoice = action.payload;
       })
       .addCase(fetchInvoiceById.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
 
-      // 📌 Yeni Fatura Ekleme
+      // 📌 **Yeni fatura oluştur**
       .addCase(createInvoice.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.invoices.unshift(action.payload);
@@ -153,7 +142,7 @@ const invoicesSlice = createSlice({
         state.error = action.payload;
       })
 
-      // 📌 Fatura Güncelleme
+      // 📌 **Faturayı güncelle**
       .addCase(updateInvoice.fulfilled, (state, action) => {
         const index = state.invoices.findIndex((inv) => inv.id === action.payload.id);
         if (index !== -1) {
@@ -165,7 +154,7 @@ const invoicesSlice = createSlice({
         state.error = action.payload;
       })
 
-      // 📌 Fatura Silme
+      // 📌 **Faturayı sil**
       .addCase(deleteInvoice.fulfilled, (state, action) => {
         state.invoices = state.invoices.filter((inv) => inv.id !== action.payload);
       })

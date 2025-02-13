@@ -6,6 +6,8 @@ import {
   decreaseQuantity,
   clearCart,
 } from "@/features/cart/cartSlice";
+import { useLanguage } from "@/features/language/useLanguage"; // ✅ Dil Desteği
+import { useTheme } from "@/features/theme/useTheme"; // ✅ Tema Desteği
 import {
   CartContainer,
   CartItem,
@@ -26,49 +28,46 @@ const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { texts } = useLanguage();  // ✅ Dil desteği
+  const { theme } = useTheme();  // ✅ Tema desteği
 
-  const VAT_RATE = 0.18;
+  const VAT_RATE = 0.19;
   const SHIPPING_COST = 20;
 
   const vatAmount = totalPrice * VAT_RATE;
   const grandTotal = totalPrice + vatAmount + SHIPPING_COST;
 
-  const navigate = useNavigate();
-
   return (
-    <CartContainer>
-      <Title>🛒 Sepetim</Title>
+    <CartContainer theme={theme}>
+      <Title>{texts.cart.title}</Title>
       {cartItems.length === 0 ? (
-        <EmptyCartMessage>Sepetiniz boş.</EmptyCartMessage>
+        <EmptyCartMessage>{texts.cart.empty}</EmptyCartMessage>
       ) : (
         <>
           {cartItems.map((item, index) => (
-            <CartItem key={item.id}>
+            <CartItem key={item.id} theme={theme}>
               <ProductImage src={item.images[0]} alt={item.title} />
               <ProductDetails>
                 <h3>
                   {index + 1}. {item.title}
                 </h3>
-                <p>Birim Fiyat: ${item.price}</p>
+                <p>{texts.cart.unitPrice}: ${item.price}</p>
                 <QuantityControls>
-                  <Button onClick={() => dispatch(decreaseQuantity(item.id))}>
-                    -
-                  </Button>
-                  <span>Miktar: {item.quantity}</span>
-                  <Button onClick={() => dispatch(increaseQuantity(item.id))}>
-                    +
-                  </Button>
+                  <Button onClick={() => dispatch(decreaseQuantity(item.id))}>-</Button>
+                  <span>{texts.cart.quantity}: {item.quantity}</span>
+                  <Button onClick={() => dispatch(increaseQuantity(item.id))}>+</Button>
                 </QuantityControls>
-                <p>Ürün Toplam: ${(item.price * item.quantity).toFixed(2)}</p>
+                <p>{texts.cart.itemTotal}: ${(item.price * item.quantity).toFixed(2)}</p>
                 <Button onClick={() => dispatch(removeFromCart(item.id))}>
-                  ❌ Sil
+                  ❌ {texts.cart.remove}
                 </Button>
               </ProductDetails>
             </CartItem>
           ))}
 
           <Summary>
-            <Invoice>📄 Fatura Detayları</Invoice>
+            <Invoice>{texts.cart.invoiceDetails}</Invoice>
             <InvoiceDetails>
               {cartItems.map((item, index) => (
                 <SummaryItem key={item.id}>
@@ -82,24 +81,16 @@ const Cart = () => {
               ))}
             </InvoiceDetails>
 
-            <SummaryItem>
-              <strong>Toplam Fiyat:</strong> ${totalPrice.toFixed(2)}
-            </SummaryItem>
-            <SummaryItem>
-              <strong>KDV (%18):</strong> ${vatAmount.toFixed(2)}
-            </SummaryItem>
-            <SummaryItem>
-              <strong>Kargo Ücreti:</strong> ${SHIPPING_COST.toFixed(2)}
-            </SummaryItem>
+            <SummaryItem><strong>{texts.cart.totalPrice}:</strong> ${totalPrice.toFixed(2)}</SummaryItem>
+            <SummaryItem><strong>{texts.cart.vat} (19%):</strong> ${vatAmount.toFixed(2)}</SummaryItem>
+            <SummaryItem><strong>{texts.cart.shippingCost}:</strong> ${SHIPPING_COST.toFixed(2)}</SummaryItem>
             <SummaryItem style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
-              Genel Toplam: ${grandTotal.toFixed(2)}
+              {texts.cart.grandTotal}: ${grandTotal.toFixed(2)}
             </SummaryItem>
 
-            <Button onClick={() => dispatch(clearCart())}>
-              🗑️ Sepeti Temizle
-            </Button>
+            <Button onClick={() => dispatch(clearCart())}>🗑️ {texts.cart.clearCart}</Button>
             <Button primary onClick={() => navigate("/checkout")}>
-              Siparişi Tamamla ✅
+              {texts.cart.checkout} ✅
             </Button>
           </Summary>
         </>

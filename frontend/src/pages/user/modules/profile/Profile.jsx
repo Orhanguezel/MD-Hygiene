@@ -8,37 +8,42 @@ import InvoiceList from "./components/InvoiceList";
 import AddressInfo from "./components/AddressInfo";
 import OrderHistory from "./components/OrderHistory";
 import CartInfo from "./components/CartInfo";
+import { useLanguage } from "@/features/language/useLanguage";  // ✅ Dil desteği eklendi
+import { useTheme } from "@/features/theme/useTheme";  // ✅ Tema desteği eklendi
 
 const Profile = () => {
-  const state = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { texts } = useLanguage(); // ✅ Kullanıcı dil dosyasını al
+  const { theme } = useTheme(); // ✅ Kullanıcı tema bilgisini al
+  
   const user = useSelector((state) => state.auth.user);
   const orders = useSelector((state) => state.orders.userOrders);
-  const invoices = useSelector((state) => state.invoices.userInvoices);
-  const dispatch = useDispatch();
+  const invoices = useSelector((state) => state.invoices.userInvoices || []); // ✅ Hata önleyici boş dizi varsayılan olarak eklendi
 
   useEffect(() => {
-    dispatch(fetchUserOrders(user.id));
-    dispatch(fetchUserInvoices(user.id));
-  }, [dispatch, user.id]);
-
+    if (user?.id) {
+      dispatch(fetchUserOrders(user.id));
+      dispatch(fetchUserInvoices(user.id));
+    }
+  }, [dispatch, user?.id]);
 
   return (
-    <ProfileContainer>
-      <h1>📋 Profil Bilgileri</h1>
+    <ProfileContainer theme={theme}>
+      <h1>{texts.profile.title}</h1>
 
-      <Section>
-        <Info>Email: {state.user.email}</Info>
-        <Info>Rol: {state.user.role}</Info>
-        <Link to={`/profile/${state.user.id}`}>
-          <Button>Profil Düzenle</Button>
+      <Section theme={theme}>
+        <Info theme={theme}>{texts.profile.email}: {user?.email || "-"}</Info>
+        <Info theme={theme}>{texts.profile.role}: {user?.role || "-"}</Info>
+        <Link to={`/profile/${user?.id}`}>
+          <Button theme={theme}>{texts.profile.editProfile}</Button>
         </Link>
       </Section>
 
       {/* ✅ Fatura Listesi */}
-      <InvoiceList userId={state.user.id} />
+      {invoices?.length > 0 ? <InvoiceList userId={user?.id} /> : <p>{texts.profile.noInvoices}</p>}
 
       {/* ✅ Sipariş Geçmişi */}
-      <OrderHistory userId={state.user.id} />
+      {orders?.length > 0 ? <OrderHistory userId={user?.id} /> : <p>{texts.profile.noOrders}</p>}
 
       {/* ✅ Sepet Yönetimi */}
       <CartInfo />

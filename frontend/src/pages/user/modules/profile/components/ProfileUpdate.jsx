@@ -1,16 +1,16 @@
-
-// ✅ ProfileUpdate.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUser} from "@/features/users/userSlice";
+import { updateUser } from "@/features/users/userSlice";
 import { useLanguage } from "@/features/language/useLanguage";
+import { useTheme } from "@/features/theme/useTheme";
 import { HomeContainer, FormContainer, Input, Button } from "../styles/profileStyles";
 
 const ProfileUpdate = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { texts } = useLanguage();
+  const { theme } = useTheme();
   const currentUser = useSelector((state) => state.auth.user);
 
   const [formData, setFormData] = useState({
@@ -20,11 +20,10 @@ const ProfileUpdate = () => {
     password: "", // Güvenlik için şifreyi boş bırakıyoruz
   });
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(updateUser({ ...currentUser, ...formData }));
-    alert("✅ Profiliniz başarıyla güncellendi!");
+    alert(texts.profile.updateSuccess);
     navigate("/profile");
   };
 
@@ -33,13 +32,13 @@ const ProfileUpdate = () => {
   };
 
   return (
-    <HomeContainer>
-      <h1>{texts.users.title || "Profil Düzenle"}</h1>
-      <FormContainer onSubmit={handleSubmit}>
+    <HomeContainer theme={theme}>
+      <h1>{texts.profile.editProfile}</h1>
+      <FormContainer onSubmit={handleSubmit} theme={theme}>
         <Input
           type="text"
           name="name"
-          placeholder={texts?.users?.name || "Adınız"}
+          placeholder={texts.profile.name}
           value={formData.name}
           onChange={handleChange}
           required
@@ -48,7 +47,7 @@ const ProfileUpdate = () => {
         <Input
           type="text"
           name="surname"
-          placeholder={texts?.users?.surname || "Soyadınız"}
+          placeholder={texts.profile.surname}
           value={formData.surname}
           onChange={handleChange}
         />
@@ -56,7 +55,7 @@ const ProfileUpdate = () => {
         <Input
           type="email"
           name="email"
-          placeholder={texts?.users?.email || "Email"}
+          placeholder={texts.profile.email}
           value={formData.email}
           onChange={handleChange}
           required
@@ -65,12 +64,12 @@ const ProfileUpdate = () => {
         <Input
           type="password"
           name="password"
-          placeholder={texts?.users?.password || "Şifre"}
+          placeholder={texts.profile.password}
           value={formData.password}
           onChange={handleChange}
         />
 
-        <Button type="submit">{texts?.users?.save || "Kaydet"}</Button>
+        <Button type="submit" theme={theme}>{texts.profile.save}</Button>
       </FormContainer>
     </HomeContainer>
   );

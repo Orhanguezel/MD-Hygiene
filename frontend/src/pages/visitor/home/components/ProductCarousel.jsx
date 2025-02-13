@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "@/features/cart/cartSlice";
-import { toast } from "react-toastify"; // Bildirim için
+import { useLanguage } from "@/features/language/useLanguage";
+import { toast } from "react-toastify"; 
 import "react-toastify/dist/ReactToastify.css";
 import {
   CarouselContainer,
@@ -18,6 +19,7 @@ import {
 } from "../styles/ProductCarouselStyles";
 
 const ProductCarousel = ({ selectedCategory }) => {
+  const { texts } = useLanguage();
   const [products, setProducts] = useState([]);
   const [favorites, setFavorites] = useState(() => JSON.parse(localStorage.getItem("favorites")) || []);
   const dispatch = useDispatch();
@@ -28,7 +30,7 @@ const ProductCarousel = ({ selectedCategory }) => {
         const response = await axios.get("http://localhost:3000/data");
         setProducts(response.data);
       } catch (error) {
-        console.error("Ürün verileri alınamadı:", error);
+        console.error(texts.home.loading, error);
       }
     };
     fetchProducts();
@@ -36,10 +38,7 @@ const ProductCarousel = ({ selectedCategory }) => {
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
-    toast.success(`${product.title} sepete eklendi!`, {
-      position: "top-right",
-      autoClose: 2000,
-    });
+    toast.success(`${product.title} ${texts.home.buyNow}`, { position: "top-right", autoClose: 2000 });
   };
 
   const handleToggleFavorite = (productId) => {
@@ -57,28 +56,26 @@ const ProductCarousel = ({ selectedCategory }) => {
 
   return (
     <CarouselContainer>
-      <h2>Ürünler</h2>
+      <h2>{texts.home.featuredProducts}</h2>
       <CarouselWrapper>
         {filteredProducts.slice(0, 6).map((product) => (
           <ProductCard key={product.id}>
-            {product.isNew && <ProductLabel>Yeni</ProductLabel>}
+            {product.isNew && <ProductLabel>🔥 {texts.home.featuredProducts}</ProductLabel>}
             <ProductImage src={product.images[0]} alt={product.title} />
-
             <ProductTitle>{product.title}</ProductTitle>
-
             <ProductPrice>${product.price}</ProductPrice>
 
             {product.stock > 0 ? (
-              <StockStatus>Stokta Var</StockStatus>
+              <StockStatus>✅ {texts.product.inStock || "Stokta Var"}</StockStatus>
             ) : (
-              <StockStatus style={{ color: "red" }}>Stokta Yok</StockStatus>
+              <StockStatus style={{ color: "red" }}>❌ {texts.product.outOfStock || "Stokta Yok"}</StockStatus>
             )}
 
             <AddToCartButton
               onClick={() => handleAddToCart(product)}
               disabled={product.stock === 0}
             >
-              {product.stock === 0 ? "Stokta Yok" : "Sepete Ekle"}
+              {product.stock === 0 ? texts.product.outOfStock : texts.home.buyNow}
             </AddToCartButton>
 
             <FavoriteIcon

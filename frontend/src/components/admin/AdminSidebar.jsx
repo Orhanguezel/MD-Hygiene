@@ -1,12 +1,13 @@
-// ✅ src/components/admin/AdminSidebar.jsx
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useLanguage } from "@/features/language/useLanguage";
-import { SidebarContainer, NavContainer, NavItem, ToggleSidebarButton, Tooltip } from "./styles/adminSidebarStyles";
-import { FaHome, FaUser, FaCog, FaChartBar, FaStore, FaBox, FaShoppingCart, FaTruck, FaFileInvoice, FaBell, FaBriefcase, FaClipboardList, FaBars } from "react-icons/fa";
+import { useTheme } from "@/features/theme/useTheme";
+import { SidebarContainer, NavContainer, NavItem, ToggleSidebarButton, Tooltip, HamburgerIcon } from "./styles/adminSidebarStyles";
+import { FaHome, FaUser, FaCog, FaChartBar, FaStore, FaBox, FaShoppingCart, FaTruck, FaFileInvoice, FaBell, FaBriefcase, FaClipboardList } from "react-icons/fa";
 
 export default function AdminSidebar() {
   const { texts } = useLanguage();
+  const { theme } = useTheme();
   const [isOpen, setIsOpen] = useState(true);
 
   const toggleSidebar = () => {
@@ -14,8 +15,10 @@ export default function AdminSidebar() {
   };
 
   return (
-    <SidebarContainer isOpen={isOpen}>
-      <ToggleSidebarButton onClick={toggleSidebar}><FaBars /></ToggleSidebarButton>
+    <SidebarContainer $isOpen={isOpen} theme={theme}>
+      <ToggleSidebarButton onClick={toggleSidebar} theme={theme}>
+        <HamburgerIcon theme={theme} /> 
+      </ToggleSidebarButton>
       <NavContainer>
         {[{
           to: "/dashboard", icon: <FaHome />, label: texts?.sidebar?.dashboard || "Dashboard"
@@ -44,10 +47,10 @@ export default function AdminSidebar() {
         }, {
           to: "/settings", icon: <FaCog />, label: texts?.sidebar?.settings || "Ayarlar"
         }].map((item, index) => (
-          <NavItem key={index} as={NavLink} to={item.to} activeclassname="active" isOpen={isOpen}>
+          <NavItem key={index} as={NavLink} to={item.to} activeclassname="active" $isOpen={isOpen} theme={theme}>
             {item.icon}
             {isOpen && <span>{item.label}</span>}
-            {!isOpen && <Tooltip>{item.label}</Tooltip>}
+            {!isOpen && <Tooltip theme={theme}>{item.label}</Tooltip>}
           </NavItem>
         ))}
       </NavContainer>

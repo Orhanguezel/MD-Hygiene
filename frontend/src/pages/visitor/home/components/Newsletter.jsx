@@ -1,5 +1,5 @@
-// ✅ src/pages/visitor/home/components/Newsletter.jsx
 import { useState } from "react";
+import { useLanguage } from "@/features/language/useLanguage"; // ✅ Dil Desteği
 import {
   NewsletterContainer,
   NewsletterTitle,
@@ -8,25 +8,26 @@ import {
 } from "../styles/NewsletterStyles";
 
 const Newsletter = () => {
+  const { texts } = useLanguage();
   const [email, setEmail] = useState("");
 
   const handleSubscribe = () => {
     if (email) {
-      alert(`Teşekkürler! Abone oldunuz: ${email}`);
+      alert(`${texts.home.thankYou} ${email}`);
       setEmail("");
     }
   };
 
   return (
     <NewsletterContainer>
-      <NewsletterTitle>Bültenimize Abone Olun</NewsletterTitle>
+      <NewsletterTitle>{texts.home.newsletterTitle}</NewsletterTitle>
       <NewsletterInput
         type="email"
-        placeholder="E-posta adresinizi girin"
+        placeholder={texts.home.enterEmail}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <SubscribeButton onClick={handleSubscribe}>Abone Ol</SubscribeButton>
+      <SubscribeButton onClick={handleSubscribe}>{texts.home.subscribe}</SubscribeButton>
     </NewsletterContainer>
   );
 };

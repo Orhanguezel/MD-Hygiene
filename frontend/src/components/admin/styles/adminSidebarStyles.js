@@ -1,28 +1,49 @@
-
-// ✅ src/styles/sidebarStyles.js
 import styled from "styled-components";
+import { FaBars } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 
 export const SidebarContainer = styled.div`
-  width: ${({ isOpen }) => (isOpen ? "250px" : "60px")};
-  background-color: #1f2937;
-  color: white;
+  width: ${({ $isOpen }) => ($isOpen ? "250px" : "60px")};
+  background-color: ${({ theme }) => theme.navBackground};
+  color: ${({ theme }) => theme.text};
+  box-shadow: 0 0 1px ${({ theme }) => theme.shadow};
   position: sticky;
   top: 0;
   left: 0;
   transition: width 0.3s ease-in-out;
   display: flex;
-  flex-direction: column;
-  border-radius: 0 0 20px 0;
-  z-index: 1000;
+  flex-direction: column; 
+  
+  z-index: 100;
+  padding: 10px 0;
 `;
 
+// ✅ Sidebar Toggle Butonu (Hamburger Menü)
 export const ToggleSidebarButton = styled.button`
-  background: transparent;
+  background: ${({ theme }) => theme.sidebarToggleHoverBackground};
   border: none;
-  color: white;
   cursor: pointer;
-  font-size: 1.5rem;
-  padding: 10px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease, color 0.3s ease;
+  color: ${({ theme }) => theme.sidebarToggle}; 
+
+  &:hover {
+    background: ${({ theme }) => theme.sidebarToggleHoverBackground}; /* 🔥 Hover Arkaplan */
+    color: ${({ theme }) => theme.sidebarToggleHover}; /* 🔥 Hover İkon Rengi */
+  }
+`;
+
+// ✅ Hamburger İkonu (React Icon'un Rengini Değiştirmek İçin)
+export const HamburgerIcon = styled(FaBars)`
+  font-size: 1.8rem;
+  transition: color 0.3s ease;
+
+  ${ToggleSidebarButton}:hover & {
+    color: ${({ theme }) => theme.sidebarToggleHover}; 
+  }
 `;
 
 export const NavContainer = styled.nav`
@@ -32,29 +53,33 @@ export const NavContainer = styled.nav`
   padding: 0 10px;
 `;
 
-export const NavItem = styled.div`
+// ✅ Sidebar Linkleri (Hover & Active Durumları Güncellendi)
+export const NavItem = styled(NavLink)`
   display: flex;
   align-items: center;
-  gap: ${({ isOpen }) => (isOpen ? "12px" : "0")};
-  justify-content: ${({ isOpen }) => (isOpen ? "flex-start" : "center")};
+  gap: ${({ $isOpen }) => ($isOpen ? "12px" : "0")};
+  justify-content: ${({ $isOpen }) => ($isOpen ? "flex-start" : "center")};
   padding: 12px;
-  color: white;
+  color: ${({ theme }) => theme.sidebarText};
   text-decoration: none;
   font-size: 16px;
   border-radius: 6px;
-  transition: background 0.3s ease, padding 0.3s ease;
+  transition: background 0.3s ease, padding 0.3s ease, color 0.3s ease;
   position: relative;
 
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
+   &:hover {
+    background-color: ${({ theme }) => theme.primaryHover};
+    color: ${({ theme }) => theme.buttonText};
   }
 
   &.active {
-    background: #2563eb;
+    background: ${({ theme }) => theme.sidebarActive};
+    color: ${({ theme }) => theme.sidebarActiveText};
+    font-weight: bold;
   }
 
   span {
-    display: ${({ isOpen }) => (isOpen ? "inline" : "none")};
+    display: ${({ $isOpen }) => ($isOpen ? "inline" : "none")};
   }
 `;
 
@@ -63,10 +88,11 @@ export const Tooltip = styled.div`
   left: 70px;
   top: 50%;
   transform: translateY(-50%);
-  background: #333;
-  color: white;
+  background: ${({ theme }) => theme.tooltipBackground};
+  color: ${({ theme }) => theme.tooltipText};
   padding: 5px 10px;
   border-radius: 4px;
+  border: 1px solid ${({ theme }) => theme.border};
   font-size: 12px;
   white-space: nowrap;
   display: none;
@@ -75,5 +101,3 @@ export const Tooltip = styled.div`
     display: block;
   }
 `;
-
-

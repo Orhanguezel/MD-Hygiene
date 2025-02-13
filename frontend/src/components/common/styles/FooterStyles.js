@@ -4,15 +4,16 @@ import { NavLink } from "react-router-dom";
 
 // ✅ Footer Konteyneri
 export const FooterContainer = styled.footer`
-  background-color: #1f2937;
-  color: white;
+  background-color: ${({ theme }) => theme.footerBackground};
+  color: ${({ theme }) => theme.footerText};
   padding: 20px 0;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 -4px 8px ${({ theme }) => theme.shadow};
+  transition: background-color 0.3s ease, color 0.3s ease;
 `;
 
 // ✅ Footer İçeriği
@@ -25,7 +26,7 @@ export const FooterContent = styled.div`
 // ✅ Başlık Stili
 export const FooterTitle = styled.h2`
   font-size: 22px;
-  color: #facc15;
+  color: ${({ theme }) => theme.primary};
   margin-bottom: 10px;
 `;
 
@@ -33,17 +34,18 @@ export const FooterTitle = styled.h2`
 export const CopyrightText = styled.p`
   font-size: 14px;
   margin: 5px 0;
-  color: #d1d5db;
+  color: ${({ theme }) => theme.footerSubText};
 `;
 
 // ✅ Link Stili
 export const FooterLink = styled(NavLink)`
-  color: #facc15;
+  color: ${({ theme }) => theme.primary};
   font-weight: bold;
   text-decoration: none;
+  transition: color 0.3s ease-in-out;
 
   &:hover {
     text-decoration: underline;
-    color: #fde047;
+    color: ${({ theme }) => theme.primaryHover};
   }
 `;

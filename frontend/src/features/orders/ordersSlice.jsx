@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { fetchInvoices } from "@/features/invoices/invoicesSlice"; // ✅ Fatura işlemleri
 import API from "@/services/api"; // ✅ API Entegrasyonu
 
 const initialState = {
@@ -15,7 +16,6 @@ export const fetchOrders = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await API.get("/orders");
-      console.log("📦 API Yanıtı - Tüm Siparişler:", response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "🚨 Siparişler yüklenirken hata oluştu!");
@@ -42,7 +42,6 @@ export const fetchUserOrders = createAsyncThunk(
   async (userId, { rejectWithValue }) => {
     try {
       const response = await API.get(`/orders?userId=${userId}`);
-      console.log(`👤 Kullanıcı (${userId}) Siparişleri:`, response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "🚨 Kullanıcı siparişleri getirilemedi!");
@@ -50,59 +49,44 @@ export const fetchUserOrders = createAsyncThunk(
   }
 );
 
-// ➕ **Sipariş oluştur**
-export const addOrder = createAsyncThunk(
-  "orders/addOrder",
-  async (order, { rejectWithValue }) => {
-    try {
-      const newOrder = {
-        ...order,
-        orderDate: new Date().toISOString(),
-        status: "pending",      // ✅ Onay bekliyor
-        paymentStatus: "pending",
-      };
-
-      const response = await API.post("/orders", newOrder);
-      console.log("✅ Yeni Sipariş Oluşturuldu:", response.data);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "🚨 Sipariş oluşturulamadı!");
-    }
-  }
-);
-
-// ✏️ Siparişi güncelle fonksiyonunda fatura oluşturma zorunlu olsun
+// ✏️ **Siparişi güncelle fonksiyonunda fatura oluşturma zorunlu olsun**
 export const updateOrder = createAsyncThunk(
   "orders/updateOrder",
   async (updatedOrder, { rejectWithValue, dispatch }) => {
     try {
       const response = await API.put(`/orders/${updatedOrder.id}`, updatedOrder);
-      
+
       if (updatedOrder.status === "shipped") {
-        // ✅ Sipariş kargoya verildiğinde fatura oluştur
+        const SHIPPING_COST = 20; 
+        const TAX_RATE = 0.19; 
+        const subtotal = updatedOrder.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
+        const taxAmount = subtotal * TAX_RATE;
+        const totalAmount = subtotal + SHIPPING_COST; 
+
+        // ✅ Fatura oluşturma
         const invoiceData = {
           invoiceNumber: `INV-${Date.now()}`,
           orderId: updatedOrder.id,
           userId: updatedOrder.userId,
           userName: updatedOrder.userName,
-          items: updatedOrder.items.map((item) => ({
-            product: item.title,
-            quantity: item.quantity,
-            unitPrice: item.unitPrice,
-            taxRate: item.taxRate || 19,
-          })),
-          totalAmount: updatedOrder.totalAmount,
+          userEmail: updatedOrder.userEmail,
+          userAddress: updatedOrder.userAddress,
+          items: updatedOrder.items,
+          subtotal: parseFloat(subtotal.toFixed(2)),
+          taxAmount: parseFloat(taxAmount.toFixed(2)),
+          totalAmount: parseFloat(totalAmount.toFixed(2)),
+          shippingCost: SHIPPING_COST,
           issuedAt: new Date().toISOString(),
           status: "paid",
         };
 
-        await API.post("/invoices", invoiceData); // ✅ Fatura veritabanına ekleniyor
-        dispatch(fetchInvoices()); // ✅ Redux'ta faturaları güncelle
+        await API.post("/invoices", invoiceData); 
+        dispatch(fetchInvoices()); 
       }
 
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Sipariş güncellenemedi!");
+      return rejectWithValue(error.response?.data || "🚨 Sipariş güncellenemedi!");
     }
   }
 );
@@ -113,13 +97,27 @@ export const deleteOrder = createAsyncThunk(
   async (orderId, { rejectWithValue }) => {
     try {
       await API.delete(`/orders/${orderId}`);
-      console.log(`🗑️ Sipariş Silindi: ${orderId}`);
       return orderId;
     } catch (error) {
       return rejectWithValue(error.response?.data || "🚨 Sipariş silinemedi!");
     }
   }
 );
+
+// ➕ **Sipariş oluştur (Checkout'tan gönderilecek)**
+export const addOrder = createAsyncThunk(
+  "orders/addOrder",
+  async (order, { rejectWithValue }) => {
+    try {
+      const response = await API.post("/orders", order);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "🚨 Sipariş oluşturulamadı!");
+    }
+  }
+);
+
+
 
 // ✅ **Redux Slice Tanımlaması**
 const ordersSlice = createSlice({
@@ -133,7 +131,6 @@ const ordersSlice = createSlice({
       state.selectedOrder = null;
       state.status = "idle";
       state.error = null;
-      console.log("🔄 Redux Store: Siparişler sıfırlandı!");
     },
   },
   extraReducers: (builder) => {
@@ -143,11 +140,25 @@ const ordersSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
-        console.log("📦 Redux Güncellendi! Yeni Siparişler:", action.payload);
         state.status = "succeeded";
         state.orders = action.payload;
       })
       .addCase(fetchOrders.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+
+      // Siparis olusturma
+
+      .addCase(addOrder.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(addOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.orders.unshift(action.payload);
+      })
+      .addCase(addOrder.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
@@ -170,12 +181,6 @@ const ordersSlice = createSlice({
       .addCase(fetchUserOrders.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.userOrders = action.payload;
-      })
-
-      // ➕ **Sipariş ekleme işlemi**
-      .addCase(addOrder.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.orders.unshift(action.payload);
       })
 
       // ✏️ **Sipariş güncelleme**

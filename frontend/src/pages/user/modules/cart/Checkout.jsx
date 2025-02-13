@@ -1,8 +1,11 @@
 import { useSelector, useDispatch } from "react-redux";
 import { clearCart } from "@/features/cart/cartSlice";
-import { addOrder } from "@/features/orders/ordersSlice";
+import { addOrder } from "@/features/orders/ordersSlice"; // ✅ Sadece sipariş oluştur
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useLanguage } from "@/features/language/useLanguage";
+import { useTheme } from "@/features/theme/useTheme";
+import API from "@/services/api";
 import {
   CheckoutContainer,
   Title,
@@ -20,11 +23,13 @@ const Checkout = () => {
   const user = useSelector((state) => state.auth.user);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
   const dispatch = useDispatch();
+  const { texts } = useLanguage(); // ✅ Dil desteği
+  const { theme } = useTheme(); // ✅ Tema desteği
 
-  const VAT_RATE = 0.19; // Almanya standart vergi oranı (%19)
+  const VAT_RATE = 0.19;
   const SHIPPING_COST = 20;
   const vatAmount = totalPrice * VAT_RATE;
-  const grandTotal = totalPrice + vatAmount + SHIPPING_COST;
+  const grandTotal = totalPrice + SHIPPING_COST; // **KDV eklenmiyor, zaten dahil!**
 
   const [paymentDetails, setPaymentDetails] = useState({
     cardNumber: "",
@@ -38,90 +43,78 @@ const Checkout = () => {
     setPaymentDetails((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleCheckout = (e) => {
+  const handleCheckout = async (e) => {
     e.preventDefault();
-  
-    const newOrder = {
-      id: `ORD-${Date.now()}`,
-      userId: user.id,
-      userName: user.name,
-      date: new Date().toISOString(),
-      items: cartItems.map((item) => ({
-        productId: item.id,
-        title: item.title,
-        quantity: item.quantity,
-        unitPrice: item.price,
-        taxRate: 19, // Almanya vergi oranı
-      })),
-      totalAmount: totalPrice,
-      shippingCost: SHIPPING_COST,
-      status: "pending",
-      paymentStatus: "pending",
-      orderDate: new Date().toISOString(),
-    };
-  
-    dispatch(addOrder(newOrder));
-    toast.success("✅ Sipariş başarıyla oluşturuldu!");
-    dispatch(clearCart());
+
+    if (!paymentDetails.name || !paymentDetails.cardNumber || !paymentDetails.expiryDate || !paymentDetails.cvv) {
+      toast.error(`❌ ${texts.checkout.missingDetails || "Lütfen tüm ödeme bilgilerini doldurun!"}`);
+      return;
+    }
+
+    try {
+      // ✅ **Sipariş oluşturma**
+      const newOrder = {
+        id: `ORD-${Date.now()}`,
+        userId: user.id,
+        userName: user.name,
+        userEmail: user.email, // ✅ Kullanıcı e-posta adresi
+        userAddress: user.address, // ✅ Kullanıcı adresi
+        date: new Date().toISOString(),
+        items: cartItems.map((item) => ({
+          productId: item.id,
+          title: item.title,
+          quantity: item.quantity,
+          unitPrice: item.price,
+          taxRate: 19,
+        })),
+        subtotal: totalPrice.toFixed(2),
+        taxAmount: vatAmount.toFixed(2),
+        totalAmount: grandTotal.toFixed(2),
+        shippingCost: SHIPPING_COST,
+        status: "pending", // ✅ Sipariş "pending" olarak başlar
+        paymentStatus: "pending",
+        orderDate: new Date().toISOString(),
+      };
+
+      await API.post("/orders", newOrder);
+      dispatch(addOrder(newOrder));
+      toast.success(`✅ ${texts.checkout.success || "Sipariş başarıyla oluşturuldu!"}`);
+      dispatch(clearCart());
+    } catch (error) {
+      console.error("🚨 Sipariş oluşturulurken hata oluştu:", error);
+      toast.error(`❌ ${texts.checkout.error || "Sipariş oluşturulamadı!"}`);
+    }
   };
-  
 
   return (
-    <CheckoutContainer>
-      <Title>💳 Ödeme Sayfası</Title>
+    <CheckoutContainer theme={theme}>
+      <Title>{texts.checkout.title || "💳 Ödeme Sayfası"}</Title>
 
       <PaymentForm onSubmit={handleCheckout}>
         <CardDetails>
-          <Label>Kart Sahibi Adı</Label>
-          <Input
-            type="text"
-            name="name"
-            value={paymentDetails.name}
-            onChange={handleChange}
-            required
-          />
+          <Label>{texts.checkout.cardHolder || "Kart Sahibi Adı"}</Label>
+          <Input type="text" name="name" value={paymentDetails.name} onChange={handleChange} required />
 
-          <Label>Kart Numarası</Label>
-          <Input
-            type="text"
-            name="cardNumber"
-            value={paymentDetails.cardNumber}
-            onChange={handleChange}
-            placeholder="1234 5678 9012 3456"
-            required
-          />
+          <Label>{texts.checkout.cardNumber || "Kart Numarası"}</Label>
+          <Input type="text" name="cardNumber" value={paymentDetails.cardNumber} onChange={handleChange} required />
 
-          <Label>Son Kullanma Tarihi (MM/YY)</Label>
-          <Input
-            type="text"
-            name="expiryDate"
-            value={paymentDetails.expiryDate}
-            onChange={handleChange}
-            placeholder="12/25"
-            required
-          />
+          <Label>{texts.checkout.expiryDate || "Son Kullanma Tarihi (MM/YY)"}</Label>
+          <Input type="text" name="expiryDate" value={paymentDetails.expiryDate} onChange={handleChange} required />
 
-          <Label>CVV</Label>
-          <Input
-            type="password"
-            name="cvv"
-            value={paymentDetails.cvv}
-            onChange={handleChange}
-            placeholder="123"
-            required
-          />
+          <Label>{texts.checkout.cvv || "CVV"}</Label>
+          <Input type="password" name="cvv" value={paymentDetails.cvv} onChange={handleChange} required />
         </CardDetails>
 
         <Summary>
-          <SummaryItem>Toplam Fiyat: ${totalPrice.toFixed(2)}</SummaryItem>
-          <SummaryItem>KDV (%19): ${vatAmount.toFixed(2)}</SummaryItem>
-          <SummaryItem>Kargo Ücreti: ${SHIPPING_COST.toFixed(2)}</SummaryItem>
+          <SummaryItem>{texts.checkout.totalPrice || "Toplam Fiyat"}: ${totalPrice.toFixed(2)}</SummaryItem>
+          <SummaryItem>{texts.checkout.vat || "KDV (%19)"}: ${vatAmount.toFixed(2)}</SummaryItem>
+          <SummaryItem>{texts.checkout.shippingCost || "Kargo Ücreti"}: ${SHIPPING_COST.toFixed(2)}</SummaryItem>
           <SummaryItem style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
-            Genel Toplam: ${grandTotal.toFixed(2)}
+            {texts.checkout.grandTotal || "Genel Toplam"}: ${grandTotal.toFixed(2)}
           </SummaryItem>
         </Summary>
 
-        <Button type="submit">💸 Ödemeyi Tamamla</Button>
+        <Button type="submit">{texts.checkout.completePayment || "💸 Ödemeyi Tamamla"}</Button>
       </PaymentForm>
     </CheckoutContainer>
   );

@@ -1,10 +1,10 @@
 // ✅ src/features/language/languageSlice.js
 import { createSlice } from '@reduxjs/toolkit';
-import tr from '../../locales/tr.json';
-import en from '../../locales/en.json';
-import de from '../../locales/de.json';
+import tr from '@/locales/tr.json';
+import en from '@/locales/en.json';
+import de from '@/locales/de.json';
 
-const initialLanguage = localStorage.getItem("language") || "tr";
+const initialLanguage = localStorage.getItem("language") || "de";
 const languages = { tr, en, de };
 
 const languageSlice = createSlice({

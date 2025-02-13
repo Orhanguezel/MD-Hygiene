@@ -1,17 +1,18 @@
 import styled from "styled-components";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px;
-  background-color: ${({ theme }) => (theme === "light" ? "#fff" : "#1f2937")};
-  color: ${({ theme }) => (theme === "light" ? "#000" : "#fff")};
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  background-color: ${({ theme }) => theme.navBackground}; 
+  color: ${({ theme }) => theme.text};  
+  box-shadow: 0 2px 4px ${({ theme }) => theme.shadow};
   position: sticky;
   top: 0;
   z-index: 1000;
+  transition: background-color 0.3s ease;
 `;
 
 export const LogoLink = styled(Link)`
@@ -29,14 +30,14 @@ export const Logo = styled.img`
 export const Name = styled.span`
   font-size: 20px;
   font-weight: bold;
-  color: ${({ theme }) => (theme === "light" ? "#000" : "#fff")};
+  color: ${({ theme }) => theme.text};
   text-decoration: none;
 `;
 
 export const Nav = styled.nav`
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
 
   @media (max-width: 768px) {
     display: ${({ isOpen }) => (isOpen ? "flex" : "none")};
@@ -45,20 +46,21 @@ export const Nav = styled.nav`
     top: 50px;
     left: 0;
     width: 100%;
-    background-color: ${({ theme }) => (theme === "light" ? "#fff" : "#1f2937")};
+    background-color: ${({ theme }) => theme.navBackground};  
     padding: 10px 0;
-    transition: all 0.9s ease;
+    transition: all 0.3s ease-in-out;
   }
 `;
 
-export const NavItem = styled.div`
+export const NavItem = styled(Link)`
   padding: 10px;
   cursor: pointer;
-  color: ${({ theme }) => (theme === "light" ? "#000" : "#fff")};
+  color: ${({ theme }) => theme.text};  
   text-decoration: none;
+  font-weight: bold;
 
   &:hover {
-    color: #007bff;
+    color: ${({ theme }) => theme.primary};  
   }
 `;
 
@@ -67,7 +69,7 @@ export const HamburgerButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  color: ${({ theme }) => (theme === "light" ? "#000" : "#fff")};
+  color: ${({ theme }) => theme.text}; 
 
   @media (max-width: 768px) {
     display: block;
@@ -80,6 +82,7 @@ export const LanguageButton = styled.button`
   cursor: pointer;
   font-size: 15px;
   margin: 0;
+  color: ${({ theme }) => theme.text};
 
   &:disabled {
     opacity: 0.5;
@@ -91,8 +94,9 @@ export const ThemeToggleButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  color: ${({ theme }) => (theme === "light" ? "#000" : "#fff")};
+  color: ${({ theme }) => theme.text}; 
   font-size: 18px;
+  transition: color 0.3s ease-in-out;
 `;
 
 export const ControlContainer = styled.div`
@@ -108,12 +112,12 @@ export const MobileMenu = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    background-color: ${({ theme }) => (theme === "light" ? "#fff" : "#1f2937")};
+    background-color: ${({ theme }) => theme.navBackground};  
     padding: 10px;
     position: absolute;
     top: 60px;
     left: 0;
     width: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px ${({ theme }) => theme.shadow};
   }
 `;
