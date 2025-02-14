@@ -4,21 +4,39 @@ import styled from "styled-components";
 export const ProductContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: ${({ theme }) => (theme === "dark" ? "#1e1e1e" : "#fff")};
-  color: ${({ theme }) => (theme === "dark" ? "#fff" : "#000")};
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
   min-height: 100vh;
   transition: background 0.3s ease, color 0.3s ease;
 `;
 
-/* 📌 Ürün Formu */
-export const FormContainer = styled.form`
-  background: ${({ theme }) => (theme === "dark" ? "#333" : "#fff")};
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: ${({ theme }) => (theme === "dark" ? "0 4px 8px rgba(255, 255, 255, 0.1)" : "0 4px 8px rgba(0, 0, 0, 0.1)")};
-  transition: background 0.3s ease;
+/* 📌 Sidebar */
+export const SidebarContainer = styled.div`
+  width: 250px;
+  background: ${({ theme }) => theme.sidebarBackground};
+  padding: 20px;
+  box-shadow: 0px 4px 8px ${({ theme }) => theme.shadow};
+  border-right: 2px solid ${({ theme }) => theme.border};
+  transition: background 0.3s ease, border 0.3s ease;
 `;
 
+export const SidebarButton = styled.button`
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: ${({ theme }) => theme.sidebarText}; 
+  border: none;
+  border-radius: 5px;
+  background: ${({ theme }) => theme.primary};
+  transition: background 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.primaryHover};
+    transform: scale(1.05);
+  }
+`;
 
 /* 📌 Ürün Listesi */
 export const ListContainer = styled.div`
@@ -32,18 +50,28 @@ export const ProductItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 2px solid ${({ theme }) => (theme === "dark" ? "#444" : "#ddd")};
-  padding: 12px 0;
-  transition: border 0.3s ease;
+  border-bottom: 2px solid ${({ theme }) => theme.border};
+  padding: 15px;
+  border-radius: 8px;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0px 4px 10px ${({ theme }) => theme.shadow};
+  }
 `;
 
 export const ProductImage = styled.img`
   width: 80px;
   height: 80px;
   object-fit: cover;
-  border-radius: 6px;
-  border: 2px solid ${({ theme }) => (theme === "dark" ? "#555" : "#ddd")};
-  transition: border 0.3s ease;
+  border-radius: 8px;
+  border: 2px solid ${({ theme }) => theme.border};
+  transition: border 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 export const ProductDetails = styled.div`
@@ -56,69 +84,58 @@ export const ProductDetails = styled.div`
 
 /* 📌 Silme Butonu */
 export const DeleteButton = styled.button`
-  background: ${({ theme }) => (theme === "dark" ? "#dc3545" : "#ff4d4d")};
-  color: white;
+  background: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.buttonText};
   border: none;
   padding: 8px 12px;
   cursor: pointer;
   border-radius: 5px;
   font-weight: bold;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 
   &:hover {
-    background: ${({ theme }) => (theme === "dark" ? "#c82333" : "#cc0000")};
+    background: ${({ theme }) => theme.primaryHover};
+    transform: scale(1.05);
   }
 `;
 
-/* 📌 Sidebar */
-export const SidebarContainer = styled.div`
-  width: 220px;
-  background: ${({ theme }) => (theme === "dark" ? "#292929" : "#f4f4f4")};
-  padding: 15px;
+/* 📌 Ürün Formu */
+export const FormContainer = styled.form`
+  background: ${({ theme }) => theme.cardBackground};
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px ${({ theme }) => theme.shadow};
   transition: background 0.3s ease;
+  max-width: 500px;
+  margin: auto;
 `;
 
-export const SidebarButton = styled.button`
-  display: block;
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 12px;
-  background: ${({ theme }) => (theme === "dark" ? "#007bff" : "#0056b3")};
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-
-  &:hover {
-    background: ${({ theme }) => (theme === "dark" ? "#0056b3" : "#003d82")};
-  }
-`;
-
-/* 📌 Fiyat ve Stok Güncelleme */
+/* 📌 Giriş Alanları */
 export const FormInput = styled.input`
   width: 100%;
-  padding: 10px;
-  margin: 5px 0;
-  background: ${({ theme }) => (theme === "dark" ? "#555" : "#f9f9f9")};
-  color: ${({ theme }) => (theme === "dark" ? "#fff" : "#000")};
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 12px;
+  margin: 8px 0;
+  background: ${({ theme }) => theme.inputBackground};
+  color: ${({ theme }) => theme.inputText};
+  border: 1px solid ${({ theme }) => theme.border};
+  border-radius: 6px;
+  transition: background 0.3s ease, border 0.3s ease;
 `;
 
 export const SubmitButton = styled.button`
-  padding: 10px 15px;
-  background: ${({ theme }) => (theme === "dark" ? "#28a745" : "#218838")};
-  color: white;
-  font-size: 0.9rem;
+  padding: 12px;
+  background: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.buttonText};
+  font-size: 1rem;
   font-weight: bold;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 
   &:hover {
-    background: ${({ theme }) => (theme === "dark" ? "#1f8a3e" : "#19692c")};
+    background: ${({ theme }) => theme.primaryHover};
+    transform: scale(1.05);
   }
 `;
 
@@ -126,9 +143,9 @@ export const SelectInput = styled.select`
   width: 100%;
   padding: 12px;
   margin: 10px 0;
-  background: ${({ theme }) => (theme === "dark" ? "#555" : "#f9f9f9")};
-  color: ${({ theme }) => (theme === "dark" ? "#fff" : "#000")};
-  border: 1px solid #ccc;
+  background: ${({ theme }) => theme.inputBackground};
+  color: ${({ theme }) => theme.inputText};
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 6px;
   font-size: 1rem;
 `;
@@ -141,30 +158,26 @@ export const CategoryContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-
-// Kategori Butonlarının Bulunduğu Alan
-export const CategoryButtonContainer = styled.div`
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-`;
-
-// Kategori Butonu Stili
+/* 📌 Kategori Butonları */
 export const CategoryButton = styled.button`
-  padding: 8px 12px;
+  padding: 10px;
+  font-size: 0.9rem;
+  font-weight: bold;
   border: none;
-  background-color: ${({ isActive }) => (isActive ? "#007bff" : "#f4f4f4")};
-  color: ${({ isActive }) => (isActive ? "white" : "#333")};
-  border-radius: 5px;
+  background-color: ${({ $isActive, theme }) => ($isActive ? theme.primary : theme.cardBackground)};
+  color: ${({ $isActive, theme }) => ($isActive ? theme.buttonText : theme.text)};
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease, transform 0.2s ease;
 
   &:hover {
-    background-color: ${({ isActive }) => (isActive ? "#0056b3" : "#ddd")};
+    background-color: ${({ $isActive, theme }) => ($isActive ? theme.primaryHover : theme.sidebarHover)};
+    transform: scale(1.05);
   }
 `;
 
-
-
-
-
+export const CategoryButtonContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+`;

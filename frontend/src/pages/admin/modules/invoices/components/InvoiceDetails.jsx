@@ -25,7 +25,7 @@ const InvoiceDetails = () => {
     dispatch(fetchInvoiceById(id));
   }, [dispatch, id]);
 
-  // ✅ Hata ve yükleme kontrolleri
+  // ✅ **Hata ve yükleme kontrolleri**
   if (status === "loading") {
     toast.info(`📦 ${texts?.invoices?.loading || "Fatura yükleniyor..."}`);
     return <p>📦 {texts?.invoices?.loading || "Fatura yükleniyor..."}</p>;
@@ -56,7 +56,12 @@ const InvoiceDetails = () => {
       <InvoiceInfo theme={theme}>
         <p><strong>{texts?.invoices?.invoiceNumber || "Fatura No"}:</strong> {selectedInvoice.invoiceNumber}</p>
         <p><strong>{texts?.invoices?.customer || "Müşteri"}:</strong> {selectedInvoice.userName || texts?.invoices?.unknownCustomer || "Bilinmeyen Müşteri"}</p>
+        <p><strong>{texts?.invoices?.email || "E-Posta"}:</strong> {selectedInvoice.userEmail || texts?.invoices?.noEmail}</p>
+        <p><strong>{texts?.invoices?.address || "Adres"}:</strong> {selectedInvoice.userAddress || texts?.invoices?.noAddress}</p>
         <p><strong>{texts?.invoices?.date || "Tarih"}:</strong> {new Date(selectedInvoice.issuedAt).toLocaleDateString()}</p>
+        <p><strong>{texts?.invoices?.subtotal || "Ara Toplam"}:</strong> €{selectedInvoice.subtotal.toFixed(2)}</p>
+        <p><strong>{texts?.invoices?.tax || "KDV (19%)"}:</strong> €{selectedInvoice.taxAmount.toFixed(2)}</p>
+        <p><strong>{texts?.invoices?.shipping || "Kargo Ücreti"}:</strong> €{selectedInvoice.shippingCost.toFixed(2)}</p>
         <p><strong>{texts?.invoices?.total || "Toplam"}:</strong> €{selectedInvoice.totalAmount.toFixed(2)}</p>
       </InvoiceInfo>
 
@@ -65,7 +70,7 @@ const InvoiceDetails = () => {
         {selectedInvoice.items.length > 0 ? (
           selectedInvoice.items.map((item, index) => (
             <Item key={index} theme={theme}>
-              <p>📦 {item.product}</p>
+              <p>📦 {item.title}</p>
               <p>🔢 {texts?.invoices?.quantity || "Adet"}: {item.quantity}</p>
               <p>💰 {texts?.invoices?.price || "Fiyat"}: €{item.unitPrice.toFixed(2)}</p>
             </Item>

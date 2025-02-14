@@ -124,16 +124,13 @@ export const addOrder = createAsyncThunk(
 // ✅ **Redux Slice Tanımlaması**
 const ordersSlice = createSlice({
   name: "orders",
-  initialState,
+  initialState: {
+    orders: [],
+    selectedOrder: null,
+    status: "idle",
+    error: null,
+  },
   reducers: {
-    // 🔄 **Siparişleri sıfırla**
-    resetOrders: (state) => {
-      state.orders = [];
-      state.userOrders = [];
-      state.selectedOrder = null;
-      state.status = "idle";
-      state.error = null;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -142,12 +139,15 @@ const ordersSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
+        state.orders = action.payload.map(order => ({
+          ...order,
+          totalAmount: Number(order.totalAmount || 0), 
+        }));
         state.status = "succeeded";
-        state.orders = action.payload;
       })
       .addCase(fetchOrders.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload;
+        state.error = action.error.message;
       })
 
       // Siparis olusturma

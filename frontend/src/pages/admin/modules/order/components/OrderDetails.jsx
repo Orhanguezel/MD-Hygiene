@@ -49,11 +49,11 @@ const OrderDetails = () => {
         <p><strong>{texts?.orders?.orderNumber || "Sipariş No"}:</strong> {order.id}</p>
         <p><strong>{texts?.orders?.customer || "Müşteri"}:</strong> {order.userName}</p>
         <p><strong>{texts?.orders?.status || "Durum"}:</strong> 
-          <StatusBadge status={order.status}>
+          <StatusBadge $status={order.status}>
             {texts?.orders?.[order.status] || order.status}
           </StatusBadge>
         </p>
-        <p><strong>{texts?.orders?.total || "Toplam"}:</strong> {order.totalAmount.toFixed(2)} ₺</p>
+        <p><strong>{texts?.orders?.total || "Toplam"}:</strong> {Number(order.totalAmount || 0).toFixed(2)} ₺</p>
         <p><strong>{texts?.orders?.paymentStatus || "Ödeme Durumu"}:</strong> 
           {texts?.orders?.[order.paymentStatus] || order.paymentStatus}
         </p>

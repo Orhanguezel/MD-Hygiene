@@ -22,8 +22,11 @@ const Orders = () => {
 
   // ✅ Siparişleri API'den çek (sayfa açıldığında)
   useEffect(() => {
-    dispatch(fetchOrders()); // ✅ Her zaman siparişleri API'den çek
+    dispatch(fetchOrders()).then((response) => {
+      console.log("📌 API'den Gelen Siparişler:", response.payload);
+    });
   }, [dispatch]);
+  
   
 
   return (
@@ -56,7 +59,8 @@ const Orders = () => {
                       {texts?.orders?.[order.status] || order.status}
                     </StatusBadge>
                   </Td>
-                  <Td>{order.totalAmount.toFixed(2)} ₺</Td>
+                  <Td>{isNaN(order.totalAmount) ? "0.00" : Number(order.totalAmount).toFixed(2)} ₺</Td>
+
                   <Td>
                     <ActionButton onClick={() => navigate(`/orders/${order.id}`)}>
                       {texts?.orders?.viewDetails || "Detayları Gör"}

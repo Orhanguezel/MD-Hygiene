@@ -1,31 +1,34 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserOrders } from "@/features/orders/ordersSlice";
-import { fetchUserInvoices } from "@/features/invoices/invoicesSlice";
+import { fetchInvoices } from "@/features/invoices/invoicesSlice"; // ✅ fetchUserInvoices yerine fetchInvoices kullanıyoruz
 import { Link } from "react-router-dom";
 import { ProfileContainer, Section, Button, Info } from "./styles/profileStyles";
 import InvoiceList from "./components/InvoiceList";
 import AddressInfo from "./components/AddressInfo";
 import OrderHistory from "./components/OrderHistory";
 import CartInfo from "./components/CartInfo";
-import { useLanguage } from "@/features/language/useLanguage";  // ✅ Dil desteği eklendi
-import { useTheme } from "@/features/theme/useTheme";  // ✅ Tema desteği eklendi
+import { useLanguage } from "@/features/language/useLanguage";  
+import { useTheme } from "@/features/theme/useTheme";  
 
 const Profile = () => {
   const dispatch = useDispatch();
-  const { texts } = useLanguage(); // ✅ Kullanıcı dil dosyasını al
-  const { theme } = useTheme(); // ✅ Kullanıcı tema bilgisini al
+  const { texts } = useLanguage();
+  const { theme } = useTheme();
   
   const user = useSelector((state) => state.auth.user);
   const orders = useSelector((state) => state.orders.userOrders);
-  const invoices = useSelector((state) => state.invoices.userInvoices || []); // ✅ Hata önleyici boş dizi varsayılan olarak eklendi
+  const invoices = useSelector((state) => state.invoices.invoices || []); // ✅ Tüm faturalar Redux Store'dan çekiliyor
 
   useEffect(() => {
     if (user?.id) {
       dispatch(fetchUserOrders(user.id));
-      dispatch(fetchUserInvoices(user.id));
+      dispatch(fetchInvoices()); // ✅ Tüm faturaları çekiyoruz
     }
   }, [dispatch, user?.id]);
+
+  // ✅ Kullanıcının faturalarını filtrele
+  const userInvoices = invoices.filter((invoice) => invoice.userId === user.id);
 
   return (
     <ProfileContainer theme={theme}>
@@ -39,8 +42,8 @@ const Profile = () => {
         </Link>
       </Section>
 
-      {/* ✅ Fatura Listesi */}
-      {invoices?.length > 0 ? <InvoiceList userId={user?.id} /> : <p>{texts.profile.noInvoices}</p>}
+      {/* ✅ Kullanıcının faturalarını gösteriyoruz */}
+      {userInvoices.length > 0 ? <InvoiceList invoices={userInvoices} /> : <p>{texts.profile.noInvoices}</p>}
 
       {/* ✅ Sipariş Geçmişi */}
       {orders?.length > 0 ? <OrderHistory userId={user?.id} /> : <p>{texts.profile.noOrders}</p>}

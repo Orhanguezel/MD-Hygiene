@@ -26,10 +26,10 @@ export const Td = styled.td`
 `;
 
 export const StatusBadge = styled.span`
-  background-color: ${({ status }) =>
-    status === "delivered" ? "#4CAF50" :
-    status === "pending" ? "#FF9800" :
-    status === "cancelled" ? "#F44336" : "#9E9E9E"};
+  background-color: ${({ $status }) =>
+    $status === "delivered" ? "#4CAF50" :
+    $status === "pending" ? "#FF9800" :
+    $status === "cancelled" ? "#F44336" : "#9E9E9E"};
   color: white;
   padding: 5px 10px;
   border-radius: 5px;

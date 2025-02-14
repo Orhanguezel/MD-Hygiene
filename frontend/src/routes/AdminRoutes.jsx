@@ -1,6 +1,9 @@
-import { Routes, Route, Outlet, Navigate } from "react-router-dom";
+import { Routes, Route, Outlet} from "react-router-dom";
 import ProtectedWrapper from "@/pages/auth/ProtectedWrapper";
 import AdminLayout from "@/layouts/AdminLayout";
+
+// ✅ Ana Sayfa
+import Home from "@/pages/visitor/home/Home";
 
 // ✅ Dashboard
 import AdminDashboard from "@/pages/admin/AdminDashboard";
@@ -27,10 +30,9 @@ import OfferPDF from "@/pages/admin/modules/offer/components/OfferPDF";
 
 // ✅ Products Modülü
 import Products from "@/pages/admin/modules/products/Products";
-import AddProduct from "@/pages/admin/modules/products/components/AddProduct";
-import EditProduct from "@/pages/admin/modules/products/components/EditProduct";
-import ProductDetails from "@/pages/admin/modules/products/components/ProductDetails";
+import ProductForm from "@/pages/admin/modules/products/components/ProductForm";
 import ManageStock from "@/pages/admin/modules/products/components/ManageStock";
+import ProductList from "@/pages/admin/modules/products/components/ProductList";
 
 // ✅ Diğer Modüller
 import Notifications from "@/pages/admin/modules/notification/Notifications";
@@ -51,6 +53,7 @@ const AdminRoutes = () => {
         }
       >
         {/* ✅ Ana Sayfa Yönlendirmesi */}
+        <Route path="/" element={<Home />} />
 
         {/* ✅ Dashboard */}
         <Route path="dashboard" element={<AdminDashboard />} />
@@ -88,13 +91,10 @@ const AdminRoutes = () => {
         </Route>
 
         {/* ✅ Products Modülü */}
-        <Route path="products" element={<Outlet />}>
-          <Route index element={<Products />} />
-          <Route path="add" element={<AddProduct />} />
-          <Route path="edit/:id" element={<EditProduct />} />
-          <Route path=":id" element={<ProductDetails />} />
+        <Route path="products" element={<Products />}>
+          <Route path="add" element={<ProductForm />} />
+          <Route path="list" element={<ProductList />} />
           <Route path="manageStock" element={<ManageStock />} />
-
         </Route>
 
         {/* ✅ Diğer Modüller */}

@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchProducts, deleteProduct } from "@/features/products/productSlice";
+import {
+  fetchProducts,
+  deleteProduct,
+  updateProduct,
+} from "@/features/products/productSlice";
 import { useLanguage } from "@/features/language/useLanguage";
 import { toast } from "react-toastify";
-import { 
-  ListContainer, ProductItem, ProductImage, DeleteButton, 
-  ProductDetails, CategoryButtonContainer, CategoryButton 
+import {
+  ListContainer,
+  ProductItem,
+  ProductImage,
+  DeleteButton,
+  ProductDetails,
+  CategoryButtonContainer,
+  CategoryButton,
+  FormInput,
+  SubmitButton,
 } from "../styles/productStyles";
 
 const ProductList = () => {
@@ -13,6 +24,7 @@ const ProductList = () => {
   const { products, loading, error } = useSelector((state) => state.product);
   const { texts } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [editingProduct, setEditingProduct] = useState(null);
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -27,9 +39,40 @@ const ProductList = () => {
     setSelectedCategory(categoryId);
   };
 
-  const filteredProducts = selectedCategory === "all"
-    ? products
-    : products.filter((product) => product.category?.id === selectedCategory);
+  const handleEdit = (product) => {
+    setEditingProduct({
+      ...product,
+      newPrice: product.price,
+      newStock: product.stock,
+    });
+  };
+
+  const handleChange = (field, value) => {
+    setEditingProduct((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleSave = () => {
+    if (!editingProduct) return;
+
+    dispatch(
+      updateProduct({
+        id: editingProduct.id,
+        price: editingProduct.newPrice,
+        stock: editingProduct.newStock,
+      })
+    );
+
+    toast.success(`✅ ${editingProduct.title} güncellendi!`);
+    setEditingProduct(null); // 📌 Formu kapat
+  };
+
+  const filteredProducts =
+    selectedCategory === "all"
+      ? products
+      : products.filter((product) => product.category?.id === selectedCategory);
 
   return (
     <ListContainer>
@@ -37,8 +80,8 @@ const ProductList = () => {
 
       {/* 📌 Kategori Butonları */}
       <CategoryButtonContainer>
-        <CategoryButton 
-          isActive={selectedCategory === "all"} 
+        <CategoryButton
+          $isActive={selectedCategory === "all"}
           onClick={() => handleCategorySelect("all")}
         >
           📌 {texts?.products?.allCategories || "Tüm Kategoriler"}
@@ -46,42 +89,48 @@ const ProductList = () => {
 
         {products
           .map((product) => product.category)
-          .filter((category, index, self) => 
-            category && self.findIndex(c => c.id === category.id) === index
+          .filter(
+            (category, index, self) =>
+              category && self.findIndex((c) => c.id === category.id) === index
           )
           .map((category) => (
-            <CategoryButton 
-              key={category.id} 
-              isActive={selectedCategory === category.id} 
+            <CategoryButton
+              key={category.id}
+              $isActive={selectedCategory === category.id}
               onClick={() => handleCategorySelect(category.id)}
             >
               {category.name}
             </CategoryButton>
-          ))
-        }
+          ))}
       </CategoryButtonContainer>
 
       {loading && <p>🔄 {texts?.products?.loading || "Yükleniyor..."}</p>}
-      {error && <p style={{ color: "red" }}>{texts?.products?.error || "Ürünleri yüklerken hata oluştu."}</p>}
-
-      {filteredProducts.length === 0 && !loading ? (
-        <p>{texts?.products?.noProducts || "Bu kategoride ürün bulunamadı."}</p>
-      ) : (
-        filteredProducts.map((product) => (
-          <ProductItem key={product.id}>
-            <ProductImage 
-              src={product.images?.[0] || "/placeholder.jpg"} 
-              alt={product.title} 
-            />
-            <ProductDetails>
-              <strong>{product.title}</strong>  
-              <p>{product.price} ₺</p>
-              <p>{texts?.products?.stock || "Stok"}: {product.stock || "Bilinmiyor"}</p>
-            </ProductDetails>
-            <DeleteButton onClick={() => handleDelete(product.id)}>🗑️</DeleteButton>
-          </ProductItem>
-        ))
+      {error && (
+        <p style={{ color: "red" }}>
+          {texts?.products?.error || "Ürünleri yüklerken hata oluştu."}
+        </p>
       )}
+
+      {filteredProducts.map((product) => (
+        <ProductItem key={product.id}>
+          <ProductImage
+            src={product.images?.[0] || "/placeholder.jpg"}
+            alt={product.title}
+            onClick={() => handleEdit(product)} // 📌 Resme tıklayınca form açılır
+          />
+          <ProductDetails>
+            <strong>{product.title}</strong>
+            <p>{product.price} ₺</p>
+            <p>
+              {texts?.products?.stock || "Stok"}:{" "}
+              {product.stock || "Bilinmiyor"}
+            </p>
+          </ProductDetails>
+          <DeleteButton onClick={() => handleDelete(product.id)}>
+            🗑️
+          </DeleteButton>
+        </ProductItem>
+      ))}
     </ListContainer>
   );
 };

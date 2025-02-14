@@ -3,7 +3,7 @@
     {
       "id": "23",
       "title": "Sleek Modern Laptop with Ambient Lighting",
-      "price": 43,
+      "price": 47,
       "description": "Experience next-level computing with our ultra-slim laptop, featuring a stunning display illuminated by ambient lighting. This high-performance machine is perfect for both work and play, delivering powerful processing in a sleek, portable design. The vibrant colors add a touch of personality to your tech collection, making it as stylish as it is functional.",
       "images": [
         "https://i.imgur.com/OKn1KFI.jpeg",
@@ -11,14 +11,15 @@
         "https://i.imgur.com/Z9oKRVJ.jpeg"
       ],
       "creationAt": "2025-02-11T17:05:13.000Z",
-      "updatedAt": "2025-02-11T17:05:13.000Z",
+      "updatedAt": "2025-02-14T00:02:37.721Z",
       "category": {
         "id": 2,
         "name": "Electronics",
         "image": "https://i.imgur.com/ZANVnHE.jpeg",
         "creationAt": "2025-02-11T17:05:13.000Z",
         "updatedAt": "2025-02-11T17:05:13.000Z"
-      }
+      },
+      "stock": 5
     },
     {
       "id": "26",
@@ -410,14 +411,15 @@
         "https://i.imgur.com/WHeVL9H.jpg"
       ],
       "creationAt": "2025-02-11T17:05:13.000Z",
-      "updatedAt": "2025-02-11T17:05:13.000Z",
+      "updatedAt": "2025-02-14T00:12:37.712Z",
       "category": {
         "id": 5,
         "name": "Miscellaneous",
         "image": "https://i.imgur.com/BG8J0Fj.jpg",
         "creationAt": "2025-02-11T17:05:13.000Z",
         "updatedAt": "2025-02-11T17:05:13.000Z"
-      }
+      },
+      "stock": 2
     },
     {
       "id": "46",
@@ -538,6 +540,24 @@
         "creationAt": "2025-02-11T17:05:13.000Z",
         "updatedAt": "2025-02-11T17:05:13.000Z"
       }
+    },
+    {
+      "id": 1739490471581,
+      "title": "ben bulduum",
+      "price": 10,
+      "stock": 2,
+      "images": [
+        "https://i.imgur.com/Au8J9sX.jpeg"
+      ],
+      "category": {
+        "id": 2,
+        "name": "Electronics",
+        "image": "https://i.imgur.com/ZANVnHE.jpeg",
+        "creationAt": "2025-02-11T17:05:13.000Z",
+        "updatedAt": "2025-02-11T17:05:13.000Z"
+      },
+      "creationAt": "2025-02-13T23:47:51.581Z",
+      "updatedAt": "2025-02-13T23:47:51.582Z"
     }
   ],
   "users": [
@@ -557,7 +577,10 @@
         }
       ],
       "phone": "+905551234567",
-      "orders": ["ORD-001", "ORD-002"],
+      "orders": [
+        "ORD-001",
+        "ORD-002"
+      ],
       "profileImage": "https://randomuser.me/api/portraits/women/1.jpg",
       "isActive": true
     },
@@ -577,7 +600,9 @@
         }
       ],
       "phone": "+905301234567",
-      "orders": ["ORD-003"],
+      "orders": [
+        "ORD-003"
+      ],
       "profileImage": "https://randomuser.me/api/portraits/men/4.jpg",
       "isActive": true
     },
@@ -657,7 +682,9 @@
       "volume": "1.5 L",
       "gtin_ean": "4006381333931",
       "reach_compliance": true,
-      "images": ["surface-cleaner-1.jpg"],
+      "images": [
+        "surface-cleaner-1.jpg"
+      ],
       "id": "1bba"
     },
     {
@@ -672,7 +699,9 @@
       "volume": "500 ml",
       "gtin_ean": "4006381333932",
       "reach_compliance": true,
-      "images": ["hand-soap.jpg"],
+      "images": [
+        "hand-soap.jpg"
+      ],
       "id": "6bfd"
     },
     {
@@ -687,7 +716,9 @@
       "volume": "-",
       "gtin_ean": "4006381333933",
       "reach_compliance": false,
-      "images": ["paper-towel.jpg"],
+      "images": [
+        "paper-towel.jpg"
+      ],
       "id": "78e7"
     },
     {
@@ -702,7 +733,9 @@
       "volume": "750 ml",
       "gtin_ean": "4006381333934",
       "reach_compliance": true,
-      "images": ["glass-cleaner.jpg"],
+      "images": [
+        "glass-cleaner.jpg"
+      ],
       "id": "af58"
     },
     {
@@ -717,7 +750,9 @@
       "volume": "1 L",
       "gtin_ean": "4006381333935",
       "reach_compliance": true,
-      "images": ["disinfectant-spray.jpg"],
+      "images": [
+        "disinfectant-spray.jpg"
+      ],
       "id": "cfd4"
     },
     {
@@ -732,7 +767,9 @@
       "volume": "-",
       "gtin_ean": "4006381333936",
       "reach_compliance": false,
-      "images": ["mop-cloth.jpg"],
+      "images": [
+        "mop-cloth.jpg"
+      ],
       "id": "66a8"
     },
     {
@@ -747,7 +784,9 @@
       "volume": "4 L",
       "gtin_ean": "4006381333937",
       "reach_compliance": true,
-      "images": ["industrial-detergent.jpg"],
+      "images": [
+        "industrial-detergent.jpg"
+      ],
       "id": "d83a"
     },
     {
@@ -762,7 +801,9 @@
       "volume": "-",
       "gtin_ean": "4006381333938",
       "reach_compliance": false,
-      "images": ["toilet-paper.jpg"],
+      "images": [
+        "toilet-paper.jpg"
+      ],
       "id": "8a79"
     },
     {
@@ -777,7 +818,9 @@
       "volume": "1 L",
       "gtin_ean": "4006381333939",
       "reach_compliance": true,
-      "images": ["dish-detergent.jpg"],
+      "images": [
+        "dish-detergent.jpg"
+      ],
       "id": "b8a2"
     },
     {
@@ -792,7 +835,9 @@
       "volume": "-",
       "gtin_ean": "4006381333940",
       "reach_compliance": false,
-      "images": ["garbage-bag.jpg"],
+      "images": [
+        "garbage-bag.jpg"
+      ],
       "id": "354a"
     }
   ],
@@ -924,11 +969,45 @@
       "taxAmount": "0.00",
       "totalAmount": "20.00",
       "shippingCost": 20,
-      "status": "pending",
+      "status": "archived",
       "paymentStatus": "pending",
-      "orderDate": "2025-02-13T14:29:18.755Z"
+      "orderDate": "2025-02-13T14:29:18.755Z",
+      "shippedDate": "2025-02-14T01:24:16.445Z",
+      "deliveredDate": "2025-02-14T01:24:30.115Z"
     }
   ],
-  "invoices": [],
+  "invoices": [
+    {
+      "id": "0060",
+      "invoiceNumber": "INV-1739496256465",
+      "orderId": "ORD-1739456958754",
+      "userId": "USR-005",
+      "userName": "Orhan Güzel",
+      "userEmail": "orhanguzell@gmail.com",
+      "userAddress": "Grevenbroich",
+      "items": [
+        {
+          "productId": "26",
+          "title": "Sleek Mirror Finish Phone Case",
+          "quantity": 1,
+          "unitPrice": 27,
+          "taxRate": 19
+        },
+        {
+          "productId": "27",
+          "title": "Sleek Smartwatch with Vibrant Display",
+          "quantity": 1,
+          "unitPrice": 16,
+          "taxRate": 19
+        }
+      ],
+      "subtotal": 43,
+      "taxAmount": 8.17,
+      "totalAmount": 63,
+      "shippingCost": 20,
+      "issuedAt": "2025-02-14T01:24:16.465Z",
+      "status": "paid"
+    }
+  ],
   "category": []
 }
