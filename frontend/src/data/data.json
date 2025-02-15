@@ -1008,8 +1008,90 @@
       "status": "paid"
     }
   ],
-  "category": [],
-  "offers": [],
+  "offers": [
+    {
+      "id": "15de78da-b2a4-415b-8c77-81364c88893c",
+      "offerNumber": "OFR-4631",
+      "offerDate": "2025-02-15",
+      "companyName": "BTU GmbH",
+      "customerId": "a9c3aedd-b60a-41df-8c06-d7de954d9ed4",
+      "selectedProducts": [
+        {
+          "id": "23",
+          "title": "Sleek Modern Laptop with Ambient Lighting",
+          "price": 47,
+          "description": "Experience next-level computing with our ultra-slim laptop, featuring a stunning display illuminated by ambient lighting. This high-performance machine is perfect for both work and play, delivering powerful processing in a sleek, portable design. The vibrant colors add a touch of personality to your tech collection, making it as stylish as it is functional.",
+          "images": [
+            "https://i.imgur.com/OKn1KFI.jpeg",
+            "https://i.imgur.com/G4f21Ai.jpeg",
+            "https://i.imgur.com/Z9oKRVJ.jpeg"
+          ],
+          "creationAt": "2025-02-11T17:05:13.000Z",
+          "updatedAt": "2025-02-14T00:02:37.721Z",
+          "category": {
+            "id": 2,
+            "name": "Electronics",
+            "image": "https://i.imgur.com/ZANVnHE.jpeg",
+            "creationAt": "2025-02-11T17:05:13.000Z",
+            "updatedAt": "2025-02-11T17:05:13.000Z"
+          },
+          "stock": 5,
+          "quantity": 1,
+          "customPrice": 45,
+          "taxRate": 19
+        },
+        {
+          "id": "30",
+          "title": "Elegant Golden-Base Stone Top Dining Table",
+          "price": 66,
+          "description": "Elevate your dining space with this luxurious table, featuring a sturdy golden metal base with an intricate rod design that provides both stability and chic elegance. The smooth stone top in a sleek round shape offers a robust surface for your dining pleasure. Perfect for both everyday meals and special occasions, this table easily complements any modern or glam decor.",
+          "images": [
+            "https://i.imgur.com/NWIJKUj.jpeg",
+            "https://i.imgur.com/Jn1YSLk.jpeg",
+            "https://i.imgur.com/VNZRvx5.jpeg"
+          ],
+          "creationAt": "2025-02-11T17:05:13.000Z",
+          "updatedAt": "2025-02-11T17:05:13.000Z",
+          "category": {
+            "id": 3,
+            "name": "Furniture",
+            "image": "https://i.imgur.com/Qphac99.jpeg",
+            "creationAt": "2025-02-11T17:05:13.000Z",
+            "updatedAt": "2025-02-11T17:58:26.000Z"
+          },
+          "quantity": 1,
+          "customPrice": 66,
+          "taxRate": 19
+        },
+        {
+          "id": "32",
+          "title": "Elegant Solid Wood Dining Table",
+          "price": 67,
+          "description": "Enhance your dining space with this sleek, contemporary dining table, crafted from high-quality solid wood with a warm finish. Its sturdy construction and minimalist design make it a perfect addition for any home looking for a touch of elegance. Accommodates up to six guests comfortably and includes a striking fruit bowl centerpiece. The overhead lighting is not included.",
+          "images": [
+            "https://i.imgur.com/4lTaHfF.jpeg",
+            "https://i.imgur.com/JktHE1C.jpeg",
+            "https://i.imgur.com/cQeXQMi.jpeg"
+          ],
+          "creationAt": "2025-02-11T17:05:13.000Z",
+          "updatedAt": "2025-02-11T17:05:13.000Z",
+          "category": {
+            "id": 3,
+            "name": "Furniture",
+            "image": "https://i.imgur.com/Qphac99.jpeg",
+            "creationAt": "2025-02-11T17:05:13.000Z",
+            "updatedAt": "2025-02-11T17:58:26.000Z"
+          },
+          "quantity": 1,
+          "customPrice": 67,
+          "taxRate": 19
+        }
+      ],
+      "shippingCost": 50,
+      "status": "draft",
+      "grandTotal": "261.82"
+    }
+  ],
   "customers": [
     {
       "id": "a9c3aedd-b60a-41df-8c06-d7de954d9ed4",

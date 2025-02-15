@@ -16,6 +16,7 @@ import {
   ActionButton,
   TotalSection,
   TaxSelect,
+  SummaryBox,
 } from "../styles/offerStyles";
 
 const OfferDetail = () => {
@@ -30,8 +31,8 @@ const OfferDetail = () => {
 
   useEffect(() => {
     dispatch(fetchOfferById(id));
-    dispatch(fetchCompanyInfo()); // ✅ Şirket bilgilerini getir
-    dispatch(fetchCustomers()); // ✅ Müşteri bilgilerini getir
+    dispatch(fetchCompanyInfo()); 
+    dispatch(fetchCustomers());
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -40,21 +41,13 @@ const OfferDetail = () => {
     }
   }, [selectedOffer]);
 
-  if (status === "loading") return <p>⏳ {texts?.offers?.loading || "Teklif yükleniyor..."}</p>;
-  if (!offerData) return <p>❌ {texts?.offers?.notFound || "Teklif bulunamadı."}</p>;
+  if (status === "loading") return <p>⏳ Teklif yükleniyor...</p>;
+  if (!offerData) return <p>❌ Teklif bulunamadı.</p>;
 
-  // 📌 Müşteriyi ID'ye Göre Bul
+  // 📌 Müşteri Bilgilerini Redux Store'dan Al
   const customer = customers.find((c) => c.id === offerData.customerId) || {};
 
-  // 📌 Açıklama Güncelleme (Silmeden Değiştirme)
-  const handleDescriptionChange = (id, value) => {
-    const updatedProducts = offerData.selectedProducts.map((product) =>
-      product.id === id ? { ...product, description: value } : product
-    );
-    setOfferData((prev) => ({ ...prev, selectedProducts: updatedProducts }));
-  };
-
-  // 📌 Ürün bilgilerini güncelle
+  // 📌 Ürün Bilgilerini Güncelleme
   const handleProductChange = (id, field, value) => {
     const updatedProducts = offerData.selectedProducts.map((product) =>
       product.id === id ? { ...product, [field]: Number(value) } : product
@@ -62,7 +55,16 @@ const OfferDetail = () => {
     setOfferData((prev) => ({ ...prev, selectedProducts: updatedProducts }));
   };
 
-  // 📌 Tutarları Hesapla ve JSON'a ekle
+  // 📌 Nakliye Ücretini Güncelleme
+  const handleShippingCostChange = (e) => {
+    let value = e.target.value;
+    setOfferData((prev) => ({
+      ...prev,
+      shippingCost: value === "" ? "" : Number(value),
+    }));
+  };
+
+  // 📌 Tutarları Hesapla
   const calculateTotals = () => {
     if (!offerData.selectedProducts) return { netTotal: 0, taxTotal: 0, grandTotal: 0 };
 
@@ -83,7 +85,7 @@ const OfferDetail = () => {
 
   const totals = calculateTotals();
 
-  // 📌 Teklif Güncelle
+  // 📌 Teklif Güncelleme Fonksiyonu
   const handleSave = () => {
     const updatedOffer = { ...offerData, grandTotal: totals.grandTotal.toFixed(2) };
     dispatch(updateOffer(updatedOffer))
@@ -91,36 +93,40 @@ const OfferDetail = () => {
       .then(() => {
         toast.success("✅ Teklif başarıyla güncellendi!");
       })
-      .catch((error) => {
+      .catch(() => {
         toast.error("❌ Teklif güncellenemedi!");
       });
   };
 
   return (
     <OfferDetailsContainer theme={theme}>
-      <h2>{texts?.offers?.details || "📄 Teklif Detayları"}</h2>
+      <h2>📄 Teklif Detayları</h2>
 
       {/* 🏢 Firma Bilgileri */}
-      <h3>{texts?.offers?.companyInfo || "🏢 Firma Bilgileri"}</h3>
-      <p>{company?.name || "Firma adı eksik"}</p>
+      <h3>🏢 Firma Bilgileri</h3>
+      <p><strong>{company?.name || "Firma adı eksik"}</strong></p>
       <p>{company?.address || "Adres bilgisi eksik"}</p>
       <p>{company?.email || "E-posta eksik"}</p>
+      <p>📌 Vergi Numarası: {company?.taxNumber || "Eksik"}</p>
+      <p>🏦 IBAN: {company?.bankIban || "Eksik"}</p>
+      <p>🏦 BIC: {company?.bankBic || "Eksik"}</p>
 
       {/* 👤 Müşteri Bilgileri */}
-      <h3>{texts?.offers?.customerInfo || "👤 Müşteri Bilgileri"}</h3>
-      <p><strong>{texts?.offers?.customerName}:</strong> {customer?.name || "Bilinmiyor"}</p>
-      <p><strong>{texts?.offers?.address}:</strong> {customer?.address || "Adres bilinmiyor"}</p>
-      <p><strong>{texts?.offers?.phone}:</strong> {customer?.phone || "Telefon bilinmiyor"}</p>
+      <h3>👤 Müşteri Bilgileri</h3>
+      <p><strong>👤 Müşteri Adı:</strong> {customer?.contactPerson || "Bilinmiyor"}</p>
+      <p><strong>🏢 Firma Adı:</strong> {customer?.companyName || "Firma bilgisi eksik"}</p>
+      <p><strong>📍 Adres:</strong> {customer?.address || "Adres bilinmiyor"}</p>
+      <p><strong>📞 Telefon:</strong> {customer?.phone || "Telefon bilinmiyor"}</p>
 
       {/* 📦 Ürün Listesi */}
       <ProductTable theme={theme}>
         <thead>
           <tr>
-            <th>{texts?.offers?.productName}</th>
-            <th>{texts?.offers?.unitPrice}</th>
-            <th>{texts?.offers?.quantity}</th>
-            <th>{texts?.offers?.taxRate}</th>
-            <th>{texts?.offers?.total}</th>
+            <th>Ürün Adı</th>
+            <th>Birim Fiyat (₺)</th>
+            <th>Adet</th>
+            <th>KDV (%)</th>
+            <th>Toplam (₺)</th>
           </tr>
         </thead>
         <tbody>
@@ -162,12 +168,18 @@ const OfferDetail = () => {
         </tbody>
       </ProductTable>
 
-      <TotalSection theme={theme}>
-        <h3>{texts?.offers?.grandTotal}: {totals.grandTotal.toFixed(2)} ₺</h3>
-      </TotalSection>
+      {/* 💰 Toplamlar - İkonlarla Geri Eklendi */}
+      <SummaryBox theme={theme}>
+        <h3>💰 Net Tutar: {totals.netTotal.toFixed(2)} ₺</h3>
+        <h3>💸 KDV: {totals.taxTotal.toFixed(2)} ₺</h3>
+        <h3>🚚 Nakliye Ücreti: 
+          <FormInput type="number" value={offerData.shippingCost || ""} onChange={handleShippingCostChange} />
+        </h3>
+        <h2>🔢 Genel Toplam: {totals.grandTotal.toFixed(2)} ₺</h2>
+      </SummaryBox>
 
-      <ActionButton onClick={handleSave}>{texts?.offers?.save}</ActionButton>
-      <ActionButton onClick={() => generateOfferPDF(offerData, texts)}>{texts?.offers?.downloadPDF}</ActionButton>
+      <ActionButton onClick={handleSave}>💾 Kaydet</ActionButton>
+      <ActionButton onClick={() => generateOfferPDF(offerData, company, customers)}>📄 PDF Olarak İndir</ActionButton>
     </OfferDetailsContainer>
   );
 };

@@ -322,3 +322,34 @@ export const DescriptionTextArea = styled.textarea`
   border-radius: 4px;
 `;
 
+export const OfferDetailsHeader = styled.h2`
+  margin-bottom: 20px;
+`;
+
+export const OfferDetailsItem = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+`;
+
+export const DeleteButton = styled.button`
+  background: #dc3545;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+
+  &:hover {
+    background: #c82333;
+  }
+`;
+
+export const SummaryBox = styled.div`
+  background: ${({ theme }) => theme.border};
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+`;
+

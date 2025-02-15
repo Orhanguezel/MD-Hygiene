@@ -18,6 +18,7 @@ import {
   ProductSelect,
   ProductOption,
   ProductTable,
+  DeleteButton
 } from "../styles/offerStyles";
 
 const OfferCreate = ({ existingOffer, onOfferCreated }) => {
@@ -40,7 +41,7 @@ const OfferCreate = ({ existingOffer, onOfferCreated }) => {
     companyName: "",
     customerId: "",
     selectedProducts: [],
-    shippingCost: "",
+    shippingCost: 0,
   });
 
   useEffect(() => {
@@ -109,7 +110,7 @@ const OfferCreate = ({ existingOffer, onOfferCreated }) => {
       (acc, item) => acc + item.customPrice * item.quantity * (item.taxRate / 100),
       0
     );
-    const grandTotal = netTotal + taxTotal + Number(formData.shippingCost || 0);
+    const grandTotal = netTotal + taxTotal + Number(formData.shippingCost);
 
     return { netTotal, taxTotal, grandTotal };
   };
@@ -148,6 +149,13 @@ const OfferCreate = ({ existingOffer, onOfferCreated }) => {
       </OfferHeader>
 
       <OfferDetailsContainer>
+        <label>📄 Teklif Numarası:</label>
+        <FormInput type="text" name="offerNumber" value={formData.offerNumber} readOnly />
+
+        <label>📅 Teklif Tarihi:</label>
+        <FormInput type="date" name="offerDate" value={formData.offerDate} readOnly />
+
+        {/* 📌 Firma Seçimi */}
         <label>🏢 Firma Adı:</label>
         <ProductSelect name="companyName" value={formData.companyName} onChange={handleSelectionChange}>
           <ProductOption value="">Firma Seçin</ProductOption>
@@ -158,6 +166,7 @@ const OfferCreate = ({ existingOffer, onOfferCreated }) => {
           ))}
         </ProductSelect>
 
+        {/* 📌 Müşteri Seçimi */}
         <label>👤 Müşteri Adı:</label>
         <ProductSelect name="customerId" value={formData.customerId} onChange={handleSelectionChange} disabled={!formData.companyName}>
           <ProductOption value="">Müşteri Seçin</ProductOption>
@@ -168,6 +177,7 @@ const OfferCreate = ({ existingOffer, onOfferCreated }) => {
           ))}
         </ProductSelect>
 
+        {/* 📌 Ürün Seçme Alanı */}
         <label>📦 Ürün Seç:</label>
         <ProductSelect onChange={(e) => handleProductSelect(e.target.value)}>
           <ProductOption value="">Ürün Seçin</ProductOption>
@@ -179,46 +189,19 @@ const OfferCreate = ({ existingOffer, onOfferCreated }) => {
         </ProductSelect>
       </OfferDetailsContainer>
 
-      {/* 📌 Seçilen Ürünler Listesi */}
+      {/* 📌 Seçilen Ürünler Tablosu */}
       <ProductTable>
-  <thead>
-    <tr>
-      <th>Ürün</th>
-      <th>Adet</th>
-      <th>Fiyat</th>
-      <th>Sil</th>
-    </tr>
-  </thead>
-  <tbody>
-    {formData.selectedProducts.map((product) => (
-      <tr key={product.id}>
-        <td>{product.title}</td>
-        <td>
-          <FormInput
-            type="number"
-            value={product.quantity}
-            onChange={(e) => handleProductChange(product.id, "quantity", e.target.value)}
-          />
-        </td>
-        <td>
-          <FormInput
-            type="number"
-            value={product.customPrice}
-            onChange={(e) => handleProductChange(product.id, "customPrice", e.target.value)}
-          />
-        </td>
-        <td>
-          <ActionButton onClick={() => handleRemoveProduct(product.id)}>🗑️</ActionButton>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</ProductTable>
-
-
-      <TotalSection>
-        <h2>🔢 Genel Toplam: {totals.grandTotal.toFixed(2)} ₺</h2>
-      </TotalSection>
+        <thead>
+          <tr>
+            <th>Ürün</th>
+            <th>Fiyat</th>
+            <th>Adet</th>
+            <th>KDV</th>
+            <th>Toplam</th>
+            <th>Sil</th>
+          </tr>
+        </thead>
+      </ProductTable>
 
       <ActionButton onClick={handleSave}>💾 Kaydet</ActionButton>
     </OfferFormContainer>
