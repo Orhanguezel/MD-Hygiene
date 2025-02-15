@@ -542,7 +542,7 @@
       }
     },
     {
-      "id": 1739490471581,
+      "id": "1739490471581",
       "title": "ben bulduum",
       "price": 10,
       "stock": 2,
@@ -940,7 +940,6 @@
     }
   ],
   "auditlog": [],
-  "offer": [],
   "orders": [
     {
       "id": "ORD-1739456958754",
@@ -1009,5 +1008,26 @@
       "status": "paid"
     }
   ],
-  "category": []
+  "category": [],
+  "offers": [],
+  "customers": [
+    {
+      "id": "a9c3aedd-b60a-41df-8c06-d7de954d9ed4",
+      "companyName": "BTU GmbH",
+      "contactPerson": "Orhan Güzel",
+      "address": "Buchholzer Straße 2",
+      "phone": "01723846068"
+    }
+  ],
+  "companies": [
+    {
+      "id": "1",
+      "name": "MD-Hygienelogistik GmbH",
+      "address": "Musterstraße 123, 40210 Düsseldorf, Germany",
+      "email": "info@md-hygiene.de",
+      "taxNumber": "DE123456789",
+      "bankIban": "DE89 3704 0044 0532 0130 00",
+      "bankBic": "COBADEFFXXX"
+    }
+  ]
 }

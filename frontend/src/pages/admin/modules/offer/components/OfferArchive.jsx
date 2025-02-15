@@ -1,18 +1,24 @@
-// Güncellenmiş dosya: OfferArchive.jsx
-
-import { useOffers } from "@/features/offer/useOffers";
 import OfferPDF from "./OfferPDF";
-import { useState } from "react";
-import { useLanguage } from "@/features/language/useLanguage"; // ✅ Dil desteği eklendi
-import { useTheme } from "@/features/theme/useTheme";         // ✅ Tema desteği eklendi
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchOffers } from "@/features/offer/offerSlice";
+import { useLanguage } from "@/features/language/useLanguage"; // ✅ Dil desteği
+import { useTheme } from "@/features/theme/useTheme";         // ✅ Tema desteği
+import { toast } from "react-toastify";
 
 const OfferArchive = () => {
-  const { offers = [] } = useOffers();
-  const [searchTerm, setSearchTerm] = useState("");
+  const dispatch = useDispatch();
   const { texts } = useLanguage(); // ✅ Dil kullanımı
   const { theme } = useTheme();    // ✅ Tema kullanımı
+  const { offers } = useSelector((state) => state.offer);
 
-  const archivedOffers = offers.filter((offer) => offer?.status === "archived");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    dispatch(fetchOffers()); // ✅ Redux Store'dan teklifleri çek
+  }, [dispatch]);
+
+  const archivedOffers = offers?.filter((offer) => offer.status === "archived") || [];
 
   const filteredOffers = archivedOffers.filter((offer) => {
     const companyName = offer?.companyName?.toLowerCase() || "";
@@ -39,14 +45,7 @@ const OfferArchive = () => {
         }}
       />
 
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          backgroundColor: theme === "dark" ? "#2c2c2c" : "#f9f9f9",
-          border: "1px solid #ddd",
-        }}
-      >
+      <table style={{ width: "100%", borderCollapse: "collapse", backgroundColor: theme === "dark" ? "#2c2c2c" : "#f9f9f9", border: "1px solid #ddd" }}>
         <thead style={{ backgroundColor: theme === "dark" ? "#555" : "#4CAF50", color: "white" }}>
           <tr>
             <th>ID</th>
@@ -57,31 +56,33 @@ const OfferArchive = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredOffers.map((offer) => (
-            <tr key={offer.id}>
-              <td>{offer.id || "N/A"}</td>
-              <td>{offer.companyName || texts?.offers?.unknown || "Bilinmiyor"}</td>
-              <td>{offer.customerName || texts?.offers?.unknown || "Bilinmiyor"}</td>
-              <td>{offer.status || texts?.offers?.unknown || "Bilinmiyor"}</td>
-              <td>
-                {offer.selectedProducts?.length > 0 ? (
-                  <OfferPDF offer={offer} />
-                ) : (
-                  <span style={{ color: "gray" }}>{texts?.offers?.noData || "Veri Yok"}</span>
-                )}
+          {filteredOffers.length > 0 ? (
+            filteredOffers.map((offer) => (
+              <tr key={offer.id}>
+                <td>{offer.id || "N/A"}</td>
+                <td>{offer.companyName || texts?.offers?.unknown || "Bilinmiyor"}</td>
+                <td>{offer.customerName || texts?.offers?.unknown || "Bilinmiyor"}</td>
+                <td>{texts?.offers?.[offer.status] || offer.status || "Taslak"}</td>
+                <td>
+                  {offer.selectedProducts?.length > 0 ? (
+                    <OfferPDF offer={offer} />
+                  ) : (
+                    <span style={{ color: "gray" }}>{texts?.offers?.noData || "Veri Yok"}</span>
+                  )}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" style={{ textAlign: "center", padding: "20px", color: theme === "dark" ? "#aaa" : "gray" }}>
+                {texts?.offers?.noArchived || "Arşivlenmiş teklif bulunamadı."}
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
-
-      {filteredOffers.length === 0 && (
-        <p style={{ marginTop: "20px", color: theme === "dark" ? "#aaa" : "gray" }}>
-          {texts?.offers?.noArchived || "Arşivlenmiş teklif bulunamadı."}
-        </p>
-      )}
     </div>
   );
 };
 
-export default OfferArchive; 
+export default OfferArchive;

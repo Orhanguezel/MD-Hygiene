@@ -1,83 +1,122 @@
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
-import { useLanguage } from "@/features/language/useLanguage"; // ✅ Dil desteği eklendi
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { useSelector } from "react-redux";
 
-// PDF Stilleri
-const styles = StyleSheet.create({
-  page: { padding: 30, backgroundColor: "#fff" },
-  header: { fontSize: 18, fontWeight: "bold", marginBottom: 10, textAlign: "center" },
-  section: { marginBottom: 10 },
-  table: { display: "table", width: "100%", borderStyle: "solid", borderWidth: 1, marginBottom: 20 },
-  tableRow: { flexDirection: "row", borderBottom: "1px solid #ccc" },
-  tableCell: { flex: 1, padding: 5, fontSize: 10, textAlign: "center" },
-  total: { marginTop: 10, fontSize: 12, textAlign: "right" },
-  footer: { marginTop: 20, fontSize: 10, textAlign: "center", borderTop: "1px solid #ccc", paddingTop: 5 },
-});
+// 📌 Hata Önleyici Fonksiyon (Boş veya yanlış veri varsa düzeltir)
+const safeText = (text) => text ? String(text) : "N/A"; 
 
-const OfferPDFDocument = ({ offer }) => {
-  const { texts } = useLanguage(); // ✅ Dil kullanımı
+const generateOfferPDF = (offerData, texts) => {
+  if (!offerData) {
+    console.error("❌ Teklif verisi bulunamadı!");
+    return;
+  }
 
-  const calculateTotals = () => {
-    const netTotal = offer.selectedProducts.reduce(
-      (acc, item) => acc + item.customPrice * item.quantity,
-      0
-    );
-    const taxTotal = offer.selectedProducts.reduce(
-      (acc, item) => acc + item.customPrice * item.quantity * (item.taxRate / 100),
-      0
-    );
-    const grandTotal = netTotal + taxTotal + Number(offer.shippingCost);
+  // ✅ Firma ve Müşteri Bilgilerini Redux Store'dan Al
+  const { company } = useSelector((state) => state.company);
+  const { customers } = useSelector((state) => state.customer);
 
-    return { netTotal, taxTotal, grandTotal };
-  };
+  // Müşteriyi ID'ye göre bul
+  const customer = customers.find(c => c.id === offerData.customerId) || {};
 
-  const totals = calculateTotals();
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
 
-  return (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <Text style={styles.header}>{texts?.offers?.detailsTitle || "📋 Teklif Detayları"}</Text>
+  // ✅ Yazı Fontu ve Güvenli Değerler
+  doc.setFont("helvetica", "normal");
 
-        <View style={styles.section}>
-          <Text>{texts?.offers?.companyName || "Firma"}: {offer.companyName}</Text>
-          <Text>{texts?.offers?.customerName || "Müşteri"}: {offer.customerName}</Text>
-          <Text>{texts?.offers?.status || "Durum"}: {offer.status}</Text>
-        </View>
+  // ✅ Firma Logosu (Sol Üst)
+  const logoPath = "/logo.png"; // Logo yolu
+  doc.addImage(logoPath, "PNG", 150, 10, 40, 20);
 
-        <View style={styles.table}>
-          <View style={styles.tableRow}>
-            <Text style={styles.tableCell}>{texts?.offers?.productName || "Ürün Adı"}</Text>
-            <Text style={styles.tableCell}>{texts?.offers?.unitPrice || "Birim Fiyat (₺)"}</Text>
-            <Text style={styles.tableCell}>{texts?.offers?.quantity || "Adet"}</Text>
-            <Text style={styles.tableCell}>{texts?.offers?.taxRate || "KDV (%)"}</Text>
-            <Text style={styles.tableCell}>{texts?.offers?.total || "Toplam (₺)"}</Text>
-          </View>
+  // ✅ Firma Bilgileri (Sağ Üst)
+  doc.setFontSize(10);
+  doc.text(safeText(company.name), 20, 20);
+  doc.text(safeText(company.address), 20, 25);
+  doc.text(safeText("Telefon: " + company.phone), 20, 30);
+  doc.text(safeText("E-Mail: " + company.email), 20, 35);
 
-          {offer.selectedProducts.map((item, index) => (
-            <View style={styles.tableRow} key={index}>
-              <Text style={styles.tableCell}>{item.name}</Text>
-              <Text style={styles.tableCell}>{item.customPrice.toFixed(2)}</Text>
-              <Text style={styles.tableCell}>{item.quantity}</Text>
-              <Text style={styles.tableCell}>{item.taxRate}%</Text>
-              <Text style={styles.tableCell}>
-                {(item.customPrice * item.quantity).toFixed(2)}
-              </Text>
-            </View>
-          ))}
-        </View>
+  // ✅ Müşteri Bilgileri (Sol)
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.text(safeText(customer.name), 20, 50);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.text(safeText(customer.address), 20, 55);
+  doc.text(safeText("Telefon: " + customer.phone), 20, 60);
+  doc.text(safeText("E-Mail: " + customer.email), 20, 65);
 
-        <View style={styles.total}>
-          <Text>💰 {texts?.offers?.netTotal || "Net Tutar"}: {totals.netTotal.toFixed(2)} ₺</Text>
-          <Text>💸 {texts?.offers?.taxTotal || "KDV Tutarı"}: {totals.taxTotal.toFixed(2)} ₺</Text>
-          <Text>🚚 {texts?.offers?.shippingCost || "Nakliye Ücreti"}: {offer.shippingCost} ₺</Text>
-          <Text>🔢 {texts?.offers?.grandTotal || "Genel Toplam"}: {totals.grandTotal.toFixed(2)} ₺</Text>
-        </View>
+  // ✅ "Angebot" Başlık ve Açıklama
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.text(safeText(texts?.offers?.title || "Angebot"), 20, 75);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+  doc.text(safeText("Vielen Dank für Ihr Interesse! Gerne bieten wir Ihnen an:"), 20, 80);
 
-        <View style={styles.footer}>
-          <Text>{texts?.offers?.footerInfo || "MD-Hygienelogistik | info@firma.com"}</Text>
-        </View>
-      </Page>
-    </Document>
+  // ✅ Teklif Detayları Tablosu (Numara, Müşteri, Tarih)
+  autoTable(doc, {
+    startY: 85,
+    head: [[
+      safeText(texts?.offers?.offerNumber || "Angebotsnr."),
+      safeText(texts?.offers?.offerDate || "Datum")
+    ]],
+    body: [[
+      safeText(offerData.offerNumber),
+      safeText(offerData.offerDate)
+    ]],
+    theme: "plain",
+    styles: { fontSize: 10, cellPadding: 2, textColor: "#000000", lineWidth: 0.1 },
+    headStyles: { fillColor: "#f2f2f2" },
+  });
+
+  // ✅ Ürün Tablosu
+  autoTable(doc, {
+    startY: doc.autoTable.previous.finalY + 10,
+    head: [[
+      safeText(texts?.offers?.pos || "Pos."),
+      safeText(texts?.offers?.productName || "Bezeichnung"),
+      safeText(texts?.offers?.quantity || "Menge & Einheit"),
+      safeText(texts?.offers?.unitPrice || "Einzel €"),
+      safeText(texts?.offers?.total || "Gesamt €")
+    ]],
+    body: offerData.selectedProducts.map((product, index) => [
+      index + 1,
+      safeText(product.title) + "\n" + safeText(product.description),
+      `${safeText(product.quantity)} Stück`,
+      `${parseFloat(product.customPrice).toFixed(2)} €`,
+      `${(parseFloat(product.customPrice) * parseFloat(product.quantity)).toFixed(2)} €`,
+    ]),
+    styles: { fontSize: 10, cellPadding: 4 },
+    headStyles: { fillColor: [0, 0, 0], textColor: "#FFFFFF" },
+    margin: { top: 5 },
+  });
+
+  // ✅ Toplamlar ve KDV Hesaplamaları
+  const totalNetto = offerData.selectedProducts.reduce(
+    (acc, item) => acc + parseFloat(item.customPrice) * parseFloat(item.quantity),
+    0
   );
+  const vatAmount = totalNetto * 0.19;
+  const totalBrutto = totalNetto + vatAmount;
+
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "bold");
+  doc.text(safeText(texts?.offers?.netTotal || "Summe der Nettobeträge:"), 120, doc.autoTable.previous.finalY + 10);
+  doc.text(`${totalNetto.toFixed(2)} €`, 180, doc.autoTable.previous.finalY + 10, { align: "right" });
+
+  doc.text(safeText(texts?.offers?.taxTotal || "zzgl. 19% Umsatzsteuer:"), 120, doc.autoTable.previous.finalY + 18);
+  doc.text(`${vatAmount.toFixed(2)} €`, 180, doc.autoTable.previous.finalY + 18, { align: "right" });
+
+  doc.setFontSize(12);
+  doc.text(safeText(texts?.offers?.grandTotal || "Gesamtbetrag"), 120, doc.autoTable.previous.finalY + 28);
+  doc.text(`${totalBrutto.toFixed(2)} €`, 180, doc.autoTable.previous.finalY + 28, { align: "right" });
+
+  // ✅ Kapanış Notu
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "normal");
+  doc.text(safeText("Wir freuen uns, wenn Sie uns Ihren Auftrag anvertrauen!"), 20, doc.autoTable.previous.finalY + 40);
+
+  // ✅ PDF İndirme
+  doc.save(`Angebot_${offerData.offerNumber}.pdf`);
 };
 
-export default OfferPDFDocument; 
+export default generateOfferPDF;

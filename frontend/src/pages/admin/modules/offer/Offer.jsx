@@ -7,7 +7,6 @@ import OfferSidebar from "./components/OfferSidebar";
 import OfferList from "./components/OfferList";
 import OfferCreate from "./components/OfferCreate";
 import OfferPDF from "./components/OfferPDF";
-import AddProduct from "./components/AddProduct";
 import SetShippingCost from "./components/SetShippingCost";
 import OfferDetails from "./components/OfferDetails";
 import OfferArchive from "./components/OfferArchive"; // ✅ Arşiv Bileşeni
@@ -30,8 +29,6 @@ const Offer = () => {
         return <OfferCreate onOfferCreated={() => setActiveSection("list")} />;
       case "pdf":
         return <OfferPDF offer={selectedOffer} />;
-      case "addProduct":
-        return <AddProduct />;
       case "shipping":
         return <SetShippingCost />;
       case "details":

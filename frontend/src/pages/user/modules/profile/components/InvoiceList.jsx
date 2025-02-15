@@ -43,7 +43,7 @@ const InvoiceList = ({ userId }) => {
             <p><strong>{texts.invoice.totalAmount}:</strong> ${invoice.totalAmount.toFixed(2)}</p>
             <p><strong>{texts.invoice.status}:</strong> {invoice.status}</p>
             <ActionButton onClick={() => handleDownloadPDF(invoice)}>
-              📄 {texts.invoice.downloadPDF}
+              {texts.invoice.downloadPDF}
             </ActionButton>
           </InvoiceCard>
         ))

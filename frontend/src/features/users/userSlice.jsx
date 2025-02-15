@@ -101,13 +101,24 @@ export const updateAddress = createAsyncThunk(
   }
 );
 
+// 📥 **Favorileri Getir**
+export const fetchUserFavorites = createAsyncThunk("users/fetchUserFavorites", async (userId, { rejectWithValue }) => {
+  try {
+    const response = await API.get(`/users/${userId}/favorites`);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || "Favoriler yüklenemedi!");
+  }
+});
+
+
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // 📥 **Tüm Kullanıcıları Getir**
       .addCase(getAllUsers.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -120,60 +131,39 @@ export const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-
-      // 📥 **Belirli Kullanıcıyı Getir (ID ile)**
-      .addCase(fetchUserById.pending, (state) => {
-        state.loading = true;
-        state.selectedUser = null;
-      })
+  
       .addCase(fetchUserById.fulfilled, (state, action) => {
-        state.loading = false;
         state.selectedUser = action.payload;
       })
-      .addCase(fetchUserById.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
-      // ➕ **Yeni Kullanıcı Ekle**
+  
       .addCase(addUser.fulfilled, (state, action) => {
         state.users.push(action.payload);
       })
-      .addCase(addUser.rejected, (state, action) => {
-        state.error = action.payload;
+  
+      .addCase(fetchUserFavorites.fulfilled, (state, action) => {
+        if (state.selectedUser && state.selectedUser.id === action.payload.userId) {
+          state.selectedUser.favorites = action.payload.favorites;
+        }
       })
-
-      // ✏️ **Kullanıcı Güncelleme**
+  
       .addCase(updateUser.fulfilled, (state, action) => {
         const index = state.users.findIndex((user) => user.id === action.payload.id);
         if (index !== -1) {
           state.users[index] = action.payload;
         }
       })
-      .addCase(updateUser.rejected, (state, action) => {
-        state.error = action.payload;
-      })
-
-      // ❌ **Kullanıcı Silme**
+  
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.users = state.users.filter((user) => user.id !== action.payload);
       })
-      .addCase(deleteUser.rejected, (state, action) => {
-        state.error = action.payload;
-      })
-
-      // ✅ **Kullanıcı Durumunu Değiştir**
+  
       .addCase(toggleUserStatus.fulfilled, (state, action) => {
         const index = state.users.findIndex((user) => user.id === action.payload.id);
         if (index !== -1) {
-          state.users[index] = action.payload;
+          state.users[index].isActive = action.payload.isActive;
         }
       })
-      .addCase(toggleUserStatus.rejected, (state, action) => {
-        state.error = action.payload;
-      })
-
-      // ✅ **Adres Güncelleme**
+  
       .addCase(updateAddress.fulfilled, (state, action) => {
         const index = state.users.findIndex((user) => user.id === action.payload.id);
         if (index !== -1) {
@@ -183,7 +173,8 @@ export const userSlice = createSlice({
       .addCase(updateAddress.rejected, (state, action) => {
         state.error = action.payload;
       });
-  },
+  }
 });
+  
 
 export default userSlice.reducer;

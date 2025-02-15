@@ -1,7 +1,10 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { fetchUserById, fetchUserFavorites } from "@/features/users/userSlice";
 import { useLanguage } from "@/features/language/useLanguage";
-import { toggleTheme } from "@/features/theme/themeSlice";
+import { useTheme } from "@/features/theme/useTheme";
+
 import {
   UsersContainer,
   UserImage,
@@ -9,65 +12,59 @@ import {
   Label,
   SectionTitle,
   DetailsContainer,
-  ActionButton,
+  FavoritesList,
 } from "../styles/usersStyles";
 
 const UserDetails = () => {
   const { id } = useParams();
   const { texts } = useLanguage();
-  const users = useSelector((state) => state.auth.users);
+  const { theme } = useTheme();
   const dispatch = useDispatch();
-  const themeMode = useSelector((state) => state.theme.mode);
+  const user = useSelector((state) => state.user.selectedUser);
 
-  const user = users.find((u) => u.id === id);
+  useEffect(() => {
+    dispatch(fetchUserById(id));
+    dispatch(fetchUserFavorites(id));
+  }, [dispatch, id]);
 
   if (!user) {
     return (
-      <UsersContainer>
-        <SectionTitle>{texts.users.details}</SectionTitle>
-        <InfoText>{texts.users.notFound}</InfoText>
-        <ActionButton onClick={() => dispatch(toggleTheme())}>
-          {themeMode === "light" ? "🌙 Dark Mode" : "☀️ Light Mode"}
-        </ActionButton>
+      <UsersContainer theme={theme}>
+        <SectionTitle theme={theme}>{texts.users.details}</SectionTitle>
+        <InfoText theme={theme}>{texts.users.notFound}</InfoText>
       </UsersContainer>
     );
   }
 
   return (
-    <UsersContainer>
-      <SectionTitle>{texts.users.details}</SectionTitle>
-      <ActionButton onClick={() => dispatch(toggleTheme())}>
-        {themeMode === "light" ? "🌙 Dark Mode" : "☀️ Light Mode"}
-      </ActionButton>
+    <UsersContainer theme={theme}>
+      <SectionTitle theme={theme}>{texts.users.details}</SectionTitle>
 
-      <DetailsContainer>
-        <UserImage
-          src={user.profileImage || "https://via.placeholder.com/150"}
-          alt={user.name}
-        />
-        <InfoText>
-          <Label>{texts.users.name}:</Label> {user.name}
+      <DetailsContainer theme={theme}>
+        <UserImage src={user.profileImage || "/default-avatar.png"} alt={user.name} />
+        <InfoText theme={theme}>
+          <Label theme={theme}>{texts.users.name}:</Label> {user.name}
         </InfoText>
-        <InfoText>
-          <Label>{texts.users.email}:</Label> {user.email}
+        <InfoText theme={theme}>
+          <Label theme={theme}>{texts.users.email}:</Label> {user.email}
         </InfoText>
-        <InfoText>
-          <Label>{texts.users.role}:</Label> {user.role}
+        <InfoText theme={theme}>
+          <Label theme={theme}>{texts.users.role}:</Label> {user.role}
         </InfoText>
-        <InfoText>
-          <Label>{texts.users.phone}:</Label> {user.phone || "-"}
-        </InfoText>
-        <InfoText>
-          <Label>{texts.users.addresses}:</Label>
-          {user.addresses && user.addresses.length > 0
-            ? user.addresses
-                .map(
-                  (address) =>
-                    `${address.street}, ${address.city}, ${address.country}`
-                )
-                .join(", ")
-            : texts.users.noAddress}
-        </InfoText>
+
+        {/* Kullanıcı Favorileri */}
+        <FavoritesList theme={theme}>
+          <h3>{texts.users.favorites}</h3>
+          {user.favorites && user.favorites.length > 0 ? (
+            <ul>
+              {user.favorites.map((fav) => (
+                <li key={fav.id}>{fav.title}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>{texts.users.noFavorites}</p>
+          )}
+        </FavoritesList>
       </DetailsContainer>
     </UsersContainer>
   );

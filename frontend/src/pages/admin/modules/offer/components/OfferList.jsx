@@ -1,8 +1,10 @@
-import { useOffers } from "@/features/offer/useOffers";    // ✅ RTK Hook
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchOffers, deleteOffer } from "@/features/offer/offerSlice";
 import { useLanguage } from "@/features/language/useLanguage";
 import { useTheme } from "@/features/theme/useTheme";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { toast } from "react-toastify";
 import {
   OfferListContainer,
   OfferTable,
@@ -11,30 +13,47 @@ import {
   FilterContainer,
   SearchInput,
   FilterButton,
-} from "../styles/offerStyles";  // ✅ Stil dosyası
+} from "../styles/offerStyles";
 
 const OfferList = () => {
-  const { offers, deleteOffer } = useOffers();
-  const { texts } = useLanguage(); // ✅ Dil desteği eklendi
-  const { theme } = useTheme();    // ✅ Tema desteği eklendi
+  const dispatch = useDispatch();
+  const { texts } = useLanguage();
+  const { theme } = useTheme();
   const navigate = useNavigate();
+  const { offers, status } = useSelector((state) => state.offer);
 
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
+  useEffect(() => {
+    dispatch(fetchOffers()).then((response) => {
+      console.log("Teklifler yüklendi:", response.payload); // ✅ Konsolda veriyi kontrol et
+    });
+  }, [dispatch]);
+
+  if (status === "loading")
+    return <p>⏳ {texts?.offers?.loading || "Teklifler yükleniyor..."}</p>;
+
   // ✅ Filtreleme ve Arama Fonksiyonu
   const filteredOffers = offers.filter((offer) => {
-    const status = offer.status || "draft";  // ✅ Varsayılan olarak "draft"
+    const status = offer.status || "draft";
     const matchesStatus = statusFilter === "all" || status === statusFilter;
-    const matchesSearch = 
-      (offer.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) || "") ||
-      (offer.companyName?.toLowerCase().includes(searchTerm.toLowerCase()) || "");
+    const matchesSearch =
+      offer.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      "" ||
+      offer.companyName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      "";
 
     return matchesStatus && matchesSearch;
   });
 
+  const handleDelete = (id) => {
+    dispatch(deleteOffer(id));
+    toast.info("🗑️ Teklif siliniyor...");
+  };
+
   return (
-    <OfferListContainer theme={theme} style={{ backgroundColor: theme === "dark" ? "#1e1e1e" : "#fff", color: theme === "dark" ? "#fff" : "#000" }}>
+    <OfferListContainer theme={theme}>
       <h2>{texts?.offers?.listTitle || "📋 Teklif Listesi"}</h2>
 
       {/* ✅ Filtreleme ve Arama Alanı */}
@@ -51,10 +70,10 @@ const OfferList = () => {
           <FilterButton
             key={status}
             onClick={() => setStatusFilter(status)}
-            active={statusFilter === status}
             theme={theme}
           >
-            {texts?.offers?.[status] || status.charAt(0).toUpperCase() + status.slice(1)}
+            {texts?.offers?.[status] ||
+              status.charAt(0).toUpperCase() + status.slice(1)}
           </FilterButton>
         ))}
       </FilterContainer>
@@ -72,42 +91,48 @@ const OfferList = () => {
         </thead>
 
         <tbody>
-          {filteredOffers.map((offer) => {
-            const totalShipping = (offer.selectedProducts || []).reduce(
-              (acc, item) => acc + (item.shippingCost || 0),
-              0
-            );
-            const totalAmount = (offer.selectedProducts || []).reduce(
-              (acc, item) => acc + item.customPrice * item.quantity,
-              0
-            ) + totalShipping;
+          {filteredOffers.map((offer) => (
+            <tr key={offer.id}>
+              <td>{offer.id}</td>
+              <td>{offer.companyName}</td>
+              <td>{offer.customerName}</td>
+              <td>
+                {offer.selectedProducts && offer.selectedProducts.length > 0
+                  ? offer.selectedProducts
+                      .reduce(
+                        (acc, product) =>
+                          acc + product.customPrice * product.quantity,
+                        0
+                      )
+                      .toFixed(2) + " ₺"
+                  : "0.00 ₺"}
+              </td>
 
-            return (
-              <tr key={offer.id}>
-                <td>{offer.id}</td>
-                <td>{offer.companyName}</td>
-                <td>{offer.customerName}</td>
-                <td>{totalAmount.toFixed(2)} ₺</td>
-                <td>
-                  <StatusBadge $status={offer.status || "draft"}>
-                    {texts?.offers?.[offer.status] || offer.status || "Taslak"}
-                  </StatusBadge>
-                </td>
-                <td>
-                  <OfferButton theme={theme} onClick={() => navigate(`/offers/${offer.id}`)}>
-                    {texts?.offers?.view || "Görüntüle"}
-                  </OfferButton>
-                  <OfferButton theme={theme} onClick={() => deleteOffer(offer.id)}>
-                    {texts?.offers?.delete || "Sil"}
-                  </OfferButton>
-                </td>
-              </tr>
-            );
-          })}
+              <td>
+                <StatusBadge $status={offer.status || "draft"}>
+                  {texts?.offers?.[offer.status] || offer.status || "Taslak"}
+                </StatusBadge>
+              </td>
+              <td>
+                <OfferButton
+                  theme={theme}
+                  onClick={() => navigate(`/offers/${offer.id}`)}
+                >
+                  {texts?.offers?.view || "Görüntüle"}
+                </OfferButton>
+                <OfferButton
+                  theme={theme}
+                  onClick={() => handleDelete(offer.id)}
+                >
+                  {texts?.offers?.delete || "Sil"}
+                </OfferButton>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </OfferTable>
     </OfferListContainer>
   );
 };
 
-export default OfferList; 
+export default OfferList;

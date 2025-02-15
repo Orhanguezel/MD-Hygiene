@@ -1,85 +1,79 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
-/**
- * 📄 Fatura PDF oluşturucu
- * @param {Object} invoiceData - Fatura verisi
- * @param {Object} texts - Çeviri metinleri
- */
-export const generateInvoicePDF = (invoiceData, texts) => {
-  if (!invoiceData?.items || invoiceData.items.length === 0) {
-    console.error("❌ HATA: Fatura verisi eksik!", invoiceData);
-    return;
-  }
-
-  // ✅ Vergi ve Toplam Hesaplamalar
+export const generateInvoicePDF = (invoiceData) => {
   const doc = new jsPDF();
-  doc.setFont("helvetica", "normal");
 
-  // 📌 Şirket Bilgileri
-  doc.setFontSize(16).text(texts?.invoices?.title || "Fatura", 105, 20, null, null, "center");
+  // ✅ Şirket Logosu
+  const logoPath = "/logo.png"; // LOGOYU DEĞİŞTİRMEDİK!
+  doc.addImage(logoPath, "PNG", 150, 10, 40, 20);
+
+  // ✅ Başlık
+  doc.setFontSize(16);
+  doc.text("Rechnung", 105, 30, { align: "center" });
+
+  // ✅ Şirket Bilgileri
   doc.setFontSize(10);
-  doc.text(`${texts?.invoices?.company}: MD-Hygienelogistik GmbH`, 14, 30);
-  doc.text(`${texts?.invoices?.address}: Musterstraße 123, 40210 Düsseldorf, Germany`, 14, 36);
-  doc.text(`${texts?.invoices?.taxNumber}: DE123456789`, 14, 42);
-  doc.text(`${texts?.invoices?.tradeRegister}: HRB 987654`, 14, 48);
-  doc.text(`${texts?.invoices?.iban}: DE89 3704 0044 0532 0130 00`, 14, 54);
-  doc.text(`${texts?.invoices?.bic}: COBADEFFXXX`, 14, 60);
+  doc.text("MD-Hygienelogistik GmbH", 20, 40);
+  doc.text("Adresse: Musterstraße 123, 40210 Düsseldorf, Germany", 20, 45);
+  doc.text("Steuernummer: DE123456789", 20, 50);
+  doc.text("Handelsregister-Nr.: HRB 987654", 20, 55);
+  doc.text("IBAN: DE89 3704 0044 0532 0130 00", 20, 60);
+  doc.text("BIC: COBADEFFXXX", 20, 65);
 
-  // 📌 Müşteri Bilgileri
-  doc.setFontSize(12).text(texts?.invoices?.customerInfo, 14, 70);
+  // ✅ Müşteri Bilgileri
+  doc.setFontSize(12);
+  doc.text("Kundeninformationen", 20, 75);
   doc.setFontSize(10);
-  doc.text(`${texts?.invoices?.name}: ${invoiceData?.userName}`, 14, 78);
-  doc.text(`${texts?.invoices?.email}: ${invoiceData?.userEmail}`, 14, 84);
-  doc.text(`${texts?.invoices?.address}: ${invoiceData?.userAddress}`, 14, 90);
+  doc.text(`Name: ${invoiceData.userName}`, 20, 80);
+  doc.text(`E-Mail: ${invoiceData.userEmail}`, 20, 85);
+  doc.text(`Adresse: ${invoiceData.userAddress}`, 20, 90);
 
-  // 📌 Ürün Tablosu
-  const tableData = invoiceData.items.map((item, index) => [
-    index + 1,
-    item.title,
-    item.quantity,
-    `${item.taxRate}%`,
-    `${(item.unitPrice / 1.19).toFixed(2)} EUR`,
-    `${((item.unitPrice / 1.19) * 0.19).toFixed(2)} EUR`,
-    `${(item.unitPrice / 1.19).toFixed(2)} EUR`,
-    `${((item.unitPrice / 1.19) * 0.19).toFixed(2)} EUR`,
-    `${item.unitPrice.toFixed(2)} EUR`,
-  ]);
+  // ✅ Ürün Tablosu
+  const tableColumn = ["#", "Produkt", "Menge", "Steuer (%)", "Netto", "Steuerbetrag", "Brutto"];
+  const tableRows = [];
 
-  doc.autoTable({
-    head: [[
-      texts?.invoices?.num,
-      texts?.invoices?.product,
-      texts?.invoices?.quantity,
-      texts?.invoices?.tax,
-      texts?.invoices?.netPrice,
-      texts?.invoices?.totalTax,
-      texts?.invoices?.netTotal,
-      texts?.invoices?.totalVAT,
-      texts?.invoices?.total,
-    ]],
-    body: tableData,
-    startY: 100,
-    styles: { fontSize: 10 },
-    headStyles: { fillColor: [41, 128, 185] },
+  let totalNet = 0;
+  let totalTax = 0;
+
+  invoiceData.items.forEach((item, index) => {
+    const netPrice = (item.unitPrice / (1 + item.taxRate / 100)).toFixed(2);
+    const taxAmount = (item.unitPrice - netPrice).toFixed(2);
+
+    totalNet += parseFloat(netPrice);
+    totalTax += parseFloat(taxAmount);
+
+    tableRows.push([
+      index + 1,
+      item.title,
+      item.quantity,
+      `${item.taxRate}%`,
+      `${netPrice} EUR`,
+      `${taxAmount} EUR`,
+      `${item.unitPrice.toFixed(2)} EUR`,
+    ]);
   });
 
-  // 📌 Kargo Ücreti ve Genel Toplam
-  const yPosition = doc.lastAutoTable.finalY + 10;
-  doc.text(`${texts?.invoices?.shipping}: ${invoiceData.shippingCost.toFixed(2)} EUR`, 14, yPosition);
-  doc.text(`${texts?.invoices?.totalAmount}: ${invoiceData.totalAmount.toFixed(2)} EUR`, 14, yPosition + 6);
+  // ✅ Tabloyu Ekle
+  doc.autoTable({
+    startY: 95,
+    head: [tableColumn],
+    body: tableRows,
+    theme: "grid",
+  });
 
-  // 📌 ÖRNEK DAMGASI
+  // ✅ Vergi & Kargo & Toplam Hesaplama
+  const shippingCost = invoiceData.shippingCost || 0;
+  const totalAmount = totalNet + totalTax + shippingCost;
+
+  doc.text(`Versandkosten: ${shippingCost.toFixed(2)} EUR`, 20, doc.autoTable.previous.finalY + 10);
+  doc.text(`Steuerbetrag: ${totalTax.toFixed(2)} EUR`, 20, doc.autoTable.previous.finalY + 15);
+  doc.text(`Gesamtsumme: ${totalAmount.toFixed(2)} EUR`, 20, doc.autoTable.previous.finalY + 20);
+
+  // ✅ "Örnek Fatura" Uyarısı
   doc.setTextColor(255, 0, 0);
-  doc.setFontSize(12);
-  doc.text("Dies ist eine Beispielrechnung und nicht rechtsgültig.", 14, yPosition + 12);
+  doc.text("Dies ist eine Beispielrechnung und nicht rechtsgültig.", 20, doc.autoTable.previous.finalY + 30);
 
-  // 📌 Şirket Logosu
-  const logoURL = "/logo.png"; // Public klasöründe olması gerekiyor
-  const imgWidth = 40;
-  const imgHeight = 20;
-  doc.addImage(logoURL, "PNG", 150, 10, imgWidth, imgHeight);
-
-  // 📌 PDF İndir
-  doc.save(`Rechnung-${invoiceData.invoiceNumber}.pdf`);
+  // ✅ PDF İndirme
+  doc.save(`Rechnung_${invoiceData.invoiceNumber}.pdf`);
 };

@@ -1,35 +1,56 @@
-// ✅ src/pages/modules/settings/Settings.jsx
-import { useSelector, useDispatch } from 'react-redux';
-import { SettingsContainer, Section, Label, Input, Button } from "./styles/settingsStyles";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setLanguage, toggleTheme } from "@/features/settings/settingsSlice";
+import { SettingsContainer, Section, Label, Button, Select } from "./styles/settingsStyles";
 
 const Settings = () => {
   const dispatch = useDispatch();
-  const { texts, language } = useSelector((state) => state.settings || { texts: {}, language: 'tr' });
+  const navigate = useNavigate();
+  const { texts, language, theme } = useSelector((state) => state.settings);
 
   return (
-    <SettingsContainer>
+    <SettingsContainer theme={theme}>
       <h1>{texts.settings?.title || "Ayarlar"}</h1>
 
+      {/* 🧑‍💼 Profil Ayarları */}
       <Section>
         <h2>{texts.settings?.profileSettings || "Profil Ayarları"}</h2>
-        <Label>{texts.settings?.name || "Ad Soyad"}</Label>
-        <Input type="text" placeholder="Ad Soyad" />
-
-        <Label>{texts.settings?.email || "E-posta"}</Label>
-        <Input type="email" placeholder="E-posta" />
-
-        <Button>{texts.settings?.updateProfile || "Profili Güncelle"}</Button>
+        <Button onClick={() => navigate("/settings/profile")}>
+          📝 {texts.settings?.updateProfile || "Profili Güncelle"}
+        </Button>
       </Section>
 
+      {/* 🏢 Firma ve Müşteri Yönetimi */}
       <Section>
-        <h2>{texts.settings?.passwordSettings || "Şifre Ayarları"}</h2>
-        <Label>{texts.settings?.newPassword || "Yeni Şifre"}</Label>
-        <Input type="password" placeholder={texts.settings?.newPassword || "Yeni Şifre"} />
+        <h2>{texts.settings?.companySettings || "Firma & Müşteri Yönetimi"}</h2>
 
-        <Label>{texts.settings?.confirmPassword || "Şifreyi Onayla"}</Label>
-        <Input type="password" placeholder={texts.settings?.confirmPassword || "Şifreyi Onayla"} />
+        <Button onClick={() => navigate("/company-management")}>
+          🏢 {texts.settings?.updateCompany || "Firma Bilgilerini Güncelle"}
+        </Button>
 
-        <Button>{texts.settings?.updatePassword || "Şifreyi Güncelle"}</Button>
+        <Button onClick={() => navigate("/customer-management")}>
+          👤 {texts.settings?.manageCustomers || "Müşteri Yönetimi"}
+        </Button>
+      </Section>
+
+      {/* 🌍 Site Ayarları */}
+      <Section>
+        <h2>{texts.settings?.siteSettings || "Site Ayarları"}</h2>
+
+        <Label>{texts.settings?.language || "Dil Seçimi"}</Label>
+        <Select
+          value={language}
+          onChange={(e) => dispatch(setLanguage(e.target.value))}
+        >
+          <option value="tr">🇹🇷 Türkçe</option>
+          <option value="en">🇺🇸 English</option>
+          <option value="de">🇩🇪 Deutsch</option>
+        </Select>
+
+        <Label>{texts.settings?.theme || "Tema"}</Label>
+        <Button onClick={() => dispatch(toggleTheme())}>
+          {theme === "dark" ? "🌙 Karanlık Mod" : "☀️ Aydınlık Mod"}
+        </Button>
       </Section>
     </SettingsContainer>
   );

@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 export const UsersContainer = styled.div`
   padding: 20px;
-  background-color: ${({ theme }) => theme.background || "#f9f9f9"};
-  color: ${({ theme }) => theme.text || "#333"};
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -12,8 +12,8 @@ export const UsersContainer = styled.div`
 `;
 
 export const AddUserButton = styled.button`
-  background: #007bff;
-  color: white;
+  background: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.buttonText};
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
@@ -22,7 +22,7 @@ export const AddUserButton = styled.button`
   transition: background 0.3s ease, transform 0.2s ease;
 
   &:hover {
-    background: #0056b3;
+    background: ${({ theme }) => theme.primaryHover};
     transform: translateY(-3px);
   }
 `;
@@ -36,8 +36,8 @@ export const ResponsiveGrid = styled.div`
 `;
 
 export const UserCard = styled.div`
-  background: ${({ theme }) => theme.cardBackground || "#fff"};
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: ${({ theme }) => theme.cardBackground};
+  box-shadow: 0 4px 12px ${({ theme }) => theme.shadow};
   border-radius: 12px;
   padding: 20px;
   display: flex;
@@ -57,7 +57,7 @@ export const UserImage = styled.img`
   height: 100px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid ${({ theme }) => theme.primary || "#007bff"};
+  border: 3px solid ${({ theme }) => theme.primary};
 `;
 
 export const UserInfo = styled.div`
@@ -70,20 +70,20 @@ export const UserInfo = styled.div`
 export const UserName = styled.h3`
   margin: 0;
   font-size: 1.4em;
-  color: ${({ theme }) => theme.primary || "#007bff"};
+  color: ${({ theme }) => theme.primary};
   font-weight: bold;
 `;
 
 export const UserEmail = styled.p`
   margin: 0;
-  color: #555;
+  color: ${({ theme }) => theme.text};
   font-size: 0.9em;
   opacity: 0.8;
 `;
 
 export const UserRole = styled.span`
-  color: #333;
-  background: #e0e7ff;
+  color: ${({ theme }) => theme.text};
+  background: ${({ theme }) => theme.border};
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 0.85em;
@@ -91,15 +91,17 @@ export const UserRole = styled.span`
 `;
 
 export const UserStatus = styled.span`
-  color: ${({ isActive }) => (isActive ? "#4CAF50" : "#FF5252")};
+  color: ${({ $isActive, theme }) => ($isActive ? theme.success : theme.error)};
   font-weight: bold;
   font-size: 0.9em;
 `;
 
 export const ActionButton = styled.button`
-  background: ${({ variant }) =>
-    variant === "edit" ? "#4CAF50" : variant === "deactivate" ? "#FF5252" : "#007bff"};
-  color: white;
+  background: ${({ variant, theme }) =>
+    variant === "edit" ? theme.success :
+    variant === "deactivate" ? theme.error :
+    theme.primary};
+  color: ${({ theme }) => theme.buttonText};
   padding: 8px 14px;
   border: none;
   border-radius: 6px;
@@ -108,15 +110,17 @@ export const ActionButton = styled.button`
   transition: background 0.3s ease, transform 0.2s ease;
 
   &:hover {
-    background: ${({ variant }) =>
-      variant === "edit" ? "#388E3C" : variant === "deactivate" ? "#E53935" : "#0056b3"};
+    background: ${({ variant, theme }) =>
+      variant === "edit" ? theme.successHover :
+      variant === "deactivate" ? theme.errorHover :
+      theme.primaryHover};
     transform: translateY(-2px);
   }
 `;
 
 export const SectionTitle = styled.h2`
-  color: ${({ theme }) => theme.primary || "#007bff"};
-  border-bottom: 2px solid ${({ theme }) => theme.primary || "#007bff"};
+  color: ${({ theme }) => theme.primary};
+  border-bottom: 2px solid ${({ theme }) => theme.primary};
   padding-bottom: 5px;
   margin-bottom: 15px;
   text-align: center;
@@ -125,10 +129,10 @@ export const SectionTitle = styled.h2`
 `;
 
 export const DetailsContainer = styled.div`
-  background: ${({ theme }) => theme.cardBackground || "#fff"};
+  background: ${({ theme }) => theme.cardBackground};
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px ${({ theme }) => theme.shadow};
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -139,59 +143,62 @@ export const DetailsContainer = styled.div`
 
 export const InfoText = styled.p`
   font-size: 14px;
-  color: ${({ theme }) => theme.text || "#666"};
+  color: ${({ theme }) => theme.text};
   margin: 5px 0;
   text-align: center;
 `;
 
 export const Label = styled.span`
   font-weight: bold;
-  color: ${({ theme }) => theme.primary || "#007bff"};
+  color: ${({ theme }) => theme.primary};
 `;
 
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 15px;
-  background: ${({ theme }) => theme.cardBackground || "#fff"};
+  background: ${({ theme }) => theme.cardBackground};
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px ${({ theme }) => theme.shadow};
   width: 100%;
   max-width: 400px;
 `;
 
 export const Input = styled.input`
   padding: 12px;
-  border: 1px solid ${({ theme }) => theme.border || "#ccc"};
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 4px;
   outline: none;
   font-size: 14px;
+  background: ${({ theme }) => theme.inputBackground};
+  color: ${({ theme }) => theme.inputText};
 
   &:focus {
-    border-color: ${({ theme }) => theme.primary || "#007bff"};
+    border-color: ${({ theme }) => theme.primary};
   }
 `;
 
 export const Select = styled.select`
   padding: 12px;
-  border: 1px solid ${({ theme }) => theme.border || "#ccc"};
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 4px;
   outline: none;
   font-size: 14px;
+  background: ${({ theme }) => theme.inputBackground};
+  color: ${({ theme }) => theme.inputText};
 
   &:focus {
-    border-color: ${({ theme }) => theme.primary || "#007bff"};
+    border-color: ${({ theme }) => theme.primary};
   }
 `;
 
 export const ErrorMessage = styled.p`
-  color: red;
+  color: ${({ theme }) => theme.error};
   font-size: 14px;
   text-align: center;
   margin: 0;
 `;
-
 
 // ✅ Resim Önizleme Stili
 export const ImagePreview = styled.img`
@@ -200,5 +207,30 @@ export const ImagePreview = styled.img`
   object-fit: cover;
   border-radius: 50%;
   margin: 10px auto;
-  border: 2px solid #4caf50;
+  border: 2px solid ${({ theme }) => theme.success};
+`;
+
+export const FavoritesList = styled.div`
+  margin-top: 20px;
+  padding: 10px;
+  border-top: 2px solid ${({ theme }) => theme.border};
+
+  h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: ${({ theme }) => theme.primary};
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    background: ${({ theme }) => theme.cardBackground};
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 5px;
+    color: ${({ theme }) => theme.text};
+  }
 `;

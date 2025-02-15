@@ -15,6 +15,8 @@ import reportsReducer from '../features/reports/reportsSlice';
 import userReducer from '../features/users/userSlice';
 import cartReducer from '../features/cart/cartSlice';
 import categoryReducer from '../features/category/categorySlice';
+import companyReducer from '../features/company/companySlice';
+import customerReducer from '../features/customer/customerSlice';
 
 export const store = configureStore({
   reducer: {
@@ -33,5 +35,7 @@ export const store = configureStore({
     user: userReducer,
     cart: cartReducer,
     category: categoryReducer,
+    company: companyReducer,
+    customer: customerReducer,
   },
 });
