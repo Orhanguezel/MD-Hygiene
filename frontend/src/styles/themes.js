@@ -1,6 +1,6 @@
 export const lightTheme = {
   background: "#ffffff",
-  text: "#1f2937",  // Daha koyu renk
+  text: "#1f2937",  
   navBackground: "#f8f9fa",
   footerBackground: "#f3f4f6",
   footerText: "#1f2937",
@@ -8,10 +8,10 @@ export const lightTheme = {
   cardBackground: "#f5f5f5",
   primary: "#4f46e5",
   primaryHover: "#4338ca",
-  border: "#ccc", // Daha belirgin hale getirildi
+  border: "#ccc",
   inputBackground: "#ffffff",
-  inputText: "#1f2937", // Koyu gri yerine net siyah
-  placeholderText: "#666",  // Daha koyu gri
+  inputText: "#1f2937",
+  placeholderText: "#666",
   buttonText: "#ffffff",
   shadow: "rgba(0, 0, 0, 0.1)",
   sidebarBackground: "#f4f4f4",
@@ -23,8 +23,11 @@ export const lightTheme = {
   sidebarToggle: "#1f2937",
   sidebarToggleHover: "#ffffff",
   sidebarToggleHoverBackground: "#4f46e5",
+  summaryBackground: "#ffffff",  // ✅ Checkout arka planı
+  summaryText: "#1f2937",        // ✅ Checkout içeriği
+  summaryHighlight: "#4f46e5",   // ✅ Toplam fiyat için vurgulu renk
+  summaryBorder: "#ccc",         // ✅ Checkout çerçeve rengi
 };
-
 export const darkTheme = {
   background: "#121212",
   text: "#ffffff",
@@ -32,15 +35,15 @@ export const darkTheme = {
   footerBackground: "#1f2937",
   footerText: "#e5e7eb",
   footerSubText: "#9ca3af",
-  cardBackground: "#1e1e1e",
+  cardBackground: "#1a1a1a", // ✅ Daha koyu ve belirgin
   primary: "#BB86FC",
   primaryHover: "#9e6bdf",
-  border: "#444", // Daha belirgin hale getirildi
-  inputBackground: "#1e1e1e",
+  border: "#444", // ✅ Daha belirgin hale getirildi
+  inputBackground: "#222", // ✅ Daha net giriş alanları
   inputText: "#ffffff",
   placeholderText: "#bbbbbb",
   buttonText: "#ffffff",
-  shadow: "rgba(255, 255, 255, 0.1)",
+  shadow: "rgba(255, 255, 255, 0.2)",
   sidebarBackground: "#1f2937",
   sidebarText: "#ffffff",
   sidebarHover: "#374151",

@@ -13,10 +13,10 @@ export const SidebarContainer = styled.div`
   transition: width 0.4s ease-in-out, box-shadow 0.3s ease-in-out;
   display: flex;
   flex-direction: column; 
-  
   z-index: 100;
   padding: 10px 0;
 `;
+
 
 // ✅ Sidebar Toggle Butonu (Hamburger Menü)
 export const ToggleSidebarButton = styled.button`

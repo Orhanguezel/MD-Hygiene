@@ -1,19 +1,32 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { fetchCustomers, addCustomer, updateCustomerInfo, deleteCustomer } from "@/features/customer/customerSlice";
-import { FormInput, ActionButton, Container, Table, TableRow, TableCell, EditButton, DeleteButton } from "../styles/settingsStyles";
+import { useLanguage } from "@/features/language/useLanguage";
+import {
+  FormInput,
+  ActionButton,
+  Container,
+  Table,
+  TableRow,
+  TableCell,
+  EditButton,
+  DeleteButton,
+  BackButton,
+} from "../styles/settingsStyles";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
 
 const CustomerManagement = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { texts } = useLanguage();
   const { customers, status } = useSelector((state) => state.customer);
 
-  // 📌 Form için müşteri verisi (Firma ve yetkili kişi bilgisi ile)
   const [customerData, setCustomerData] = useState({
     id: null,
     companyName: "",
-    contactPerson: "", // Yetkili kişi (Opsiyonel)
+    contactPerson: "",
     address: "",
     phone: "",
   });
@@ -22,91 +35,85 @@ const CustomerManagement = () => {
     dispatch(fetchCustomers());
   }, [dispatch]);
 
-  // 📌 Input değişikliklerini yakalama
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCustomerData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 📌 Firma Ekleme veya Güncelleme
   const handleSave = () => {
     if (!customerData.companyName) {
-      toast.error("❌ Firma ismi zorunludur!");
+      toast.error("❌ " + texts.customer.missingCompanyName);
       return;
     }
 
     const customerToSave = {
       ...customerData,
-      id: customerData.id || uuidv4(), // ✅ ID eksikse oluştur
+      id: customerData.id || uuidv4(),
     };
 
     if (customerData.id) {
       dispatch(updateCustomerInfo(customerToSave))
         .unwrap()
-        .then(() => toast.success("✅ Firma bilgileri güncellendi!"))
-        .catch(() => toast.error("❌ Güncelleme başarısız oldu!"));
+        .then(() => toast.success("✅ " + texts.customer.updated))
+        .catch(() => toast.error("❌ " + texts.customer.updateFailed));
     } else {
       dispatch(addCustomer(customerToSave))
         .unwrap()
-        .then(() => toast.success("✅ Yeni firma eklendi!"))
-        .catch(() => toast.error("❌ Ekleme başarısız oldu!"));
+        .then(() => toast.success("✅ " + texts.customer.added))
+        .catch(() => toast.error("❌ " + texts.customer.addFailed));
     }
 
     setCustomerData({ id: null, companyName: "", contactPerson: "", address: "", phone: "" });
   };
 
-  // 📌 Firma Düzenleme
   const handleEdit = (customer) => {
     setCustomerData(customer);
   };
 
-  // 📌 Firma Silme
   const handleDelete = (id) => {
     if (!id) {
-      toast.error("❌ Geçersiz ID!");
+      toast.error("❌ " + texts.customer.invalidId);
       return;
     }
     dispatch(deleteCustomer(id))
       .unwrap()
-      .then(() => toast.success("✅ Firma başarıyla silindi!"))
-      .catch(() => toast.error("❌ Silme işlemi başarısız oldu!"));
+      .then(() => toast.success("✅ " + texts.customer.deleted))
+      .catch(() => toast.error("❌ " + texts.customer.deleteFailed));
   };
 
   return (
     <Container>
-      <h2>🏢 Firma Yönetimi</h2>
+      <h2>🏢 {texts.customer.title}</h2>
 
-      {/* 📝 Firma Formu */}
-      <label>Firma Adı:</label>
-      <FormInput type="text" name="companyName" value={customerData.companyName} onChange={handleInputChange} required />
-      
-      <label>Yetkili Kişi (Opsiyonel):</label>
+      <label>{texts.customer.companyName}:</label>
+      <FormInput type="text" name="companyName" value={customerData.companyName} onChange={handleInputChange} />
+
+      <label>{texts.customer.contactPerson}:</label>
       <FormInput type="text" name="contactPerson" value={customerData.contactPerson} onChange={handleInputChange} />
 
-      <label>Adres:</label>
+      <label>{texts.customer.address}:</label>
       <FormInput type="text" name="address" value={customerData.address} onChange={handleInputChange} />
 
-      <label>Telefon:</label>
+      <label>{texts.customer.phone}:</label>
       <FormInput type="text" name="phone" value={customerData.phone} onChange={handleInputChange} />
 
       <ActionButton onClick={handleSave}>
-        {customerData.id ? "✏️ Güncelle" : "➕ Firma Ekle"}
+        {customerData.id ? "✏️ " + texts.customer.update : "➕ " + texts.customer.add}
       </ActionButton>
 
-      {/* 📋 Firma Listesi */}
-      <h3>📋 Firma Listesi</h3>
+      <h3>📋 {texts.customer.list}</h3>
       {status === "loading" ? (
-        <p>⏳ Firmalar yükleniyor...</p>
+        <p>⏳ {texts.customer.loading}</p>
       ) : (
         <Table>
           <thead>
             <tr>
               <th>ID</th>
-              <th>Firma Adı</th>
-              <th>Yetkili Kişi</th>
-              <th>Adres</th>
-              <th>Telefon</th>
-              <th>İşlemler</th>
+              <th>{texts.customer.companyName}</th>
+              <th>{texts.customer.contactPerson}</th>
+              <th>{texts.customer.address}</th>
+              <th>{texts.customer.phone}</th>
+              <th>{texts.customer.actions}</th>
             </tr>
           </thead>
           <tbody>
@@ -119,19 +126,20 @@ const CustomerManagement = () => {
                   <TableCell>{customer.address}</TableCell>
                   <TableCell>{customer.phone}</TableCell>
                   <TableCell>
-                    <EditButton onClick={() => handleEdit(customer)}>✏️ Düzenle</EditButton>
-                    <DeleteButton onClick={() => handleDelete(customer.id)}>🗑️ Sil</DeleteButton>
+                    <EditButton onClick={() => handleEdit(customer)}>✏️ {texts.customer.edit}</EditButton>
+                    <DeleteButton onClick={() => handleDelete(customer.id)}>🗑️ {texts.customer.delete}</DeleteButton>
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <tr>
-                <td colSpan="6" style={{ textAlign: "center" }}>⚠️ Henüz kayıtlı firma yok.</td>
+                <td colSpan="6" style={{ textAlign: "center" }}>⚠️ {texts.customer.noRecords}</td>
               </tr>
             )}
           </tbody>
         </Table>
       )}
+      <BackButton onClick={() => navigate("/settings")}>⬅️ {texts.general.back}</BackButton>
     </Container>
   );
 };

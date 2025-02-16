@@ -1,71 +1,25 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import API from "@/services/api";
-
-// 📌 Kullanıcı profilini güncelleme (Ad, Soyad, E-posta)
-export const updateProfile = createAsyncThunk(
-  "settings/updateProfile",
-  async (profileData, { rejectWithValue }) => {
-    try {
-      const response = await API.put(`/users/${profileData.id}`, profileData);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "Profil güncellenemedi!");
-    }
-  }
-);
-
-// 📌 Şirket bilgilerini güncelleme
-export const updateCompanyInfo = createAsyncThunk(
-  "settings/updateCompanyInfo",
-  async (companyData, { rejectWithValue }) => {
-    try {
-      const response = await API.put(`/companies/${companyData.id}`, companyData);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "Firma bilgileri güncellenemedi!");
-    }
-  }
-);
-
-// 📌 Kullanıcı şifresini güncelleme
-export const updatePassword = createAsyncThunk(
-  "settings/updatePassword",
-  async ({ id, newPassword }, { rejectWithValue }) => {
-    try {
-      const response = await API.post(`/users/update-password`, { id, password: newPassword });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "Şifre güncellenemedi!");
-    }
-  }
-);
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  language: "tr",
-  theme: "light",
-  user: null, // Kullanıcı bilgileri burada saklanır
-  company: null, // Şirket bilgileri burada saklanır
+  currency: "EUR", // Varsayılan para birimi
+  shippingCost: 50, // Varsayılan nakliye ücreti
+  taxRate: 19, // Varsayılan vergi oranı (%)
+  paymentMethods: {
+    paypal: false,
+    stripe: false,
+    bankTransfer: false,
+  },
   texts: {
     settings: {
-      title: "Ayarlar",
-      profileSettings: "Profil Ayarları",
-      name: "Ad Soyad",
-      email: "E-posta",
-      updateProfile: "Profili Güncelle",
-      appSettings: "Uygulama Ayarları",
-      theme: "Tema",
-      darkMode: "Karanlık Mod",
-      lightMode: "Aydınlık Mod",
-      language: "Dil",
-      passwordSettings: "Şifre Ayarları",
-      newPassword: "Yeni Şifre",
-      confirmPassword: "Şifreyi Onayla",
-      updatePassword: "Şifreyi Güncelle",
-      companySettings: "Firma Bilgileri",
-      companyName: "Firma Adı",
-      companyAddress: "Adres",
-      companyEmail: "Firma E-Posta",
-      updateCompany: "Firma Bilgilerini Güncelle",
+      title: "Genel Ayarlar",
+      currency: "Para Birimi",
+      shippingCost: "Nakliye Ücreti",
+      taxRate: "Vergi Oranı",
+      paymentMethods: "Ödeme Yöntemleri",
+      paypal: "PayPal",
+      stripe: "Stripe",
+      bankTransfer: "Banka Havalesi",
+      saveSettings: "Ayarları Kaydet",
     },
   },
 };
@@ -74,26 +28,20 @@ const settingsSlice = createSlice({
   name: "settings",
   initialState,
   reducers: {
-    setLanguage: (state, action) => {
-      state.language = action.payload;
+    setCurrency: (state, action) => {
+      state.currency = action.payload;
     },
-    toggleTheme: (state) => {
-      state.theme = state.theme === "light" ? "dark" : "light";
+    setShippingCost: (state, action) => {
+      state.shippingCost = action.payload;
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(updateProfile.fulfilled, (state, action) => {
-        state.user = action.payload;
-      })
-      .addCase(updateCompanyInfo.fulfilled, (state, action) => {
-        state.company = action.payload;
-      })
-      .addCase(updatePassword.fulfilled, (state) => {
-        state.status = "succeeded";
-      });
+    setTaxRate: (state, action) => {
+      state.taxRate = action.payload;
+    },
+    togglePaymentMethod: (state, action) => {
+      state.paymentMethods[action.payload] = !state.paymentMethods[action.payload];
+    },
   },
 });
 
-export const { setLanguage, toggleTheme } = settingsSlice.actions;
+export const { setCurrency, setShippingCost, setTaxRate, togglePaymentMethod } = settingsSlice.actions;
 export default settingsSlice.reducer;

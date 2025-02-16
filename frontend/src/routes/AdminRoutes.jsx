@@ -4,6 +4,7 @@ import AdminLayout from "@/layouts/AdminLayout";
 
 // ✅ Ana Sayfa
 import Home from "@/pages/visitor/home/Home";
+import ProductDetail from "@/pages/visitor/home/components/ProductDetail";
 
 // ✅ Dashboard
 import AdminDashboard from "@/pages/admin/AdminDashboard";
@@ -56,8 +57,6 @@ const AdminRoutes = () => {
           </ProtectedWrapper>
         }
       >
-        {/* ✅ Ana Sayfa Yönlendirmesi */}
-        <Route path="/" element={<Home />} />
 
         {/* ✅ Dashboard */}
         <Route path="dashboard" element={<AdminDashboard />} />
@@ -92,7 +91,6 @@ const AdminRoutes = () => {
           <Route path=":id/reject" element={<OfferDetails />} />
           <Route path="archive" element={<OfferArchive />} />
         </Route>
-
 
         {/* ✅ Ayarlar Modülü */}
         <Route path="settings" element={<Settings />} />

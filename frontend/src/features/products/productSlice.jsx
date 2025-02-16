@@ -2,18 +2,16 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "@/services/api"; // ✅ Merkezi API yapısı
 import { toast } from "react-toastify";
 
-// ✅ Ürünleri Çekme
+// 📌 Ürünleri API’den çekme
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async (_, thunkAPI) => {
     try {
-      const response = await API.get("/data");
+      const response = await API.get("/data"); // ✅ Doğru endpoint
       return response.data;
     } catch (error) {
       toast.error("❌ Ürünler yüklenirken hata oluştu!");
-      return thunkAPI.rejectWithValue(
-        error.response?.data || "Ürünler alınırken hata oluştu"
-      );
+      return thunkAPI.rejectWithValue(error.response?.data || "Ürünler alınırken hata oluştu");
     }
   }
 );

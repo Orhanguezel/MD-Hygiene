@@ -9,15 +9,13 @@ import ProtectedWrapper from "@/pages/auth/ProtectedWrapper";
 import Profile from "@/pages/user/modules/profile/Profile";
 import ProfileUpdate from "@/pages/user/modules/profile/components/ProfileUpdate";
 import Invoices from "@/pages/user/modules/profile/components/InvoiceList";
-import Orders from "@/pages/user/modules/profile/components/OrderHistory";
 import AddressBook from "@/pages/user/modules/profile/components/AddressInfo";
 import Favorites from "@/pages/user/Favorites";
 import Notifications from "@/pages/user/Notifications";
 import Support from "@/pages/user/Support";
-import Product from "@/pages/visitor/Products";
 import Cart from "@/pages/user/modules/cart/Cart";
 import Checkout from "@/pages/user/modules/cart/Checkout";
-import Category from "@/pages/user/Category";
+import ProductDetail from "@/pages/visitor/home/components/ProductDetail";
 
 const UserRoutes = () => (
   <Routes>
@@ -25,11 +23,10 @@ const UserRoutes = () => (
       {/* ✅ Genel Sayfalar */}
       <Route index element={<Home />} />
       <Route path="home" element={<Home />} />
-      <Route path="category" element={<Category />} />
-      <Route path="products" element={<Product />} />
       <Route path="cart" element={<Cart />} />
       <Route path="checkout" element={<Checkout />} />
       <Route path="contact" element={<Contact />} />
+      <Route path="/product/:id" element={<ProductDetail />} />
 
       {/* ✅ Profil Yönetimi */}
       <Route

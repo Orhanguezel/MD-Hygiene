@@ -1,180 +1,169 @@
 import styled from "styled-components";
+import { motion } from "framer-motion"; // ✅ Animasyon için Framer Motion
 
+// 📌 Carousel Konteyneri
 export const CarouselContainer = styled.div`
   padding: 20px;
-  background-color: ${({ theme }) => theme.background || "#fff"};
+  background-color: ${({ theme }) => theme.background};
   text-align: center;
+  overflow: hidden;
+  position: relative;
+  color: ${({ theme }) => theme.text};
 `;
 
+// 📌 Carousel Wrapper
 export const CarouselWrapper = styled.div`
   display: flex;
-  gap: 15px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding: 10px 0;
-
-  &::-webkit-scrollbar {
-    height: 8px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.primary || "#888"};
-    border-radius: 4px;
-  }
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
 `;
 
+// 📌 Otomatik kayan içerik
+export const CarouselInner = styled(motion.div)`
+  display: flex;
+  gap: 15px;
+  min-width: 100%;
+`;
+
+// 📌 Ürün Kartı
 export const ProductCard = styled.div`
   min-width: 200px;
   flex: 0 0 auto;
-  background: ${({ theme }) => theme.cardBackground || "#f8f8f8"};
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: ${({ theme }) => theme.cardBackground};
+  padding: 12px;
+  margin: 5px;
+  box-shadow: 0 2px 2px ${({ theme }) => theme.shadow};
   transition: transform 0.3s ease;
   scroll-snap-align: start;
   position: relative;
+  text-align: center;
 
   &:hover {
     transform: translateY(-5px);
   }
 `;
 
+// 📌 Ürün Görseli
 export const ProductImage = styled.img`
   width: 100%;
-  height: 150px;
+  height: 160px;
   object-fit: cover;
-  border-radius: 5px;
+  border-radius: 6px;
 `;
 
+// 📌 Ürün Başlığı
 export const ProductTitle = styled.h3`
   font-size: 1rem;
   margin: 10px 0;
-  color: ${({ theme }) => theme.text || "#333"};
-`;
-
-export const ProductPrice = styled.p`
-  color: ${({ theme }) => theme.primary || "#007bff"};
+  color: ${({ theme }) => theme.text};
   font-weight: bold;
 `;
 
-export const CarouselNavigation = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 15px;
-
-  button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-
-    &:hover {
-      background-color: #0056b3;
-    }
-  }
+// 📌 Ürün Fiyatı
+export const ProductPrice = styled.p`
+  color: ${({ theme }) => theme.primary};
+  font-weight: bold;
+  font-size: 1rem;
 `;
 
-export const CarouselButton = styled.button`
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
-
-  &:hover {
-    background-color: #0056b3;
-  }
+// 📌 Stok Durumu
+export const StockStatus = styled.p`
+  color: ${({ theme }) => (theme.name === "light" ? "#008000" : "#90EE90")};
+  font-weight: bold;
+  font-size: 0.9rem;
 `;
 
-export const NavButton = styled.button`
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
+// 📌 Sepete Ekle Butonu
 export const AddToCartButton = styled.button`
-  background-color: #28a745;
+  background-color: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.buttonText};
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: background 0.3s ease, transform 0.2s ease;
+  margin-top: 5px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.primaryHover};
+    transform: scale(1.05);
+  }
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.disabled};
+    cursor: not-allowed;
+  }
+`;
+
+// 📌 Şimdi Satın Al Butonu
+export const BuyNowButton = styled.button`
+  background-color: #ff9800;
   color: white;
   border: none;
   padding: 8px 12px;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
-  margin-top: 10px;
-  transition: background 0.3s;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: background 0.3s ease, transform 0.2s ease;
+  margin-top: 5px;
 
   &:hover {
-    background-color: #218838;
+    background-color: #e68900;
+    transform: scale(1.05);
   }
 `;
 
+// 📌 Favori Butonu
 export const FavoriteIcon = styled.span`
   position: absolute;
   top: 10px;
   right: 10px;
   font-size: 20px;
-  color: ${({ isFavorite }) => (isFavorite ? "#e74c3c" : "#ccc")};
   cursor: pointer;
-  transition: color 0.3s;
+  color: ${({ $favorited }) => ($favorited ? "red" : "gray")};
+  transition: color 0.3s ease;
 
   &:hover {
-    color: #e74c3c;
+    color: ${({ $favorited }) => ($favorited ? "darkred" : "black")};
   }
 `;
 
-export const ProductBadge = styled.div`
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: ${({ badgeType }) =>
-    badgeType === "Sale"
-      ? "#e74c3c"
-      : badgeType === "New"
-      ? "#007bff"
-      : "#ffc107"};
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  font-weight: bold;
-  text-transform: uppercase;
-`;
-
-export const StockInfo = styled.div`
-  margin-top: 5px;
-  font-size: 0.85rem;
-  color: ${({ inStock }) => (inStock ? "#28a745" : "#dc3545")};
-  font-weight: bold;
-`;
-
+// 📌 Ürün Etiketi (Yeni Ürün vs.)
 export const ProductLabel = styled.span`
   position: absolute;
   top: 10px;
   left: 10px;
-  background-color: ${({ theme }) => theme.primary || "#007bff"};
+  background-color: ${({ theme }) => theme.primary};
   color: white;
   padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: 6px;
   font-size: 12px;
   font-weight: bold;
   text-transform: uppercase;
 `;
 
-export const StockStatus = styled.p`
-  color: ${({ theme }) => theme.primary || "#007bff"};
-  font-weight: bold;
+// 📌 Navigasyon Butonları (Sol & Sağ)
+export const NavButton = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-size: 18px;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  ${({ left }) => left && "left: 10px;"}
+  ${({ right }) => right && "right: 10px;"}
 `;
-
-

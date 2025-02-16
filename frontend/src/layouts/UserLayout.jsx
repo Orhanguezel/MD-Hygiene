@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import UserHeader from "@/components/user/UserHeader";
 import Footer from "@/components/common/Footer";
-import { LayoutContainer, MainContent } from "./styles/userLayoutStyles.js";
+import { LayoutContainer, MainContent } from "./styles/LayoutStyles.js";
 
 const UserLayout = () => {
   return (

@@ -1,82 +1,111 @@
 import styled from "styled-components";
 
+// 📌 **Checkout Ana Konteyneri**
 export const CheckoutContainer = styled.div`
   max-width: 600px;
-  margin: 0 auto;
+  margin: 40px auto;
   padding: 20px;
-  background-color: ${({ theme }) => theme.background || "#f9f9f9"};
+  background-color: ${({ theme }) => theme.cardBackground}; /* 🔥 Daha belirgin */
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px ${({ theme }) => theme.shadow};
 `;
 
+// 📌 **Başlık (Title)**
 export const Title = styled.h2`
   text-align: center;
-  color: ${({ theme }) => theme.primary || "#333"};
+  color: ${({ theme }) => theme.primary};
+  font-size: 1.8rem;
+  font-weight: bold;
   margin-bottom: 20px;
 `;
 
+// 📌 **Ödeme Formu**
 export const PaymentForm = styled.form`
   display: flex;
   flex-direction: column;
   gap: 15px;
+  padding: 20px;
 `;
 
+// 📌 **Kart Detayları Alanı**
 export const CardDetails = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-
-  label {
-    font-weight: bold;
-    color: ${({ theme }) => theme.text || "#333"};
-  }
+  padding: 15px;
 `;
 
+// 📌 **Label (Etiketler)**
 export const Label = styled.label`
   font-weight: bold;
-  color: ${({ theme }) => theme.text || "#333"};
+  color: ${({ theme }) => theme.text};
+  font-size: 1rem;
 `;
 
+// 📌 **Input Alanı (Daha Kontrastlı)**
 export const Input = styled.input`
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  outline: none;
+  padding: 12px;
+  border: 2px solid ${({ theme }) => theme.border}; /* ✅ Daha belirgin border */
+  border-radius: 6px;
+  font-size: 1rem;
+  background: ${({ theme }) => theme.inputBackground};
+  color: ${({ theme }) => theme.inputText};
+  transition: border 0.3s ease, box-shadow 0.2s ease;
 
   &:focus {
-    border-color: ${({ theme }) => theme.primary || "#007bff"};
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    border-color: ${({ theme }) => theme.primary};
+    box-shadow: 0 0 5px ${({ theme }) => theme.primaryHover};
+    outline: none;
   }
 `;
 
+// 📌 **Özet Alanı (Daha Kontrastlı)**
 export const Summary = styled.div`
-  background: ${({ theme }) => theme.cardBackground || "#f5f5f5"};
-  padding: 15px;
-  border-radius: 6px;
+  background: ${({ theme }) => theme.cardBackground};
+  padding: 20px;
+  border-radius: 8px;
   margin-top: 20px;
+  box-shadow: 0 4px 8px ${({ theme }) => theme.shadow}; /* ✅ Gölgeler güçlendirildi */
 `;
 
+// 📌 **Özet İçin Satır (Renk Güncellendi)**
 export const SummaryItem = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 8px 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 10px;
+  color: ${({ theme }) => theme.text};
+  border-bottom: 1px solid ${({ theme }) => theme.border};
+
+  &:last-child {
+    border-bottom: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: ${({ theme }) => theme.primary}; /* 🔥 Vurgulandı */
+  }
 `;
 
+// 📌 **Buton Stili**
 export const Button = styled.button`
-  background-color: #4caf50;
-  color: white;
+  background-color: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.buttonText};
+  padding: 12px 15px;
   border: none;
-  padding: 12px;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background 0.3s ease, transform 0.2s ease;
+  width: 100%;
 
   &:hover {
-    background-color: #45a049;
+    background-color: ${({ theme }) => theme.primaryHover};
+    transform: scale(1.05);
   }
 
   &:disabled {
-    background-color: #ccc;
+    background-color: ${({ theme }) => theme.disabled};
     cursor: not-allowed;
   }
 `;

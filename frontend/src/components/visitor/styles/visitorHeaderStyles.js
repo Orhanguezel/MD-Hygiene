@@ -31,33 +31,24 @@ export const Name = styled.span`
   font-size: 20px;
   font-weight: bold;
   color: ${({ theme }) => theme.text};
-  text-decoration: none;
 `;
 
 export const Nav = styled.nav`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
 
   @media (max-width: 768px) {
-    display: ${({ isOpen }) => (isOpen ? "flex" : "none")};
-    flex-direction: column;
-    position: absolute;
-    top: 50px;
-    left: 0;
-    width: 100%;
-    background-color: ${({ theme }) => theme.navBackground};  
-    padding: 10px 0;
-    transition: all 0.3s ease-in-out;
+    display: none;
   }
 `;
 
 export const NavItem = styled(Link)`
   padding: 10px;
-  cursor: pointer;
   color: ${({ theme }) => theme.text};  
   text-decoration: none;
   font-weight: bold;
+  transition: color 0.3s;
 
   &:hover {
     color: ${({ theme }) => theme.primary};  
@@ -81,7 +72,6 @@ export const LanguageButton = styled.button`
   border: none;
   cursor: pointer;
   font-size: 15px;
-  margin: 0;
   color: ${({ theme }) => theme.text};
 
   &:disabled {
@@ -105,19 +95,20 @@ export const ControlContainer = styled.div`
   gap: 10px;
 `;
 
+// ✅ Mobil Menü
 export const MobileMenu = styled.div`
-  display: none;
+  display: ${({ $isOpen }) => ($isOpen ? "flex" : "none")};
+  flex-direction: column;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  background-color: ${({ theme }) => theme.navBackground};  
+  box-shadow: 0 4px 8px ${({ theme }) => theme.shadow};
+  padding: 10px;
+  transition: all 0.3s ease-in-out;
 
-  @media (max-width: 768px) {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    background-color: ${({ theme }) => theme.navBackground};  
-    padding: 10px;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    box-shadow: 0 4px 8px ${({ theme }) => theme.shadow};
+  @media (min-width: 769px) {
+    display: none;
   }
 `;

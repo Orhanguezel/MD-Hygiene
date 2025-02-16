@@ -13,6 +13,7 @@ import {
 const HeroSection = () => {
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.product);
+  const theme = useSelector((state) => state.theme); // ✅ Redux Theme
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -20,11 +21,13 @@ const HeroSection = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev === products.length - 1 ? 0 : prev + 1));
-    }, 4000);
+    if (products.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentSlide((prev) => (prev === products.length - 1 ? 0 : prev + 1));
+      }, 4000);
 
-    return () => clearInterval(interval);
+      return () => clearInterval(interval);
+    }
   }, [products]);
 
   const goToSlide = (index) => {
@@ -34,28 +37,38 @@ const HeroSection = () => {
   if (loading) return <p>Yükleniyor...</p>;
   if (error) return <p>Hata: {error}</p>;
 
-  const currentProduct = products[currentSlide];
+  const currentProduct = products[currentSlide] || {}; // ✅ Undefined hatasını önler
 
   return (
-    <CarouselContainer>
-      <CarouselInfo>
-        <h2>{currentProduct?.title}</h2>
-        <p>{currentProduct?.description.substring(0, 100)}...</p>
+    <CarouselContainer theme={theme}>
+      <CarouselInfo theme={theme}>
+        <h2>{currentProduct.title || "Ürün Bulunamadı"}</h2>
+        <p>{currentProduct.description?.substring(0, 100) || "Açıklama bulunamadı"}...</p>
       </CarouselInfo>
-        <Slide>
-          <SlideImage src={currentProduct?.images[0]} alt={currentProduct?.title} />
-          <SlideContent>
-            <p>{currentProduct?.price}$</p>
-          </SlideContent>
-        </Slide>
+      <Slide theme={theme}>
+        <SlideImage
+          src={currentProduct.images?.[0] || "/placeholder.jpg"}
+          alt={currentProduct.title || "Ürün Resmi"}
+        />
+        <SlideContent theme={theme}>
+          <p>{currentProduct.price ? `${currentProduct.price}$` : "Fiyat Bilgisi Yok"}</p>
+        </SlideContent>
+      </Slide>
 
-        <CarouselNavButton left onClick={() => goToSlide(currentSlide === 0 ? products.length - 1 : currentSlide - 1)}>
-          ◀
-        </CarouselNavButton>
-        <CarouselNavButton onClick={() => goToSlide((currentSlide + 1) % products.length)}>
-          ▶
-        </CarouselNavButton>
+      <CarouselNavButton theme={theme}
+        $left
+        onClick={() =>
+          goToSlide(currentSlide === 0 ? products.length - 1 : currentSlide - 1)
+        }
+      >
+        ◀
+      </CarouselNavButton>
 
+      <CarouselNavButton theme={theme}
+        onClick={() => goToSlide((currentSlide + 1) % products.length)}
+      >
+        ▶
+      </CarouselNavButton>
     </CarouselContainer>
   );
 };

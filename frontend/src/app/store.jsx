@@ -13,10 +13,12 @@ import productReducer from '../features/products/productSlice';
 import settingsReducer from '../features/settings/settingsSlice';
 import reportsReducer from '../features/reports/reportsSlice';
 import userReducer from '../features/users/userSlice';
-import cartReducer from '../features/cart/cartSlice';
+import cartReducer from '@/features/cart/cartSlice';
 import categoryReducer from '../features/category/categorySlice';
 import companyReducer from '../features/company/companySlice';
 import customerReducer from '../features/customer/customerSlice';
+import favoriteReducer from '../features/favorites/favoriteSlice';
+import reviewReducer from '../features/reviews/reviewSlice';
 
 export const store = configureStore({
   reducer: {
@@ -37,5 +39,7 @@ export const store = configureStore({
     category: categoryReducer,
     company: companyReducer,
     customer: customerReducer,
+    favorite: favoriteReducer,
+    review: reviewReducer,
   },
 });

@@ -4,18 +4,18 @@ export const CarouselContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  background-color: var(--background-color);
+  background-color: ${({ theme }) => theme.background};
   padding-top: 50px;
 
   @media (max-width: 768px) {
-    flex-direction: column;
+    flex-direction: column-reverse; 
     padding-top: 20px;
   }
 `;
 
 export const CarouselInfo = styled.div`
   width: 50%;
-  background-color: var(--green2-color);
+  background-color: ${({ theme }) => theme.cardBackground}; /* ✅ Tema desteği */
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -23,31 +23,18 @@ export const CarouselInfo = styled.div`
 
   h2 {
     font-size: 1.6rem;
-    color: var(--primary-color);
+    color: ${({ theme }) => theme.primary};
   }
 
   p {
     font-size: 1.1rem;
-    color: var(--text2-color);
+    color: ${({ theme }) => theme.text};
     margin: 10px 0;
   }
 
   @media (max-width: 768px) {
     width: 100%;
     text-align: center;
-  }
-`;
-
-export const CarouselButton = styled.a`
-  padding: 10px 20px;
-  background-color: var(--primary-color);
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background 0.3s;
-
-  &:hover {
-    background-color: var(--highlight-color);
   }
 `;
 
@@ -74,8 +61,8 @@ export const SlideContent = styled.div`
   position: absolute;
   bottom: 20px;
   left: 20px;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
+  background: ${({ theme }) => theme.overlay}; /* ✅ Tema desteği */
+  color: ${({ theme }) => theme.text};
   padding: 10px;
   border-radius: 8px;
 `;
@@ -83,55 +70,17 @@ export const SlideContent = styled.div`
 export const CarouselNavButton = styled.button`
   position: absolute;
   top: 50%;
-  ${({ left }) => (left ? "left: 10px;" : "right: 10px;")}
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
+  ${({ $left }) => ($left ? "left: 10px;" : "right: 10px;")}
+  transform: translateY(-50%);
+  background: ${({ theme }) => theme.buttonBackground}; /* ✅ Tema desteği */
+  color: ${({ theme }) => theme.buttonText};
   border: none;
   padding: 10px;
-  border-radius: 50%;
   cursor: pointer;
-  transform: translateY(-50%);
-  z-index: 1;
+  font-size: 18px;
+  z-index: 2;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.8);
+    background: ${({ theme }) => theme.primaryHover};
   }
 `;
-
-export const HeroButton = styled.button`
-  padding: 10px 20px;
-  background-color: var(--primary-color);
-  color: white;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-  transition: background 0.3s;
-
-  &:hover {
-    background-color: var(--highlight-color);
-  }
-`;
-
-export const HeroContainer = styled.section`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: var(--background-color);
-  color: white;
-`;
-
-export const HeroContent = styled.div`
-  text-align: center;
-`;
-
-export const HeroTitle = styled.h1`
-  font-size: 3rem;
-  margin-bottom: 20px;
-`;
-
-export const HeroSubtitle = styled.p`
-  font-size: 1.5rem;
-  margin-bottom: 30px;
-`;
-

@@ -145,20 +145,29 @@
     "status": "Status"
   },
   "settings": {
-    "title": "Settings",
-    "profileSettings": "Profile Settings",
-    "appSettings": "App Settings",
-    "passwordSettings": "Password Settings",
-    "name": "Full Name",
-    "email": "Email",
-    "updateProfile": "Update Profile",
+    "title": "⚙️ General Settings",
+    "companySettings": "🏢 Company & Customer Management",
+    "updateCompany": "Update Company Information",
+    "manageCustomers": "Manage Customers",
+    "siteSettings": "🌍 Site Settings",
+    "language": "Language Selection",
     "theme": "Theme",
-    "darkMode": "Dark Mode",
-    "lightMode": "Light Mode",
-    "language": "Language",
-    "newPassword": "New Password",
-    "confirmPassword": "Confirm Password",
-    "updatePassword": "Update Password"
+    "darkMode": "🌙 Dark Mode",
+    "lightMode": "☀️ Light Mode",
+    "financialSettings": "💰 Financial Settings",
+    "currency": "Currency",
+    "shippingCost": "🚚 Shipping Cost",
+    "taxRate": "📊 Tax Rate (%)",
+    "paymentMethods": "💳 Payment Methods",
+    "paypal": "PayPal",
+    "stripe": "Stripe",
+    "bankTransfer": "Bank Transfer",
+    "paypalActive": "✅ PayPal Active",
+    "paypalInactive": "❌ PayPal Inactive",
+    "stripeActive": "✅ Stripe Active",
+    "stripeInactive": "❌ Stripe Inactive",
+    "bankTransferActive": "✅ Bank Transfer Active",
+    "bankTransferInactive": "❌ Bank Transfer Inactive"
   },
   "offers": {
     "title": "📋 Offers",
@@ -231,7 +240,7 @@
     "homeButton": "Go to Homepage"
   },
   "home": {
-    "heroTitle": " Welcome",
+    "heroTitle": "🏡 Welcome",
     "heroSubtitle": "✨ Discover amazing products!",
     "cta": "🛍 Start Shopping Now",
     "women fashion": "👗 Women's Fashion",
@@ -242,10 +251,30 @@
     "buyNow": "🛒 Buy Now",
     "testimonials": "⭐ Customer Reviews",
     "newsletterTitle": "📩 Subscribe to Our Newsletter",
-    "enterEmail": "📧 Enter your email address",
+    "enterEmail": "📧 Enter your email",
     "subscribe": "📬 Subscribe",
     "thankYou": "✅ Thank you for subscribing!",
-    "loading": "📦 Loading products..."
+    "loading": "📦 Loading products...",
+    "welcome": "🏡 Welcome",
+    "noProducts": "🚫 No products found.",
+    "addToCart": "🛒 Add to Cart",
+    "inCart": "✅ Already in Cart",
+    "addReview": "📝 Write your review...",
+    "submitReview": "📩 Submit",
+    "invalidEmail": "⚠️ Please enter a valid email address!",
+    "categoryTitle": "📦 Categories",
+    "allProducts": "🛍️ All Products",
+    "showMore": "🔽 Show More",
+    "stockAvailable": "✅ In Stock",
+    "stockUnavailable": "⚠️ Stock Unavailable",
+    "remove": "❌ Remove",
+    "productDetails": "📌 Product Details",
+    "price": "💰 Price",
+    "addedToFavorites": "❤️ Added to Favorites",
+    "removedFromFavorites": "💔 Removed from Favorites",
+    "favorite": "⭐ Add to Favorites",
+    "continueShopping": "🛍️ Continue Shopping",
+    "back": "🔙 Back"
   },
   "nav": {
     "home": "Home",
@@ -276,14 +305,12 @@
     "password": "Password",
     "save": "Save",
     "updateSuccess": "✅ Your profile has been updated successfully!",
-
     "orderHistory": "🧾 Order History",
     "orderID": "Order ID",
     "date": "Date",
     "amount": "Total",
     "status": "Status",
     "noOrders": "You have no orders yet.",
-
     "invoices": "📄 My Invoices",
     "invoiceID": "Invoice ID",
     "downloadPDF": "📄 Download PDF",
@@ -292,6 +319,7 @@
     "noInvoices": "⚠️ You have no invoices yet.",
     "loading": "📦 Loading..."
   },
+
   "cart": {
     "title": "🛒 My Cart",
     "product": "🛍 Product",
@@ -302,8 +330,13 @@
     "checkout": "💳 Checkout",
     "empty": "🚫 Your cart is currently empty.",
     "loading": "🛒 Loading cart...",
-    "clearCart": "Clear Cart"
+    "clearCart": "Clear Cart",
+    "totalPrice": "Total",
+    "vat": "Tax (VAT)",
+    "shippingCost": "Shipping Cost",
+    "grandTotal": "Grand Total"
   },
+
   "categories": {
     "title": "📂 Categories",
     "all": "📦 All Products",
@@ -327,11 +360,21 @@
     "loading": "📦 Loading product details..."
   },
   "product": {
-    "inStock": "In Stock",
-    "outOfStock": "Out of Stock",
     "newArrival": "New Arrivals",
-    "addToCart": "Add to Cart",
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "notFound": "🔍 Product not found.",
+    "goBack": "🔙 Go Back",
+    "addToCart": "🛒 Add to Cart",
+    "addedToCart": "✅ Product added to cart!",
+    "addToCartError": "❌ Failed to add product to cart!",
+    "buyNow": "🛒 Buy Now",
+    "inCart": "✅ Already in Cart",
+    "inStock": "✅ In Stock",
+    "outOfStock": "⚠️ Stock Unavailable",
+    "addedToFavorites": "❤️ Added to Favorites",
+    "removedFromFavorites": "💔 Removed from Favorites",
+    "addToFavorites": "⭐ Add to Favorites",
+    "inFavorites": "❤️ In Favorites"
   },
   "products": {
     "title": "Product Management",
@@ -450,5 +493,53 @@
     "pending": "Pending",
     "viewDetails": "🔍 View Details",
     "noInvoices": "You have no invoices yet."
-  }
+  },
+  "company": {
+    "title": "Company Information",
+    "name": "Company Name",
+    "address": "Address",
+    "email": "Email",
+    "taxNumber": "Tax Number",
+    "bankIban": "Bank IBAN",
+    "bankBic": "Bank BIC",
+    "save": "Save",
+    "updated": "Company details updated!",
+    "updateFailed": "Failed to update company details!",
+    "loading": "Loading company details..."
+  },
+  "customer": {
+    "title": "Customer Management",
+    "companyName": "Company Name",
+    "contactPerson": "Contact Person",
+    "address": "Address",
+    "phone": "Phone",
+    "add": "Add New Customer",
+    "update": "Update",
+    "added": "New customer added successfully!",
+    "updated": "Customer details updated!",
+    "updateFailed": "Failed to update customer details!",
+    "delete": "Delete",
+    "deleted": "Customer deleted successfully!",
+    "deleteFailed": "Failed to delete customer!",
+    "missingCompanyName": "Company name is required!",
+    "invalidId": "Invalid customer ID!",
+    "list": "Customer List",
+    "noRecords": "No customers found.",
+    "loading": "Loading customers..."
+  },
+  "general": {
+    "back": "Back"
+  },
+  "checkout": {
+      "title": "💳 Checkout Page",
+      "error": "🚫 Your cart is empty!",
+      "totalPrice": "💰 Total Price",
+      "vat": "📊 VAT (19%)",
+      "shippingCost": "🚚 Shipping Cost",
+      "grandTotal": "🧾 Grand Total",
+      "completePayment": "💸 Complete Payment",
+      "missingDetails": "⚠️ Please fill in all payment details!",
+      "success": "✅ Your order has been successfully placed!",
+      "paymentFailed": "❌ Payment failed. Please try again."
+    }
 }

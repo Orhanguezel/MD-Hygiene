@@ -101,26 +101,97 @@ Ana hedefimiz modern, şık ve kullanıcı dostu bir ana sayfa oluşturmak. Bunu
 - Veya istersen **API entegrasyonları** ile başlayabiliriz.  
 
 📢 **Seçimini yap, ona göre başlayalım!** 🚀
+### **Home Modülü İncelemesi ve Yapılacaklar**
 
+**📌 Genel Yapı**  
+Home modülü, ziyaretçilerin ana sayfada görebileceği bileşenleri içeriyor ve **Redux Store'dan** gelen verileri kullanarak dinamik olarak çalışıyor. Mevcut yapı **kategori bazlı filtreleme, ürün listeleme, favorilere ekleme, sepete ekleme ve dil desteği** gibi özellikleri içeriyor.
 
-Ana sayfa üzerinde şu şekilde bir yol haritası izleyebiliriz:
+---
 
-### 1️⃣ **Kategoriler ve Ürün Listeleme:**
-- Kategorilere tıklandığında ilgili ürünler listelenecek.
-- API'den gelen kategorilerle dinamik listeleme yapılacak.
-- Her ürün kartında "Sepete Ekle" butonu yer alacak.
+## **🛠 Mevcut Kodların İncelenmesi**
 
-### 2️⃣ **Carousel (Sağ-Sol Düğmeleri):**
-- Sağ-sol gezinme düğmelerini işlevsel hale getireceğiz.
-- Responsive olarak düzgün çalışması sağlanacak.
+### **1️⃣ `Home.jsx` (Ana Sayfa)**
+- Ana sayfayı oluşturan temel bileşenleri içeriyor:
+  - **HeroSection**: Ürünleri slayt olarak gösteriyor.
+  - **CategorySection**: Ürünleri kategorilere göre filtreleme işlevi sağlıyor.
+  - **ProductCarousel**: Öne çıkan ürünleri listeleyen kaydırılabilir bileşen.
+  - **Testimonials**: Müşteri yorumlarını içeriyor.
+  - **Newsletter**: Kullanıcıların e-posta aboneliğini sağlıyor.
+- **Yapılacaklar:**
+  - Redux ile entegre edilmeyen bazı bileşenler hâlâ **axios ile API çağrısı yapıyor.** Bunları **Redux Store'dan** veri alacak şekilde değiştirmeliyiz.
+  - **ProductCarousel bileşeni `useState` ile API çağrısı yapıyor.** Bunun yerine Redux'tan verileri çekmeliyiz.
 
-### 3️⃣ **Sepet ve Satın Alma Süreci:**
-- "Sepete Ekle" butonuna basıldığında ürün sepete eklenecek.
-- Sepete gitmek için bir buton veya ikon eklenecek.
-- Satın alma işlemi için kullanıcı girişi zorunlu olacak.
+---
 
-### 4️⃣ **Üyelik Zorunluluğu:**
-- Sepete eklenen ürünler için ödeme adımında kullanıcı giriş kontrolü yapılacak.
-- Giriş yapılmadıysa Login/Register ekranına yönlendirme yapılacak.
+### **2️⃣ `HeroSection.jsx` (Ana Sayfa Ürün Slaytı)**
+- **Redux Store’dan** gelen ürünleri belirli aralıklarla döndürerek slayt gösterimi yapıyor.
+- Mevcut yapı Redux kullanıyor, ancak **otomatik slayt değişimi** için ek bir `useEffect` mevcut.
+- **Yapılacaklar:**
+  - **Slaytın daha iyi çalışması için ürünlerin sayısını kontrol etmeliyiz.** Eğer ürün sayısı 1 ise kaydırma işlemini engellemeliyiz.
+  - **Görselliği daha profesyonel hâle getirmek için slayt geçiş animasyonları eklenebilir.**
 
-İlk adım olarak, **kategorilere tıklayınca ürün listeleme** özelliğini geliştirmeye devam edelim mi?
+---
+
+### **3️⃣ `ProductCarousel.jsx` (Ürün Karusel Bileşeni)**
+- **Şu an API çağrısı yapıyor.** Ancak **Redux Store'dan veri çekmelidir.**
+- **Favorilere ekleme işlemi `localStorage` ile yapılıyor.** Bu işlem **Redux Store** üzerinden yönetilmelidir.
+- **Ürünler filtrelenirken `selectedCategory` kullanılıyor.** Ancak **Redux Store’da kategori bazlı filtreleme özelliği zaten mevcut.**
+- **Yapılacaklar:**
+  - `fetchProducts` ve `fetchCategories` çağrıları Redux üzerinden yapılmalı.
+  - `localStorage` yerine favoriler **Redux Store’a taşınmalı.**
+  - Kategori seçildiğinde ürünleri filtrelemek için **Redux'taki `filterByCategory` fonksiyonunu kullanmalıyız.**
+
+---
+
+### **4️⃣ `ProductCard.jsx` (Tekil Ürün Kartı)**
+- Kullanıcı ürünü sepete ekleyebilir.
+- Sepete ekleme işlemi **Redux Store’a veri göndererek yapılıyor (✅ Doğru yapı).**
+- **Yapılacaklar:**
+  - Favorilere ekleme işlemi burada da geçerli olabilir. Bunu **Redux Store’a taşımalıyız.**
+  - Ürün fiyatı **para birimine göre gösterilebilir (Settings modülüyle entegre edilecek).**
+
+---
+
+### **5️⃣ `Newsletter.jsx` (E-Bülten)**
+- Kullanıcıların e-posta aboneliğini yapmasını sağlıyor.
+- **Şu an sadece bir `alert()` ile çalışıyor, veriler kaydedilmiyor.**
+- **Yapılacaklar:**
+  - Kullanıcıların abone oldukları e-postaları kaydetmek için **Redux Store’a veya API’ye gönderim yapılabilir.**
+  - Kullanıcının daha önce abone olup olmadığını kontrol eden bir sistem entegre edilebilir.
+
+---
+
+### **6️⃣ `CategorySection.jsx` (Kategori Seçimi)**
+- **Şu an API çağrısı yapıyor.** Ancak **Redux Store’dan kategori çekmelidir.**
+- **Ürünleri kategorilere göre filtrelemek için kendi içinde `useState` kullanıyor.** Ancak **Redux'taki `filterByCategory` fonksiyonunu kullanmalıyız.**
+- **Yapılacaklar:**
+  - API çağrıları **Redux Store'dan çekilecek.**
+  - **Seçilen kategori Redux Store’a gönderilmeli ve filtreleme burada yapılmalı.**
+  - **Kategori listesi değişirse güncellenmeli (örn: yeni kategori eklenirse Redux güncellenmeli).**
+
+---
+
+## **📌 Sonuç ve Yapılacaklar**
+
+| Modül | Mevcut Durum | Yapılacaklar |
+|--------|-------------|-------------|
+| **Home.jsx** | Redux kullanılıyor, ama bazı bileşenler **API çağrısı yapıyor.** | **Redux Store’a tamamen entegre edilmeli.** |
+| **HeroSection.jsx** | Ürünleri slayt olarak döndürüyor, **Redux kullanıyor.** | Slayt **görsel iyileştirme** ve animasyonlarla profesyonelleştirilmeli. |
+| **ProductCarousel.jsx** | API çağrısı yapıyor, **Redux kullanılmalı.** | `fetchProducts` ve `fetchCategories` Redux ile çekilecek, **favoriler Redux Store'a alınacak.** |
+| **ProductCard.jsx** | Sepete ekleme **Redux ile çalışıyor.** | Favoriler Redux’a taşınacak, **para birimi ayarı eklenecek.** |
+| **Newsletter.jsx** | E-postalar **alert ile gösteriliyor.** | **E-postalar Redux veya API’ye kaydedilmeli.** |
+| **CategorySection.jsx** | API çağrısı yapıyor, **Redux kullanılmalı.** | **Kategori seçimi Redux’a entegre edilmeli, filtreleme Redux üzerinden yapılmalı.** |
+
+---
+
+## **🛠 Öncelik Sırası**
+1️⃣ **ProductCarousel.jsx ve CategorySection.jsx** Redux Store’a entegre edilecek.  
+2️⃣ **Favoriler `localStorage` yerine Redux Store’da yönetilecek.**  
+3️⃣ **Para birimi ve fiyat gösterimi Settings modülü ile entegre edilecek.**  
+4️⃣ **HeroSection slayt sistemi iyileştirilecek.**  
+5️⃣ **Newsletter abonelikleri Redux veya API’ye entegre edilecek.**  
+
+---
+
+## **📌 Şimdi Ne Yapıyoruz?**
+Şimdi önce **ProductCarousel** ve **CategorySection** Redux Store’a entegre edilecek. **Bunları düzeltmeye başlayalım mı?** 🚀

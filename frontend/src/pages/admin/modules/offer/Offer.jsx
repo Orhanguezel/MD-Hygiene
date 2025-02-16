@@ -1,8 +1,6 @@
 // ✅ src/features/offer/Offer.jsx
 import { useState } from "react";
 import { useLanguage } from "@/features/language/useLanguage";
-//import { useTheme } from "@/features/theme/useTheme";
-
 import OfferSidebar from "./components/OfferSidebar";
 import OfferList from "./components/OfferList";
 import OfferCreate from "./components/OfferCreate";

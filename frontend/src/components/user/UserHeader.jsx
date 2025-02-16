@@ -69,7 +69,7 @@ export default function UserHeader() {
         {menuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
       </HamburgerButton>
 
-      <Nav isOpen={menuOpen}>
+      <Nav $isOpen={menuOpen}>
         <NavItem as={Link} to="/">
           {texts?.nav?.home || "Ana Sayfa"}
         </NavItem>

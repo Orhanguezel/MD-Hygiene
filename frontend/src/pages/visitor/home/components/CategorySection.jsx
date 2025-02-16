@@ -1,6 +1,9 @@
-// ✅ src/pages/visitor/home/components/CategorySection.jsx
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchProducts,
+  filterByCategory,
+} from "@/features/products/productSlice";
 import {
   CategoryContainer,
   CategoryCard,
@@ -8,32 +11,42 @@ import {
   CategoryTitle,
 } from "../styles/CategorySectionStyles";
 
-const CategorySection = ({ onCategoryClick }) => {
-  const [categories, setCategories] = useState([]);
+const CategorySection = () => {
+  const dispatch = useDispatch();
+  const { products, selectedCategory } = useSelector((state) => state.product);
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/data");
-        const products = response.data;
+    dispatch(fetchProducts()); // ✅ Ürünleri çek
+  }, [dispatch]);
 
-        const uniqueCategories = [
-          ...new Map(products.map((item) => [item.category.id, item.category])).values(),
-        ];
+  // 📌 Ürünler içindeki kategorileri al, tekrar edenleri kaldır
+  const uniqueCategories = [
+    ...new Map(
+      products.map((item) => [item.category.id, item.category])
+    ).values(),
+  ];
 
-        setCategories(uniqueCategories);
-      } catch (error) {
-        console.error("Kategori verileri alınamadı:", error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
+  const handleCategoryClick = (categoryId) => {
+    dispatch(filterByCategory(categoryId));
+    console.log("📌 Seçilen Kategori:", categoryId); // ✅ Konsolda kontrol et
+  };
 
   return (
     <CategoryContainer>
-      {categories.map((category) => (
-        <CategoryCard key={category.id} onClick={() => onCategoryClick(category.id)}>
+      {/* 📌 Tüm Ürünler Seçeneği */}
+      <CategoryCard
+        onClick={() => handleCategoryClick(null)}
+        $active={!selectedCategory} // ✅ `$active` olarak değiştirildi!
+      >
+        <CategoryTitle>📌 Tüm Ürünler</CategoryTitle>
+      </CategoryCard>
+
+      {uniqueCategories.map((category) => (
+        <CategoryCard
+          key={category.id}
+          onClick={() => dispatch(filterByCategory(category.id))}
+          $active={selectedCategory === category.id} // ✅ `$active` olarak değiştirildi!
+        >
           <CategoryImage src={category.image} alt={category.name} />
           <CategoryTitle>{category.name}</CategoryTitle>
         </CategoryCard>

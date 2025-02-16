@@ -37,7 +37,7 @@ export const Nav = styled.nav`
   gap: 15px;
 
   @media (max-width: 768px) {
-    display: ${({ isOpen }) => (isOpen ? "flex" : "none")};
+    display: ${({ $isOpen }) => ($isOpen ? "flex" : "none")};
     flex-direction: column;
     background: #1f2937;
     position: absolute;

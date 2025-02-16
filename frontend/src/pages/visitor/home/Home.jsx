@@ -1,4 +1,5 @@
 // ✅ src/pages/visitor/home/Home.jsx
+import { useSelector } from "react-redux";
 import HeroSection from "./components/HeroSection";
 import CategorySection from "./components/CategorySection";
 import ProductCarousel from "./components/ProductCarousel";
@@ -8,10 +9,11 @@ import { HomeContainer } from "./styles/HomeStyles";
 import { useState } from "react";
 
 const Home = () => {
+  const theme = useSelector((state) => state.theme); // ✅ Redux Toolkit Theme
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   return (
-    <HomeContainer>
+    <HomeContainer theme={theme}>
       <HeroSection />
       <CategorySection onCategoryClick={setSelectedCategory} />
       <ProductCarousel selectedCategory={selectedCategory} />
@@ -22,4 +24,3 @@ const Home = () => {
 };
 
 export default Home;
-

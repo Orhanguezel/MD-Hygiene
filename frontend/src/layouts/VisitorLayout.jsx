@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import VisitorHeader from "@/components/visitor/VisitorHeader";
 import Footer from "@/components/common/Footer";
-import { LayoutContainer, MainContent } from "./styles/visitorLayoutStyles.js";
+import { LayoutContainer, MainContent } from "./styles/LayoutStyles.js";
 
 const VisitorLayout = () => {
   return (

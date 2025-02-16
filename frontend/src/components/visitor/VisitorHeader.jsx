@@ -12,6 +12,7 @@ import {
   HamburgerButton,
   LanguageButton,
   ThemeToggleButton,
+  MobileMenu
 } from "./styles/visitorHeaderStyles";
 import { FaBars, FaTimes, FaSun, FaMoon } from "react-icons/fa";
 import logo from "@/assets/logo.png";
@@ -27,47 +28,49 @@ export default function VisitorHeader() {
 
   return (
     <HeaderContainer>
+      {/* 🏠 Logo */}
       <LogoLink to="/">
-  <Logo src={logo} alt="MD-Hygienelogistik" />
-  <Name>MD-HL</Name>
-</LogoLink>
+        <Logo src={logo} alt="MD-Hygienelogistik" />
+        <Name>MD-HL</Name>
+      </LogoLink>
 
+      {/* 🌍 Dil Seçenekleri */}
+      <div>
+        {["tr", "en", "de"].map((lang) => (
+          <LanguageButton key={lang} onClick={() => setLanguage(lang)} disabled={language === lang}>
+            {lang === "tr" ? "🇹🇷" : lang === "en" ? "🇬🇧" : "🇩🇪"}
+          </LanguageButton>
+        ))}
+      </div>
 
-      <LanguageButton onClick={() => setLanguage("tr")} disabled={language === "tr"}>
-        🇹🇷
-      </LanguageButton>
-      <LanguageButton onClick={() => setLanguage("en")} disabled={language === "en"}>
-        🇬🇧
-      </LanguageButton>
-      <LanguageButton onClick={() => setLanguage("de")} disabled={language === "de"}>
-        🇩🇪
-      </LanguageButton>
+      {/* ☀️🌙 Tema Değiştirme */}
       <ThemeToggleButton onClick={toggleTheme}>
         {theme === "light" ? <FaMoon size={18} /> : <FaSun size={18} />}
       </ThemeToggleButton>
 
+      {/* 🍔 Mobil Menü Aç/Kapat */}
       <HamburgerButton onClick={toggleMenu}>
         {menuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
       </HamburgerButton>
 
-      <Nav isOpen={menuOpen}>
-        <NavItem as={Link} to="/">
-          {texts?.nav?.home || "Ana Sayfa"}
-        </NavItem>
-        <NavItem as={Link} to="/categories">
-          {texts?.nav?.categories || "Kategoriler"}
-        </NavItem>
-    
-        <NavItem as={Link} to="/products">
-          {texts?.nav?.products || "Ürünler"}
-        </NavItem>
-        <NavItem as={Link} to="/contact">
-          {texts?.nav?.contact || "İletişim"}
-        </NavItem>
-        <NavItem as={Link} to="/login">
-          {texts?.nav?.login || "Giriş Yap"}
-        </NavItem>
+      {/* 📌 Ana Menü (Masaüstü) */}
+      <Nav>
+        <NavItem to="/">{texts?.nav?.home || "Ana Sayfa"}</NavItem>
+        <NavItem to="/categories">{texts?.nav?.categories || "Kategoriler"}</NavItem>
+        <NavItem to="/products">{texts?.nav?.products || "Ürünler"}</NavItem>
+        <NavItem to="/contact">{texts?.nav?.contact || "İletişim"}</NavItem>
+        <NavItem to="/login">{texts?.nav?.login || "Giriş Yap"}</NavItem>
       </Nav>
+
+      {/* 📱 Mobil Menü */}
+      <MobileMenu $isOpen={menuOpen}>
+        <NavItem to="/" onClick={() => setMenuOpen(false)}>{texts?.nav?.home || "Ana Sayfa"}</NavItem>
+        <NavItem to="/categories" onClick={() => setMenuOpen(false)}>{texts?.nav?.categories || "Kategoriler"}</NavItem>
+        <NavItem to="/products" onClick={() => setMenuOpen(false)}>{texts?.nav?.products || "Ürünler"}</NavItem>
+        <NavItem to="/contact" onClick={() => setMenuOpen(false)}>{texts?.nav?.contact || "İletişim"}</NavItem>
+        <NavItem to="/login" onClick={() => setMenuOpen(false)}>{texts?.nav?.login || "Giriş Yap"}</NavItem>
+      </MobileMenu>
     </HeaderContainer>
   );
 }
+

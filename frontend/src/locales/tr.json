@@ -158,23 +158,32 @@
     "date": "Tarih",
     "status": "Durum"
   },
-  "settings": {
-    "title": "Ayarlar",
-    "profileSettings": "Profil Ayarları",
-    "appSettings": "Uygulama Ayarları",
-    "passwordSettings": "Parola Ayarları",
-    "name": "Ad Soyad",
-    "email": "E-posta",
-    "updateProfile": "Profili Güncelle",
-    "theme": "Tema",
-    "darkMode": "Karanlık Mod",
-    "lightMode": "Aydınlık Mod",
-    "language": "Dil",
-    "newPassword": "Yeni Parola",
-    "confirmPassword": "Parolayı Onayla",
-    "updatePassword": "Parolayı Güncelle"
-  },
 
+  "settings": {
+    "title": "⚙️ Genel Ayarlar",
+    "companySettings": "🏢 Firma & Müşteri Yönetimi",
+    "updateCompany": "Firma Bilgilerini Güncelle",
+    "manageCustomers": "Müşteri Yönetimi",
+    "siteSettings": "🌍 Site Ayarları",
+    "language": "Dil Seçimi",
+    "theme": "Tema",
+    "darkMode": "🌙 Karanlık Mod",
+    "lightMode": "☀️ Aydınlık Mod",
+    "financialSettings": "💰 Finansal Ayarlar",
+    "currency": "Para Birimi",
+    "shippingCost": "🚚 Nakliye Ücreti",
+    "taxRate": "📊 Vergi Oranı (%)",
+    "paymentMethods": "💳 Ödeme Yöntemleri",
+    "paypal": "PayPal",
+    "stripe": "Stripe",
+    "bankTransfer": "Banka Havalesi",
+    "paypalActive": "✅ PayPal Aktif",
+    "paypalInactive": "❌ PayPal Kapalı",
+    "stripeActive": "✅ Stripe Aktif",
+    "stripeInactive": "❌ Stripe Kapalı",
+    "bankTransferActive": "✅ Banka Havalesi Aktif",
+    "bankTransferInactive": "❌ Banka Havalesi Kapalı"
+  },
   "sidebar": {
     "dashboard": "Yönetim Paneli",
     "users": "Kullanıcılar",
@@ -197,7 +206,7 @@
     "homeButton": "Ana Sayfaya Dön"
   },
   "home": {
-    "heroTitle": "Hoş Geldiniz",
+    "heroTitle": "🏡 Hoş Geldiniz",
     "heroSubtitle": "✨ Harika ürünleri keşfedin!",
     "cta": "🛍 Hemen Alışveriş Yap",
     "women fashion": "👗 Kadın Modası",
@@ -211,7 +220,27 @@
     "enterEmail": "📧 E-posta adresinizi girin",
     "subscribe": "📬 Abone Ol",
     "thankYou": "✅ Aboneliğiniz için teşekkürler!",
-    "loading": "📦 Ürünler yükleniyor..."
+    "loading": "📦 Ürünler yükleniyor...",
+    "welcome": "🏡 Hoş Geldiniz",
+    "noProducts": "🚫 Ürün bulunamadı.",
+    "addToCart": "🛒 Sepete Ekle",
+    "inCart": "✅ Sepette Mevcut",
+    "addReview": "📝 Yorumunuzu yazın...",
+    "submitReview": "📩 Gönder",
+    "invalidEmail": "⚠️ Geçerli bir e-posta adresi giriniz!",
+    "categoryTitle": "📦 Kategoriler",
+    "allProducts": "🛍️ Tüm Ürünler",
+    "showMore": "🔽 Daha Fazla Göster",
+    "stockAvailable": "✅ Stokta Var",
+    "stockUnavailable": "⚠️ Stok Durumu Belirsiz",
+    "remove": "❌ Kaldır",
+    "productDetails": "📌 Ürün Detayları",
+    "price": "💰 Fiyat",
+    "addedToFavorites": "❤️ Favorilere Eklendi",
+    "removedFromFavorites": "💔 Favorilerden Kaldırıldı",
+    "favorite": "⭐ Favorilere Ekle",
+    "continueShopping": "🛍️ Alışverişe Devam Et",
+    "back": "🔙 Geri Dön"
   },
   "nav": {
     "home": "Ana Sayfa",
@@ -269,7 +298,11 @@
     "checkout": "💳 Ödeme Yap",
     "empty": "🚫 Sepetiniz şu anda boş.",
     "loading": "🛒 Sepet yükleniyor...",
-    "clearCart": "Sepeti Temizle"
+    "clearCart": "🗑️ Sepeti Temizle",
+    "totalPrice": "💰 Toplam",
+    "vat": "📊 Vergi (KDV)",
+    "shippingCost": "🚚 Nakliye Ücreti",
+    "grandTotal": "🧾 Genel Toplam"
   },
   "categories": {
     "title": "📂 Kategoriler",
@@ -294,11 +327,21 @@
     "loading": "📦 Ürün bilgileri yükleniyor..."
   },
   "product": {
-    "inStock": "Stokta Var",
-    "outOfStock": "Stokta Yok",
     "newArrival": "Yeni Gelenler",
-    "addToCart": "Sepete Ekle",
-    "viewDetails": "Detayları Gör"
+    "viewDetails": "Detayları Gör",
+    "notFound": "🔍 Ürün bulunamadı.",
+    "goBack": "🔙 Geri Dön",
+    "addToCart": "🛒 Sepete Ekle",
+    "addedToCart": "✅ Ürün sepete eklendi!",
+    "addToCartError": "❌ Ürün sepete eklenemedi!",
+    "buyNow": "🛒 Hemen Al",
+    "inCart": "✅ Sepette Mevcut",
+    "inStock": "✅ Stokta Var",
+    "outOfStock": "⚠️ Stok Durumu Belirsiz",
+    "addedToFavorites": "❤️ Favorilere Eklendi",
+    "removedFromFavorites": "💔 Favorilerden Kaldırıldı",
+    "addToFavorites": "⭐ Favorilere Ekle",
+    "inFavorites": "❤️ Favorilerde"
   },
   "products": {
     "title": "Ürün Yönetimi",
@@ -472,5 +515,53 @@
     "grandTotal": "Genel Toplam",
     "save": "💾 Kaydet",
     "downloadPDF": "📄 PDF Olarak İndir"
+  },
+  "company": {
+    "title": "Firma Bilgileri",
+    "name": "Firma Adı",
+    "address": "Adres",
+    "email": "E-Posta",
+    "taxNumber": "Vergi Numarası",
+    "bankIban": "Banka IBAN",
+    "bankBic": "Banka BIC",
+    "save": "Kaydet",
+    "updated": "Firma bilgileri güncellendi!",
+    "updateFailed": "Firma bilgileri güncellenemedi!",
+    "loading": "Firma bilgileri yükleniyor..."
+  },
+  "customer": {
+    "title": "Müşteri Yönetimi",
+    "companyName": "Firma Adı",
+    "contactPerson": "Yetkili Kişi",
+    "address": "Adres",
+    "phone": "Telefon",
+    "add": "Yeni Müşteri Ekle",
+    "update": "Güncelle",
+    "added": "Yeni müşteri başarıyla eklendi!",
+    "updated": "Müşteri bilgileri güncellendi!",
+    "updateFailed": "Müşteri bilgileri güncellenemedi!",
+    "delete": "Sil",
+    "deleted": "Müşteri başarıyla silindi!",
+    "deleteFailed": "Müşteri silinemedi!",
+    "missingCompanyName": "Firma ismi zorunludur!",
+    "invalidId": "Geçersiz müşteri ID!",
+    "list": "Müşteri Listesi",
+    "noRecords": "Kayıtlı müşteri bulunamadı.",
+    "loading": "Müşteriler yükleniyor..."
+  },
+  "general": {
+    "back": "Geri Dön"
+  },
+  "checkout": {
+    "title": "💳 Ödeme Sayfası",
+    "error": "🚫 Sepetiniz şu anda boş!",
+    "totalPrice": "💰 Toplam Fiyat",
+    "vat": "📊 Vergi (KDV %19)",
+    "shippingCost": "🚚 Nakliye Ücreti",
+    "grandTotal": "🧾 Genel Toplam",
+    "completePayment": "💸 Ödemeyi Tamamla",
+    "missingDetails": "⚠️ Lütfen tüm ödeme bilgilerini doldurun!",
+    "success": "✅ Siparişiniz başarıyla oluşturuldu!",
+    "paymentFailed": "❌ Ödeme başarısız. Lütfen tekrar deneyin."
   }
 }

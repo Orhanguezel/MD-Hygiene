@@ -290,20 +290,22 @@ export const OfferDetailsContainer = styled.div`
   margin-bottom: 20px;
 `;
 
-export const CategoryButton = styled.button`
-  padding: 10px 20px;
-  background: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => theme.buttonText};
-  border: none;
+export const CategoryButton = styled.button.attrs((props) => ({
+  $isActive: props.$isActive ? "true" : undefined,
+}))`
+  padding: 10px 15px;
+  background: ${({ $isActive, theme }) => ($isActive === "true" ? theme.primary : theme.cardBackground)};
+  color: ${({ $isActive, theme }) => ($isActive === "true" ? theme.buttonText : theme.text)};
+  border: ${({ $isActive, theme }) => ($isActive === "true" ? `2px solid ${theme.primaryHover}` : "2px solid transparent")};
+  border-radius: 5px;
   cursor: pointer;
-  border-radius: 4px;
-  transition: background 0.3s;
-  margin-right: 5px;
+  transition: all 0.3s ease;
 
   &:hover {
     background: ${({ theme }) => theme.primaryHover};
   }
 `;
+
 
 export const CategoryButtonContainer = styled.div`
   display: flex;
@@ -312,24 +314,25 @@ export const CategoryButtonContainer = styled.div`
 `;
 
 export const DeleteButton = styled.button`
-  padding: 10px 20px;
   background: #dc3545;
   color: white;
-  border: none;
-  cursor: pointer;
+  padding: 8px 12px;
   border-radius: 4px;
+  cursor: pointer;
   transition: background 0.3s;
-  margin-right: 5px;
 
   &:hover {
     background: #c82333;
   }
 `;
 
+
 export const ListContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 20px;
+  justify-content: center; // ✅ Kartları ortala
+  padding: 20px;
 `;
 
 export const ProductDetails = styled.div`
@@ -342,15 +345,38 @@ export const ProductDetails = styled.div`
 
 export const ProductImage = styled.img`
   width: 100%;
+  height: 200px; 
+  object-fit: cover; 
   border-radius: 8px;
   margin-bottom: 10px;
 `;
 
+
 export const ProductItem = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  margin-bottom: 5px;
+  width: calc(33.333% - 10px); // ✅ 3 sütun düzeni
+  background: ${({ theme }) => theme.cardBackground};
+  border-radius: 8px;
+  box-shadow: 0 2px 8px ${({ theme }) => theme.shadow};
+  padding: 15px;
+  text-align: center;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.02); // ✅ Hover efekti eklendi
+  }
+
+  @media (max-width: 1024px) {
+    width: calc(50% - 10px); // ✅ Tablet görünümü için 2 sütun
+  }
+
+  @media (max-width: 768px) {
+    width: 100%; // ✅ Mobilde tam genişlik
+  }
 `;
+
 
 export const ProductName = styled.h3`
   color: ${({ theme }) => theme.text};
@@ -389,9 +415,18 @@ export const FormContainer = styled.div`
 
 export const ProductContainer = styled.div`
   display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
+  align-items: flex-start; // ✅ Sidebar ile içerik hizalama
+  gap: 20px;
+  padding: 20px;
+  background: ${({ theme }) => theme.background};
+  min-height: 100vh;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
+
 
 export const ProductInput = styled.input`
   padding: 8px;
