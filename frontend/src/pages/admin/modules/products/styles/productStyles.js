@@ -2,9 +2,11 @@ import styled from "styled-components";
 
 /* ✅ Ürün Yönetim Konteyneri */
 export const ProductContainer = styled.div`
-margin-left: 290px;
-  @media (max-width: 768px) {
-  margin-left: 40px;
+  width: calc(100% - 570px);;
+  margin-top: 10px;
+  @media (max-width: 1020px) {
+    margin-left: 40px;
+    margin-top: 170px;
     flex-direction: column;
     align-items: center;
     padding-top: 150px;
@@ -17,8 +19,6 @@ margin-left: 290px;
   }
 `;
 
-
-
 export const ProductTitle = styled.h1`
   @media (max-width: 768px) {
     font-size: 18px;
@@ -27,7 +27,6 @@ export const ProductTitle = styled.h1`
     margin-left: 0; /* Küçük ekranda margin sıfır */
   }
 `;
-
 
 /* ✅ Sidebar */
 /* ✅ Ürün Paneli */
@@ -38,8 +37,8 @@ export const SidebarContainer = styled.div`
   color: ${({ theme }) => theme.text};
   padding: 20px;
   height: auto;
-  position: fixed;
-  top: 80px;
+  position: absolute;
+  top: 50px;
   left: 50px;
   display: flex;
   flex-direction: column;
@@ -54,16 +53,14 @@ export const SidebarContainer = styled.div`
 
   /* 📌 Tablet Görünümü */
   @media (max-width: 1024px) {
-    width: 300px;
-    left: 30px;
+    width: 90%;
+    top: 70px;
+    left: 50px;
   }
 
   /* 📌 Mobil Görünüm */
   @media (max-width: 768px) {
-    width: 100%;
     position: absolute;
-    left: 0;
-    top: 70px;
     border-radius: 0;
     padding: 15px;
   }
@@ -106,8 +103,6 @@ export const SidebarButton = styled.button`
     font-size: 18px;
   }
 `;
-
-
 
 /* ✅ Kategori Kartlarını Listeleme */
 export const CategoryListContainer = styled.div`
@@ -169,7 +164,7 @@ export const ListContainer = styled.div`
 /* ✅ Ürün Kartı */
 export const ProductItem = styled.div`
   @media (max-width: 768px) {
-    width: calc(50% - 10px);
+    width: calc(100% - 10px);
   }
 
   @media (max-width: 480px) {
@@ -226,7 +221,6 @@ export const AddToCartButton = styled.button`
     background: #c82333;
   }
 `;
-
 
 /* ✅ Kategori Butonları */
 export const CategoryButtonContainer = styled.div`
