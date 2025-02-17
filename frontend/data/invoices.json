@@ -1,0 +1,32 @@
+[
+    {
+      "id": "INV-001",
+      "order": "ORD-001",
+      "user": "USR-001",
+      "items": [
+        { "product": "Product A", "quantity": 2, "unitPrice": 100 },
+        { "product": "Product B", "quantity": 1, "unitPrice": 150 }
+      ],
+      "totalAmount": 350,
+      "taxRate": 19,
+      "taxAmount": 66.5,
+      "issuedAt": "2024-05-01",
+      "status": "paid",
+      "invoiceNumber": "INV-001"
+    },
+    {
+      "id": "INV-002",
+      "order": "ORD-002",
+      "user": "USR-002",
+      "items": [
+        { "product": "Product C", "quantity": 3, "unitPrice": 200 }
+      ],
+      "totalAmount": 600,
+      "taxRate": 19,
+      "taxAmount": 114,
+      "issuedAt": "2024-05-02",
+      "status": "pending",
+      "invoiceNumber": "INV-002"
+    }
+  ]
+  
