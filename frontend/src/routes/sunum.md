@@ -1,0 +1,1 @@
+eger uye olur cok basit. gercek bilgi vermenize gerek yok. isminiz gercek olsa yeterli. verdiginiz siparisleri belki adresinize gönderirim sunumun sonunda. :) hem de test yapmis oluruz. 

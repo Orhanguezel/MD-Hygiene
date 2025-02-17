@@ -1,0 +1,24 @@
+.custom-toast {
+    font-size: 16px !important;
+    font-weight: bold !important;
+    color: white !important;
+  }
+  
+  .Toastify__toast--success {
+    background: #28a745 !important; /* Yeşil */
+  }
+  
+  .Toastify__toast--error {
+    background: #dc3545 !important; /* Kırmızı */
+  }
+  
+  .Toastify__toast--warning {
+    background: #ffc107 !important; /* Sarı */
+  }
+  
+  .Toastify__toast--info {
+    background: #17a2b8 !important; /* Mavi */
+  }
+
+  /* */
+  

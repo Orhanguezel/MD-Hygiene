@@ -8,6 +8,7 @@ import { useLanguage } from "./features/language/useLanguage";
 import { useTheme } from "./features/theme/useTheme"; // ✅ Tema desteği
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 
 const App = () => {
   const { user, isAuthenticated, loading, error } = useSelector((state) => state.auth);
@@ -26,8 +27,8 @@ const App = () => {
 
   if (isAppLoading) {
     return (
-      <div style={{ textAlign: "center", padding: "20px", color: theme.text, background: theme.background }}>
-        <h3>{texts.app?.loading || "⏳ Yükleniyor, lütfen bekleyin..."}</h3>
+      <div style={{ textAlign: "center", justifyContent:"center", padding: "20px", color: theme.text, background: theme.background }}>
+        <h3>{texts.app?.loading}</h3>
       </div>
     );
   }
@@ -53,7 +54,20 @@ const App = () => {
       </Routes>
 
       {/* ✅ ToastContainer eklendi */}
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} theme={theme.mode} />
+      <ToastContainer
+  position="top-right"
+  autoClose={2000}
+  hideProgressBar={false}
+  newestOnTop={false}
+  closeOnClick
+  rtl={false}
+  pauseOnFocusLoss
+  draggable
+  pauseOnHover
+  theme={theme.mode} // 🌙 
+  style={{ fontSize: "16px", fontWeight: "bold", textAlign: "center" }}
+  className="custom-toast"
+/>;
     </BrowserRouter>
   );
 };

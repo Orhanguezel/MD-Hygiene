@@ -341,7 +341,13 @@
     "invoiceDownloaded": "📄 Invoice downloaded successfully!",
     "missingUser": "❌ Missing user information, PDF could not be generated!",
     "noInvoices": "⚠️ You have no invoices yet.",
-    "loading": "📦 Loading..."
+    "loading": "📦 Loading...",
+    "invoiceNumber": "Invoice No",
+    "orders": "📦 My Orders",
+    "goToCart": "🛒 Go to Cart"
+  },
+  "invoice":{
+    "downloadPDF": "PDF"
   },
 
   "cart": {
@@ -573,5 +579,9 @@
     "orderTotal": "💵 Order Total",
     "continueShopping": "🛍️ Continue Shopping",
     "viewOrders": "📑 View My Orders"
+  }
+  ,
+  "app":{
+    "loading":"⏳ Loading, please wait..."
   }
 }

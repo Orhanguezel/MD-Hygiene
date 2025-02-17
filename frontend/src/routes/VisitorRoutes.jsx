@@ -1,11 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 import AppLayout from "@/layouts/AppLayout";
-import Home from "@/pages/visitor/home/Home";
+import Home from "@/pages/modules/home/Home";
 import NotFound from "@/pages/navbar/NotFound";
 import Login from "@/pages/auth/Login";
 import Register from "@/pages/auth/Register";
 import Unauthorized from "@/pages/auth/Unauthorized";
-import ProductDetail from "@/pages/visitor/home/components/ProductDetail";
+import ProductDetail from "@/pages/modules/home/components/ProductDetail";
 //import TermsOfService from "@/pages/visitor/TermsOfService"; 
 //import PrivacyPolicy from "@/pages/visitor/PrivacyPolicy"; 
 

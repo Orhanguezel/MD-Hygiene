@@ -565,6 +565,60 @@
         "creationAt": "2025-02-11T17:05:13.000Z",
         "updatedAt": "2025-02-11T17:05:13.000Z"
       }
+    },
+    {
+      "id": 1739801719981,
+      "title": "aa",
+      "price": 12,
+      "stock": 2,
+      "images": [
+        "https://i.imgur.com/Au8J9sX.jpeg"
+      ],
+      "category": {
+        "id": 2,
+        "name": "Electronics",
+        "image": "https://i.imgur.com/ZANVnHE.jpeg",
+        "creationAt": "2025-02-11T17:05:13.000Z",
+        "updatedAt": "2025-02-11T17:05:13.000Z"
+      },
+      "creationAt": "2025-02-17T14:15:19.981Z",
+      "updatedAt": "2025-02-17T14:15:19.981Z"
+    },
+    {
+      "id": 1739801755075,
+      "title": "bb",
+      "price": 45,
+      "stock": 5,
+      "images": [
+        "https://i.imgur.com/Au8J9sX.jpeg"
+      ],
+      "category": {
+        "id": 2,
+        "name": "Electronics",
+        "image": "https://i.imgur.com/ZANVnHE.jpeg",
+        "creationAt": "2025-02-11T17:05:13.000Z",
+        "updatedAt": "2025-02-11T17:05:13.000Z"
+      },
+      "creationAt": "2025-02-17T14:15:55.075Z",
+      "updatedAt": "2025-02-17T14:15:55.075Z"
+    },
+    {
+      "id": 1739801775443,
+      "title": "ccc",
+      "price": 78,
+      "stock": 8,
+      "images": [
+        "https://i.imgur.com/Au8J9sX.jpeg"
+      ],
+      "category": {
+        "id": 2,
+        "name": "Electronics",
+        "image": "https://i.imgur.com/ZANVnHE.jpeg",
+        "creationAt": "2025-02-11T17:05:13.000Z",
+        "updatedAt": "2025-02-11T17:05:13.000Z"
+      },
+      "creationAt": "2025-02-17T14:16:15.443Z",
+      "updatedAt": "2025-02-17T14:16:15.443Z"
     }
   ],
   "users": [
@@ -949,69 +1003,6 @@
   "auditlog": [],
   "orders": [
     {
-      "id": "ORD-ac7171be-3124-4df5-9604-47462506e203",
-      "userId": "USR-005",
-      "userName": "Orhan Güzel",
-      "userEmail": "orhanguzell@gmail.com",
-      "userAddress": "Grevenbroich",
-      "orderDate": "16.02.2025 - 19:46",
-      "items": [
-        {
-          "productId": "f085",
-          "title": "Vibrant Runners: Bold Orange & Blue Sneakers",
-          "quantity": 1,
-          "unitPrice": 27
-        }
-      ],
-      "totalAmount": "27.00",
-      "shippingCost": "20.00",
-      "vatAmount": "4.31",
-      "status": "pending",
-      "paymentStatus": "pending"
-    },
-    {
-      "id": "ORD-73e53e8b-870d-4c10-bc42-8eea69f4720f",
-      "userId": "USR-005",
-      "userName": "Orhan Güzel",
-      "userEmail": "orhanguzell@gmail.com",
-      "userAddress": "Grevenbroich",
-      "orderDate": "16.02.2025 - 19:49",
-      "items": [
-        {
-          "productId": "9354",
-          "title": "Vibrant Pink Classic Sneakers",
-          "quantity": 1,
-          "unitPrice": 84
-        }
-      ],
-      "totalAmount": "84.00",
-      "shippingCost": "20.00",
-      "vatAmount": "13.41",
-      "status": "pending",
-      "paymentStatus": "pending"
-    },
-    {
-      "id": "ORD-329b9f8d-9787-4222-ba9e-8e7bba5fbad9",
-      "userId": "USR-005",
-      "userName": "Orhan Güzel",
-      "userEmail": "orhanguzell@gmail.com",
-      "userAddress": "Grevenbroich",
-      "orderDate": "16.02.2025 - 19:52",
-      "items": [
-        {
-          "productId": "8d06",
-          "title": "Vibrant Pink Classic Sneakers",
-          "quantity": 1,
-          "unitPrice": 84
-        }
-      ],
-      "totalAmount": "84.00",
-      "shippingCost": "20.00",
-      "vatAmount": "13.41",
-      "status": "pending",
-      "paymentStatus": "pending"
-    },
-    {
       "id": "ORD-1a74787a-7db1-4486-b567-c13e977a6541",
       "userId": "USR-005",
       "userName": "Orhan Güzel",
@@ -1029,7 +1020,7 @@
       "totalAmount": "68.00",
       "shippingCost": "20.00",
       "vatAmount": "10.86",
-      "status": "pending",
+      "status": "archived",
       "paymentStatus": "pending"
     },
     {
@@ -1071,163 +1062,177 @@
       "totalAmount": "27.00",
       "shippingCost": "20.00",
       "vatAmount": "4.31",
-      "status": "pending",
+      "status": "archived",
       "paymentStatus": "pending"
     },
     {
-      "id": "ORD-44ffa934-9bac-4add-baa0-ffe41792b220",
-      "userId": "USR-005",
-      "userName": "Orhan Güzel",
-      "userEmail": "orhanguzell@gmail.com",
-      "userAddress": "Grevenbroich",
-      "orderDate": "16.02.2025 - 21:13",
+      "id": "ORD-e434357d-ffd4-406b-bd42-fd9ead48fe4d",
+      "userId": "USR-006",
+      "userName": "Orhan",
+      "userEmail": "orhan@gmail.com",
+      "orderDate": "17.02.2025 - 19:23",
       "items": [
         {
-          "productId": "caaa",
-          "title": "Vibrant Pink Classic Sneakers",
+          "productId": "1b06",
+          "title": "Sleek Modern Laptop with Ambient Lighting",
           "quantity": 1,
-          "unitPrice": 84
+          "unitPrice": 47
         },
         {
-          "productId": "61c1",
-          "title": "Elegant Patent Leather Peep-Toe Pumps with Gold-Tone Heel",
-          "quantity": 3,
-          "unitPrice": 53
-        }
-      ],
-      "totalAmount": "243.00",
-      "shippingCost": "20.00",
-      "status": "pending",
-      "paymentStatus": "pending"
-    },
-    {
-      "id": "ORD-2080e2b9-c482-4221-a0c2-2192a19437ff",
-      "userId": "USR-005",
-      "userName": "Orhan Güzel",
-      "userEmail": "orhanguzell@gmail.com",
-      "userAddress": "Grevenbroich",
-      "orderDate": "16.02.2025 - 21:25",
-      "items": [
-        {
-          "productId": "36ff",
-          "title": "Elegant Patent Leather Peep-Toe Pumps with Gold-Tone Heel",
-          "quantity": 1,
-          "unitPrice": 53
-        }
-      ],
-      "totalAmount": "53.00",
-      "shippingCost": "20.00",
-      "status": "pending",
-      "paymentStatus": "pending"
-    },
-    {
-      "id": "ORD-f37451be-05ac-4a5b-a629-94f986a6c0ca",
-      "userId": "USR-005",
-      "userName": "Orhan Güzel",
-      "userEmail": "orhanguzell@gmail.com",
-      "userAddress": "Grevenbroich",
-      "orderDate": "16.02.2025 - 21:30",
-      "items": [
-        {
-          "productId": "75d9",
-          "title": "Elegant Glass Tumbler Set",
-          "quantity": 1,
-          "unitPrice": 50
-        }
-      ],
-      "totalAmount": "50.00",
-      "shippingCost": "20.00",
-      "status": "pending",
-      "paymentStatus": "pending"
-    },
-    {
-      "id": "ORD-67693b98-2711-4e66-bf61-27726c41366f",
-      "userId": "USR-005",
-      "userName": "Orhan Güzel",
-      "userEmail": "orhanguzell@gmail.com",
-      "userAddress": "Grevenbroich",
-      "orderDate": "16.02.2025 - 21:54",
-      "items": [
-        {
-          "productId": "0a2e",
-          "title": "Elegant Patent Leather Peep-Toe Pumps with Gold-Tone Heel",
-          "quantity": 1,
-          "unitPrice": 53
-        }
-      ],
-      "totalAmount": "53.00",
-      "shippingCost": "20.00",
-      "status": "pending",
-      "paymentStatus": "pending"
-    },
-    {
-      "id": "ORD-3cba9995-b9da-4867-869b-4707ecf43421",
-      "userId": "USR-005",
-      "userName": "Orhan Güzel",
-      "userEmail": "orhanguzell@gmail.com",
-      "userAddress": "Grevenbroich",
-      "orderDate": "16.02.2025 - 21:55",
-      "items": [
-        {
-          "productId": "434f",
-          "title": "Vibrant Runners: Bold Orange & Blue Sneakers",
+          "productId": "5fb8",
+          "title": "Sleek Mirror Finish Phone Case",
           "quantity": 1,
           "unitPrice": 27
         }
       ],
-      "totalAmount": "27.00",
-      "shippingCost": "20.00",
-      "status": "pending",
+      "totalAmount": 94,
+      "shippingCost": 20,
+      "vatAmount": 11.82,
+      "status": "archived",
       "paymentStatus": "pending"
     },
     {
-      "id": "ORD-e8e45cd1-31a7-4c43-b064-d7913138963e",
-      "userId": "USR-005",
-      "userName": "Orhan Güzel",
-      "userEmail": "orhanguzell@gmail.com",
-      "userAddress": "Grevenbroich",
-      "orderDate": "16.02.2025 - 21:55",
+      "id": "ORD-905e1cbb-fb43-41cf-822f-88ba1f5e7336",
+      "userId": "USR-006",
+      "userName": "Orhan",
+      "userEmail": "orhan@gmail.com",
+      "orderDate": "17.02.2025 - 20:51",
       "items": [
         {
-          "productId": "342e",
-          "title": "Futuristic Chic High-Heel Boots",
-          "quantity": 1,
-          "unitPrice": 36
-        }
-      ],
-      "totalAmount": "36.00",
-      "shippingCost": "20.00",
-      "status": "pending",
-      "paymentStatus": "pending"
-    },
-    {
-      "id": "ORD-5994d180-3a6f-49ed-90a5-479fa18753b7",
-      "userId": "USR-005",
-      "userName": "Orhan Güzel",
-      "userEmail": "orhanguzell@gmail.com",
-      "userAddress": "Grevenbroich",
-      "orderDate": "16.02.2025 - 22:43",
-      "items": [
-        {
-          "productId": "9585",
-          "title": "Vibrant Runners: Bold Orange & Blue Sneakers",
+          "productId": "4898",
+          "title": "Sleek Mirror Finish Phone Case",
           "quantity": 1,
           "unitPrice": 27
-        },
-        {
-          "productId": "1833",
-          "title": "Vibrant Pink Classic Sneakers",
-          "quantity": 1,
-          "unitPrice": 84
         }
       ],
-      "totalAmount": "111.00",
-      "shippingCost": "20.00",
-      "status": "pending",
+      "totalAmount": 47,
+      "shippingCost": 20,
+      "vatAmount": 4.31,
+      "status": "archived",
       "paymentStatus": "pending"
     }
   ],
-  "invoices": [],
+  "invoices": [
+    {
+      "id": "INV-6865754c-a1b6-400b-b3b7-ec173b5a7f2e",
+      "invoiceNumber": "INV-6124f541-7c71-4e0e-8cf1-a9f94f24a1f6",
+      "orderId": "ORD-1a74787a-7db1-4486-b567-c13e977a6541",
+      "userId": "USR-005",
+      "userName": "Orhan Güzel",
+      "userEmail": "orhanguzell@gmail.com",
+      "userAddress": "Grevenbroich",
+      "items": [
+        {
+          "productId": "435a",
+          "title": "Futuristic Silver and Gold High-Top Sneaker",
+          "quantity": 1,
+          "unitPrice": 68
+        }
+      ],
+      "subtotal": 48,
+      "vatAmount": "10.86",
+      "totalAmount": "68.00",
+      "shippingCost": "20.00",
+      "issuedAt": "17.02.2025 - 17:38",
+      "status": "paid"
+    },
+    {
+      "id": "INV-2c28ff65-28ab-4c08-a894-ee9a731a0c6b",
+      "invoiceNumber": "INV-33289b9d-e652-41ad-9b8d-e4e3f5af2bcb",
+      "orderId": "ORD-1a74787a-7db1-4486-b567-c13e977a6541",
+      "userId": "USR-005",
+      "userName": "Orhan Güzel",
+      "userEmail": "orhanguzell@gmail.com",
+      "userAddress": "Grevenbroich",
+      "items": [
+        {
+          "productId": "435a",
+          "title": "Futuristic Silver and Gold High-Top Sneaker",
+          "quantity": 1,
+          "unitPrice": 68
+        }
+      ],
+      "subtotal": 48,
+      "vatAmount": "10.86",
+      "totalAmount": "68.00",
+      "shippingCost": "20.00",
+      "issuedAt": "17.02.2025 - 17:38",
+      "status": "paid"
+    },
+    {
+      "id": "INV-ef34ef02-6029-43c8-9681-718bcfdac00b",
+      "invoiceNumber": "INV-152256fa-ae0a-4277-875c-5f0af21a4ddf",
+      "orderId": "ORD-8a037ab0-009c-42f2-9154-103be0a31e00",
+      "userId": "USR-005",
+      "userName": "Orhan Güzel",
+      "userEmail": "orhanguzell@gmail.com",
+      "userAddress": "Grevenbroich",
+      "items": [
+        {
+          "productId": "13f2",
+          "title": "Vibrant Runners: Bold Orange & Blue Sneakers",
+          "quantity": 1,
+          "unitPrice": 27
+        }
+      ],
+      "subtotal": 7,
+      "vatAmount": "4.31",
+      "totalAmount": "27.00",
+      "shippingCost": "20.00",
+      "issuedAt": "17.02.2025 - 17:41",
+      "status": "paid"
+    },
+    {
+      "id": "INV-6a2ea65e-891b-40b1-84d7-85f4acd34c37",
+      "invoiceNumber": "INV-1cb5d00c-cc9c-496f-8985-14ddf814c8be",
+      "orderId": "ORD-e434357d-ffd4-406b-bd42-fd9ead48fe4d",
+      "userId": "USR-006",
+      "userName": "Orhan",
+      "userEmail": "orhan@gmail.com",
+      "items": [
+        {
+          "productId": "1b06",
+          "title": "Sleek Modern Laptop with Ambient Lighting",
+          "quantity": 1,
+          "unitPrice": 47
+        },
+        {
+          "productId": "5fb8",
+          "title": "Sleek Mirror Finish Phone Case",
+          "quantity": 1,
+          "unitPrice": 27
+        }
+      ],
+      "subtotal": 74,
+      "vatAmount": 11.82,
+      "totalAmount": 94,
+      "shippingCost": 20,
+      "issuedAt": "17.02.2025 - 19:25",
+      "status": "paid"
+    },
+    {
+      "id": "INV-c3eb0d6e-5c26-4aea-91d8-90fa515a1c34",
+      "invoiceNumber": "INV-5be2b4ac-6198-419a-8c17-d951bc4c093f",
+      "orderId": "ORD-905e1cbb-fb43-41cf-822f-88ba1f5e7336",
+      "userId": "USR-006",
+      "userName": "Orhan",
+      "userEmail": "orhan@gmail.com",
+      "items": [
+        {
+          "productId": "4898",
+          "title": "Sleek Mirror Finish Phone Case",
+          "quantity": 1,
+          "unitPrice": 27
+        }
+      ],
+      "subtotal": 27,
+      "vatAmount": 4.31,
+      "totalAmount": 47,
+      "shippingCost": 20,
+      "issuedAt": "17.02.2025 - 22:02",
+      "status": "paid"
+    }
+  ],
   "offers": [
     {
       "id": "15de78da-b2a4-415b-8c77-81364c88893c",
@@ -1377,35 +1382,26 @@
       "id": "347f",
       "userId": "USR-005",
       "productId": "33"
+    },
+    {
+      "id": "e23f",
+      "userId": "USR-006",
+      "productId": "27"
+    },
+    {
+      "id": "dad9",
+      "userId": "USR-006",
+      "productId": "28"
+    },
+    {
+      "id": "702c",
+      "userId": "USR-006",
+      "productId": "26"
     }
   ],
   "cart": [
     {
-      "id": "59b4",
-      "productId": "31",
-      "quantity": 2,
-      "price": 25,
-      "title": "Modern Elegance Teal Armchair",
-      "images": [
-        "https://i.imgur.com/6wkyyIN.jpeg",
-        "https://i.imgur.com/Ald3Rec.jpeg",
-        "https://i.imgur.com/dIqo03c.jpeg"
-      ]
-    },
-    {
-      "id": "8545",
-      "productId": "32",
-      "quantity": 1,
-      "price": 67,
-      "title": "Elegant Solid Wood Dining Table",
-      "images": [
-        "https://i.imgur.com/4lTaHfF.jpeg",
-        "https://i.imgur.com/JktHE1C.jpeg",
-        "https://i.imgur.com/cQeXQMi.jpeg"
-      ]
-    },
-    {
-      "id": "ed68",
+      "id": "9751",
       "productId": "23",
       "quantity": 1,
       "price": 47,
@@ -1414,6 +1410,18 @@
         "https://i.imgur.com/OKn1KFI.jpeg",
         "https://i.imgur.com/G4f21Ai.jpeg",
         "https://i.imgur.com/Z9oKRVJ.jpeg"
+      ]
+    },
+    {
+      "id": "618f",
+      "productId": "26",
+      "quantity": 1,
+      "price": 27,
+      "title": "Sleek Mirror Finish Phone Case",
+      "images": [
+        "https://i.imgur.com/yb9UQKL.jpeg",
+        "https://i.imgur.com/m2owtQG.jpeg",
+        "https://i.imgur.com/bNiORct.jpeg"
       ]
     }
   ],
@@ -1437,83 +1445,6 @@
       "userId": "USR-005",
       "name": "Orhan Güzel",
       "avatar": "https://randomuser.me/api/portraits/lego/1.jpg"
-    },
-    {
-      "id": "1739683067791",
-      "name": "Orhan Güzel",
-      "feedback": "fgfssg",
-      "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
-      "userId": "USR-005"
-    },
-    {
-      "id": "1739683087047",
-      "name": "Orhan Güzel",
-      "feedback": "hjjhjhj ",
-      "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
-      "userId": "USR-005"
-    },
-    {
-      "id": "1739683200308",
-      "name": "Orhan Güzel",
-      "feedback": "vbdfbydf",
-      "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
-      "userId": "USR-005"
-    },
-    {
-      "id": "1739683259985",
-      "name": "Orhan Güzel",
-      "feedback": "dfadfef",
-      "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
-      "userId": "USR-005"
-    },
-    {
-      "id": "1739716691327",
-      "name": "Orhan Güzel",
-      "feedback": "kkkakak",
-      "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
-      "userId": "USR-005"
-    },
-    {
-      "id": "1739716701726",
-      "name": "Orhan Güzel",
-      "feedback": "bu bir deneme",
-      "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
-      "userId": "USR-005"
-    },
-    {
-      "id": 1739742742597,
-      "name": "Orhan Güzel",
-      "feedback": "sdfdsfdsf",
-      "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
-      "userId": "USR-005"
-    },
-    {
-      "id": 1739755046038,
-      "name": "Orhan Güzel",
-      "feedback": "aadd",
-      "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
-      "userId": "USR-005"
-    },
-    {
-      "id": 1739755077990,
-      "name": "Orhan Güzel",
-      "feedback": "xcxdasdas",
-      "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
-      "userId": "USR-005"
-    },
-    {
-      "id": 1739755200671,
-      "name": "Orhan Güzel",
-      "feedback": "ewfsgfsg",
-      "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
-      "userId": "USR-005"
-    },
-    {
-      "id": 1739755343991,
-      "name": "Orhan Güzel",
-      "feedback": "fsdfdsfds",
-      "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
-      "userId": "USR-005"
     }
   ]
 }

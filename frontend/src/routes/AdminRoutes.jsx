@@ -3,47 +3,55 @@ import ProtectedWrapper from "@/pages/auth/ProtectedWrapper";
 import AppLayout from "@/layouts/AppLayout";
 
 // ✅ Genel Sayfalar
-import Home from "@/pages/visitor/home/Home";
-import ProductDetail from "@/pages/visitor/home/components/ProductDetail";
-import Cart from "@/pages/user/modules/cart/Cart";
-import Checkout from "@/pages/user/modules/cart/Checkout";
-import OrderConfirmation from "@/pages/user/modules/cart/OrderConfirmation";
+import Home from "@/pages/modules/home/Home";
+import ProductDetail from "@/pages/modules/home/components/ProductDetail";
+import Cart from "@/pages/modules/cart/Cart";
+import Checkout from "@/pages/modules/cart/Checkout";
+import OrderConfirmation from "@/pages/modules/cart/OrderConfirmation";
+
+// ✅ Profil Yönetimi
+import Profile from "@/pages/modules/profile/Profile";
+import ProfileUpdate from "@/pages/modules/profile/components/ProfileUpdate";
+import AddressBook from "@/pages/modules/profile/components/AddressInfo";
+import OrderHistory from "@/pages/modules/profile/components/OrderHistory";
+
 
 // ✅ Dashboard
-import AdminDashboard from "@/pages/admin/AdminDashboard";
+import AdminDashboard from "@/pages/modules/dashboard/AdminDashboard";
 
 // ✅ Users Modülü
-import Users from "@/pages/admin/modules/user/Users";
-import UserDetails from "@/pages/admin/modules/user/components/UserDetails";
-import AddUserForm from "@/pages/admin/modules/user/components/AddUserForm";
+import Users from "@/pages/modules/user/Users";
+import UserDetails from "@/pages/modules/user/components/UserDetails";
+import AddUserForm from "@/pages/modules/user/components/AddUserForm";
 
 // ✅ Orders Modülü
-import Orders from "@/pages/admin/modules/order/Orders";
-import OrderDetails from "@/pages/admin/modules/order/components/OrderDetails";
+import Orders from "@/pages/modules/order/Orders";
+import OrderDetails from "@/pages/modules/order/components/OrderDetails";
 
 // ✅ Invoices Modülü
-import Invoices from "@/pages/admin/modules/invoices/Invoices";
-import InvoiceDetails from "@/pages/admin/modules/invoices/components/InvoiceDetails";
+import Invoices from "@/pages/modules/invoices/Invoices";
+import InvoiceDetails from "@/pages/modules/invoices/components/InvoiceDetails";
+
 
 // ✅ Offers Modülü
-import Offers from "@/pages/admin/modules/offer/Offer";
-import OfferDetails from "@/pages/admin/modules/offer/components/OfferDetails";
-import OfferCreate from "@/pages/admin/modules/offer/components/OfferCreate";
-import OfferArchive from "@/pages/admin/modules/offer/components/OfferArchive";
+import Offers from "@/pages/modules/offer/Offer";
+import OfferDetails from "@/pages/modules/offer/components/OfferDetails";
+import OfferCreate from "@/pages/modules/offer/components/OfferCreate";
+import OfferArchive from "@/pages/modules/offer/components/OfferArchive";
 
 // ✅ Products Modülü
-import Products from "@/pages/admin/modules/products/Products";
-import ProductForm from "@/pages/admin/modules/products/components/ProductForm";
-import ManageStock from "@/pages/admin/modules/products/components/ManageStock";
-import ProductList from "@/pages/admin/modules/products/components/ProductList";
+import Products from "@/pages/modules/products/Products";
+import ProductForm from "@/pages/modules/products/components/ProductForm";
+import ManageStock from "@/pages/modules/products/components/ManageStock";
+import ProductList from "@/pages/modules/products/components/ProductList";
 
 // ✅ Ayarlar Modülü
-import Settings from "@/pages/admin/modules/settings/Settings";
-import CompanyManagement from "@/pages/admin/modules/settings/components/CompanyManagement";
-import CustomerManagement from "@/pages/admin/modules/settings/components/CustomerManagement";
+import Settings from "@/pages/modules/settings/Settings";
+import CompanyManagement from "@/pages/modules/settings/components/CompanyManagement";
+import CustomerManagement from "@/pages/modules/settings/components/CustomerManagement";
 
 // ✅ Diğer Modüller
-import Reports from "@/pages/admin/modules/report/Reports";
+import Reports from "@/pages/modules/report/Reports";
 import NotFound from "@/pages/navbar/NotFound";
 
 const AdminRoutes = () => {
@@ -66,6 +74,14 @@ const AdminRoutes = () => {
         <Route path="checkout" element={<Checkout />} />
         <Route path="order-confirmation" element={<OrderConfirmation />} />
         <Route path="product/:id" element={<ProductDetail />} />
+
+        {/* ✅ Profil Yönetimi */}
+        <Route path="profile" element={<Outlet />}>
+          <Route index element={<Profile />} />
+          <Route path=":id" element={<ProfileUpdate />} />
+          <Route path="address-book" element={<AddressBook />} />
+          <Route path="orders" element={<OrderHistory />} />
+        </Route>
 
         {/* ✅ Users Modülü */}
         <Route path="users" element={<Outlet />}>
@@ -102,11 +118,10 @@ const AdminRoutes = () => {
         <Route path="customer-management" element={<CustomerManagement />} />
 
         {/* ✅ Products Modülü */}
-        <Route path="products" element={<Outlet />}>
-          <Route index element={<Products />} />
-          <Route path="add" element={<ProductForm />} />
-          <Route path="list" element={<ProductList />} />
-          <Route path="manageStock" element={<ManageStock />} />
+        <Route path="products" element={<Products />}>
+          <Route index element={<ProductList />} />{" "}
+          <Route path="add" element={<ProductForm />} />{" "}
+          <Route path="manageStock" element={<ManageStock />} />{" "}
         </Route>
 
         {/* ✅ Diğer Modüller */}

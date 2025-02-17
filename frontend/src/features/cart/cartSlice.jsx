@@ -1,36 +1,32 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "@/services/api";
 
-const calculateTotals = (cartItems) => {
+// ✅ **Hesaplama Fonksiyonu**
+export const calculateTotals = (cartItems) => {
+  let subtotal = 0;
+  let totalQuantity = 0;
   const VAT_RATE = 0.19; // %19 KDV
   const SHIPPING_COST = 20;
-  let totalPrice = 0;
-  let totalQuantity = 0;
 
   cartItems.forEach((item) => {
-    totalPrice += item.quantity * item.price;
+    subtotal += item.quantity * item.price;
     totalQuantity += item.quantity;
   });
 
-  // 📌 Net Fiyatı Hesapla (Toplam fiyatta KDV zaten var!)
-  const netPrice = totalPrice / (1 + VAT_RATE);
+  // ✅ KDV'yi toplam fiyatın içinden ayır
+  const vatAmount = (subtotal * VAT_RATE) / (1 + VAT_RATE);
 
-  // 📌 KDV Miktarını Hesapla
-  const vatAmount = totalPrice - netPrice;
-
-  // 📌 Genel Toplam (Toplam Fiyat + Nakliye Ücreti)
-  const grandTotal = totalPrice + SHIPPING_COST;
+  // ✅ Genel toplamı doğru hesapla (KDV tekrar eklenmiyor!)
+  const grandTotal = subtotal + SHIPPING_COST;
 
   return {
-    totalPrice: parseFloat(totalPrice.toFixed(2)), // KDV dahil toplam fiyat
-    netPrice: parseFloat(netPrice.toFixed(2)), // KDV hariç fiyat
-    totalQuantity,
+    totalPrice: parseFloat(subtotal.toFixed(2)), // KDV dahil toplam fiyat
     vatAmount: parseFloat(vatAmount.toFixed(2)), // KDV miktarı
+    totalQuantity,
     shippingCost: SHIPPING_COST,
-    grandTotal: parseFloat(grandTotal.toFixed(2)), // Genel toplam (nakliye dahil)
+    grandTotal: parseFloat(grandTotal.toFixed(2)), // Genel toplam (KDV + kargo dahil)
   };
 };
-
 
 // **Sepet Verilerini API'den Çekme**
 export const fetchCart = createAsyncThunk("cart/fetchCart", async (_, thunkAPI) => {
@@ -120,31 +116,21 @@ export const removeFromCart = createAsyncThunk("cart/removeFromCart", async (pro
 // **Ödeme Sonrası Sepeti Sıfırlama**
 export const clearCart = createAsyncThunk("cart/clearCart", async (_, thunkAPI) => {
   try {
-    // 📌 1. Önce Sepetteki Ürünleri API'den Çek
     const response = await API.get("/cart");
     const cartItems = response.data;
 
-    // 📌 2. Eğer Sepet Boşsa, Direkt Dön
     if (!cartItems.length) {
-      console.log("🛒 Sepet zaten boş!");
       return [];
     }
 
-    // 📌 3. Tüm Ürünleri Tek Tek Sil
-    await Promise.all(
-      cartItems.map((item) => API.delete(`/cart/${item.id}`))
-    );
-
-    console.log("✅ Sepet temizlendi!");
+    await Promise.all(cartItems.map((item) => API.delete(`/cart/${item.id}`)));
     return [];
   } catch (error) {
-    console.error("🚨 Sepet temizlenirken hata oluştu:", error);
     return thunkAPI.rejectWithValue("Sepet temizlenemedi.");
   }
 });
 
-
-// **Redux Store Güncelleme**
+// ✅ **Redux Store Güncelleme**
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
@@ -182,39 +168,7 @@ const cartSlice = createSlice({
         state.vatAmount = totals.vatAmount;
         state.grandTotal = totals.grandTotal;
       })
-      .addCase(increaseQuantity.fulfilled, (state, action) => {
-        const item = state.cartItems.find((item) => item.productId === action.payload.productId);
-        if (item) item.quantity += 1;
-        const totals = calculateTotals(state.cartItems);
-        state.totalQuantity = totals.totalQuantity;
-        state.totalPrice = totals.totalPrice;
-        state.vatAmount = totals.vatAmount;
-        state.grandTotal = totals.grandTotal;
-      })
-      .addCase(decreaseQuantity.fulfilled, (state, action) => {
-        const itemIndex = state.cartItems.findIndex((item) => item.productId === action.payload.productId);
-        if (itemIndex !== -1) {
-          state.cartItems[itemIndex].quantity -= 1;
-          if (state.cartItems[itemIndex].quantity === 0) {
-            state.cartItems.splice(itemIndex, 1);
-          }
-        }
-        const totals = calculateTotals(state.cartItems);
-        state.totalQuantity = totals.totalQuantity;
-        state.totalPrice = totals.totalPrice;
-        state.vatAmount = totals.vatAmount;
-        state.grandTotal = totals.grandTotal;
-      })
-      .addCase(removeFromCart.fulfilled, (state, action) => {
-        state.cartItems = state.cartItems.filter((item) => item.productId !== action.payload);
-        const totals = calculateTotals(state.cartItems);
-        state.totalQuantity = totals.totalQuantity;
-        state.totalPrice = totals.totalPrice;
-        state.vatAmount = totals.vatAmount;
-        state.grandTotal = totals.grandTotal;
-      })
       .addCase(clearCart.fulfilled, (state) => {
-        console.log("✅ Redux Store: Sepet başarıyla temizlendi!");
         state.cartItems = [];
         state.totalQuantity = 0;
         state.totalPrice = 0;
@@ -222,8 +176,6 @@ const cartSlice = createSlice({
         state.shippingCost = 20;
         state.grandTotal = 0;
       });
-      
-      ;
   },
 });
 

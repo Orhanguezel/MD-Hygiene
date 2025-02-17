@@ -287,21 +287,22 @@
     "password": "Şifre",
     "save": "Kaydet",
     "updateSuccess": "✅ Profiliniz başarıyla güncellendi!",
-
     "orderHistory": "🧾 Sipariş Geçmişi",
     "orderID": "Sipariş ID",
     "date": "Tarih",
     "amount": "Tutar",
     "status": "Durum",
     "noOrders": "Henüz bir siparişiniz bulunmamaktadır.",
-
     "invoices": "📄 Faturalarım",
     "invoiceID": "Fatura ID",
     "downloadPDF": "📄 PDF İndir",
     "invoiceDownloaded": "📄 Fatura başarıyla indirildi!",
     "missingUser": "❌ Kullanıcı bilgisi eksik, PDF oluşturulamadı!",
     "noInvoices": "⚠️ Henüz bir faturanız bulunmamaktadır.",
-    "loading": "📦 Yükleniyor..."
+    "loading": "📦 Yükleniyor...",
+    "invoiceNumber": "Fatura No",
+    "orders": "📦 Meine Bestellungen",
+    "goToCart": "🛒 Zum Warenkorb"
   },
 
   "cart": {
@@ -477,6 +478,9 @@
     "viewDetails": "🔍 Detayları Gör",
     "noInvoices": "Henüz bir faturanız bulunmamaktadır."
   },
+  "invoice":{
+    "downloadPDF": "PDF"
+  },
   "offers": {
     "title": "📋 Teklifler",
     "archivedTitle": "📁 Arşivlenmiş Teklifler",
@@ -601,5 +605,9 @@
     "processing": "🔵 İşleniyor",
     "shipped": "🚛 Kargoya Verildi",
     "delivered": "✅ Teslim Edildi"
+  },
+  "app":{
+    "loading":"⏳ Yükleniyor, lütfen bekleyin..."
   }
+
 }

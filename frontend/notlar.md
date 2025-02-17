@@ -1,1 +1,0 @@
-1. Siparis modulu ile ilgili olarak... İleride sipariş filtreleme, arama, sıralama veya CSV olarak dışa aktarma gibi özellikler eklemek istersen kolayca entegre edebiliriz.

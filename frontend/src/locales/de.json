@@ -344,7 +344,11 @@
     "invoiceDownloaded": "📄 Rechnung erfolgreich heruntergeladen!",
     "missingUser": "❌ Fehlende Benutzerinformationen, PDF konnte nicht erstellt werden!",
     "noInvoices": "⚠️ Sie haben noch keine Rechnungen.",
-    "loading": "📦 Laden..."
+    "loading": "📦 Laden...",
+    "invoiceNumber": "Fatura No",
+    "orders": "📦 Meine Bestellungen",
+    "goToCart": "🛒 Zum Warenkorb"
+
   },
   "cart": {
     "title": "🛒 Mein Warenkorb",
@@ -525,6 +529,9 @@
     "viewDetails": "🔍 Details anzeigen",
     "noInvoices": "Sie haben noch keine Rechnungen."
   },
+  "invoice":{
+    "downloadPDF": "PDF"
+  },
   "company": {
     "title": "Unternehmensinformationen",
     "name": "Firmenname",
@@ -577,5 +584,9 @@
     "removedFromFavorites": "💔 Aus Favoriten entfernt",
     "addToFavorites": "⭐ Zu Favoriten hinzufügen",
     "inFavorites": "❤️ In den Favoriten"
+  }
+  ,
+  "app":{
+    "loading":"⏳ Laden, bitte warten..."
   }
 }

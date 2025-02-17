@@ -1225,6 +1225,43 @@
       "shippingCost": "20.00",
       "status": "pending",
       "paymentStatus": "pending"
+    },
+    {
+      "id": "ORD-9e5e6d2c-3e4b-40e2-af41-fd253e64252c",
+      "userId": "USR-006",
+      "userName": "Orhan",
+      "userEmail": "orhan@gmail.com",
+      "orderDate": "17.02.2025 - 11:58",
+      "items": [
+        {
+          "productId": "59b4",
+          "title": "Modern Elegance Teal Armchair",
+          "quantity": 2,
+          "unitPrice": 25
+        },
+        {
+          "productId": "8545",
+          "title": "Elegant Solid Wood Dining Table",
+          "quantity": 1,
+          "unitPrice": 67
+        },
+        {
+          "productId": "ed68",
+          "title": "Sleek Modern Laptop with Ambient Lighting",
+          "quantity": 1,
+          "unitPrice": 47
+        },
+        {
+          "productId": "fadf",
+          "title": "Rainbow Glitter High Heels",
+          "quantity": 1,
+          "unitPrice": 39
+        }
+      ],
+      "totalAmount": "203.00",
+      "shippingCost": "20.00",
+      "status": "pending",
+      "paymentStatus": "pending"
     }
   ],
   "invoices": [],
@@ -1379,44 +1416,7 @@
       "productId": "33"
     }
   ],
-  "cart": [
-    {
-      "id": "59b4",
-      "productId": "31",
-      "quantity": 2,
-      "price": 25,
-      "title": "Modern Elegance Teal Armchair",
-      "images": [
-        "https://i.imgur.com/6wkyyIN.jpeg",
-        "https://i.imgur.com/Ald3Rec.jpeg",
-        "https://i.imgur.com/dIqo03c.jpeg"
-      ]
-    },
-    {
-      "id": "8545",
-      "productId": "32",
-      "quantity": 1,
-      "price": 67,
-      "title": "Elegant Solid Wood Dining Table",
-      "images": [
-        "https://i.imgur.com/4lTaHfF.jpeg",
-        "https://i.imgur.com/JktHE1C.jpeg",
-        "https://i.imgur.com/cQeXQMi.jpeg"
-      ]
-    },
-    {
-      "id": "ed68",
-      "productId": "23",
-      "quantity": 1,
-      "price": 47,
-      "title": "Sleek Modern Laptop with Ambient Lighting",
-      "images": [
-        "https://i.imgur.com/OKn1KFI.jpeg",
-        "https://i.imgur.com/G4f21Ai.jpeg",
-        "https://i.imgur.com/Z9oKRVJ.jpeg"
-      ]
-    }
-  ],
+  "cart": [],
   "category": [],
   "reviews": [
     {
@@ -1481,35 +1481,35 @@
       "userId": "USR-005"
     },
     {
-      "id": 1739742742597,
+      "id": "1739742742597",
       "name": "Orhan Güzel",
       "feedback": "sdfdsfdsf",
       "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
       "userId": "USR-005"
     },
     {
-      "id": 1739755046038,
+      "id": "1739755046038",
       "name": "Orhan Güzel",
       "feedback": "aadd",
       "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
       "userId": "USR-005"
     },
     {
-      "id": 1739755077990,
+      "id": "1739755077990",
       "name": "Orhan Güzel",
       "feedback": "xcxdasdas",
       "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
       "userId": "USR-005"
     },
     {
-      "id": 1739755200671,
+      "id": "1739755200671",
       "name": "Orhan Güzel",
       "feedback": "ewfsgfsg",
       "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
       "userId": "USR-005"
     },
     {
-      "id": 1739755343991,
+      "id": "1739755343991",
       "name": "Orhan Güzel",
       "feedback": "fsdfdsfds",
       "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",

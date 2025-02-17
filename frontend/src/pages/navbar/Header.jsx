@@ -89,10 +89,6 @@ export default function Header() {
             <FaShoppingCart size={18} /> ({totalItems})
           </NavItem>
 
-          <NavItem as={Link} to="/notifications">
-            <FaBell size={18} />
-          </NavItem>
-
           <ProfileSection onClick={handleProfileClick}>
             {user.profileImage ? (
               <ProfileImage src={user.profileImage} alt={user.name} />

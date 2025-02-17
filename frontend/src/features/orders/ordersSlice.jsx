@@ -57,18 +57,8 @@ export const updateOrder = createAsyncThunk(
     try {
       const response = await API.put(`/orders/${updatedOrder.id}`, updatedOrder);
 
+      // 📌 **Sipariş "shipped" olduğunda fatura oluştur**
       if (updatedOrder.status === "shipped") {
-        const SHIPPING_COST = 20;
-        const TAX_RATE = 0.19;
-
-        const subtotal = updatedOrder.items.reduce(
-          (sum, item) => sum + item.quantity * item.unitPrice,
-          0
-        );
-
-        const taxAmount = (subtotal * TAX_RATE) / (1 + TAX_RATE);
-        const totalAmount = subtotal + SHIPPING_COST;
-
         const now = new Date();
         const invoiceDate = `${now.getDate().toString().padStart(2, "0")}.${(now.getMonth() + 1)
           .toString()
@@ -86,10 +76,10 @@ export const updateOrder = createAsyncThunk(
           userEmail: updatedOrder.userEmail,
           userAddress: updatedOrder.userAddress,
           items: updatedOrder.items,
-          subtotal: parseFloat(subtotal.toFixed(2)),
-          taxAmount: parseFloat(taxAmount.toFixed(2)),
-          totalAmount: parseFloat(totalAmount.toFixed(2)),
-          shippingCost: SHIPPING_COST,
+          subtotal: updatedOrder.totalAmount - updatedOrder.shippingCost,
+          vatAmount: updatedOrder.vatAmount,
+          totalAmount: updatedOrder.totalAmount,
+          shippingCost: updatedOrder.shippingCost,
           issuedAt: invoiceDate,
           status: "paid",
         };
@@ -97,6 +87,7 @@ export const updateOrder = createAsyncThunk(
         await API.post("/invoices", invoiceData);
         dispatch(fetchInvoices());
       }
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Sipariş güncellenemedi!");
@@ -130,8 +121,10 @@ export const addOrder = createAsyncThunk(
         return rejectWithValue("Kullanıcı oturum açmamış.");
       }
 
-      const totalAmount = cart.totalPrice ? parseFloat(cart.totalPrice).toFixed(2) : "0.00";
-      const shippingCost = cart.shippingCost ? parseFloat(cart.shippingCost).toFixed(2) : "0.00";
+      // 📌 **Toplam tutar kontrolü** (cartSlice ile tutarlı mı?)
+      if (cart.grandTotal !== cart.totalPrice + cart.shippingCost) {
+        return rejectWithValue("Sepet toplamı değişti, lütfen tekrar deneyin.");
+      }
 
       const now = new Date();
       const formattedDate = `${now.getDate().toString().padStart(2, "0")}.${(now.getMonth() + 1)
@@ -154,8 +147,9 @@ export const addOrder = createAsyncThunk(
           quantity: item.quantity,
           unitPrice: item.price,
         })),
-        totalAmount,
-        shippingCost,
+        totalAmount: cart.grandTotal, // 📌 **CartSlice'tan alındı**
+        shippingCost: cart.shippingCost, // 📌 **CartSlice'tan alındı**
+        vatAmount: cart.vatAmount, // 📌 **CartSlice'tan alındı**
         status: "pending",
         paymentStatus: "pending",
       };
@@ -171,7 +165,13 @@ export const addOrder = createAsyncThunk(
 // ✅ **Redux Slice Tanımlaması**
 const ordersSlice = createSlice({
   name: "orders",
-  initialState,
+  initialState: {
+    orders: [],
+    userOrders: [],
+    selectedOrder: null,
+    status: "idle",
+    error: null,
+  },
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -179,9 +179,16 @@ const ordersSlice = createSlice({
         state.orders = action.payload;
         state.status = "succeeded";
       })
+      .addCase(fetchUserOrders.pending, (state) => {
+        state.status = "loading";
+      })
       .addCase(fetchUserOrders.fulfilled, (state, action) => {
-        state.userOrders = action.payload;
         state.status = "succeeded";
+        state.userOrders = action.payload;
+      })
+      .addCase(fetchUserOrders.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
       })
       .addCase(addOrder.fulfilled, (state, action) => {
         state.orders.unshift(action.payload);
@@ -191,6 +198,18 @@ const ordersSlice = createSlice({
         if (index !== -1) {
           state.orders[index] = action.payload;
         }
+      })
+      .addCase(fetchOrderById.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchOrderById.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.selectedOrder = action.payload; // ✅ Seçili siparişi güncelle
+      })
+      .addCase(fetchOrderById.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+        state.selectedOrder = null;
       });
   },
 });
