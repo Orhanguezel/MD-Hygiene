@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-  "start": "npx json-server --watch data.json --port 5001"
+  "start": "npx json-server --watch data.json --port 5001 --host 0.0.0.0"
 }
+
 ,
   "keywords": [],
   "author": "",
