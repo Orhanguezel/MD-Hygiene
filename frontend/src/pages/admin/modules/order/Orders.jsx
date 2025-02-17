@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom"; 
-import { fetchOrders } from "@/features/orders/ordersSlice"; // ✅ Siparişleri API'den çek
+import { fetchOrders, deleteOrder } from "@/features/orders/ordersSlice"; // ✅ Siparişleri ve silme fonksiyonunu getir
 import {
   OrdersContainer,
   OrdersTable,
@@ -9,7 +9,9 @@ import {
   Td,
   StatusBadge,
   ActionButton,
+  DeleteButton 
 } from "./styles/ordersStyles";
+import { toast } from "react-toastify"; // ✅ Bildirimler için
 
 const Orders = () => {
   const dispatch = useDispatch();
@@ -26,8 +28,19 @@ const Orders = () => {
       console.log("📌 API'den Gelen Siparişler:", response.payload);
     });
   }, [dispatch]);
-  
-  
+
+  // ✅ **Sipariş Silme Fonksiyonu**
+  const handleDeleteOrder = (orderId) => {
+    if (window.confirm(texts?.orders?.confirmDelete || "Bu siparişi silmek istediğinizden emin misiniz?")) {
+      dispatch(deleteOrder(orderId))
+        .then(() => {
+          toast.success(texts?.orders?.orderDeleted || "✅ Sipariş başarıyla silindi!");
+        })
+        .catch(() => {
+          toast.error(texts?.orders?.orderDeleteError || "❌ Sipariş silinemedi!");
+        });
+    }
+  };
 
   return (
     <OrdersContainer>
@@ -65,6 +78,9 @@ const Orders = () => {
                     <ActionButton onClick={() => navigate(`/orders/${order.id}`)}>
                       {texts?.orders?.viewDetails || "Detayları Gör"}
                     </ActionButton>
+                    <DeleteButton onClick={() => handleDeleteOrder(order.id)}>
+                      {texts?.orders?.deleteOrder || "❌ Sil"}
+                    </DeleteButton>
                   </Td>
                 </tr>
               ))

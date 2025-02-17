@@ -16,17 +16,19 @@
   },
   "auth": {
     "loginTitle": "Giriş Yap",
-    "emailPlaceholder": "Email",
+    "emailPlaceholder": "E-Posta",
     "passwordPlaceholder": "Şifre",
-    "loginButton": "Giriş Yap",
+    "loginButton": "🔑 Giriş Yap",
+    "loggingIn": "⏳ Giriş Yapılıyor...",
+    "registerButton": "📝 Kayıt Ol",
+    "registering": "⏳ Kayıt Yapılıyor...",
     "noAccount": "Hesabınız yok mu?",
-    "registerLink": "Kayıt Ol",
-    "error": "Bir hata oluştu. Lütfen tekrar deneyin.",
-    "loginSuccess": "Başarıyla giriş yapıldı!",
-    "login": "🔑 Giriş Yap",
-    "register": "📝 Kayıt Ol",
+    "registerLink": "📝 Kayıt Ol",
+    "haveAccount": "Zaten hesabınız var mı?",
+    "error": "❌ Bir hata oluştu. Lütfen tekrar deneyin.",
+    "loginSuccess": "✅ Başarıyla giriş yapıldı!",
     "logout": "🚪 Çıkış Yap",
-    "email": "📧 Email",
+    "email": "📧 E-Posta",
     "password": "🔒 Şifre",
     "confirmPassword": "🔁 Şifre Tekrar",
     "forgotPassword": "❓ Şifrenizi mi unuttunuz?",
@@ -34,7 +36,14 @@
     "newUser": "🆕 Hesabınız yok mu? Kayıt olun!",
     "existingUser": "📌 Zaten hesabınız var mı? Giriş yapın!",
     "loading": "⏳ İşlem yapılıyor...",
-    "invalidCredentials": "❌ Geçersiz email veya şifre!"
+    "invalidCredentials": "❌ Geçersiz e-posta veya şifre!",
+    "registerTitle": "📝 Kayıt Ol",
+    "namePlaceholder": "Ad Soyad",
+    "alreadyHaveAccount": "Zaten hesabınız var mı?",
+    "successLogout": "✅ Başarıyla çıkış yapıldı.",
+    "unauthorized": "🚫 Yetkisiz Erişim",
+    "unauthorizedMessage": "Bu sayfaya erişim yetkiniz bulunmamaktadır.",
+    "goToHome": "🏠 Ana Sayfaya Dön"
   },
   "register": {
     "registerTitle": "Kayıt Ol",
@@ -108,6 +117,11 @@
 
   "orders": {
     "details": "Sipariş Detayları",
+    "goBack": "Go Back",
+    "deleteOrder": "❌ Sil",
+    "confirmDelete": "Bu siparişi silmek istediğinizden emin misiniz?",
+    "orderDeleted": "✅ Sipariş başarıyla silindi!",
+    "orderDeleteError": "❌ Sipariş silinemedi!",
     "paymentStatus": "Ödeme Durumu",
     "shippingAddress": "Teslimat Adresi",
     "products": "Ürünler",
@@ -209,12 +223,12 @@
     "heroTitle": "🏡 Hoş Geldiniz",
     "heroSubtitle": "✨ Harika ürünleri keşfedin!",
     "cta": "🛍 Hemen Alışveriş Yap",
-    "women fashion": "👗 Kadın Modası",
-    "men fashion": "👔 Erkek Modası",
+    "womenFashion": "👗 Kadın Modası",
+    "menFashion": "👔 Erkek Modası",
     "kids": "👶 Çocuklar",
     "accessories": "👜 Aksesuarlar",
     "featuredProducts": "🔥 Öne Çıkan Ürünler",
-    "buyNow": "🛒 Hemen Satın Al",
+    "buyNow": "Hemen Satın Al",
     "testimonials": "⭐ Müşteri Yorumları",
     "newsletterTitle": "📩 Bültenimize Abone Olun",
     "enterEmail": "📧 E-posta adresinizi girin",
@@ -240,7 +254,9 @@
     "removedFromFavorites": "💔 Favorilerden Kaldırıldı",
     "favorite": "⭐ Favorilere Ekle",
     "continueShopping": "🛍️ Alışverişe Devam Et",
-    "back": "🔙 Geri Dön"
+    "back": "🔙 Geri Dön",
+    "noDescription": "📝 Açıklama bulunamadı."
+
   },
   "nav": {
     "home": "Ana Sayfa",
@@ -552,16 +568,38 @@
   "general": {
     "back": "Geri Dön"
   },
+
   "checkout": {
     "title": "💳 Ödeme Sayfası",
-    "error": "🚫 Sepetiniz şu anda boş!",
     "totalPrice": "💰 Toplam Fiyat",
-    "vat": "📊 Vergi (KDV %19)",
-    "shippingCost": "🚚 Nakliye Ücreti",
+    "vat": "📊 Vergi (KDV 19%)",
+    "shippingCost": "🚚 Kargo Ücreti",
     "grandTotal": "🧾 Genel Toplam",
-    "completePayment": "💸 Ödemeyi Tamamla",
-    "missingDetails": "⚠️ Lütfen tüm ödeme bilgilerini doldurun!",
+    "paymentFailed": "❌ Ödeme başarısız oldu. Lütfen tekrar deneyin.",
+    "emptyCart": "🚫 Sepetinizde ürün bulunmamaktadır.",
+    "missingDetails": "❌ Lütfen tüm ödeme bilgilerini doldurun!",
     "success": "✅ Siparişiniz başarıyla oluşturuldu!",
-    "paymentFailed": "❌ Ödeme başarısız. Lütfen tekrar deneyin."
+    "error": "❌ Sipariş oluşturulamadı!",
+    "completePayment": "💸 Ödemeyi Tamamla",
+    "orderSummary": "📦 Sipariş Özeti",
+    "orderSuccessMessage": "🎉 Siparişiniz başarıyla alındı!",
+    "orderId": "📄 Sipariş Numarası",
+    "orderDate": "📅 Sipariş Tarihi",
+    "orderTotal": "💵 Sipariş Toplamı",
+    "continueShopping": "🛍️ Alışverişe Devam Et",
+    "viewOrders": "📑 Siparişlerimi Görüntüle"
+  },
+  "userOrders": {
+    "title": "📑 Siparişlerim",
+    "loading": "⏳ Siparişler yükleniyor...",
+    "noOrders": "📦 Henüz siparişiniz bulunmuyor.",
+    "orderId": "📄 Sipariş Numarası",
+    "orderDate": "📅 Sipariş Tarihi",
+    "orderTotal": "💵 Toplam",
+    "viewDetails": "🔍 Detayı Gör",
+    "pending": "🟡 Beklemede",
+    "processing": "🔵 İşleniyor",
+    "shipped": "🚛 Kargoya Verildi",
+    "delivered": "✅ Teslim Edildi"
   }
 }

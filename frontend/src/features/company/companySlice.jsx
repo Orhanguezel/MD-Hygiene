@@ -5,7 +5,6 @@ import API from "@/services/api";
 export const fetchCompanyInfo = createAsyncThunk("company/fetchCompanyInfo", async (_, { rejectWithValue }) => {
   try {
     const response = await API.get("/companies");
-    console.log("📡 API Yanıtı (Şirket Bilgisi):", response.data);
 
     if (!response.data.length) {
       throw new Error("❌ Şirket bilgisi bulunamadı!");
@@ -13,7 +12,6 @@ export const fetchCompanyInfo = createAsyncThunk("company/fetchCompanyInfo", asy
 
     return response.data[0]; // **İlk şirketi döndür**
   } catch (error) {
-    console.error("⚠️ Hata (fetchCompanyInfo):", error);
     return rejectWithValue(error.response?.data || "Şirket bilgileri yüklenemedi!");
   }
 });
@@ -21,10 +19,8 @@ export const fetchCompanyInfo = createAsyncThunk("company/fetchCompanyInfo", asy
 // 📌 **Şirket Bilgilerini Güncelle**
 export const updateCompanyInfo = createAsyncThunk("company/updateCompanyInfo", async (updatedData, { rejectWithValue }) => {
   try {
-    console.log("🔄 Güncellenen Şirket Verisi:", updatedData);
 
     const response = await API.put(`/companies/${updatedData.id}`, updatedData);
-    console.log("✅ API Güncelleme Yanıtı:", response.data);
 
     return response.data;
   } catch (error) {

@@ -4,15 +4,17 @@ import { NavLink } from "react-router-dom";
 
 export const SidebarContainer = styled.div`
   width: ${({ $isOpen }) => ($isOpen ? "250px" : "60px")};
-  background-color: ${({ theme }) => theme.navBackground};
+  background: ${({ theme }) => theme.navBackground}CC; /* 🔥 %80 transparan */
+  backdrop-filter: blur(8px); /* 🆕 Blur efekti */
   color: ${({ theme }) => theme.text};
-  box-shadow: ${({ $isOpen, theme }) => ($isOpen ? `4px 0 10px ${theme.shadow}` : "none")};
-  position: sticky;
-  top: 0;
+  box-shadow: ${({ $isOpen, theme }) =>
+    $isOpen ? `4px 0 10px ${theme.shadow}` : "none"};
+  position: fixed;
+  top: 70px;
   left: 0;
   transition: width 0.4s ease-in-out, box-shadow 0.3s ease-in-out;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   z-index: 100;
   padding: 10px 0;
 `;
@@ -20,7 +22,7 @@ export const SidebarContainer = styled.div`
 
 // ✅ Sidebar Toggle Butonu (Hamburger Menü)
 export const ToggleSidebarButton = styled.button`
-  background: ${({ theme }) => theme.sidebarToggleHover};
+  background: ${({ theme }) => theme.sidebarToggleBackground};
   border: none;
   cursor: pointer;
   padding: 12px;
@@ -29,6 +31,10 @@ export const ToggleSidebarButton = styled.button`
   justify-content: center;
   transition: background 0.3s ease, color 0.3s ease;
   color: ${({ theme }) => theme.sidebarToggle};
+  border-radius: 6px;
+  margin: 0 auto 10px auto;
+  width: 80%;
+  max-width: 40px;
 
   &:hover {
     background: ${({ theme }) => theme.sidebarToggleHoverBackground};
@@ -42,14 +48,14 @@ export const HamburgerIcon = styled(FaBars)`
   transition: color 0.3s ease;
 
   ${ToggleSidebarButton}:hover & {
-    color: ${({ theme }) => theme.sidebarToggleHover}; 
+    color: ${({ theme }) => theme.sidebarToggleHover};
   }
 `;
 
 export const NavContainer = styled.nav`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   padding: 0 10px;
 `;
 
@@ -57,24 +63,28 @@ export const NavContainer = styled.nav`
 export const NavItem = styled(NavLink)`
   display: flex;
   align-items: center;
-  gap: ${({ $isOpen }) => ($isOpen ? "12px" : "0")};
+  gap: ${({ $isOpen }) => ($isOpen ? "14px" : "0")};
   justify-content: ${({ $isOpen }) => ($isOpen ? "flex-start" : "center")};
-  padding: 12px;
+  padding: 14px;
   color: ${({ theme }) => theme.sidebarText};
   text-decoration: none;
   font-size: 16px;
-  border-radius: 6px;
-  transition: background 0.3s ease, padding 0.3s ease, color 0.3s ease; 
+  font-weight: 500;
+  border-radius: 8px;
+  transition: background 0.3s ease, padding 0.3s ease, color 0.3s ease;
   position: relative;
+  overflow: hidden;
 
   &:hover {
     background: ${({ theme }) => theme.sidebarHover};
     color: ${({ theme }) => theme.sidebarTextHover};
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
   &.active {
     background: ${({ theme }) => theme.sidebarActive};
     color: ${({ theme }) => theme.sidebarActiveText};
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   }
 
   span {
@@ -83,6 +93,7 @@ export const NavItem = styled(NavLink)`
   }
 `;
 
+// ✅ Tooltip (Kapalı Sidebar İçin)
 export const Tooltip = styled.div`
   position: absolute;
   left: 70px;
@@ -90,12 +101,14 @@ export const Tooltip = styled.div`
   transform: translateY(-50%);
   background: ${({ theme }) => theme.tooltipBackground};
   color: ${({ theme }) => theme.tooltipText};
-  padding: 5px 10px;
-  border-radius: 4px;
+  padding: 6px 12px;
+  border-radius: 6px;
   border: 1px solid ${({ theme }) => theme.border};
-  font-size: 12px;
+  font-size: 14px;
   white-space: nowrap;
   display: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease-in-out;
 
   ${NavItem}:hover & {
     display: block;

@@ -29,10 +29,8 @@ export const addFavorite = createAsyncThunk(
   async (productId, thunkAPI) => {
     try {
       await API.post("/favorites", { productId });
-      toast.success("✅ Ürün favorilere eklendi!");
       return productId;
     } catch (error) {
-      toast.error("❌ Ürün favorilere eklenirken hata oluştu!");
       return thunkAPI.rejectWithValue(error.response?.data || "Favori eklenirken hata oluştu");
     }
   }
@@ -48,11 +46,9 @@ export const removeFavorite = createAsyncThunk(
 
       if (favorite) {
         await API.delete(`/favorites/${favorite.id}`);
-        toast.warn("🗑️ Ürün favorilerden kaldırıldı!");
         return productId;
       }
     } catch (error) {
-      toast.error("❌ Ürün favorilerden kaldırılırken hata oluştu!");
       return thunkAPI.rejectWithValue(error.response?.data || "Favori silinirken hata oluştu");
     }
   }

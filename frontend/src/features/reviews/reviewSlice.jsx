@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "@/services/api";
-import { toast } from "react-toastify";
 
 // 📌 Tüm yorumları çekme
 export const fetchReviews = createAsyncThunk("reviews/fetchReviews", async (_, thunkAPI) => {
@@ -30,10 +29,8 @@ export const addReview = createAsyncThunk("reviews/addReview", async (reviewData
     };
 
     const response = await API.post("/reviews", newReview);
-    toast.success("✅ Yorum eklendi!");
     return response.data;
   } catch (error) {
-    toast.error("❌ Yorum eklenirken hata oluştu!");
     return thunkAPI.rejectWithValue("Yorum eklenirken hata oluştu!");
   }
 });
@@ -49,10 +46,8 @@ export const deleteReview = createAsyncThunk("reviews/deleteReview", async (revi
     }
 
     await API.delete(`/reviews/${reviewId}`);
-    toast.warn("🗑️ Yorum silindi!");
     return reviewId;
   } catch (error) {
-    toast.error("❌ Yorum silinirken hata oluştu!");
     return thunkAPI.rejectWithValue("Yorum silinemedi!");
   }
 });

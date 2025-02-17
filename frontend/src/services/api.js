@@ -1,7 +1,13 @@
 import axios from "axios";
 
+// ✅ Ortama Göre API Adresi Belirleme
+const API_BASE_URL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000" // ✅ Yerel Geliştirme Ortamı
+    : "https://www.md-hygienelogistik.de/api"; // ✅ Canlı Sunucu
+
 const API = axios.create({
-  baseURL: "http://localhost:3000", // JSON Server endpoint
+  baseURL: API_BASE_URL, 
 });
 
 API.interceptors.response.use(
@@ -16,3 +22,4 @@ API.interceptors.response.use(
 );
 
 export default API;
+

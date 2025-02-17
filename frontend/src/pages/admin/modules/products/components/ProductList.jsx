@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchProducts,
@@ -15,8 +15,6 @@ import {
   ProductDetails,
   CategoryButtonContainer,
   CategoryButton,
-  FormInput,
-  SubmitButton,
 } from "../styles/productStyles";
 
 const ProductList = () => {

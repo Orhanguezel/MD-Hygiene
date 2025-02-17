@@ -10,13 +10,14 @@ import {
   CategoryImage,
   CategoryTitle,
 } from "../styles/CategorySectionStyles";
+import { motion } from "framer-motion";
 
 const CategorySection = () => {
   const dispatch = useDispatch();
   const { products, selectedCategory } = useSelector((state) => state.product);
 
   useEffect(() => {
-    dispatch(fetchProducts()); // ✅ Ürünleri çek
+    dispatch(fetchProducts());
   }, [dispatch]);
 
   // 📌 Ürünler içindeki kategorileri al, tekrar edenleri kaldır
@@ -26,17 +27,17 @@ const CategorySection = () => {
     ).values(),
   ];
 
-  const handleCategoryClick = (categoryId) => {
-    dispatch(filterByCategory(categoryId));
-    console.log("📌 Seçilen Kategori:", categoryId); // ✅ Konsolda kontrol et
-  };
-
   return (
-    <CategoryContainer>
+    <CategoryContainer
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+    >
       {/* 📌 Tüm Ürünler Seçeneği */}
       <CategoryCard
-        onClick={() => handleCategoryClick(null)}
-        $active={!selectedCategory} // ✅ `$active` olarak değiştirildi!
+        onClick={() => dispatch(filterByCategory(null))}
+        $active={!selectedCategory}
+        whileTap={{ scale: 0.95 }}
       >
         <CategoryTitle>📌 Tüm Ürünler</CategoryTitle>
       </CategoryCard>
@@ -45,7 +46,8 @@ const CategorySection = () => {
         <CategoryCard
           key={category.id}
           onClick={() => dispatch(filterByCategory(category.id))}
-          $active={selectedCategory === category.id} // ✅ `$active` olarak değiştirildi!
+          $active={selectedCategory === category.id}
+          whileTap={{ scale: 0.95 }}
         >
           <CategoryImage src={category.image} alt={category.name} />
           <CategoryTitle>{category.name}</CategoryTitle>

@@ -8,18 +8,18 @@ Tabii! İşte tüm **PM2 ile ilgili kullanılan komutların listesi** markdown (
 pm2 start server.js --name backend-md-hygiene  
 
 # Frontend'i PM2 ile başlatma (Vite preview için)
-pm2 start npm --name frontend-md-hygiene -- run preview
+pm2 start npm --name frontend -- run preview
 
 # Çalışan süreçleri listeleme
 pm2 list
 
 # Bir süreci durdurma
 pm2 stop backend-md-hygiene
-pm2 stop frontend-md-hygiene
+pm2 stop frontend
 
 # Bir süreci yeniden başlatma
 pm2 restart backend-md-hygiene
-pm2 restart frontend-md-hygiene
+pm2 restart frontend
 
 # Çevresel değişkenleri güncelleyerek yeniden başlatma
 pm2 restart backend-md-hygiene --update-env
@@ -27,7 +27,7 @@ pm2 restart frontend-md-hygiene --update-env
 
 # Bir süreci tamamen silme
 pm2 delete backend-md-hygiene
-pm2 delete frontend-md-hygiene
+pm2 delete md-hygiene-frontend
 
 # Tüm süreçleri silme
 pm2 delete all

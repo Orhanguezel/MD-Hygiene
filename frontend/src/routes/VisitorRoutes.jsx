@@ -1,36 +1,28 @@
 import { Routes, Route } from "react-router-dom";
-import VisitorLayout from "@/layouts/VisitorLayout";
+import AppLayout from "@/layouts/AppLayout";
 import Home from "@/pages/visitor/home/Home";
-import About from "@/pages/visitor/About";
-import Contact from "@/pages/visitor/Contact";
-import NotFound from "@/components/common/NotFound";
+import NotFound from "@/pages/navbar/NotFound";
 import Login from "@/pages/auth/Login";
 import Register from "@/pages/auth/Register";
 import Unauthorized from "@/pages/auth/Unauthorized";
 import ProductDetail from "@/pages/visitor/home/components/ProductDetail";
+//import TermsOfService from "@/pages/visitor/TermsOfService"; 
+//import PrivacyPolicy from "@/pages/visitor/PrivacyPolicy"; 
 
-const VisitorRouter = () => (
+const VisitorRoutes = () => (
   <Routes>
-    <Route path="/" element={<VisitorLayout />}>
-      {/* ✅ Ana Sayfa */}
+    <Route path="/" element={<AppLayout />}>
       <Route index element={<Home />} />
-
-      {/* ✅ Ürün Detayları */}
       <Route path="product/:id" element={<ProductDetail />} />
 
-      {/* ✅ Statik Sayfalar */}
-      <Route path="about" element={<About />} />
-      <Route path="contact" element={<Contact />} />
 
-      {/* ✅ Auth Sayfaları */}
+
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="unauthorized" element={<Unauthorized />} />
-
-      {/* ✅ 404 Sayfası */}
       <Route path="*" element={<NotFound />} />
     </Route>
   </Routes>
 );
 
-export default VisitorRouter;
+export default VisitorRoutes;

@@ -1,19 +1,27 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "@/features/products/productSlice";
+import { addToCart } from "@/features/cart/cartSlice";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useLanguage } from "@/features/language/useLanguage"; // ✅ Dil desteği eklendi
 import {
   CarouselContainer,
   CarouselInfo,
   Slide,
-  SlideImage,
-  SlideContent,
   CarouselNavButton,
+  PriceBox,
+  ActionButtons,
+  Button,
 } from "../styles/HeroSectionStyles";
 
 const HeroSection = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { products, loading, error } = useSelector((state) => state.product);
-  const theme = useSelector((state) => state.theme); // ✅ Redux Theme
+  const theme = useSelector((state) => state.theme);
+  const { texts } = useLanguage(); // ✅ Dil dosyalarından metinleri almak için
+
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -23,7 +31,9 @@ const HeroSection = () => {
   useEffect(() => {
     if (products.length > 0) {
       const interval = setInterval(() => {
-        setCurrentSlide((prev) => (prev === products.length - 1 ? 0 : prev + 1));
+        setCurrentSlide((prev) =>
+          prev === products.length - 1 ? 0 : prev + 1
+        );
       }, 4000);
 
       return () => clearInterval(interval);
@@ -34,28 +44,111 @@ const HeroSection = () => {
     setCurrentSlide(index);
   };
 
-  if (loading) return <p>Yükleniyor...</p>;
-  if (error) return <p>Hata: {error}</p>;
+  const handleAddToCart = (product, event) => {
+    event.stopPropagation();
+    dispatch(addToCart(product));
+  };
 
-  const currentProduct = products[currentSlide] || {}; // ✅ Undefined hatasını önler
+  const handleBuyNow = (product, event) => {
+    event.stopPropagation();
+    dispatch(addToCart(product));
+    navigate("/checkout");
+  };
+
+  const handleProductClick = (productId) => {
+    navigate(`/product/${productId}`);
+  };
+
+  if (loading) return <p>{texts?.loading || "Yükleniyor..."}</p>;
+  if (error) return <p>{texts?.error || "Hata oluştu!"}</p>;
+
+  const currentProduct = products[currentSlide] || {};
 
   return (
     <CarouselContainer theme={theme}>
-      <CarouselInfo theme={theme}>
-        <h2>{currentProduct.title || "Ürün Bulunamadı"}</h2>
-        <p>{currentProduct.description?.substring(0, 100) || "Açıklama bulunamadı"}...</p>
+      <CarouselInfo theme={theme} key={currentProduct.id || currentSlide}>
+        <motion.h2
+          key={`title-${currentSlide}`}
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          {currentProduct.title || texts?.noProducts || "Ürün Bulunamadı"}
+        </motion.h2>
+
+        <motion.p
+          key={`desc-${currentSlide}`}
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+        >
+          {currentProduct.description?.substring(0, 100) ||
+            texts?.noDescription || "Açıklama bulunamadı"}
+          ...
+        </motion.p>
+
+        {/* ✅ Fiyat Bilgisi + Butonlar */}
+        <motion.div
+          key={`price-${currentSlide}`}
+          initial={{ x: -30, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.7, ease: "easeOut", delay: 0.4 }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "10px",
+            marginTop: "10px",
+          }}
+        >
+          <ActionButtons>
+            <Button
+              theme={theme}
+              onClick={(e) => handleAddToCart(currentProduct, e)}
+            >
+              {texts?.home.addToCart || "Sepete Ekle"}
+            </Button>
+
+            <Button
+              theme={theme}
+              onClick={(e) => handleBuyNow(currentProduct, e)}
+            >
+              💳 {texts?.home.buyNow || "Satın Al"}
+            </Button>
+          </ActionButtons>
+
+          <PriceBox theme={theme}>
+            {currentProduct.price
+              ? `${currentProduct.price}$`
+              : texts?.home.price || "Fiyat Bilgisi Yok"}
+          </PriceBox>
+        </motion.div>
       </CarouselInfo>
-      <Slide theme={theme}>
-        <SlideImage
+
+      {/* ✅ Tıklanabilir Resim (Ürün Detay Sayfasına Yönlendiriyor) */}
+      <Slide
+        theme={theme}
+        onClick={() => handleProductClick(currentProduct.id)}
+      >
+        <motion.img
+          key={`image-${currentSlide}`}
           src={currentProduct.images?.[0] || "/placeholder.jpg"}
           alt={currentProduct.title || "Ürün Resmi"}
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          style={{
+            width: "100%",
+            height: "auto",
+            maxHeight: "400px",
+            objectFit: "cover",
+            cursor: "pointer",
+          }}
         />
-        <SlideContent theme={theme}>
-          <p>{currentProduct.price ? `${currentProduct.price}$` : "Fiyat Bilgisi Yok"}</p>
-        </SlideContent>
       </Slide>
 
-      <CarouselNavButton theme={theme}
+      <CarouselNavButton
+        theme={theme}
         $left
         onClick={() =>
           goToSlide(currentSlide === 0 ? products.length - 1 : currentSlide - 1)
@@ -64,7 +157,8 @@ const HeroSection = () => {
         ◀
       </CarouselNavButton>
 
-      <CarouselNavButton theme={theme}
+      <CarouselNavButton
+        theme={theme}
         onClick={() => goToSlide((currentSlide + 1) % products.length)}
       >
         ▶

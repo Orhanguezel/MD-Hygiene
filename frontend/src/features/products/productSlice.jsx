@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "@/services/api"; // ✅ Merkezi API yapısı
-import { toast } from "react-toastify";
+
 
 // 📌 Ürünleri API’den çekme
 export const fetchProducts = createAsyncThunk(
@@ -10,7 +10,6 @@ export const fetchProducts = createAsyncThunk(
       const response = await API.get("/data"); // ✅ Doğru endpoint
       return response.data;
     } catch (error) {
-      toast.error("❌ Ürünler yüklenirken hata oluştu!");
       return thunkAPI.rejectWithValue(error.response?.data || "Ürünler alınırken hata oluştu");
     }
   }
@@ -24,7 +23,6 @@ export const fetchCategories = createAsyncThunk(
       const response = await API.get("/category");
       return response.data;
     } catch (error) {
-      toast.error("❌ Kategoriler yüklenirken hata oluştu!");
       return thunkAPI.rejectWithValue(
         error.response?.data || "Kategoriler alınırken hata oluştu"
       );
@@ -53,11 +51,9 @@ export const addProduct = createAsyncThunk("products/addProduct", async (product
     const response = await API.post("/data", newProduct);
     console.log("✅ API Yanıtı:", response.data); // 🔍 API’nin döndürdüğü cevabı konsolda gör
 
-    toast.success("✅ Ürün başarıyla eklendi!");
     return response.data;
   } catch (error) {
     console.error("❌ API Hatası:", error); // 🔍 Konsolda API Hatası gör
-    toast.error("❌ Ürün eklenirken hata oluştu!");
     return thunkAPI.rejectWithValue(error.response?.data || "Ürün eklenirken hata oluştu");
   }
 });
@@ -87,10 +83,8 @@ export const updateProduct = createAsyncThunk(
       console.log("📌 Güncellenecek Ürün:", updatedProduct); // 🔍 Konsolda kontrol et
 
       const response = await API.put(`/data/${id}`, updatedProduct);
-      toast.success(`✅ Ürün başarıyla güncellendi!`);
       return response.data;
     } catch (error) {
-      toast.error("❌ Ürün güncellenirken hata oluştu!");
       return thunkAPI.rejectWithValue(error.response?.data || "Ürün güncellenirken hata oluştu");
     }
   }
@@ -103,10 +97,8 @@ export const deleteProduct = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       await API.delete(`/data/${id}`);
-      toast.warn("🗑️ Ürün başarıyla silindi!");
       return id;
     } catch (error) {
-      toast.error("❌ Ürün silinirken hata oluştu!");
       return thunkAPI.rejectWithValue(
         error.response?.data || "Ürün silinirken hata oluştu"
       );
@@ -172,7 +164,6 @@ const productSlice = createSlice({
         state.products = state.products.map((product) =>
           product.id === action.payload.id ? action.payload : product
         );
-        toast.success("✅ Ürün Redux Store'da güncellendi!");
       })
       .addCase(updateProduct.rejected, (state, action) => {
         state.error = action.payload || "Ürün güncellenemedi.";

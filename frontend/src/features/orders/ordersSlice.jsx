@@ -1,16 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchInvoices } from "@/features/invoices/invoicesSlice"; // ✅ Fatura işlemleri
-import API from "@/services/api"; // ✅ API Entegrasyonu
+import { v4 as uuidv4 } from "uuid";
+import { fetchInvoices } from "@/features/invoices/invoicesSlice";
+import API from "@/services/api";
 
 const initialState = {
-  orders: [],          // ✅ Tüm siparişleri tutar
-  userOrders: [],      // ✅ Kullanıcının siparişlerini tutar
-  selectedOrder: null, // ✅ Seçilen siparişin detaylarını tutar
-  status: "idle",      // ✅ API çağrısı durumu
-  error: null,         // ✅ Hata mesajlarını saklar
+  orders: [],
+  userOrders: [],
+  selectedOrder: null,
+  status: "idle",
+  error: null,
 };
 
-// 📥 **Tüm siparişleri getir**
+// 📥 **Tüm siparişleri getir (Admin Panel)**
 export const fetchOrders = createAsyncThunk(
   "orders/fetchOrders",
   async (_, { rejectWithValue }) => {
@@ -18,7 +19,7 @@ export const fetchOrders = createAsyncThunk(
       const response = await API.get("/orders");
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "🚨 Siparişler yüklenirken hata oluştu!");
+      return rejectWithValue(error.response?.data || "Siparişler yüklenemedi!");
     }
   }
 );
@@ -31,12 +32,12 @@ export const fetchOrderById = createAsyncThunk(
       const response = await API.get(`/orders/${orderId}`);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "🚨 Sipariş bulunamadı!");
+      return rejectWithValue(error.response?.data || "Sipariş bulunamadı!");
     }
   }
 );
 
-// 📥 **Kullanıcının siparişlerini getir**
+// 📥 **Kullanıcının Siparişlerini Getir**
 export const fetchUserOrders = createAsyncThunk(
   "orders/fetchUserOrders",
   async (userId, { rejectWithValue }) => {
@@ -44,12 +45,12 @@ export const fetchUserOrders = createAsyncThunk(
       const response = await API.get(`/orders?userId=${userId}`);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "🚨 Kullanıcı siparişleri getirilemedi!");
+      return rejectWithValue(error.response?.data || "Siparişler yüklenemedi!");
     }
   }
 );
 
-// ✏️ **Siparişi güncelle fonksiyonunda fatura oluşturma zorunlu olsun**
+// ✏️ **Sipariş Güncelleme (Admin Panel)**
 export const updateOrder = createAsyncThunk(
   "orders/updateOrder",
   async (updatedOrder, { rejectWithValue, dispatch }) => {
@@ -57,15 +58,28 @@ export const updateOrder = createAsyncThunk(
       const response = await API.put(`/orders/${updatedOrder.id}`, updatedOrder);
 
       if (updatedOrder.status === "shipped") {
-        const SHIPPING_COST = 20; 
-        const TAX_RATE = 0.19; 
-        const subtotal = updatedOrder.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
-        const taxAmount = subtotal * TAX_RATE;
-        const totalAmount = subtotal + SHIPPING_COST; 
+        const SHIPPING_COST = 20;
+        const TAX_RATE = 0.19;
 
-        // ✅ Fatura oluşturma
+        const subtotal = updatedOrder.items.reduce(
+          (sum, item) => sum + item.quantity * item.unitPrice,
+          0
+        );
+
+        const taxAmount = (subtotal * TAX_RATE) / (1 + TAX_RATE);
+        const totalAmount = subtotal + SHIPPING_COST;
+
+        const now = new Date();
+        const invoiceDate = `${now.getDate().toString().padStart(2, "0")}.${(now.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}.${now.getFullYear()} - ${now
+          .getHours()
+          .toString()
+          .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
+
         const invoiceData = {
-          invoiceNumber: `INV-${Date.now()}`,
+          id: `INV-${uuidv4()}`,
+          invoiceNumber: `INV-${uuidv4()}`,
           orderId: updatedOrder.id,
           userId: updatedOrder.userId,
           userName: updatedOrder.userName,
@@ -76,22 +90,21 @@ export const updateOrder = createAsyncThunk(
           taxAmount: parseFloat(taxAmount.toFixed(2)),
           totalAmount: parseFloat(totalAmount.toFixed(2)),
           shippingCost: SHIPPING_COST,
-          issuedAt: new Date().toISOString(),
+          issuedAt: invoiceDate,
           status: "paid",
         };
 
-        await API.post("/invoices", invoiceData); 
-        dispatch(fetchInvoices()); 
+        await API.post("/invoices", invoiceData);
+        dispatch(fetchInvoices());
       }
-
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "🚨 Sipariş güncellenemedi!");
+      return rejectWithValue(error.response?.data || "Sipariş güncellenemedi!");
     }
   }
 );
 
-// ❌ **Siparişi sil**
+// ❌ **Siparişi Sil (Admin Panel)**
 export const deleteOrder = createAsyncThunk(
   "orders/deleteOrder",
   async (orderId, { rejectWithValue }) => {
@@ -99,107 +112,87 @@ export const deleteOrder = createAsyncThunk(
       await API.delete(`/orders/${orderId}`);
       return orderId;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "🚨 Sipariş silinemedi!");
+      return rejectWithValue(error.response?.data || "Sipariş silinemedi!");
     }
   }
 );
 
-// ➕ **Sipariş oluştur (Checkout'tan gönderilecek)**
+// ➕ **Yeni Sipariş Oluştur (Checkout Sayfası)**
 export const addOrder = createAsyncThunk(
   "orders/addOrder",
-  async (order, { rejectWithValue }) => {
+  async (cartItems, { getState, rejectWithValue }) => {
     try {
-      const response = await API.post("/orders", order);
+      const state = getState();
+      const user = state.auth.user;
+      const cart = state.cart;
+
+      if (!user) {
+        return rejectWithValue("Kullanıcı oturum açmamış.");
+      }
+
+      const totalAmount = cart.totalPrice ? parseFloat(cart.totalPrice).toFixed(2) : "0.00";
+      const shippingCost = cart.shippingCost ? parseFloat(cart.shippingCost).toFixed(2) : "0.00";
+
+      const now = new Date();
+      const formattedDate = `${now.getDate().toString().padStart(2, "0")}.${(now.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}.${now.getFullYear()} - ${now
+        .getHours()
+        .toString()
+        .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
+
+      const newOrder = {
+        id: `ORD-${uuidv4()}`,
+        userId: user.id,
+        userName: user.name,
+        userEmail: user.email,
+        userAddress: user.address,
+        orderDate: formattedDate,
+        items: cartItems.map((item) => ({
+          productId: item.id,
+          title: item.title,
+          quantity: item.quantity,
+          unitPrice: item.price,
+        })),
+        totalAmount,
+        shippingCost,
+        status: "pending",
+        paymentStatus: "pending",
+      };
+
+      const response = await API.post("/orders", newOrder);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "🚨 Sipariş oluşturulamadı!");
+      return rejectWithValue("Sipariş oluşturulamadı.");
     }
   }
 );
-
-
-
-
 
 // ✅ **Redux Slice Tanımlaması**
 const ordersSlice = createSlice({
   name: "orders",
-  initialState: {
-    orders: [],
-    selectedOrder: null,
-    status: "idle",
-    error: null,
-  },
-  reducers: {
-  },
+  initialState,
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      // 📥 **Tüm siparişleri getir**
-      .addCase(fetchOrders.pending, (state) => {
-        state.status = "loading";
-      })
       .addCase(fetchOrders.fulfilled, (state, action) => {
-        state.orders = action.payload.map(order => ({
-          ...order,
-          totalAmount: Number(order.totalAmount || 0), 
-        }));
+        state.orders = action.payload;
         state.status = "succeeded";
       })
-      .addCase(fetchOrders.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
-
-      // Siparis olusturma
-
-      .addCase(addOrder.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
+      .addCase(fetchUserOrders.fulfilled, (state, action) => {
+        state.userOrders = action.payload;
+        state.status = "succeeded";
       })
       .addCase(addOrder.fulfilled, (state, action) => {
-        state.status = "succeeded";
         state.orders.unshift(action.payload);
       })
-      .addCase(addOrder.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-
-      // 📥 **Belirli bir siparişi getir**
-      .addCase(fetchOrderById.pending, (state) => {
-        state.status = "loading";
-        state.selectedOrder = null;
-      })
-      .addCase(fetchOrderById.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.selectedOrder = action.payload;
-      })
-      .addCase(fetchOrderById.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-
-      // 📥 **Kullanıcının siparişlerini getir**
-      .addCase(fetchUserOrders.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.userOrders = action.payload;
-      })
-
-      // ✏️ **Sipariş güncelleme**
       .addCase(updateOrder.fulfilled, (state, action) => {
-        const index = state.orders.findIndex((order) => order.id === action.payload.id);
+        const index = state.orders.findIndex(order => order.id === action.payload.id);
         if (index !== -1) {
           state.orders[index] = action.payload;
         }
-      })
-
-      // ❌ **Sipariş silme işlemi**
-      .addCase(deleteOrder.fulfilled, (state, action) => {
-        state.orders = state.orders.filter((order) => order.id !== action.payload);
       });
   },
 });
 
-// **Reducer ve Actions'ları dışa aktar**
-export const { resetOrders } = ordersSlice.actions;
 export default ordersSlice.reducer;

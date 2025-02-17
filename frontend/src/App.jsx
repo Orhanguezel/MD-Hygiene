@@ -3,12 +3,17 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import AdminRoutes from "./routes/AdminRoutes";
 import UserRoutes from "./routes/UserRoutes";
-import VisitorRouter from "./routes/VisitorRoutes";
+import VisitorRoutes from "./routes/VisitorRoutes";
 import { useLanguage } from "./features/language/useLanguage";
+import { useTheme } from "./features/theme/useTheme"; // ✅ Tema desteği
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const { user, isAuthenticated, loading, error } = useSelector((state) => state.auth);
   const { texts } = useLanguage();
+  const { theme } = useTheme(); // ✅ Tema desteği
+
   const [isAppLoading, setIsAppLoading] = useState(true);
 
   useEffect(() => {
@@ -21,7 +26,7 @@ const App = () => {
 
   if (isAppLoading) {
     return (
-      <div style={{ textAlign: "center", padding: "20px" }}>
+      <div style={{ textAlign: "center", padding: "20px", color: theme.text, background: theme.background }}>
         <h3>{texts.app?.loading || "⏳ Yükleniyor, lütfen bekleyin..."}</h3>
       </div>
     );
@@ -29,19 +34,26 @@ const App = () => {
 
   return (
     <BrowserRouter>
+      {/* ✅ Hata mesajı gösterme */}
       {error && <div style={{ color: "red", textAlign: "center" }}>{error}</div>}
 
       <Routes>
         {isAuthenticated ? (
           user?.role === "admin" ? (
-            <Route path="/*" element={<AdminRoutes />} />
+            <>
+              <Route path="/*" element={<AdminRoutes />} />
+              <Route path="/user/*" element={<UserRoutes />} />
+            </>
           ) : (
             <Route path="/*" element={<UserRoutes />} />
           )
         ) : (
-          <Route path="/*" element={<VisitorRouter />} />
+          <Route path="/*" element={<VisitorRoutes />} />
         )}
       </Routes>
+
+      {/* ✅ ToastContainer eklendi */}
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} theme={theme.mode} />
     </BrowserRouter>
   );
 };

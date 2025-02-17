@@ -152,3 +152,19 @@ export const InvoiceCard = styled(Card)`
   justify-content: space-between;
   align-items: center;
 `;
+
+export const ViewButton = styled.button`
+  margin-top: 10px;
+  padding: 8px 12px;
+  border: none;
+  background-color: ${({ theme }) => theme.primary};
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.secondary};
+  }
+`;
+

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addReview } from "@/features/reviews/reviewSlice";
 import { useLanguage } from "@/features/language/useLanguage";
-import { toast } from "react-toastify"; // ✅ Bildirimler için import edildi
+import { toast } from "react-toastify"; 
 import "react-toastify/dist/ReactToastify.css";
 import {
   ReviewFormContainer,
@@ -12,18 +12,22 @@ import {
   ProfileSection,
   UserAvatar,
   UserName,
+  ReviewBox,
 } from "../styles/ReviewStyles";
+import { FaUserCircle } from "react-icons/fa"; 
 
 const ReviewForm = () => {
   const { texts } = useLanguage();
   const dispatch = useDispatch();
-  const theme = useSelector((state) => state.theme); // ✅ Tema desteği
-  const user = useSelector((state) => state.auth.user); // ✅ Kullanıcı bilgisi
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated); // ✅ Kullanıcı giriş yapmış mı?
+  const theme = useSelector((state) => state.theme);
+  const user = useSelector((state) => state.auth.user);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const [reviewText, setReviewText] = useState("");
+  const [imageError, setImageError] = useState(false); // ✅ Resim yüklenemezse fallback için state
 
-  // 📌 Kullanıcı giriş yapmamışsa yorum yapmasına izin verme!
+  console.log("Redux User Data:", user); // ✅ Konsolda user verisini kontrol et!
+
   if (!isAuthenticated) {
     return (
       <ReviewFormContainer theme={theme}>
@@ -43,35 +47,41 @@ const ReviewForm = () => {
     }
 
     const newReview = {
-      id: Date.now(), // 📌 Geçici ID
+      id: Date.now(),
       name: user?.name || "Anonim Kullanıcı",
       feedback: reviewText,
-      avatar: user?.avatar || "https://randomuser.me/api/portraits/lego/5.jpg", // ✅ Kullanıcının avatarı varsa kullan
+      avatar: user?.profileImage && !imageError ? user.profileImage : "/default-avatar.png",
     };
 
     dispatch(addReview(newReview));
-    setReviewText(""); // 📌 Formu temizle
+    setReviewText("");
 
     toast.success(texts?.home?.reviewSubmitted || "✅ Yorum başarıyla eklendi!");
   };
 
   return (
     <ReviewFormContainer theme={theme} onSubmit={handleSubmit}>
-      {/* 📌 Kullanıcı Profili */}
+      {/* Kullanıcı Profili */}
       <ProfileSection>
-        <UserAvatar src={user?.avatar || "https://randomuser.me/api/portraits/lego/5.jpg"} />
+        <UserAvatar
+          src={!imageError ? user.profileImage : "/default-avatar.png"}
+          alt={user.name}
+          onError={() => setImageError(true)} // ✅ Resim yüklenemezse hata durumunu yönet
+        />
         <UserName>{user?.name || "Anonim Kullanıcı"}</UserName>
       </ProfileSection>
 
       <ReviewHeader>{texts?.home?.writeReview || "Yorum Yap"}</ReviewHeader>
 
-      <ReviewInput
-        type="text"
-        placeholder={texts?.home?.leaveReview || "Yorumunuzu buraya yazın..."}
-        value={reviewText}
-        onChange={(e) => setReviewText(e.target.value)}
-        theme={theme}
-      />
+      <ReviewBox>
+        <ReviewInput
+          type="text"
+          placeholder={texts?.home?.leaveReview || "Yorumunuzu buraya yazın..."}
+          value={reviewText}
+          onChange={(e) => setReviewText(e.target.value)}
+          theme={theme}
+        />
+      </ReviewBox>
 
       <SubmitButton type="submit" theme={theme}>
         {texts?.home?.submitReview || "Gönder"}

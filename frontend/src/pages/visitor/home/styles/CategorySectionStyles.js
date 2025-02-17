@@ -1,116 +1,82 @@
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
 // 📌 Kategori Konteyneri (Ana Bölüm)
-export const CategoryContainer = styled.div`
+export const CategoryContainer = styled(motion.div)`
   display: flex;
   gap: 20px;
-  padding: 20px;
+  padding: 30px;
   justify-content: center;
   flex-wrap: wrap;
   background: ${({ theme }) => theme.background};
+  border-radius: 12px;
+  box-shadow: 0 6px 12px ${({ theme }) => theme.shadow};
+
+  @media (max-width: 768px) {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding: 15px;
+  }
 `;
 
 // 📌 Kategori Kartı
-export const CategoryCard = styled.div`
-  padding: 15px;
-  background-color: ${({ theme, $active }) => ($active ? theme.primary : theme.cardBackground)};
+export const CategoryCard = styled(motion.div)`
+  padding: 20px;
+  width: 300px;
+  height: 250px;
+  background: ${({ theme, $active }) => ($active ? theme.primary : theme.cardBackground)};
   color: ${({ theme, $active }) => ($active ? theme.buttonText : theme.text)};
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-  border-radius: 8px;
+  border-radius: 12px;
   text-align: center;
-  box-shadow: 0 4px 8px ${({ theme }) => theme.shadow};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 6px 12px ${({ theme }) => theme.shadow};
+  transition: background 0.3s ease, transform 0.3s ease;
+  position: relative;
 
   &:hover {
     background-color: ${({ theme }) => theme.primaryHover};
-    transform: scale(1.05);
+    transform: scale(1.1);
+  }
+
+  ${({ $active }) =>
+    $active &&
+    `
+    transform: scale(1.12);
+    border: 4px solid rgba(255, 255, 255, 0.9);
+  `}
+
+  @media (max-width: 768px) {
+    width: 140px;
+    height: 180px;
   }
 `;
 
 // 📌 Kategori Görseli
 export const CategoryImage = styled.img`
-  width: 100%;
-  height: 130px;
-  object-fit: cover;
-  border-radius: 5px;
+  width: 90%;
+  height: 170px;
+  object-fit: contain;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+
+  ${CategoryCard}:hover & {
+    transform: scale(1.15);
+  }
 `;
 
 // 📌 Kategori Başlığı
 export const CategoryTitle = styled.h3`
-  padding: 10px;
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: ${({ theme }) => theme.text};
   font-weight: bold;
-`;
+  text-transform: capitalize;
+  transition: color 0.3s ease;
 
-// 📌 Kategori Açıklaması
-export const CategoryDescription = styled.p`
-  font-size: 0.9rem;
-  color: ${({ theme }) => theme.subText};
-  text-align: center;
-`;
-
-// 📌 Kategori Butonu
-export const CategoryButton = styled.button`
-  padding: 10px 20px;
-  background-color: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => theme.buttonText};
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: bold;
-  transition: background 0.3s ease, transform 0.2s ease;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.primaryHover};
-    transform: scale(1.05);
+  ${CategoryCard}:hover & {
+    color: ${({ theme }) => theme.buttonText};
   }
-`;
-
-// 📌 Ürün Kartı
-export const ProductCard = styled.div`
-  min-width: 200px;
-  flex: 0 0 auto;
-  background: ${({ theme }) => theme.cardBackground};
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px ${({ theme }) => theme.shadow};
-  transition: transform 0.3s ease;
-  scroll-snap-align: start;
-
-  &:hover {
-    transform: translateY(-5px);
-  }
-`;
-
-// 📌 Ürün Görseli
-export const ProductImage = styled.img`
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 5px;
-`;
-
-// 📌 Ürün Başlığı
-export const ProductTitle = styled.h3`
-  font-size: 1rem;
-  margin: 10px 0;
-  color: ${({ theme }) => theme.text};
-`;
-
-// 📌 Ürün Fiyatı
-export const ProductPrice = styled.p`
-  color: ${({ theme }) => theme.primary};
-  font-weight: bold;
-`;
-
-// 📌 Ürün Listesi
-export const ProductList = styled.div`
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
-  background: ${({ theme }) => theme.background};
 `;

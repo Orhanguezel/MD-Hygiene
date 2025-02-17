@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 const ProtectedWrapper = ({ children, role }) => {
   const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
 
-  // 1️⃣ Yüklenme kontrolü
+  // ⏳ Yüklenme ekranı
   if (loading) {
     return (
       <div style={{ textAlign: "center", marginTop: "50px" }}>
@@ -13,17 +13,17 @@ const ProtectedWrapper = ({ children, role }) => {
     );
   }
 
-  // 2️⃣ Giriş yapılmamışsa login sayfasına yönlendir
+  // 🚫 Kullanıcı giriş yapmamışsa login sayfasına yönlendir
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  // 3️⃣ Yetkisiz rol kontrolü
+  // 🚫 Yetki kontrolü (Array destekli)
   if (role && (!user || (Array.isArray(role) ? !role.includes(user.role) : user.role !== role))) {
     return <Navigate to="/unauthorized" replace />;
   }
 
-  // 4️⃣ Yetkili kullanıcılar için içerik gösterimi
+  // ✅ Yetkili kullanıcı içeriği görebilir
   return children;
 };
 

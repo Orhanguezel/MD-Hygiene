@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom"; // ✅ `useNavigate` eklendi
 import { useSelector, useDispatch } from "react-redux";
 import { fetchOrderById, updateOrder } from "@/features/orders/ordersSlice";
 import { 
@@ -8,29 +8,42 @@ import {
   ProductList, 
   ProductItem, 
   StatusBadge, 
-  ActionButton 
+  ActionButton,
+  BackButton // ✅ Geri Dön Butonu için stil eklendi
 } from "../styles/ordersStyles";
 import { toast } from "react-toastify"; // ✅ Bildirim için Toastify
 
 const OrderDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate(); // ✅ `navigate` tanımlandı
   const dispatch = useDispatch();
 
   const texts = useSelector((state) => state.language.texts) || {};  
   const order = useSelector((state) => state.orders.selectedOrder); 
   const status = useSelector((state) => state.orders.status);
-  
-  // ✅ Siparişi API'den çek
+
+  // ✅ **Sipariş durumu için lokal state**
+  const [orderStatus, setOrderStatus] = useState(order?.status || "pending");
+
+  // ✅ **Siparişi API'den çek**
   useEffect(() => {
     dispatch(fetchOrderById(id));
   }, [dispatch, id]);
 
   // ✅ **Hata ve yükleme durumlarını yönet**
+  useEffect(() => {
+    if (order) {
+      setOrderStatus(order.status); // Redux güncellendiğinde UI de güncellensin
+    }
+  }, [order]);
+
   if (status === "loading") return <p>{texts?.orders?.loading || "Sipariş yükleniyor..."}</p>;
   if (!order) return <p>{texts?.orders?.notFound || "Sipariş bulunamadı."}</p>;
 
   // ✅ **Siparişi Güncelleme Fonksiyonu**
   const handleUpdateOrder = (newStatus) => {
+    setOrderStatus(newStatus); // **UI anlık güncelle**
+    
     const updatedOrder = { ...order, status: newStatus };
     
     if (newStatus === "shipped") updatedOrder.shippedDate = new Date().toISOString();
@@ -43,14 +56,19 @@ const OrderDetails = () => {
 
   return (
     <OrderDetailsContainer>
+      {/* ✅ Geri Dön Butonu */}
+      <BackButton onClick={() => navigate(-1)}>
+        ← {texts?.orders?.goBack || "Geri Dön"}
+      </BackButton>
+
       <h1>{texts?.orders?.details || "Sipariş Detayları"}</h1>
 
       <OrderInfo>
         <p><strong>{texts?.orders?.orderNumber || "Sipariş No"}:</strong> {order.id}</p>
         <p><strong>{texts?.orders?.customer || "Müşteri"}:</strong> {order.userName}</p>
         <p><strong>{texts?.orders?.status || "Durum"}:</strong> 
-          <StatusBadge $status={order.status}>
-            {texts?.orders?.[order.status] || order.status}
+          <StatusBadge $status={orderStatus}>
+            {texts?.orders?.[orderStatus] || orderStatus}
           </StatusBadge>
         </p>
         <p><strong>{texts?.orders?.total || "Toplam"}:</strong> {Number(order.totalAmount || 0).toFixed(2)} ₺</p>
@@ -76,36 +94,6 @@ const OrderDetails = () => {
           <p>{texts?.orders?.noProducts || "Bu siparişte ürün bulunmamaktadır."}</p>
         )}
       </ProductList>
-
-      <h2>{texts?.orders?.actions || "İşlemler"}</h2>
-      {order.status === "pending" && (
-        <>
-          <ActionButton onClick={() => handleUpdateOrder("processing")}>
-            ✅ {texts?.orders?.approve || "Siparişi Onayla"}
-          </ActionButton>
-          <ActionButton onClick={() => handleUpdateOrder("canceled")} danger>
-            ❌ {texts?.orders?.reject || "Siparişi Reddet"}
-          </ActionButton>
-        </>
-      )}
-
-      {order.status === "processing" && (
-        <ActionButton onClick={() => handleUpdateOrder("shipped")}>
-          🚚 {texts?.orders?.ship || "Kargoya Ver"}
-        </ActionButton>
-      )}
-
-      {order.status === "shipped" && (
-        <ActionButton onClick={() => handleUpdateOrder("delivered")}>
-          📦 {texts?.orders?.deliver || "Teslim Edildi"}
-        </ActionButton>
-      )}
-
-      {order.status === "delivered" && (
-        <ActionButton onClick={() => handleUpdateOrder("archived")}>
-          🗂️ {texts?.orders?.archive || "Arşive Kaldır"}
-        </ActionButton>
-      )}
     </OrderDetailsContainer>
   );
 };

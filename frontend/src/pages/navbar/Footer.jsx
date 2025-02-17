@@ -1,6 +1,6 @@
 
 // ✅ src/components/admin/Footer.jsx
-import { FooterContainer, FooterContent, FooterTitle, CopyrightText, FooterLink } from "./styles/FooterStyles";
+import { FooterContainer, FooterContent, FooterTitle, CopyrightText, FooterLink } from "./styles/footerStyles";
 
 const Footer = () => {
   return (

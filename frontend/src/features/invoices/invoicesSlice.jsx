@@ -1,14 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import API from "@/services/api"; // ✅ API Bağlantısı
+import { v4 as uuidv4 } from "uuid";
+import API from "@/services/api";
 
 const initialState = {
-  invoices: [],         // ✅ Tüm faturalar
-  selectedInvoice: null,// ✅ Seçilen fatura detayları
-  status: "idle",       // ✅ API çağrı durumu
-  error: null,          // ✅ Hata yönetimi
+  invoices: [],
+  selectedInvoice: null,
+  status: "idle",
+  error: null,
 };
 
-// 📥 **Tüm faturaları getir**
+// 📥 Tüm faturaları getir
 export const fetchInvoices = createAsyncThunk(
   "invoices/fetchInvoices",
   async (_, { rejectWithValue }) => {
@@ -34,24 +35,24 @@ export const fetchInvoiceById = createAsyncThunk(
   }
 );
 
-// 📥 **Siparişten Fatura Oluştur (Doğrudan Sipariş Verilerini Kullan)**
+// 📥 Siparişten Fatura Oluştur
 export const createInvoiceFromOrder = createAsyncThunk(
   "invoices/createInvoiceFromOrder",
   async (orderData, { rejectWithValue }) => {
     try {
       const invoiceData = {
-        id: `INV-${Date.now()}`,
-        invoiceNumber: `INV-${Date.now()}`,
+        id: `INV-${uuidv4()}`,
+        invoiceNumber: `INV-${uuidv4()}`,
         orderId: orderData.id,
         userId: orderData.userId,
         userName: orderData.userName,
         userEmail: orderData.userEmail,
         userAddress: orderData.userAddress,
-        items: orderData.items, // ✅ Ürünleri direkt al
-        subtotal: orderData.subtotal, // ✅ Siparişten al
-        taxAmount: orderData.taxAmount, // ✅ Siparişten al
-        totalAmount: orderData.totalAmount, // ✅ Siparişten al
-        shippingCost: orderData.shippingCost, // ✅ Siparişten al
+        items: orderData.items,
+        subtotal: orderData.subtotal,
+        taxAmount: orderData.taxAmount,
+        totalAmount: orderData.totalAmount,
+        shippingCost: orderData.shippingCost,
         issuedAt: new Date().toISOString(),
         status: "pending",
       };

@@ -17,12 +17,16 @@ import {
   SwitchText,
   ErrorMessage,
   LoadingSpinner,
-} from "./styles/authStyles";
+} from "./styles/authStyles"; // ✅ Ortak stil dosyası kullanıldı
 import { FaUser, FaEnvelope, FaLock, FaUserPlus } from "react-icons/fa";
 import RegisterImageSrc from "@/assets/register-image.png";
 
 const Register = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { texts } = useLanguage();
@@ -37,22 +41,26 @@ const Register = () => {
     e.preventDefault();
     const result = await dispatch(register(formData));
     if (result.meta.requestStatus === "fulfilled") {
-      navigate("/login");
+      navigate("/login"); // ✅ Kayıt sonrası giriş sayfasına yönlendirme
     }
   };
 
   return (
     <AuthContainer theme={theme}>
-      <Card>
+      <Card theme={theme}>
         <AuthImage src={RegisterImageSrc} alt="Register" />
 
         <AuthForm theme={theme} onSubmit={handleSubmit}>
-          <Title theme={theme}>{texts?.auth?.registerTitle || "Kayıt Ol"}</Title>
+          <Title theme={theme}>
+            {texts?.auth?.registerTitle || "📝 Kayıt Ol"}
+          </Title>
 
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
-          <InputContainer>
-            <Icon><FaUser /></Icon>
+          <InputContainer theme={theme}>
+            <Icon theme={theme}>
+              <FaUser />
+            </Icon>
             <InputField
               name="name"
               type="text"
@@ -63,8 +71,10 @@ const Register = () => {
             />
           </InputContainer>
 
-          <InputContainer>
-            <Icon><FaEnvelope /></Icon>
+          <InputContainer theme={theme}>
+            <Icon theme={theme}>
+              <FaEnvelope />
+            </Icon>
             <InputField
               name="email"
               type="email"
@@ -75,8 +85,10 @@ const Register = () => {
             />
           </InputContainer>
 
-          <InputContainer>
-            <Icon><FaLock /></Icon>
+          <InputContainer theme={theme}>
+            <Icon theme={theme}>
+              <FaLock />
+            </Icon>
             <InputField
               name="password"
               type="password"
@@ -88,14 +100,17 @@ const Register = () => {
           </InputContainer>
 
           <Button theme={theme} type="submit" disabled={loading}>
-            {loading ? "Kayıt Yapılıyor..." : <>Kayıt Ol <FaUserPlus /></>}
+            {loading ? texts.auth.registerTitle : texts.auth.registerButton}
+            {""}
+            <FaUserPlus />
           </Button>
 
-          <SwitchText>
-            {texts?.auth?.haveAccount || "Zaten hesabınız var mı?"} <Link to="/login">Giriş Yap</Link>
+          <SwitchText theme={theme}>
+            {texts?.auth?.haveAccount || "Zaten hesabınız var mı?"}{" "}
+            <Link to="/login">{texts?.auth?.login || "Giriş Yap"}</Link>
           </SwitchText>
 
-          {loading && <LoadingSpinner />}
+          {loading && <LoadingSpinner theme={theme} />}
         </AuthForm>
       </Card>
     </AuthContainer>

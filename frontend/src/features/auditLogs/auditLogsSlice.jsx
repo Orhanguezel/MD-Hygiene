@@ -1,7 +1,7 @@
 
 // ✅ src/features/auditLogs/auditLogsSlice.js
 import { createSlice } from '@reduxjs/toolkit';
-import auditLogsData from '../../data/auditLogsData.json';
+import auditLogsData from '@/data/auditLogsData.json';
 
 const initialState = auditLogsData || [];
 

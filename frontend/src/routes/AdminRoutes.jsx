@@ -1,10 +1,13 @@
 import { Routes, Route, Outlet } from "react-router-dom";
 import ProtectedWrapper from "@/pages/auth/ProtectedWrapper";
-import AdminLayout from "@/layouts/AdminLayout";
+import AppLayout from "@/layouts/AppLayout";
 
-// ✅ Ana Sayfa
+// ✅ Genel Sayfalar
 import Home from "@/pages/visitor/home/Home";
 import ProductDetail from "@/pages/visitor/home/components/ProductDetail";
+import Cart from "@/pages/user/modules/cart/Cart";
+import Checkout from "@/pages/user/modules/cart/Checkout";
+import OrderConfirmation from "@/pages/user/modules/cart/OrderConfirmation";
 
 // ✅ Dashboard
 import AdminDashboard from "@/pages/admin/AdminDashboard";
@@ -40,11 +43,8 @@ import CompanyManagement from "@/pages/admin/modules/settings/components/Company
 import CustomerManagement from "@/pages/admin/modules/settings/components/CustomerManagement";
 
 // ✅ Diğer Modüller
-import Notifications from "@/pages/admin/modules/notification/Notifications";
 import Reports from "@/pages/admin/modules/report/Reports";
-import AuditLogs from "@/pages/admin/modules/auditlog/AuditLogs";
-
-import NotFound from "@/components/common/NotFound";
+import NotFound from "@/pages/navbar/NotFound";
 
 const AdminRoutes = () => {
   return (
@@ -53,13 +53,19 @@ const AdminRoutes = () => {
         path="/"
         element={
           <ProtectedWrapper role="admin">
-            <AdminLayout />
+            <AppLayout />
           </ProtectedWrapper>
         }
       >
-
         {/* ✅ Dashboard */}
         <Route path="dashboard" element={<AdminDashboard />} />
+
+        {/* ✅ Genel Kullanıcı Sayfaları */}
+        <Route path="/" element={<Home />} />
+        <Route path="cart" element={<Cart />} />
+        <Route path="checkout" element={<Checkout />} />
+        <Route path="order-confirmation" element={<OrderConfirmation />} />
+        <Route path="product/:id" element={<ProductDetail />} />
 
         {/* ✅ Users Modülü */}
         <Route path="users" element={<Outlet />}>
@@ -87,8 +93,6 @@ const AdminRoutes = () => {
           <Route path="create" element={<OfferCreate />} />
           <Route path="edit/:id" element={<OfferCreate />} />
           <Route path=":id" element={<OfferDetails />} />
-          <Route path=":id/approve" element={<OfferDetails />} />
-          <Route path=":id/reject" element={<OfferDetails />} />
           <Route path="archive" element={<OfferArchive />} />
         </Route>
 
@@ -98,18 +102,17 @@ const AdminRoutes = () => {
         <Route path="customer-management" element={<CustomerManagement />} />
 
         {/* ✅ Products Modülü */}
-        <Route path="products" element={<Products />}>
+        <Route path="products" element={<Outlet />}>
+          <Route index element={<Products />} />
           <Route path="add" element={<ProductForm />} />
           <Route path="list" element={<ProductList />} />
           <Route path="manageStock" element={<ManageStock />} />
         </Route>
 
         {/* ✅ Diğer Modüller */}
-        <Route path="notifications" element={<Notifications />} />
         <Route path="reports" element={<Reports />} />
-        <Route path="audit-logs" element={<AuditLogs />} />
 
-        {/* ✅ 404 Not Found */}
+        {/* ✅ 404 Sayfası */}
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

@@ -1,323 +1,271 @@
 import styled from "styled-components";
 
-
-// ✅ Genel Konteyner
-export const OfferModuleContainer = styled.div`
-  display: flex;
-  min-height: 100vh;
-  background-color: ${({ theme }) => theme.background};
-  color: ${({ theme }) => theme.text};
-`;
-
-// ✅ Sidebar
-export const SidebarContainer = styled.div`
-  width: 250px;
-  background-color: ${({ theme }) => theme.sidebarBackground};
-  padding: 20px;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  box-shadow: 2px 0 5px ${({ theme }) => theme.shadow};
-
+/* ✅ Ürün Yönetim Konteyneri */
+export const ProductContainer = styled.div`
+margin-left: 290px;
   @media (max-width: 768px) {
-    position: relative;
+  margin-left: 40px;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 150px;
     width: 100%;
-    height: auto;
-    flex-direction: row;
-    justify-content: space-around;
-    box-shadow: none;
   }
-`;
-// ✅ Sidebar Başlık
-export const SidebarTitle = styled.h2`
-  color: ${({ theme }) => theme.sidebarText};
-  font-size: 18px;
-  margin-bottom: 10px;
-  border-bottom: 2px solid ${({ theme }) => theme.primary};
-  padding-bottom: 5px;
-`;
 
-// ✅ Sidebar Butonları
-export const SidebarButton = styled.button`
-  padding: 12px 15px;
-  background-color: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => theme.buttonText};
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.3s;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.primaryHover};
-  }
-`;
-
-
-// ✅ Teklif Formu Konteyneri
-export const OfferFormContainer = styled.div`
-  margin-left: 270px;
-  padding: 20px;
-  flex: 1;
-  background: ${({ theme }) => theme.cardBackground};
-  border-radius: 8px;
-  box-shadow: 0 2px 8px ${({ theme }) => theme.shadow};
-
-  @media (max-width: 768px) {
-    margin-left: 0;
-    padding: 15px;
-  }
-`;
-
-// ✅ Form Input
-export const FormInput = styled.input`
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0;
-  background: ${({ theme }) => theme.inputBackground};
-  color: ${({ theme }) => theme.inputText};
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 4px;
-`;
-
-
-// ✅ Buton
-export const ActionButton = styled.button`
-  background-color: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => theme.buttonText};
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.3s;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.primaryHover};
-  }
-`;
-
-// ✅ Teklif Listesi
-export const OfferListContainer = styled.div`
-  padding: 20px;
-  margin-left: 270px;
-
-  @media (max-width: 768px) {
-    margin-left: 0;
+  @media (max-width: 480px) {
+    width: 100%;
     padding: 10px;
   }
 `;
 
-// ✅ Tablo
-export const OfferTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  background: ${({ theme }) => theme.cardBackground};
 
+
+export const ProductTitle = styled.h1`
   @media (max-width: 768px) {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
+    font-size: 18px;
+    text-align: center;
+    margin: 20px 0;
+    margin-left: 0; /* Küçük ekranda margin sıfır */
   }
 `;
 
-// ✅ Tablo Başlığı
-export const TableHeader = styled.th`
-  background-color: ${({ theme }) => theme.primary};
-  color: white;
-  padding: 12px;
-`;
 
-// ✅ Tablo Satırları
-export const TableRow = styled.tr`
-  background-color: ${({ theme }) => theme.cardBackground};
-
-  &:nth-child(even) {
-    background-color: ${({ theme }) => theme.border};
-  }
-`;
-
-// ✅ Tablo Hücreleri
-export const TableCell = styled.td`
-  padding: 10px;
-  border: 1px solid ${({ theme }) => theme.border};
+/* ✅ Sidebar */
+/* ✅ Ürün Paneli */
+export const SidebarContainer = styled.div`
+  width: 250px;
+  background: rgba(255, 255, 255, 0.12); /* Hafif şeffaf */
+  backdrop-filter: blur(20px); /* Daha güçlü blur efekti */
   color: ${({ theme }) => theme.text};
-`;
-
-// ✅ Filtreleme Alanı
-export const FilterContainer = styled.div`
+  padding: 20px;
+  height: auto;
+  position: fixed;
+  top: 80px;
+  left: 50px;
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  flex-direction: column;
+  gap: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Daha belirgin gölge */
+  border-radius: 16px;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 
+  &:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  /* 📌 Tablet Görünümü */
+  @media (max-width: 1024px) {
+    width: 300px;
+    left: 30px;
+  }
+
+  /* 📌 Mobil Görünüm */
   @media (max-width: 768px) {
-    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 70px;
+    border-radius: 0;
+    padding: 15px;
   }
 `;
 
-// ✅ Arama Input
-export const SearchInput = styled.input`
-  padding: 8px;
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 5px;
-  width: 200px;
+/* ✅ Sidebar Başlık */
+export const SidebarTitle = styled.h3`
   color: ${({ theme }) => theme.text};
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid ${({ theme }) => theme.primary};
+`;
 
+/* ✅ Sidebar Butonları */
+export const SidebarButton = styled.button`
+  padding: 14px 18px;
+  background: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.buttonText};
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  box-shadow: 0 4px 12px ${({ theme }) => theme.shadow};
+
+  &:hover {
+    background: ${({ theme }) => theme.primaryHover};
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 15px ${({ theme }) => theme.shadow};
+  }
+
+  svg {
+    font-size: 18px;
+  }
+`;
+
+
+
+/* ✅ Kategori Kartlarını Listeleme */
+export const CategoryListContainer = styled.div`
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 15px;
+  margin-bottom: 10px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+/* ✅ Kategori Kartı */
+export const CategoryCard = styled.button.attrs((props) => ({
+  $isActive: props.$isActive ? "true" : undefined,
+}))`
+  flex: 0 0 140px;
+  height: 120px;
+  background: ${({ $isActive, theme }) =>
+    $isActive === "true" ? theme.primary : theme.cardBackground};
+  color: ${({ $isActive, theme }) =>
+    $isActive === "true" ? theme.buttonText : theme.text};
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 10px ${({ theme }) => theme.shadow};
+  transition: all 0.3s ease;
+  text-align: center;
+
+  &:hover {
+    background: ${({ theme }) => theme.primaryHover};
+    transform: scale(1.08);
+  }
+
+  img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    margin-bottom: 8px;
+  }
+`;
+
+/* ✅ Ürün Kartlarını Listeleme */
+export const ListContainer = styled.div`
   @media (max-width: 768px) {
+    width: 100%;
+    margin-left: 0;
+    padding: 10px;
+    justify-content: center;
+  }
+`;
+
+/* ✅ Ürün Kartı */
+export const ProductItem = styled.div`
+  @media (max-width: 768px) {
+    width: calc(50% - 10px);
+  }
+
+  @media (max-width: 480px) {
     width: 100%;
   }
 `;
 
-// ✅ Filtre Butonu
-export const FilterButton = styled.button`
-  padding: 10px 20px;
-  background: ${({ theme }) => theme.primary};
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-
-  &:hover {
-    background: ${({ theme }) => theme.primaryHover};
-  }
-`;
-
-
-
-
-
-
-// ✅ Teklif Durum Etiketi
-export const StatusBadge = styled.span`
-  background-color: ${({ $status, theme }) => {
-    switch ($status) {
-      case "approved":
-        return "#28a745";
-      case "pending":
-        return "#ffc107";
-      case "archived":
-        return theme.sidebarBackground;
-      default:
-        return "#dc3545";
-    }
-  }};
-  color: ${({ theme }) => theme.buttonText};
-  padding: 5px 10px;
-  border-radius: 4px;
-  display: inline-block;
-`;
-
-// ✅ Ürün Seçim Alanı
-export const ProductLabel = styled.label`
-  font-size: 16px;
-  font-weight: bold;
+/* ✅ Ürün Resmi */
+export const ProductImage = styled.img`
+  width: 100%;
+  height: 120px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: ${({ theme }) => theme.inputBackground};
   margin-bottom: 8px;
-  display: block;
+`;
+
+/* ✅ Ürün Detayları */
+export const ProductDetails = styled.div`
+  padding: 8px;
   color: ${({ theme }) => theme.text};
 `;
 
-export const ProductSelect = styled.select`
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid ${({ theme }) => theme.border};
-  background: ${({ theme }) => theme.inputBackground};
-  color: ${({ theme }) => theme.inputText};
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    border-color: ${({ theme }) => theme.primary};
-  }
-`;
-
-export const ProductOption = styled.option`
+/* ✅ Ürün İsmi */
+export const ProductName = styled.h3`
   font-size: 14px;
-  padding: 8px;
-  background: ${({ theme }) => theme.sidebarBackground};
+  font-weight: bold;
+`;
+
+/* ✅ Ürün Fiyatı */
+export const ProductPrice = styled.span`
+  font-size: 14px;
+  font-weight: bold;
+  color: ${({ theme }) => theme.primary};
+`;
+
+/* ✅ Ürün Stok Bilgisi */
+export const ProductStock = styled.p`
+  font-size: 12px;
   color: ${({ theme }) => theme.text};
 `;
 
-// ✅ Ürün Tablosu
-export const ProductTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  background: ${({ theme }) => theme.cardBackground};
-  color: ${({ theme }) => theme.text};
-
-  @media (max-width: 768px) {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-`;
-
-export const TaxSelect = styled.select`
+/* ✅ Sepete Ekle Butonu */
+export const AddToCartButton = styled.button`
   padding: 8px;
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 5px;
-  background: ${({ theme }) => theme.inputBackground};
-  color: ${({ theme }) => theme.inputText};
-`;
-
-export const OfferButton = styled.button`
-  padding: 10px 20px;
-  background: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => theme.buttonText};
-  border: none;
+  background: #dc3545;
+  color: white;
+  border-radius: 8px;
   cursor: pointer;
-  border-radius: 4px;
-  transition: background 0.3s;
-  margin-right: 5px;
+  transition: background 0.3s ease;
+  font-size: 14px;
 
   &:hover {
-    background: ${({ theme }) => theme.primaryHover};
+    background: #c82333;
   }
 `;
 
-export const OfferHeader = styled.h2`
-  color: ${({ theme }) => theme.text};
-  margin-bottom: 20px;
+
+/* ✅ Kategori Butonları */
+export const CategoryButtonContainer = styled.div`
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 `;
 
-export const OfferDetailsContainer = styled.div`
-  margin-bottom: 20px;
-`;
-
+/* ✅ Kategori Butonu */
 export const CategoryButton = styled.button.attrs((props) => ({
   $isActive: props.$isActive ? "true" : undefined,
 }))`
   padding: 10px 15px;
-  background: ${({ $isActive, theme }) => ($isActive === "true" ? theme.primary : theme.cardBackground)};
-  color: ${({ $isActive, theme }) => ($isActive === "true" ? theme.buttonText : theme.text)};
-  border: ${({ $isActive, theme }) => ($isActive === "true" ? `2px solid ${theme.primaryHover}` : "2px solid transparent")};
-  border-radius: 5px;
+  background: ${({ $isActive, theme }) =>
+    $isActive === "true" ? theme.primary : theme.cardBackground};
+  color: ${({ $isActive, theme }) =>
+    $isActive === "true" ? theme.buttonText : theme.text};
+  border: ${({ $isActive, theme }) =>
+    $isActive === "true"
+      ? `2px solid ${theme.primaryHover}`
+      : "2px solid transparent"};
+  border-radius: 6px;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 3px 6px ${({ theme }) => theme.shadow};
 
   &:hover {
     background: ${({ theme }) => theme.primaryHover};
   }
 `;
 
-
-export const CategoryButtonContainer = styled.div`
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-`;
-
+/* ✅ Silme Butonu */
 export const DeleteButton = styled.button`
   background: #dc3545;
   color: white;
   padding: 8px 12px;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   transition: background 0.3s;
 
@@ -326,114 +274,68 @@ export const DeleteButton = styled.button`
   }
 `;
 
-
-export const ListContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center; // ✅ Kartları ortala
+/* ✅ Form */
+export const FormContainer = styled.form`
+  max-width: 500px;
+  background: ${({ theme }) => theme.cardBackground};
   padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px ${({ theme }) => theme.shadow};
 `;
 
-export const ProductDetails = styled.div`
-  padding: 10px;
-  background: ${({ theme }) => theme.cardBackground};
-  border-radius: 8px;
-  box-shadow: 0 2px 8px ${({ theme }) => theme.shadow};
-  flex: 1;
-`;
-
-export const ProductImage = styled.img`
+/* ✅ Form Input */
+export const FormInput = styled.input`
   width: 100%;
-  height: 200px; 
-  object-fit: cover; 
-  border-radius: 8px;
-  margin-bottom: 10px;
+  padding: 12px;
+  margin: 8px 0;
+  background: ${({ theme }) => theme.inputBackground};
+  color: ${({ theme }) => theme.inputText};
+  border: 1px solid ${({ theme }) => theme.border};
+  border-radius: 6px;
+  font-size: 14px;
 `;
 
-
-export const ProductItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: calc(33.333% - 10px); // ✅ 3 sütun düzeni
-  background: ${({ theme }) => theme.cardBackground};
-  border-radius: 8px;
-  box-shadow: 0 2px 8px ${({ theme }) => theme.shadow};
-  padding: 15px;
-  text-align: center;
-  transition: transform 0.2s ease-in-out;
-
-  &:hover {
-    transform: scale(1.02); // ✅ Hover efekti eklendi
-  }
-
-  @media (max-width: 1024px) {
-    width: calc(50% - 10px); // ✅ Tablet görünümü için 2 sütun
-  }
-
-  @media (max-width: 768px) {
-    width: 100%; // ✅ Mobilde tam genişlik
-  }
-`;
-
-
-export const ProductName = styled.h3`
-  color: ${({ theme }) => theme.text};
-`;
-
-export const ProductPrice = styled.span`
-  color: ${({ theme }) => theme.text};
-`;
-
-export const ProductDescription = styled.p`
-  color: ${({ theme }) => theme.text};
-`;
-
-export const ProductCategory = styled.span`
-  color: ${({ theme }) => theme.text};
-`;
-
+/* ✅ Form Gönder Butonu */
 export const SubmitButton = styled.button`
   padding: 10px 20px;
   background: ${({ theme }) => theme.primary};
   color: ${({ theme }) => theme.buttonText};
   border: none;
+  border-radius: 6px;
   cursor: pointer;
-  border-radius: 4px;
-  transition: background 0.3s;
-  margin-top: 10px;
+  transition: background 0.3s, transform 0.2s;
 
   &:hover {
     background: ${({ theme }) => theme.primaryHover};
+    transform: scale(1.05);
   }
 `;
 
-export const FormContainer = styled.div`
-  max-width: 500px;
-`;
-
-export const ProductContainer = styled.div`
+/* ✅ Stok Güncelleme Konteyneri */
+export const ManageStockContainer = styled.div`
   display: flex;
-  align-items: flex-start; // ✅ Sidebar ile içerik hizalama
+  flex-wrap: wrap;
   gap: 20px;
+  justify-content: center;
   padding: 20px;
   background: ${({ theme }) => theme.background};
-  min-height: 100vh;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: center;
-  }
 `;
 
-
-export const ProductInput = styled.input`
-  padding: 8px;
+/* ✅ Stok Güncelleme Input */
+export const StockInput = styled.input`
+  padding: 10px;
   border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 5px;
+  border-radius: 6px;
   background: ${({ theme }) => theme.inputBackground};
   color: ${({ theme }) => theme.inputText};
 `;
 
+/* ✅ Ürün Güncelleme Butonu */
+export const SaveButton = styled(SubmitButton)`
+  margin-top: 10px;
+  background: #28a745;
 
+  &:hover {
+    background: #218838;
+  }
+`;

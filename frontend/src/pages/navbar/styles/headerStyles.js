@@ -9,12 +9,12 @@ export const HeaderContainer = styled.header`
   background-color: ${({ theme }) => theme.navBackground};
   color: ${({ theme }) => theme.text};
   box-shadow: 0 2px 4px ${({ theme }) => theme.shadow};
-  position: sticky;
+  position: fixed;
   top: 0;
+  width: 100%;
   z-index: 1000;
   transition: background-color 0.3s ease;
 `;
-
 
 export const LogoLink = styled(Link)`
   display: flex;
@@ -74,26 +74,7 @@ export const LanguageSelect = styled.select`
   &:hover {
     border-color: ${({ theme }) => theme.primary};
   }
-
-  option {
-    background: ${({ theme }) => theme.cardBackground};
-    color: ${({ theme }) => theme.text};
-  }
 `;
-
-
-export const HamburgerButton = styled.button`
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: ${({ theme }) => theme.text};
-
-  @media (max-width: 768px) {
-    display: block;
-  }
-`;
-
 
 export const ThemeToggleButton = styled.button`
   background: none;

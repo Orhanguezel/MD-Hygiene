@@ -16,9 +16,9 @@ import {
   Button,
   SwitchText,
   ErrorMessage,
-  LoadingSpinner
+  LoadingSpinner,
 } from "./styles/authStyles";
-import { FaEnvelope, FaLock, FaSignInAlt} from "react-icons/fa";
+import { FaEnvelope, FaLock, FaSignInAlt } from "react-icons/fa";
 import LoginImageSrc from "@/assets/login-image.png";
 
 const Login = () => {
@@ -28,28 +28,37 @@ const Login = () => {
   const navigate = useNavigate();
   const { texts } = useLanguage();
   const { theme } = useTheme();
-  const { loading, error } = useSelector((state) => state.auth);
+  const { loading, error, user } = useSelector((state) => state.auth);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await dispatch(login({ email, password }));
+
     if (result.meta.requestStatus === "fulfilled") {
-      navigate("/dashboard");
+      if (user?.role === "admin") {
+        navigate("/dashboard"); // ✅ Admin giriş yapınca dashboard'a yönlendir
+      } else {
+        navigate("/"); // ✅ Kullanıcı giriş yapınca ana sayfaya yönlendir
+      }
     }
   };
 
   return (
-    <AuthContainer>
-      <Card>
+    <AuthContainer theme={theme}>
+      <Card theme={theme}>
         <AuthImage src={LoginImageSrc} alt="Login" />
 
         <AuthForm onSubmit={handleSubmit}>
-          <Title>{texts?.auth?.loginTitle || "🔑 Giriş Yap"}</Title>
+          <Title theme={theme}>
+            {texts?.auth?.loginTitle || "🔑 Giriş Yap"}
+          </Title>
 
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
-          <InputContainer>
-            <Icon><FaEnvelope /></Icon>
+          <InputContainer theme={theme}>
+            <Icon theme={theme}>
+              <FaEnvelope />
+            </Icon>
             <InputField
               type="email"
               placeholder={texts?.auth?.emailPlaceholder || "Email"}
@@ -59,8 +68,10 @@ const Login = () => {
             />
           </InputContainer>
 
-          <InputContainer>
-            <Icon><FaLock /></Icon>
+          <InputContainer theme={theme}>
+            <Icon theme={theme}>
+              <FaLock />
+            </Icon>
             <InputField
               type="password"
               placeholder={texts?.auth?.passwordPlaceholder || "Şifre"}
@@ -70,16 +81,17 @@ const Login = () => {
             />
           </InputContainer>
 
-          <Button type="submit" disabled={loading}>
-            {loading ? "Giriş Yapılıyor..." : "Giriş Yap"} <FaSignInAlt />
+          <Button type="submit" disabled={loading} theme={theme}>
+            {loading ? texts.auth.loggingIn : texts.auth.loginButton}{" "}
+            <FaSignInAlt />
           </Button>
 
-          <SwitchText>
-            {texts?.auth?.noAccount || "Hesabınız yok mu?"} {" "}
+          <SwitchText theme={theme}>
+            {texts?.auth?.noAccount || "Hesabınız yok mu?"}{" "}
             <Link to="/register">{texts?.auth?.register || "Kayıt Ol"}</Link>
           </SwitchText>
 
-          {loading && <LoadingSpinner />}
+          {loading && <LoadingSpinner theme={theme} />}
         </AuthForm>
       </Card>
     </AuthContainer>

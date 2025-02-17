@@ -109,3 +109,28 @@ export const Button = styled.button`
     cursor: not-allowed;
   }
 `;
+
+// 📌 **Hata Mesajları*
+// *
+export const ErrorMessage = styled.p`
+  color: ${({ theme }) => theme.error};
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+`;
+
+/* ✅ **Sipariş Başarıyla Tamamlandığında Görünecek Mesaj** */
+export const OrderConfirmation = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+  color: ${({ theme }) => theme.success};
+  background: ${({ theme }) => theme.successBackground};
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 20px;
+  box-shadow: ${({ theme }) => theme.shadow};
+`;

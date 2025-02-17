@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "@/services/api";
-import { toast } from "react-toastify";
 
 // 📥 **Tüm Teklifleri Getir**
 export const fetchOffers = createAsyncThunk("offers/fetchOffers", async (_, { rejectWithValue }) => {
@@ -26,7 +25,6 @@ export const fetchOfferById = createAsyncThunk("offers/fetchOfferById", async (i
 export const addOffer = createAsyncThunk("offers/addOffer", async (newOffer, { rejectWithValue }) => {
   try {
     const response = await API.post("/offers", newOffer);
-    toast.success("✅ Teklif başarıyla eklendi!");
     return response.data;
   } catch (error) {
     return rejectWithValue(error.response?.data || "Teklif eklenemedi!");
@@ -37,7 +35,6 @@ export const addOffer = createAsyncThunk("offers/addOffer", async (newOffer, { r
 export const updateOffer = createAsyncThunk("offers/updateOffer", async (updatedOffer, { rejectWithValue }) => {
   try {
     const response = await API.put(`/offers/${updatedOffer.id}`, updatedOffer);
-    toast.success("✅ Teklif başarıyla güncellendi!");
     return response.data;
   } catch (error) {
     return rejectWithValue(error.response?.data || "Teklif güncellenemedi!");
@@ -48,7 +45,6 @@ export const updateOffer = createAsyncThunk("offers/updateOffer", async (updated
 export const updateOfferStatus = createAsyncThunk("offers/updateOfferStatus", async ({ id, status }, { rejectWithValue }) => {
   try {
     const response = await API.patch(`/offers/${id}`, { status });
-    toast.success(`✅ Teklif durumu "${status}" olarak güncellendi!`);
     return { id, status };
   } catch (error) {
     return rejectWithValue(error.response?.data || "Teklif durumu güncellenemedi!");
@@ -59,7 +55,6 @@ export const updateOfferStatus = createAsyncThunk("offers/updateOfferStatus", as
 export const deleteOffer = createAsyncThunk("offers/deleteOffer", async (offerId, { rejectWithValue }) => {
   try {
     await API.delete(`/offers/${offerId}`);
-    toast.success("✅ Teklif başarıyla silindi!");
     return offerId;
   } catch (error) {
     return rejectWithValue(error.response?.data || "Teklif silinemedi!");
