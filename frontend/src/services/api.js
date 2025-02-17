@@ -4,7 +4,7 @@ import axios from "axios";
 const API_BASE_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000" // ✅ Yerel Geliştirme Ortamı
-    : "https://www.md-hygienelogistik.de/api"; // ✅ Canlı Sunucu
+    : "https://md-hygiene-json.onrender.com"; // ✅ Render'daki JSON Server
 
 const API = axios.create({
   baseURL: API_BASE_URL, 
@@ -22,4 +22,3 @@ API.interceptors.response.use(
 );
 
 export default API;
-
