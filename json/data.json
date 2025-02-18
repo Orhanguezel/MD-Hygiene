@@ -1109,6 +1109,58 @@
       "vatAmount": 97.24,
       "status": "pending",
       "paymentStatus": "pending"
+    },
+    {
+      "id": "ORD-cb2b4b23-ca82-4a15-8c5f-3fce0db93ec6",
+      "userId": "40f6",
+      "userName": "abc",
+      "userEmail": "o@gmail.com",
+      "orderDate": "18.02.2025 - 12:31",
+      "items": [
+        {
+          "productId": "2972",
+          "title": "Modern Elegance Teal Armchair",
+          "quantity": 1,
+          "unitPrice": 25
+        },
+        {
+          "productId": "7b92",
+          "title": "Elegant Solid Wood Dining Table",
+          "quantity": 1,
+          "unitPrice": 67
+        }
+      ],
+      "totalAmount": 112,
+      "shippingCost": 20,
+      "vatAmount": 14.69,
+      "status": "pending",
+      "paymentStatus": "pending"
+    },
+    {
+      "id": "ORD-c2d53805-a596-460a-886f-822d2f9c8446",
+      "userId": "USR-006",
+      "userName": "Orhan",
+      "userEmail": "orhan@gmail.com",
+      "orderDate": "18.02.2025 - 12:36",
+      "items": [
+        {
+          "productId": "d6dd",
+          "title": "Elegant Patent Leather Peep-Toe Pumps with Gold-Tone Heel",
+          "quantity": 1,
+          "unitPrice": 53
+        },
+        {
+          "productId": "6c78",
+          "title": "Elegant Purple Leather Loafers",
+          "quantity": 1,
+          "unitPrice": 17
+        }
+      ],
+      "totalAmount": 90,
+      "shippingCost": 20,
+      "vatAmount": 11.18,
+      "status": "pending",
+      "paymentStatus": "pending"
     }
   ],
   "invoices": [
@@ -1486,32 +1538,7 @@
       "productId": "29"
     }
   ],
-  "cart": [
-    {
-      "id": "2972",
-      "productId": "31",
-      "quantity": 1,
-      "price": 25,
-      "title": "Modern Elegance Teal Armchair",
-      "images": [
-        "https://i.imgur.com/6wkyyIN.jpeg",
-        "https://i.imgur.com/Ald3Rec.jpeg",
-        "https://i.imgur.com/dIqo03c.jpeg"
-      ]
-    },
-    {
-      "id": "7b92",
-      "productId": "32",
-      "quantity": 1,
-      "price": 67,
-      "title": "Elegant Solid Wood Dining Table",
-      "images": [
-        "https://i.imgur.com/4lTaHfF.jpeg",
-        "https://i.imgur.com/JktHE1C.jpeg",
-        "https://i.imgur.com/cQeXQMi.jpeg"
-      ]
-    }
-  ],
+  "cart": [],
   "category": [],
   "reviews": [
     {

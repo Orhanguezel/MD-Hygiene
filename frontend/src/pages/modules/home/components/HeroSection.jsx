@@ -45,7 +45,6 @@ const HeroSection = () => {
     setCurrentSlide((prev) => (prev === products.length - 1 ? 0 : prev + 1));
   };
 
-
   const handleAddToCart = (product, event) => {
     event.stopPropagation();
     dispatch(addToCart(product));
@@ -79,32 +78,25 @@ const HeroSection = () => {
     <HeroContainer theme={theme}>
       {/* ✅ Ürün Açıklama Alanı */}
       <HeroContent>
-        <AnimatePresence mode="sync">
-          <motion.h2 
+        <AnimatePresence mode="wait">
+          <motion.div
             key={currentSlide}
-            initial={{ opacity: 0, y: -30 }} 
-            animate={{ opacity: 1, y: 0 }} 
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
             transition={{ duration: 1, ease: "easeOut" }}
           >
-            {currentProduct.title || texts?.noProducts || "Ürün Bulunamadı"}
-          </motion.h2>
-
-          <motion.p
-            key={`desc-${currentSlide}`}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 30 }}
-            transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-          >
-            {currentProduct.description?.substring(0, 100) || texts?.noDescription || "Açıklama bulunamadı"}...
-          </motion.p>
+            <motion.h2>{currentProduct.title || texts?.noProducts || "Ürün Bulunamadı"}</motion.h2>
+            <motion.p>
+              {currentProduct.description?.substring(0, 100) || texts?.noDescription || "Açıklama bulunamadı"}...
+            </motion.p>
+          </motion.div>
         </AnimatePresence>
 
         {/* ✅ Fiyat + Butonlar */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }} 
-          animate={{ opacity: 1, scale: 1 }} 
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
         >
           <PriceTag>{currentProduct.price ? `${currentProduct.price}$` : texts?.home.price || "Fiyat Bilgisi Yok"}</PriceTag>
