@@ -12,7 +12,7 @@ Das Projekt wurde mit **React + Vite** entwickelt und verwendet **Redux Toolkit*
 **🚀 Jetzt ausprobieren!** 👉 [Live-Demo öffnen](https://md-hygiene.onrender.com/)
 
 🖼️ **Demo-Bilder:** 
-![Live-Demo Vorschau](https://github.com/Orhanguezel/MD-Hygiene/demo.png)
+![Live-Demo Vorschau](./demo.png)
 
 Das System bietet **drei verschiedene Benutzertypen**:
 
