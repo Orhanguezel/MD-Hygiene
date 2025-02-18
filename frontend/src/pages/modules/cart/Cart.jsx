@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   fetchCart,
-  removeFromCart,
   increaseQuantity,
   decreaseQuantity,
   clearCart,
@@ -45,15 +44,26 @@ const Cart = () => {
   }, [dispatch]);
 
   const handleIncrease = (productId) => {
-    dispatch(increaseQuantity(productId)).then(() => dispatch(fetchCart()));
-    toast.success(texts.cart.increaseSuccess);
+    dispatch(increaseQuantity(productId))
+      .then(() => {
+        dispatch(fetchCart());
+        toast.success(texts.cart.toast?.increaseSuccess || "✅ Ürün miktarı artırıldı!");
+      })
+      .catch(() => toast.error(texts.cart.toast?.error || "❌ Hata oluştu!"));
   };
 
-  const handleDecrease = (productId) => {
-    dispatch(decreaseQuantity(productId)).then(() => dispatch(fetchCart()));
-    toast.info(texts.cart.decreaseSuccess);
+  const handleDecrease = (productId, quantity) => {
+    dispatch(decreaseQuantity(productId))
+      .then(() => {
+        dispatch(fetchCart());
+        if (quantity > 1) {
+          toast.info(texts.cart.toast?.decreaseSuccess || "➖ Ürün miktarı azaltıldı!");
+        } else {
+          toast.warn(texts.cart.toast?.removeSuccess || "🗑️ Ürün sepetten kaldırıldı!");
+        }
+      })
+      .catch(() => toast.error(texts.cart.toast?.error || "❌ Hata oluştu!"));
   };
-  
 
   return (
     <CartContainer>
@@ -118,7 +128,12 @@ const Cart = () => {
             </SummaryItem>
 
             <ButtonContainer>
-              <StyledButton onClick={() => dispatch(clearCart()).then(() => dispatch(fetchCart()))}>
+              <StyledButton onClick={() => {
+                dispatch(clearCart()).then(() => {
+                  dispatch(fetchCart());
+                  toast.warn(texts.cart.toast?.clearCart || "🗑️ Sepet temizlendi!");
+                });
+              }}>
                  {texts.cart.clearCart}
               </StyledButton>
               <StyledButton $primary={true} onClick={() => navigate("/checkout")}> 
