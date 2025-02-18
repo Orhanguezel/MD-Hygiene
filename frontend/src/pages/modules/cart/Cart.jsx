@@ -34,26 +34,49 @@ const Cart = () => {
   const { texts } = useLanguage();
 
   // 📌 **Redux Store'dan Sepet Verileri**
-  const cartItems = useSelector((state) => state.cart.cartItems) || [];
-  const totalPrice = useSelector((state) => state.cart.totalPrice) || 0;
-  const vatAmount = useSelector((state) => state.cart.vatAmount) || 0;
-  const shippingCost = useSelector((state) => state.cart.shippingCost) || 0;
-  const grandTotal = useSelector((state) => state.cart.grandTotal) || 0;
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const totalPrice = useSelector((state) => state.cart.totalPrice);
+  const vatAmount = useSelector((state) => state.cart.vatAmount);
+  const shippingCost = useSelector((state) => state.cart.shippingCost);
+  const grandTotal = useSelector((state) => state.cart.grandTotal);
 
-  // 📌 **Sayfa Açıldığında Sepet Verisini Redux Store'a Yükle**
   useEffect(() => {
     dispatch(fetchCart());
   }, [dispatch]);
 
+  const handleIncrease = (productId) => {
+    dispatch(increaseQuantity(productId)).then(() => dispatch(fetchCart()));
+    toast.success(texts.cart.increaseSuccess || "✅ Ürün miktarı artırıldı.");
+  };
+
+  const handleDecrease = (productId, quantity) => {
+    if (quantity > 1) {
+      dispatch(decreaseQuantity(productId)).then(() => dispatch(fetchCart()));
+      toast.info(texts.cart.decreaseSuccess || "ℹ️ Ürün miktarı azaltıldı.");
+    } else {
+      dispatch(removeFromCart(productId)).then(() => {
+        dispatch(fetchCart());
+        toast.warn(texts.cart.removeSuccess || "⚠️ Ürün sepetten kaldırıldı.");
+      });
+    }
+  };
+
+  const handleRemove = (productId) => {
+    dispatch(removeFromCart(productId)).then(() => {
+      dispatch(fetchCart());
+      toast.error(texts.cart.removeSuccess || "❌ Ürün sepetten kaldırıldı.");
+    });
+  };
+
   return (
     <CartContainer>
-      <Title>{texts.cart.title}</Title>
+      <Title>{texts.cart.title || "Sepetiniz"}</Title>
       {cartItems.length === 0 ? (
-        <EmptyCartMessage>{texts.cart.empty}</EmptyCartMessage>
+        <EmptyCartMessage>{texts.cart.empty || "Sepetiniz boş."}</EmptyCartMessage>
       ) : (
         <>
           {cartItems.map((item, index) => (
-            <CartItem key={item.id}>
+            <CartItem key={item.productId}> {/* ✅ Redux güncellemelerinde sorun çıkmaması için key değiştirildi */}
               <ProductImage
                 src={item.images?.[0] || "/placeholder.jpg"}
                 alt={item.title || "Ürün resmi"}
@@ -61,49 +84,29 @@ const Cart = () => {
               />
               <ProductDetails>
                 <h3>{index + 1}. {item.title}</h3>
-                <p>{texts.cart.unitPrice}: ${item.price}</p>
+                <p>{texts.cart.unitPrice || "Birim Fiyat"}: ${item.price}</p>
                 <QuantityControls>
-                  <StyledButton
-                    onClick={() => {
-                      if (item.quantity > 1) {
-                        dispatch(decreaseQuantity(item.productId));
-                        toast.info("➖ Ürün miktarı azaltıldı!");
-                      } else {
-                        dispatch(removeFromCart(item.productId));
-                        toast.warn("🗑️ Ürün sepetten kaldırıldı!");
-                      }
-                    }}
-                  >
+                  <StyledButton onClick={() => handleDecrease(item.productId, item.quantity)}>
                     -
                   </StyledButton>
-                  <span>{texts.cart.quantity}: {item.quantity}</span>
-                  <StyledButton
-                    onClick={() => {
-                      dispatch(increaseQuantity(item.productId));
-                      toast.success("➕ Ürün miktarı artırıldı!");
-                    }}
-                  >
+                  <span>{texts.cart.quantity || "Adet"}: {item.quantity}</span>
+                  <StyledButton onClick={() => handleIncrease(item.productId)}>
                     +
                   </StyledButton>
                 </QuantityControls>
-                <p>{texts.cart.itemTotal}: ${(item.price * item.quantity).toFixed(2)}</p>
-                <StyledButton
-                  onClick={() => {
-                    dispatch(removeFromCart(item.productId));
-                    toast.warn("🗑️ Ürün sepetten kaldırıldı!");
-                  }}
-                >
-                  {texts.cart.remove}
+                <p>{texts.cart.itemTotal || "Toplam"}: ${(item.price * item.quantity).toFixed(2)}</p>
+                <StyledButton onClick={() => handleRemove(item.productId)}>
+                  {texts.cart.remove || "Kaldır"}
                 </StyledButton>
               </ProductDetails>
             </CartItem>
           ))}
 
           <Summary>
-            <Invoice>{texts.cart.invoiceDetails}</Invoice>
+            <Invoice>{texts.cart.invoiceDetails || "Fatura Detayları"}</Invoice>
             <InvoiceDetails>
               {cartItems.map((item, index) => (
-                <SummaryItem key={item.id}>
+                <SummaryItem key={item.productId}>
                   <ListItems>{index + 1}. {item.title} (x{item.quantity})</ListItems>
                   <ListItems>${(item.price * item.quantity).toFixed(2)}</ListItems>
                 </SummaryItem>
@@ -111,28 +114,28 @@ const Cart = () => {
             </InvoiceDetails>
 
             <SummaryItem>
-              <strong>{texts.cart.totalPrice}:</strong>
+              <strong>{texts.cart.totalPrice || "Ara Toplam"}:</strong>
               <span>${totalPrice.toFixed(2)}</span>
             </SummaryItem>
             <SummaryItem>
-              <strong>{texts.cart.vat} (19%):</strong>
+              <strong>{texts.cart.vat || "KDV"} (19%):</strong>
               <span>${vatAmount.toFixed(2)}</span>
             </SummaryItem>
             <SummaryItem>
-              <strong>{texts.cart.shippingCost}:</strong>
+              <strong>{texts.cart.shippingCost || "Kargo Ücreti"}:</strong>
               <span>${shippingCost.toFixed(2)}</span>
             </SummaryItem>
             <SummaryItem className="grand-total">
-              <strong>{texts.cart.grandTotal}:</strong>
+              <strong>{texts.cart.grandTotal || "Genel Toplam"}:</strong>
               <span>${grandTotal.toFixed(2)}</span>
             </SummaryItem>
 
             <ButtonContainer>
-              <StyledButton onClick={() => dispatch(clearCart())}>
-                🗑️ {texts.cart.clearCart}
+              <StyledButton onClick={() => dispatch(clearCart()).then(() => dispatch(fetchCart()))}>
+                {texts.cart.clearCart || "Sepeti Temizle"}
               </StyledButton>
               <StyledButton $primary={true} onClick={() => navigate("/checkout")}>
-                ✅ {texts.cart.checkout}
+                {texts.cart.checkout || "Ödeme Yap"}
               </StyledButton>
             </ButtonContainer>
           </Summary>

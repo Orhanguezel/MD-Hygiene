@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom"; // ✅ Sayfa yönlendirme
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "@/features/cart/cartSlice";
 import { useLanguage } from "@/features/language/useLanguage";
-import { toast } from "react-toastify"; // ✅ Bildirimler için import edildi
+import { useTheme } from "@/features/theme/useTheme";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   ProductCardContainer,
@@ -16,62 +17,66 @@ import {
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
   const { texts } = useLanguage();
-  const navigate = useNavigate(); // ✅ Navigasyon
+  const { theme } = useTheme();
+  const navigate = useNavigate();
 
   const handleAddToCart = () => {
-    if (!product || typeof addToCart !== "function") {
-      toast.error("❌ Sepete ekleme işlemi başarısız!");
+    if (!product || !product.id) {
+      toast.error(texts.product.toastMessages.addToCartError);
       return;
     }
 
     dispatch(addToCart(product))
       .unwrap()
       .then(() => {
-        toast.success("✅ Ürün sepete eklendi!");
+        toast.success(texts.product.toastMessages.addToCartSuccess);
       })
       .catch(() => {
-        toast.error("❌ Ürün sepete eklenemedi!");
+        toast.error(texts.product.toastMessages.addToCartError);
       });
   };
 
   const handleBuyNow = (e) => {
     e.stopPropagation();
-    if (typeof addToCart !== "function") {
-      toast.error("❌ Sepete ekleme işlemi başarısız!");
+
+    if (!product || !product.id) {
+      toast.error(texts.product.toastMessages.addToCartError);
       return;
     }
 
     dispatch(addToCart(product))
       .unwrap()
       .then(() => {
-        toast.success("✅ Ürün sepete eklendi! Ödeme sayfasına yönlendiriliyorsunuz...");
+        toast.success(texts.product.toastMessages.buyNowSuccess);
         navigate("/checkout");
       })
       .catch(() => {
-        toast.error("❌ Ürün sepete eklenemedi!");
+        toast.error(texts.product.toastMessages.addToCartError);
       });
   };
 
   const handleProductClick = () => {
-    navigate(`/product/${product.id}`); // ✅ Ürün detayına yönlendir
+    navigate(`/product/${product.id}`);
   };
 
   return (
-    <ProductCardContainer onClick={handleProductClick}>
+    <ProductCardContainer theme={theme} onClick={handleProductClick}>
       <ProductImage src={product?.images?.[0] || "/placeholder.jpg"} alt={product.title} />
-      <ProductTitle>{product.title}</ProductTitle>
-      <ProductPrice>${product.price}</ProductPrice>
+      <ProductTitle theme={theme}>{product.title}</ProductTitle>
+      <ProductPrice theme={theme}>${product.price}</ProductPrice>
+
       <AddToCartButton
+        theme={theme}
         onClick={(e) => {
           e.stopPropagation();
           handleAddToCart();
         }}
       >
-        {texts?.product?.addToCart || "Sepete Ekle"}
+        {texts.product.addToCart}
       </AddToCartButton>
 
-      <BuyNowButton onClick={handleBuyNow}>
-        {texts?.product?.buyNow || "Hemen Al"}
+      <BuyNowButton theme={theme} onClick={handleBuyNow}>
+        {texts.product.buyNow}
       </BuyNowButton>
     </ProductCardContainer>
   );

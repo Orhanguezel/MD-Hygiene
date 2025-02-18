@@ -14,7 +14,6 @@ import {
   UserName,
   ReviewBox,
 } from "../styles/ReviewStyles";
-import { FaUserCircle } from "react-icons/fa"; 
 
 const ReviewForm = () => {
   const { texts } = useLanguage();
@@ -32,7 +31,7 @@ const ReviewForm = () => {
     return (
       <ReviewFormContainer theme={theme}>
         <p style={{ textAlign: "center", color: theme.text }}>
-          🚫 {texts?.home?.onlyMembers || "Yorum yapmak için üye olmalısınız!"}
+          🚫 {texts?.home?.toastMessages?.onlyMembers || "Yorum yapmak için üye olmalısınız!"}
         </p>
       </ReviewFormContainer>
     );
@@ -42,7 +41,7 @@ const ReviewForm = () => {
     e.preventDefault();
 
     if (reviewText.trim() === "") {
-      toast.error(texts?.home?.emptyReview || "❌ Yorum boş olamaz!");
+      toast.error(texts?.home?.toastMessages?.emptyReview || "❌ Yorum boş olamaz!");
       return;
     }
 
@@ -56,7 +55,7 @@ const ReviewForm = () => {
     dispatch(addReview(newReview));
     setReviewText("");
 
-    toast.success(texts?.home?.reviewSubmitted || "✅ Yorum başarıyla eklendi!");
+    toast.success(texts?.home?.toastMessages?.reviewSubmitted || "✅ Yorum başarıyla eklendi!");
   };
 
   return (

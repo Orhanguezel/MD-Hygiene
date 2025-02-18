@@ -8,7 +8,7 @@ import { useLanguage } from "./features/language/useLanguage";
 import { useTheme } from "./features/theme/useTheme"; // ✅ Tema desteği
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./App.css";
+
 
 const App = () => {
   const { user, isAuthenticated, loading, error } = useSelector((state) => state.auth);

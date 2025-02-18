@@ -1,6 +1,16 @@
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
+// 📌 Kategori Başlığı
+export const CategoryHeader = styled.h2`
+  width: 90%;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: ${({ theme }) => theme.text};
+  margin-bottom: 20px;
+`;
+
 // 📌 Kategori Konteyneri (Ana Bölüm)
 export const CategoryContainer = styled(motion.div)`
   display: flex;
@@ -14,7 +24,6 @@ export const CategoryContainer = styled(motion.div)`
 
   @media (max-width: 768px) {
     overflow-x: auto;
-    flex-wrap: nowrap;
     padding: 15px;
   }
 `;
@@ -27,19 +36,19 @@ export const CategoryCard = styled(motion.div)`
   background: ${({ theme, $active }) => ($active ? theme.primary : theme.cardBackground)};
   color: ${({ theme, $active }) => ($active ? theme.buttonText : theme.text)};
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: 16px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 6px 12px ${({ theme }) => theme.shadow};
-  transition: background 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 8px 16px ${({ theme }) => theme.shadow};
+  transition: all 0.3s ease;
   position: relative;
 
   &:hover {
     background-color: ${({ theme }) => theme.primaryHover};
-    transform: scale(1.1);
+    transform: scale(1.08);
   }
 
   ${({ $active }) =>
@@ -57,20 +66,20 @@ export const CategoryCard = styled(motion.div)`
 
 // 📌 Kategori Görseli
 export const CategoryImage = styled.img`
-  width: 90%;
-  height: 170px;
+  width: 85%;
+  height: 160px;
   object-fit: contain;
   border-radius: 10px;
   transition: transform 0.3s ease;
 
   ${CategoryCard}:hover & {
-    transform: scale(1.15);
+    transform: scale(1.1);
   }
 `;
 
 // 📌 Kategori Başlığı
 export const CategoryTitle = styled.h3`
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: ${({ theme }) => theme.text};
   font-weight: bold;
   text-transform: capitalize;
@@ -80,3 +89,5 @@ export const CategoryTitle = styled.h3`
     color: ${({ theme }) => theme.buttonText};
   }
 `;
+
+

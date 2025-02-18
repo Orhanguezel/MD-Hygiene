@@ -1,0 +1,359 @@
+{
+    "cart": {
+      "title": "Einkaufswagen",
+      "empty": "Ihr Warenkorb ist leer.",
+      "unitPrice": "Preis pro Einheit",
+      "quantity": "Menge",
+      "itemTotal": "Gesamtbetrag",
+      "totalPrice": "Gesamtpreis",
+      "vat": "MwSt.",
+      "shippingCost": "Versandkosten",
+      "grandTotal": "Gesamtsumme",
+      "clearCart": "Warenkorb leeren",
+      "checkout": "Zur Kasse gehen",
+      "increaseSuccess": "✔ Produktmenge erhöht!",
+      "decreaseSuccess": "➖ Produktmenge reduziert!",
+      "removeSuccess": "🗑️ Produkt entfernt!",
+      "error": "❌ Ein Fehler ist aufgetreten!"
+    }
+  }
+
+  {
+    "tr": {
+      "cart": {
+        "title": "Sepetiniz",
+        "empty": "Sepetiniz boş.",
+        "unitPrice": "Birim Fiyat",
+        "quantity": "Miktar",
+        "itemTotal": "Ürün Toplamı",
+        "totalPrice": "Toplam Fiyat",
+        "vat": "KDV",
+        "shippingCost": "Kargo Ücreti",
+        "grandTotal": "Genel Toplam",
+        "clearCart": "Sepeti Temizle",
+        "checkout": "Ödeme Yap",
+        "increaseSuccess": "Ürün miktarı artırıldı!",
+        "decreaseSuccess": "Ürün miktarı azaltıldı!",
+        "removeSuccess": "Ürün sepetten kaldırıldı!",
+        "error": "Bir hata oluştu."
+      }
+    },
+    "en": {
+      "cart": {
+        "title": "Your Cart",
+        "empty": "Your cart is empty.",
+        "unitPrice": "Unit Price",
+        "quantity": "Quantity",
+        "itemTotal": "Item Total",
+        "totalPrice": "Total Price",
+        "vat": "VAT",
+        "shippingCost": "Shipping Cost",
+        "grandTotal": "Grand Total",
+        "clearCart": "Clear Cart",
+        "checkout": "Checkout",
+        "increaseSuccess": "Product quantity increased!",
+        "decreaseSuccess": "Product quantity decreased!",
+        "removeSuccess": "Product removed from cart!",
+        "error": "An error occurred."
+      }
+    },
+    "de": {
+      "cart": {
+        "title": "Ihr Warenkorb",
+        "empty": "Ihr Warenkorb ist leer.",
+        "unitPrice": "Stückpreis",
+        "quantity": "Menge",
+        "itemTotal": "Gesamtbetrag",
+        "totalPrice": "Gesamtpreis",
+        "vat": "MwSt.",
+        "shippingCost": "Versandkosten",
+        "grandTotal": "Gesamtsumme",
+        "clearCart": "Warenkorb leeren",
+        "checkout": "Zur Kasse",
+        "increaseSuccess": "Produktmenge erhöht!",
+        "decreaseSuccess": "Produktmenge verringert!",
+        "removeSuccess": "Produkt aus dem Warenkorb entfernt!",
+        "error": "Ein Fehler ist aufgetreten."
+      }
+    }
+  }
+
+
+  {
+    "tr": {
+      "checkout": {
+        "title": "Ödeme Sayfası",
+        "emptyCart": "🚫 Sepetiniz boş.",
+        "cardHolder": "💳 Kart Sahibi Adı",
+        "cardNumber": "💳 Kart Numarası",
+        "expiryDate": "📅 Son Kullanma Tarihi (MM/YY)",
+        "cvv": "🔐 CVV",
+        "totalPrice": "💰 Toplam Fiyat",
+        "vat": "📊 Vergi (KDV 19%)",
+        "shippingCost": "🚚 Kargo Ücreti",
+        "grandTotal": "🧾 Genel Toplam",
+        "completePayment": "💸 Ödemeyi Tamamla",
+        "missingDetails": "❌ Lütfen tüm ödeme bilgilerini doldurun!",
+        "success": "✅ Sipariş oluşturuldu!",
+        "error": "❌ Sipariş oluşturulamadı!",
+        "orderSuccessMessage": "🎉 Sipariş Başarıyla Tamamlandı!",
+        "orderId": "Sipariş ID",
+        "orderDate": "Sipariş Tarihi",
+        "orderTotal": "Toplam Tutar",
+        "viewOrders": "📜 Siparişleri Görüntüle",
+        "continueShopping": "🛍️ Alışverişe Devam Et"
+      }
+    },
+    "en": {
+      "checkout": {
+        "title": "Checkout Page",
+        "emptyCart": "🚫 Your cart is empty.",
+        "cardHolder": "💳 Cardholder Name",
+        "cardNumber": "💳 Card Number",
+        "expiryDate": "📅 Expiry Date (MM/YY)",
+        "cvv": "🔐 CVV",
+        "totalPrice": "💰 Total Price",
+        "vat": "📊 VAT (19%)",
+        "shippingCost": "🚚 Shipping Cost",
+        "grandTotal": "🧾 Grand Total",
+        "completePayment": "💸 Complete Payment",
+        "missingDetails": "❌ Please fill in all payment details!",
+        "success": "✅ Order placed successfully!",
+        "error": "❌ Order could not be placed!",
+        "orderSuccessMessage": "🎉 Order Successfully Completed!",
+        "orderId": "Order ID",
+        "orderDate": "Order Date",
+        "orderTotal": "Total Amount",
+        "viewOrders": "📜 View Orders",
+        "continueShopping": "🛍️ Continue Shopping"
+      }
+    },
+    "de": {
+      "checkout": {
+        "title": "Kasse-Seite",
+        "emptyCart": "🚫 Ihr Warenkorb ist leer.",
+        "cardHolder": "💳 Karteninhaber Name",
+        "cardNumber": "💳 Kartennummer",
+        "expiryDate": "📅 Ablaufdatum (MM/JJ)",
+        "cvv": "🔐 CVV",
+        "totalPrice": "💰 Gesamtpreis",
+        "vat": "📊 MwSt. (19%)",
+        "shippingCost": "🚚 Versandkosten",
+        "grandTotal": "🧾 Gesamtsumme",
+        "completePayment": "💸 Zahlung abschließen",
+        "missingDetails": "❌ Bitte füllen Sie alle Zahlungsdetails aus!",
+        "success": "✅ Bestellung erfolgreich aufgegeben!",
+        "error": "❌ Bestellung konnte nicht aufgegeben werden!",
+        "orderSuccessMessage": "🎉 Bestellung erfolgreich abgeschlossen!",
+        "orderId": "Bestell-ID",
+        "orderDate": "Bestelldatum",
+        "orderTotal": "Gesamtbetrag",
+        "viewOrders": "📜 Bestellungen anzeigen",
+        "continueShopping": "🛍️ Weiter einkaufen"
+      }
+    }
+  }
+
+  {
+    "product": {
+      "toast": {
+        "addedToCart": "✅ Ürün sepete eklendi!",
+        "failedToAdd": "❌ Ürün sepete eklenemedi!",
+        "invalidProduct": "❌ Sepete eklenmeye çalışılan ürün geçersiz!",
+        "removedFromFavorites": "💔 Ürün favorilerden çıkarıldı!",
+        "addedToFavorites": "❤️ Ürün favorilere eklendi!",
+        "loginToBuy": "⚠️ Satın almak için giriş yapmalısınız!",
+        "redirectToCheckout": "✅ Ürün sepete eklendi! Ödeme sayfasına yönlendiriliyorsunuz..."
+      }
+    }
+  }
+
+  {
+    "product": {
+      "toast": {
+        "addedToCart": "✅ Product added to cart!",
+        "failedToAdd": "❌ Failed to add product to cart!",
+        "invalidProduct": "❌ The product attempted to be added to the cart is invalid!",
+        "removedFromFavorites": "💔 Product removed from favorites!",
+        "addedToFavorites": "❤️ Product added to favorites!",
+        "loginToBuy": "⚠️ You need to log in to buy!",
+        "redirectToCheckout": "✅ Product added to cart! Redirecting to checkout..."
+      }
+    }
+  }
+  
+  {
+    "product": {
+      "toast": {
+        "addedToCart": "✅ Produkt zum Warenkorb hinzugefügt!",
+        "failedToAdd": "❌ Produkt konnte nicht zum Warenkorb hinzugefügt werden!",
+        "invalidProduct": "❌ Das Produkt, das dem Warenkorb hinzugefügt werden sollte, ist ungültig!",
+        "removedFromFavorites": "💔 Produkt aus den Favoriten entfernt!",
+        "addedToFavorites": "❤️ Produkt zu den Favoriten hinzugefügt!",
+        "loginToBuy": "⚠️ Sie müssen sich anmelden, um zu kaufen!",
+        "redirectToCheckout": "✅ Produkt wurde zum Warenkorb hinzugefügt! Weiterleitung zur Kasse..."
+      }
+    }
+  }
+  
+
+  {
+    "review": {
+      "toast": {
+        "onlyMembers": "🚫 Yorum yapmak için üye olmalısınız!",
+        "emptyReview": "❌ Yorum boş olamaz!",
+        "reviewSubmitted": "✅ Yorum başarıyla eklendi!"
+      }
+    }
+  }
+
+  {
+    "review": {
+      "toast": {
+        "onlyMembers": "🚫 You need to be a member to leave a review!",
+        "emptyReview": "❌ Review cannot be empty!",
+        "reviewSubmitted": "✅ Review successfully submitted!"
+      }
+    }
+  }
+  
+  {
+    "review": {
+      "toast": {
+        "onlyMembers": "🚫 Sie müssen Mitglied sein, um eine Bewertung zu hinterlassen!",
+        "emptyReview": "❌ Die Bewertung darf nicht leer sein!",
+        "reviewSubmitted": "✅ Bewertung erfolgreich hinzugefügt!"
+      }
+    }
+  }
+  
+  {
+    "review": {
+      "testimonials": "Müşteri Yorumları",
+      "addReview": "Yorumunuzu yazın...",
+      "submitReview": "Gönder",
+      "delete": "Sil",
+      "showMore": "Daha Fazla Göster",
+      "anonymous": "Anonim Kullanıcı",
+      "toast": {
+        "onlyMembers": "🚫 Yorum yapmak için üye olmalısınız!",
+        "emptyReview": "❌ Yorum boş olamaz!",
+        "reviewSubmitted": "✅ Yorum başarıyla eklendi!",
+        "reviewDeleted": "🗑️ Yorum silindi."
+      }
+    }
+  }
+
+  {
+    "review": {
+      "testimonials": "Customer Reviews",
+      "addReview": "Write your review...",
+      "submitReview": "Submit",
+      "delete": "Delete",
+      "showMore": "Show More",
+      "anonymous": "Anonymous User",
+      "toast": {
+        "onlyMembers": "🚫 You need to be a member to leave a review!",
+        "emptyReview": "❌ Review cannot be empty!",
+        "reviewSubmitted": "✅ Review successfully submitted!",
+        "reviewDeleted": "🗑️ Review deleted."
+      }
+    }
+  }
+  
+  {
+    "review": {
+      "testimonials": "Kundenbewertungen",
+      "addReview": "Schreiben Sie Ihre Bewertung...",
+      "submitReview": "Absenden",
+      "delete": "Löschen",
+      "showMore": "Mehr anzeigen",
+      "anonymous": "Anonymer Benutzer",
+      "toast": {
+        "onlyMembers": "🚫 Sie müssen Mitglied sein, um eine Bewertung zu hinterlassen!",
+        "emptyReview": "❌ Die Bewertung darf nicht leer sein!",
+        "reviewSubmitted": "✅ Bewertung erfolgreich hinzugefügt!",
+        "reviewDeleted": "🗑️ Bewertung gelöscht."
+      }
+    }
+  }
+
+  {
+    "home": {
+      "newsletterTitle": "📩 Subscribe to Our Newsletter",
+      "enterEmail": "Enter your email...",
+      "subscribe": "Subscribe",
+      "toastMessages": {
+        "emptyEmail": "❌ Please enter a valid email!",
+        "thankYou": "✅ Thank you for subscribing!"
+      }
+    }
+  }
+
+  {
+    "home": {
+      "newsletterTitle": "📩 Haber Bültenimize Abone Ol",
+      "enterEmail": "E-posta adresinizi girin...",
+      "subscribe": "Abone Ol",
+      "toastMessages": {
+        "emptyEmail": "❌ Lütfen geçerli bir e-posta girin!",
+        "thankYou": "✅ Abone olduğunuz için teşekkürler!"
+      }
+    }
+  }
+  
+
+  {
+    "home": {
+      "newsletterTitle": "📩 Abonnieren Sie unseren Newsletter",
+      "enterEmail": "Geben Sie Ihre E-Mail ein...",
+      "subscribe": "Abonnieren",
+      "toastMessages": {
+        "emptyEmail": "❌ Bitte geben Sie eine gültige E-Mail ein!",
+        "thankYou": "✅ Danke für Ihr Abonnement!"
+      }
+    }
+  }
+
+  {
+    "product": {
+      "addToCart": "Add to Cart",
+      "buyNow": "Buy Now",
+      "toastMessages": {
+        "addToCartSuccess": "✅ Product added to cart!",
+        "addToCartError": "❌ Failed to add product to cart!",
+        "buyNowSuccess": "✅ Product added to cart! Redirecting to checkout..."
+      }
+    }
+  }
+
+  {
+    "product": {
+      "addToCart": "Sepete Ekle",
+      "buyNow": "Hemen Al",
+      "toastMessages": {
+        "addToCartSuccess": "✅ Ürün sepete eklendi!",
+        "addToCartError": "❌ Ürün sepete eklenemedi!",
+        "buyNowSuccess": "✅ Ürün sepete eklendi! Ödeme sayfasına yönlendiriliyorsunuz..."
+      }
+    }
+  }
+  
+  {
+    "product": {
+      "addToCart": "In den Warenkorb",
+      "buyNow": "Jetzt Kaufen",
+      "toastMessages": {
+        "addToCartSuccess": "✅ Produkt wurde zum Warenkorb hinzugefügt!",
+        "addToCartError": "❌ Produkt konnte nicht hinzugefügt werden!",
+        "buyNowSuccess": "✅ Produkt wurde zum Warenkorb hinzugefügt! Weiterleitung zur Kasse..."
+      }
+    }
+  }
+  
+  
+  
+  
+  
+  
+  

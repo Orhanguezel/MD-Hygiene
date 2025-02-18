@@ -1,31 +1,33 @@
 import styled from "styled-components";
 
 export const NewsletterContainer = styled.div`
-  padding: 40px 20px;
-  background-color: ${({ theme }) => theme.background};
+  padding: 50px 30px;
+  background-color: ${({ theme }) => theme.cardBackground};
   text-align: center;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px ${({ theme }) => theme.shadow};
+  border-radius: 12px;
+  box-shadow: 0 4px 8px ${({ theme }) => theme.shadow};
+  max-width: 600px;
+  margin: 40px auto; /* ✅ Sayfa ortalama */
 `;
 
 export const NewsletterTitle = styled.h2`
-  font-size: 1.8rem;
+  font-size: 2rem;
   color: ${({ theme }) => theme.primary};
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 `;
 
-export const NewsletterForm = styled.form`
+export const NewsletterForm = styled.div`
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
 `;
 
 export const NewsletterInput = styled.input`
-  padding: 12px;
-  width: 280px;
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 6px;
+  padding: 14px;
+  width: 320px;
+  border: 2px solid ${({ theme }) => theme.border};
+  border-radius: 8px;
   outline: none;
   font-size: 1rem;
   color: ${({ theme }) => theme.text};
@@ -33,22 +35,22 @@ export const NewsletterInput = styled.input`
 
   &:focus {
     border-color: ${({ theme }) => theme.primary};
-    box-shadow: 0 0 5px ${({ theme }) => theme.primaryHover};
+    box-shadow: 0 0 6px ${({ theme }) => theme.primaryHover};
   }
 `;
 
 export const SubscribeButton = styled.button`
-  padding: 12px 20px;
+  padding: 14px 22px;
   background-color: ${({ theme }) => theme.primary};
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
   transition: background 0.3s ease, transform 0.2s ease;
 
   &:hover {
     background-color: ${({ theme }) => theme.primaryHover};
-    transform: scale(1.05);
+    transform: scale(1.07);
   }
 `;

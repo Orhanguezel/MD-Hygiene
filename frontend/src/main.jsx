@@ -6,6 +6,7 @@ import { ThemeProvider } from 'styled-components';
 import { lightTheme, darkTheme } from './styles/themes';
 import { GlobalStyles } from './styles/globalStyles';
 import { useSelector } from 'react-redux';
+import "./App.css";
 
 const ThemeWrapper = ({ children }) => {
   const themeMode = useSelector((state) => state.theme);

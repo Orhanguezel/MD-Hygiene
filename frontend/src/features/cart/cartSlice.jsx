@@ -29,106 +29,130 @@ export const calculateTotals = (cartItems) => {
 };
 
 // **Sepet Verilerini API'den Çekme**
-export const fetchCart = createAsyncThunk("cart/fetchCart", async (_, thunkAPI) => {
-  try {
-    const response = await API.get("/cart");
-    return response.data;
-  } catch (error) {
-    return thunkAPI.rejectWithValue("Sepet yüklenemedi.");
+export const fetchCart = createAsyncThunk(
+  "cart/fetchCart",
+  async (_, thunkAPI) => {
+    try {
+      const response = await API.get("/cart");
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue("Sepet yüklenemedi.");
+    }
   }
-});
+);
 
 // **Sepete Ürün Ekleme**
-export const addToCart = createAsyncThunk("cart/addToCart", async (product, thunkAPI) => {
-  try {
-    const response = await API.get("/cart");
-    const existingItem = response.data.find((item) => item.productId === product.id);
+export const addToCart = createAsyncThunk(
+  "cart/addToCart",
+  async (product, thunkAPI) => {
+    try {
+      const response = await API.get("/cart");
+      const existingItem = response.data.find(
+        (item) => item.productId === product.id
+      );
 
-    if (existingItem) {
-      const updatedItem = { ...existingItem, quantity: existingItem.quantity + 1 };
-      await API.patch(`/cart/${existingItem.id}`, updatedItem);
-      return updatedItem;
-    } else {
-      const newItem = {
-        productId: product.id,
-        quantity: 1,
-        price: product.price,
-        title: product.title,
-        images: product.images?.length ? product.images : ["/placeholder.jpg"],
-      };
-      const res = await API.post("/cart", newItem);
-      return res.data;
+      if (existingItem) {
+        const updatedItem = {
+          ...existingItem,
+          quantity: existingItem.quantity + 1,
+        };
+        await API.patch(`/cart/${existingItem.id}`, updatedItem);
+        return updatedItem;
+      } else {
+        const newItem = {
+          productId: product.id,
+          quantity: 1,
+          price: product.price,
+          title: product.title,
+          images: product.images?.length
+            ? product.images
+            : ["/placeholder.jpg"],
+        };
+        const res = await API.post("/cart", newItem);
+        return res.data;
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue("Ürün sepete eklenemedi.");
     }
-  } catch (error) {
-    return thunkAPI.rejectWithValue("Ürün sepete eklenemedi.");
   }
-});
-
+);
 // **Miktar Artırma**
-export const increaseQuantity = createAsyncThunk("cart/increaseQuantity", async (productId, thunkAPI) => {
-  try {
-    const response = await API.get("/cart");
-    const cartItem = response.data.find((item) => item.productId === productId);
-    if (!cartItem) return thunkAPI.rejectWithValue("Ürün bulunamadı.");
+export const increaseQuantity = createAsyncThunk(
+  "cart/increaseQuantity",
+  async (productId, thunkAPI) => {
+    try {
+      const response = await API.get("/cart");
+      const cartItem = response.data.find(
+        (item) => item.productId === productId
+      );
+      if (!cartItem) return thunkAPI.rejectWithValue("Ürün bulunamadı.");
 
-    const updatedItem = { ...cartItem, quantity: cartItem.quantity + 1 };
-    await API.patch(`/cart/${cartItem.id}`, updatedItem);
-    return updatedItem;
-  } catch (error) {
-    return thunkAPI.rejectWithValue("Miktar artırılamadı.");
-  }
-});
-
-// **Miktar Azaltma**
-export const decreaseQuantity = createAsyncThunk("cart/decreaseQuantity", async (productId, thunkAPI) => {
-  try {
-    const response = await API.get("/cart");
-    const cartItem = response.data.find((item) => item.productId === productId);
-    if (!cartItem) return thunkAPI.rejectWithValue("Ürün bulunamadı.");
-
-    if (cartItem.quantity > 1) {
-      const updatedItem = { ...cartItem, quantity: cartItem.quantity - 1 };
+      const updatedItem = { ...cartItem, quantity: cartItem.quantity + 1 };
       await API.patch(`/cart/${cartItem.id}`, updatedItem);
       return updatedItem;
-    } else {
-      await API.delete(`/cart/${cartItem.id}`);
-      return productId;
+    } catch (error) {
+      return thunkAPI.rejectWithValue("Miktar artırılamadı.");
     }
-  } catch (error) {
-    return thunkAPI.rejectWithValue("Miktar azaltılamadı.");
   }
-});
+);
+// **Miktar Azaltma**
+export const decreaseQuantity = createAsyncThunk(
+  "cart/decreaseQuantity",
+  async (productId, thunkAPI) => {
+    try {
+      const response = await API.get("/cart");
+      const cartItem = response.data.find(
+        (item) => item.productId === productId
+      );
+      if (!cartItem) return thunkAPI.rejectWithValue("Ürün bulunamadı.");
 
+      if (cartItem.quantity > 1) {
+        const updatedItem = { ...cartItem, quantity: cartItem.quantity - 1 };
+        await API.patch(`/cart/${cartItem.id}`, updatedItem);
+        return updatedItem;
+      } else {
+        await API.delete(`/cart/${cartItem.id}`);
+        return productId;
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue("Miktar azaltılamadı.");
+    }
+  }
+);
 // **Sepetten Ürün Kaldırma**
-export const removeFromCart = createAsyncThunk("cart/removeFromCart", async (productId, thunkAPI) => {
-  try {
-    const response = await API.get("/cart");
-    const cartItem = response.data.find((item) => item.productId === productId);
-    if (!cartItem) return thunkAPI.rejectWithValue("Ürün bulunamadı.");
-
-    await API.delete(`/cart/${cartItem.id}`);
-    return productId;
-  } catch (error) {
-    return thunkAPI.rejectWithValue("Ürün sepetten kaldırılamadı.");
+export const removeFromCart = createAsyncThunk(
+  "cart/removeFromCart",
+  async (productId, thunkAPI) => {
+    try {
+      await API.delete(`/cart/${productId}`);
+      return productId;
+    } catch (error) {
+      return thunkAPI.rejectWithValue("Ürün sepetten kaldırılamadı.");
+    }
   }
-});
+);
 
 // **Ödeme Sonrası Sepeti Sıfırlama**
-export const clearCart = createAsyncThunk("cart/clearCart", async (_, thunkAPI) => {
-  try {
-    const response = await API.get("/cart");
-    const cartItems = response.data;
+export const clearCart = createAsyncThunk(
+  "cart/clearCart",
+  async (_, thunkAPI) => {
+    try {
+      const response = await API.get("/cart");
+      const cartItems = response.data;
 
-    if (!cartItems.length) {
+      if (!cartItems.length) {
+        return [];
+      }
+
+      await Promise.all(
+        cartItems.map((item) => API.delete(`/cart/${item.id}`))
+      );
       return [];
+    } catch (error) {
+      return thunkAPI.rejectWithValue("Sepet temizlenemedi.");
     }
-
-    await Promise.all(cartItems.map((item) => API.delete(`/cart/${item.id}`)));
-    return [];
-  } catch (error) {
-    return thunkAPI.rejectWithValue("Sepet temizlenemedi.");
   }
-});
+);
 
 // ✅ **Redux Store Güncelleme**
 const cartSlice = createSlice({
@@ -156,7 +180,9 @@ const cartSlice = createSlice({
         state.grandTotal = totals.grandTotal;
       })
       .addCase(addToCart.fulfilled, (state, action) => {
-        const existingItem = state.cartItems.find((item) => item.productId === action.payload.productId);
+        const existingItem = state.cartItems.find(
+          (item) => item.productId === action.payload.productId
+        );
         if (existingItem) {
           existingItem.quantity += 1;
         } else {

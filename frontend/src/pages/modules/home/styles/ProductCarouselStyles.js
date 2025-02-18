@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { motion } from "framer-motion"; // ✅ Animasyon için Framer Motion
+import { motion } from "framer-motion"; 
 
 // 📌 Carousel Konteyneri
 export const CarouselContainer = styled.div`
@@ -8,11 +8,10 @@ export const CarouselContainer = styled.div`
   text-align: center;
   position: relative;
   color: ${({ theme }) => theme.text};
-  width: 100%;  /* ✅ Alanı tamamen sınırla */
-  max-width: 100vw; /* ✅ Görüntü genişliğini aşmasını önle */
-  overflow: hidden; /* ✅ Taşmayı önle */
+  width: 100%; 
+  max-width: 80vw; 
+  overflow: hidden; 
 `;
-
 
 // 📌 Carousel Wrapper
 export const CarouselWrapper = styled.div`
@@ -21,14 +20,8 @@ export const CarouselWrapper = styled.div`
   white-space: nowrap;
   width: 100%;
   position: relative;
-  border-radius: 12px;
-`;
-
-// 📌 Otomatik kayan içerik
-export const CarouselInner = styled(motion.div)`
-  display: flex;
-  gap: 15px;
-  min-width: 100%;
+  border-radius: 16px; /* ✅ Daha modern ve yumuşak görünüm */
+  box-shadow: 0 8px 16px ${({ theme }) => theme.shadow};
 `;
 
 // 📌 Ürün Kartı
@@ -38,17 +31,17 @@ export const ProductCard = styled.div`
   background: ${({ theme }) => theme.cardBackground};
   padding: 16px;
   margin: 8px;
-  box-shadow: 0 4px 8px ${({ theme }) => theme.shadow};
+  box-shadow: 0 6px 12px ${({ theme }) => theme.shadow}; /* ✅ Daha belirgin gölge */
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-  border-radius: 12px;
+  border-radius: 14px;
   scroll-snap-align: start;
   position: relative;
   text-align: center;
   overflow: hidden;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px ${({ theme }) => theme.shadow};
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px ${({ theme }) => theme.shadow}; /* ✅ Daha güçlü hover efekti */
   }
 `;
 
@@ -57,17 +50,17 @@ export const ProductImage = styled.img`
   width: 100%;
   height: 180px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 10px;
   transition: transform 0.3s ease-in-out;
 
   ${ProductCard}:hover & {
-    transform: scale(1.05);
+    transform: scale(1.07); /* ✅ Hover efekti biraz azaltıldı */
   }
 `;
 
 // 📌 Ürün Başlığı
 export const ProductTitle = styled.h3`
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   margin: 12px 0;
   color: ${({ theme }) => theme.text};
   font-weight: bold;

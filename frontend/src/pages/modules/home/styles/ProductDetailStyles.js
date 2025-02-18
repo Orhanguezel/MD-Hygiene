@@ -1,5 +1,13 @@
 import styled from "styled-components";
 
+export const ProductDetailContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
+`;
 
 export const ProductImage = styled.img`
   width: 400px;
@@ -48,7 +56,7 @@ export const ProductPrice = styled.p`
 export const StockStatus = styled.p`
   font-size: 16px;
   font-weight: bold;
-  color: ${({ theme }) => (theme.text === "dark" ? "#ff4d4d" : "#28a745")};
+  color: ${({ theme }) => theme.text === "dark" ? "#ff4d4d" : "#28a745"};
 `;
 
 export const ProductDescription = styled.p`
@@ -59,7 +67,7 @@ export const ProductDescription = styled.p`
 
 export const AddToCartButton = styled.button`
   padding: 10px 20px;
-  background: ${({ theme }) => theme.success || "#28a745"};
+  background: ${({ theme }) => theme.success};
   color: white;
   border: none;
   border-radius: 5px;
@@ -68,18 +76,18 @@ export const AddToCartButton = styled.button`
   transition: background 0.3s;
 
   &:hover {
-    background: ${({ theme }) => theme.successHover || "#218838"};
+    background: ${({ theme }) => theme.successHover};
   }
 
   &:disabled {
-    background: ${({ theme }) => theme.disabled || "#ccc"};
+    background: ${({ theme }) => theme.disabled};
     cursor: not-allowed;
   }
 `;
 
 export const FavoriteButton = styled.button`
   padding: 10px 20px;
-  background: ${({ theme, $favorited }) => ($favorited === "true" ? theme.danger || "#ff4d4d" : theme.cardBackground)};
+  background: ${({ theme, $favorited }) => ($favorited === "true" ? theme.danger : theme.cardBackground)};
   color: ${({ theme, $favorited }) => ($favorited === "true" ? "white" : theme.text)};
   border: none;
   border-radius: 5px;
@@ -88,21 +96,10 @@ export const FavoriteButton = styled.button`
   transition: background 0.3s;
 
   &:hover {
-    background: ${({ theme, $favorited }) => ($favorited === "true" ? theme.dangerHover || "#d43f3a" : theme.border)};
+    background: ${({ theme, $favorited }) => ($favorited === "true" ? theme.dangerHover : theme.border)};
   }
 `;
 
-// 📌 Sayfanın Ana Konteyneri
-export const ProductDetailContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 20px;
-  background-color: ${({ theme }) => theme.background};
-  color: ${({ theme }) => theme.text};
-`;
-
-// 🔙 Geri Butonu
 export const BackButton = styled.button`
   background-color: ${({ theme }) => theme.primary};
   color: ${({ theme }) => theme.buttonText};

@@ -31,10 +31,11 @@ const ProductCarousel = () => {
   const { favorites } = useSelector((state) => state.favorite);
   const { filteredProducts } = useSelector((state) => state.product);
   const cart = useSelector((state) => state.cart);
+  const user = useSelector((state) => state.auth.user); // ✅ Kullanıcı kontrolü
 
   const [offset, setOffset] = useState(0);
-  const [direction, setDirection] = useState(-1); // -1 = sola, 1 = sağa
-  const [speed, setSpeed] = useState(1.5); // Varsayılan hız
+  const [direction, setDirection] = useState(-1);
+  const [speed, setSpeed] = useState(1.5);
   const [isPaused, setIsPaused] = useState(false);
 
   const carouselRef = useRef(null);
@@ -51,9 +52,9 @@ const ProductCarousel = () => {
         setOffset((prev) => {
           const newOffset = prev + direction * (220 * speed);
           if (newOffset < -filteredProducts.length * 220 + window.innerWidth * 0.5) {
-            setDirection(1); // Sola gidince yönü değiştir
+            setDirection(1);
           } else if (newOffset > 0) {
-            setDirection(-1); // Sağa gidince yönü değiştir
+            setDirection(-1);
           }
           return newOffset;
         });
@@ -62,11 +63,9 @@ const ProductCarousel = () => {
     }
   }, [filteredProducts, direction, speed, isPaused]);
 
-  // 🛑 Mouse Üzerinde Durunca Kaydırmayı Durdur
   const handleMouseEnter = () => setIsPaused(true);
   const handleMouseLeave = () => setIsPaused(false);
 
-  // 🖐️ Kullanıcı Mouse ile Sürükleme
   const handleDragStart = (e) => {
     touchStartX.current = e.clientX || e.touches[0].clientX;
   };
@@ -77,39 +76,40 @@ const ProductCarousel = () => {
 
     if (Math.abs(diff) > 50) {
       setDirection(diff > 0 ? 1 : -1);
-      setSpeed(Math.min(3, Math.abs(diff) / 100)); // Hız ayarlama
+      setSpeed(Math.min(3, Math.abs(diff) / 100));
     }
   };
 
-  // 🛒 **Sepete Ekle Butonu**
   const handleAddToCart = (product, event) => {
     event.stopPropagation();
     if (!product || !product.id) {
-      toast.error("❌ Sepete eklenmeye çalışılan ürün geçersiz!");
+      toast.error(texts?.product?.toast?.invalidProduct || "❌ Sepete eklenmeye çalışılan ürün geçersiz!");
       return;
     }
     dispatch(addToCart(product))
       .unwrap()
-      .then(() => toast.success("✅ Ürün sepete eklendi!"))
-      .catch(() => toast.error("❌ Ürün sepete eklenemedi!"));
+      .then(() => toast.success(texts?.product?.toast?.addedToCart || "✅ Ürün sepete eklendi!"))
+      .catch(() => toast.error(texts?.product?.toast?.failedToAdd || "❌ Ürün sepete eklenemedi!"));
   };
 
-  // 🛒 **Şimdi Satın Al Butonu**
   const handleBuyNow = (product, event) => {
     event.stopPropagation();
-    const user = useSelector((state) => state.auth.user);
+
     if (!user) {
-      toast.warning("⚠️ Satın almak için giriş yapmalısınız!");
+      toast.warning(texts?.product?.toast?.loginToBuy || "⚠️ Satın almak için giriş yapmalısınız!");
       navigate("/login");
       return;
     }
+
     dispatch(addToCart(product))
       .unwrap()
       .then(() => {
-        toast.success("✅ Ürün sepete eklendi! Ödeme sayfasına yönlendiriliyorsunuz...");
+        toast.success(
+          texts?.product?.toast?.redirectToCheckout || "✅ Ürün sepete eklendi! Ödeme sayfasına yönlendiriliyorsunuz..."
+        );
         navigate("/checkout");
       })
-      .catch(() => toast.error("❌ Ürün sepete eklenemedi!"));
+      .catch(() => toast.error(texts?.product?.toast?.failedToAdd || "❌ Ürün sepete eklenemedi!"));
   };
 
   return (
@@ -130,7 +130,8 @@ const ProductCarousel = () => {
           style={{ display: "flex", gap: "15px", minWidth: "100%" }}
         >
           {filteredProducts?.map((product, index) => {
-            const stockMessage = product.stock > 0 ? "✅ Stokta Var" : "⚠️ Stok Durumu Belirsiz";
+            const stockMessage =
+              product.stock > 0 ? texts?.product?.inStock || "✅ Stokta Var" : texts?.product?.outOfStock || "⚠️ Stok Yok";
             return (
               <ProductCard key={index} theme={theme} onClick={() => navigate(`/product/${product.id}`)}>
                 {product.isNew && <ProductLabel theme={theme}>🔥 {texts?.home?.newProduct || "Yeni"}</ProductLabel>}
@@ -154,8 +155,8 @@ const ProductCarousel = () => {
                     dispatch(toggleFavorite(product.id));
                     toast.info(
                       favorites.includes(product.id)
-                        ? "💔 Ürün favorilerden çıkarıldı!"
-                        : "❤️ Ürün favorilere eklendi!"
+                        ? texts?.product?.toast?.removedFromFavorites || "💔 Ürün favorilerden çıkarıldı!"
+                        : texts?.product?.toast?.addedToFavorites || "❤️ Ürün favorilere eklendi!"
                     );
                   }}
                   $favorited={favorites.includes(product.id) ? "true" : undefined}

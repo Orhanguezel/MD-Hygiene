@@ -14,14 +14,14 @@ import {
   ReviewInput,
   SubmitButton,
   DeleteButton,
-  ShowMoreButton, // ✅ Renk düzenlendi ve korunuyor
+  ShowMoreButton,
 } from "../styles/TestimonialsStyles";
 
 const Testimonials = () => {
   const dispatch = useDispatch();
   const { texts } = useLanguage();
   const theme = useSelector((state) => state.theme);
-  const { reviews, loading, error } = useSelector((state) => state.review);
+  const { reviews = [], loading, error } = useSelector((state) => state.review) || {}; // ✅ Boş array varsayıldı
   const user = useSelector((state) => state.auth.user);
   const [newReview, setNewReview] = useState("");
   const [visibleReviews, setVisibleReviews] = useState(5); // ✅ İlk başta 5 yorum göster
@@ -32,36 +32,36 @@ const Testimonials = () => {
 
   const handleAddReview = () => {
     if (!user) {
-      toast.error(texts.home.authRequired || "❌ Yorum ekleyebilmek için giriş yapmalısınız!");
+      toast.error(texts.review?.toast?.onlyMembers || "🚫 Yorum yapmak için üye olmalısınız!");
       return;
     }
 
     if (newReview.trim() === "") {
-      toast.error(texts.home.emptyReview || "❌ Boş yorum ekleyemezsiniz!");
+      toast.error(texts.review?.toast?.emptyReview || "❌ Yorum boş olamaz!");
       return;
     }
 
     const reviewData = {
       id: Date.now(),
-      name: user?.name || "Anonim Kullanıcı",
+      name: user?.name || texts.review?.anonymous || "Anonim Kullanıcı",
       feedback: newReview,
-      avatar: user?.profileImage || "https://randomuser.me/api/portraits/lego/5.jpg",
+      avatar: user?.profileImage || "/default-avatar.png",
     };
 
     dispatch(addReview(reviewData));
     setNewReview("");
-    toast.success(texts.home.reviewSubmitted || "✅ Yorum başarıyla eklendi!");
+    toast.success(texts.review?.toast?.reviewSubmitted || "✅ Yorum başarıyla eklendi!");
   };
 
   const handleDeleteReview = (reviewId) => {
     dispatch(deleteReview(reviewId));
-    toast.warn(texts.home.reviewDeleted || "🗑️ Yorum silindi.");
+    toast.warn(texts.review?.toast?.reviewDeleted || "🗑️ Yorum silindi.");
   };
 
   return (
     <TestimonialsContainer theme={theme}>
-      <h2>{texts.home.testimonials || "Müşteri Yorumları"}</h2>
-      {loading && <p>🔄 {texts.loading || "Yükleniyor..."}</p>}
+      <h2>{texts.review?.testimonials || "Müşteri Yorumları"}</h2>
+      {loading && <p>🔄 {texts.global?.loading || "Yükleniyor..."}</p>}
       {error && <p style={{ color: "red" }}>❌ {error}</p>}
 
       {reviews.slice(0, visibleReviews).map((testimonial) => (
@@ -70,34 +70,31 @@ const Testimonials = () => {
           <CustomerName>{testimonial.name}</CustomerName>
           <Feedback>{testimonial.feedback}</Feedback>
           
-          {/* ✅ Admin ise Silme Butonu Göster */}
           {user?.role === "admin" && (
             <DeleteButton onClick={() => handleDeleteReview(testimonial.id)} theme={theme}>
-              🗑️ {texts.home.delete || "Sil"}
+              🗑️ {texts.review?.delete || "Sil"}
             </DeleteButton>
           )}
         </TestimonialCard>
       ))}
 
-      {/* ✅ Daha Fazla Göster Butonu RENK GÜNCELLENDİ */}
       {reviews.length > visibleReviews && (
         <ShowMoreButton onClick={() => setVisibleReviews(reviews.length)} theme={theme}>
-          {texts.home.showMore || "Daha Fazla Göster"}
+          {texts.review?.showMore || "Daha Fazla Göster"}
         </ShowMoreButton>
       )}
 
-      {/* ✅ Kullanıcı Yorumu Ekleme Formu */}
       {user && (
         <ReviewForm theme={theme}>
           <ReviewInput
             type="text"
             value={newReview}
             onChange={(e) => setNewReview(e.target.value)}
-            placeholder={texts.home.addReview || "Yorumunuzu yazın..."}
+            placeholder={texts.review?.addReview || "Yorumunuzu yazın..."}
             theme={theme}
           />
           <SubmitButton onClick={handleAddReview} theme={theme}>
-            {texts.home.submitReview || "Gönder"}
+            {texts.review?.submitReview || "Gönder"}
           </SubmitButton>
         </ReviewForm>
       )}
