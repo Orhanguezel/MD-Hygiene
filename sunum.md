@@ -1,7 +1,7 @@
 # **MD-Hygiene – E-Commerce- und Angebotsverwaltungssystem Präsentation**
 
 ## **📌 1. Einführung (Begrüßung und Projektvorstellung – 1 Minute)**
-Hallo und herzlich willkommen! Heute werde ich Ihnen **MD-Hygiene** vorstellen. 
+Hallo und herzlich willkommen! Heute werde ich Ihnen **MD-Hygienelogistik** vorstellen. 
 Dieses Projekt ist ein **modernes E-Commerce- und Angebotsverwaltungssystem**, das sowohl für **Einzelkunden als auch für Unternehmen** konzipiert wurde.
 
 Sowohl **Einzelkunden** als auch **Geschäftskunden** können Produkte ansehen, sie in den Warenkorb legen, Bestellungen aufgeben und ihre Bestellungen verfolgen. 
