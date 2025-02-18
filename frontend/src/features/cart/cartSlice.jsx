@@ -76,17 +76,18 @@ export const addToCart = createAsyncThunk(
     }
   }
 );
+
 // **Miktar Artırma**
 export const increaseQuantity = createAsyncThunk(
   "cart/increaseQuantity",
   async (productId, thunkAPI) => {
     try {
+      // ✅ Mevcut ürünün bilgilerini al
       const response = await API.get("/cart");
-      const cartItem = response.data.find(
-        (item) => item.productId === productId
-      );
+      const cartItem = response.data.find((item) => item.productId === productId);
       if (!cartItem) return thunkAPI.rejectWithValue("Ürün bulunamadı.");
 
+      // ✅ Miktarı artır
       const updatedItem = { ...cartItem, quantity: cartItem.quantity + 1 };
       await API.patch(`/cart/${cartItem.id}`, updatedItem);
       return updatedItem;
@@ -95,31 +96,32 @@ export const increaseQuantity = createAsyncThunk(
     }
   }
 );
-// **Miktar Azaltma**
+// ✅ **Miktar Azaltma (Eğer miktar 1 ise, ürün kaldırılacak)**
 export const decreaseQuantity = createAsyncThunk(
   "cart/decreaseQuantity",
   async (productId, thunkAPI) => {
     try {
       const response = await API.get("/cart");
-      const cartItem = response.data.find(
-        (item) => item.productId === productId
-      );
+      const cartItem = response.data.find((item) => item.productId === productId);
       if (!cartItem) return thunkAPI.rejectWithValue("Ürün bulunamadı.");
 
       if (cartItem.quantity > 1) {
+        // ✅ Miktarı azalt
         const updatedItem = { ...cartItem, quantity: cartItem.quantity - 1 };
         await API.patch(`/cart/${cartItem.id}`, updatedItem);
         return updatedItem;
       } else {
+        // ✅ Ürün tamamen kaldırılacak
         await API.delete(`/cart/${cartItem.id}`);
-        return productId;
+        return { id: cartItem.id, removed: true }; // 🚀 Ürün kaldırıldığında `removed: true` ekledik
       }
     } catch (error) {
       return thunkAPI.rejectWithValue("Miktar azaltılamadı.");
     }
   }
 );
-// **Sepetten Ürün Kaldırma**
+
+// **Ürün Kaldırma**
 export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
   async (productId, thunkAPI) => {
@@ -127,10 +129,11 @@ export const removeFromCart = createAsyncThunk(
       await API.delete(`/cart/${productId}`);
       return productId;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Ürün sepetten kaldırılamadı.");
+      return thunkAPI.rejectWithValue("Ürün kaldırılamadı.");
     }
   }
 );
+
 
 // **Ödeme Sonrası Sepeti Sıfırlama**
 export const clearCart = createAsyncThunk(
@@ -201,6 +204,28 @@ const cartSlice = createSlice({
         state.vatAmount = 0;
         state.shippingCost = 20;
         state.grandTotal = 0;
+      })
+      .addCase(increaseQuantity.fulfilled, (state, action) => {
+        const item = state.cartItems.find((i) => i.id === action.payload.id);
+        if (item) item.quantity = action.payload.quantity;
+      })
+      .addCase(decreaseQuantity.fulfilled, (state, action) => {
+        if (action.payload.removed) {
+            state.cartItems = state.cartItems.filter(item => item.id !== action.payload.id);
+        } else {
+            const item = state.cartItems.find(i => i.id === action.payload.id);
+            if (item) item.quantity = action.payload.quantity;
+        }
+    
+        // ✅ Sepet hesaplamalarını güncelle
+        const totals = calculateTotals(state.cartItems);
+        state.totalQuantity = totals.totalQuantity;
+        state.totalPrice = totals.totalPrice;
+        state.vatAmount = totals.vatAmount;
+        state.grandTotal = totals.grandTotal;
+    })
+      .addCase(removeFromCart.fulfilled, (state, action) => {
+        state.cartItems = state.cartItems.filter((item) => item.id !== action.payload);
       });
   },
 });

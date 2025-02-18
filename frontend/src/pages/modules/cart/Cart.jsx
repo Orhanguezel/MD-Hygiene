@@ -46,37 +46,24 @@ const Cart = () => {
 
   const handleIncrease = (productId) => {
     dispatch(increaseQuantity(productId)).then(() => dispatch(fetchCart()));
-    toast.success(texts.cart.increaseSuccess || "✅ Ürün miktarı artırıldı.");
+    toast.success(texts.cart.increaseSuccess);
   };
 
-  const handleDecrease = (productId, quantity) => {
-    if (quantity > 1) {
-      dispatch(decreaseQuantity(productId)).then(() => dispatch(fetchCart()));
-      toast.info(texts.cart.decreaseSuccess || "ℹ️ Ürün miktarı azaltıldı.");
-    } else {
-      dispatch(removeFromCart(productId)).then(() => {
-        dispatch(fetchCart());
-        toast.warn(texts.cart.removeSuccess || "⚠️ Ürün sepetten kaldırıldı.");
-      });
-    }
+  const handleDecrease = (productId) => {
+    dispatch(decreaseQuantity(productId)).then(() => dispatch(fetchCart()));
+    toast.info(texts.cart.decreaseSuccess);
   };
-
-  const handleRemove = (productId) => {
-    dispatch(removeFromCart(productId)).then(() => {
-      dispatch(fetchCart());
-      toast.error(texts.cart.removeSuccess || "❌ Ürün sepetten kaldırıldı.");
-    });
-  };
+  
 
   return (
     <CartContainer>
-      <Title>{texts.cart.title || "Sepetiniz"}</Title>
+      <Title>{texts.cart.title}</Title>
       {cartItems.length === 0 ? (
-        <EmptyCartMessage>{texts.cart.empty || "Sepetiniz boş."}</EmptyCartMessage>
+        <EmptyCartMessage>{texts.cart.empty}</EmptyCartMessage>
       ) : (
         <>
           {cartItems.map((item, index) => (
-            <CartItem key={item.productId}> {/* ✅ Redux güncellemelerinde sorun çıkmaması için key değiştirildi */}
+            <CartItem key={item.id}>
               <ProductImage
                 src={item.images?.[0] || "/placeholder.jpg"}
                 alt={item.title || "Ürün resmi"}
@@ -84,29 +71,29 @@ const Cart = () => {
               />
               <ProductDetails>
                 <h3>{index + 1}. {item.title}</h3>
-                <p>{texts.cart.unitPrice || "Birim Fiyat"}: ${item.price}</p>
+                <p>{texts.cart.unitPrice}: ${item.price}</p>
                 <QuantityControls>
                   <StyledButton onClick={() => handleDecrease(item.productId, item.quantity)}>
                     -
                   </StyledButton>
-                  <span>{texts.cart.quantity || "Adet"}: {item.quantity}</span>
+                  <span>{texts.cart.quantity}: {item.quantity}</span>
                   <StyledButton onClick={() => handleIncrease(item.productId)}>
                     +
                   </StyledButton>
                 </QuantityControls>
-                <p>{texts.cart.itemTotal || "Toplam"}: ${(item.price * item.quantity).toFixed(2)}</p>
-                <StyledButton onClick={() => handleRemove(item.productId)}>
-                  {texts.cart.remove || "Kaldır"}
+                <p>{texts.cart.itemTotal}: ${(item.price * item.quantity).toFixed(2)}</p>
+                <StyledButton onClick={() => handleDecrease(item.productId, 1)}>
+                  {texts.cart.remove}
                 </StyledButton>
               </ProductDetails>
             </CartItem>
           ))}
 
           <Summary>
-            <Invoice>{texts.cart.invoiceDetails || "Fatura Detayları"}</Invoice>
+            <Invoice>{texts.cart.invoiceDetails}</Invoice>
             <InvoiceDetails>
               {cartItems.map((item, index) => (
-                <SummaryItem key={item.productId}>
+                <SummaryItem key={item.id}>
                   <ListItems>{index + 1}. {item.title} (x{item.quantity})</ListItems>
                   <ListItems>${(item.price * item.quantity).toFixed(2)}</ListItems>
                 </SummaryItem>
@@ -114,28 +101,28 @@ const Cart = () => {
             </InvoiceDetails>
 
             <SummaryItem>
-              <strong>{texts.cart.totalPrice || "Ara Toplam"}:</strong>
+              <strong>{texts.cart.totalPrice}:</strong>
               <span>${totalPrice.toFixed(2)}</span>
             </SummaryItem>
             <SummaryItem>
-              <strong>{texts.cart.vat || "KDV"} (19%):</strong>
+              <strong>{texts.cart.vat} (19%):</strong>
               <span>${vatAmount.toFixed(2)}</span>
             </SummaryItem>
             <SummaryItem>
-              <strong>{texts.cart.shippingCost || "Kargo Ücreti"}:</strong>
+              <strong>{texts.cart.shippingCost}:</strong>
               <span>${shippingCost.toFixed(2)}</span>
             </SummaryItem>
             <SummaryItem className="grand-total">
-              <strong>{texts.cart.grandTotal || "Genel Toplam"}:</strong>
+              <strong>{texts.cart.grandTotal}:</strong>
               <span>${grandTotal.toFixed(2)}</span>
             </SummaryItem>
 
             <ButtonContainer>
               <StyledButton onClick={() => dispatch(clearCart()).then(() => dispatch(fetchCart()))}>
-                {texts.cart.clearCart || "Sepeti Temizle"}
+                 {texts.cart.clearCart}
               </StyledButton>
-              <StyledButton $primary={true} onClick={() => navigate("/checkout")}>
-                {texts.cart.checkout || "Ödeme Yap"}
+              <StyledButton $primary={true} onClick={() => navigate("/checkout")}> 
+                 {texts.cart.checkout}
               </StyledButton>
             </ButtonContainer>
           </Summary>

@@ -25,7 +25,6 @@ import {
   FaSignOutAlt,
   FaSun,
   FaMoon,
-  FaBell,
   FaShoppingCart,
 } from "react-icons/fa";
 import logo from "@/assets/logo.png";
@@ -102,9 +101,12 @@ export default function Header() {
                 <Link to="/profile">
                   <FaUserCircle /> {texts?.profile?.title || "Profilim"}
                 </Link>
-                <Link to="/settings">
+                {user.role === "admin" && (
+                  <Link to="/settings">
                   <FaCog /> {texts?.settings?.title || "Ayarlar"}
                 </Link>
+                  )}
+                
                 {user.role === "admin" && (
                   <Link to="/dashboard">
                     🛠 {texts?.admin?.dashboard || "Yönetim Paneli"}

@@ -1420,20 +1420,7 @@
       "productId": "23"
     }
   ],
-  "cart": [
-    {
-      "id": "248a",
-      "productId": "26",
-      "quantity": 1,
-      "price": 27,
-      "title": "Sleek Mirror Finish Phone Case",
-      "images": [
-        "https://i.imgur.com/yb9UQKL.jpeg",
-        "https://i.imgur.com/m2owtQG.jpeg",
-        "https://i.imgur.com/bNiORct.jpeg"
-      ]
-    }
-  ],
+  "cart": [],
   "category": [],
   "reviews": [
     {
