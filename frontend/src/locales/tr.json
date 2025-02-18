@@ -130,9 +130,7 @@
     "notFound": "Sipariş bulunamadı.",
     "noAddress": "Adres bilgisi bulunamadı.",
     "noProducts": "Bu siparişte ürün bulunmamaktadır.",
-
     "completed": "Tamamlandı",
-
     "processing": "İşleniyor",
     "paid": "Ödendi",
     "unpaid": "Ödenmedi",
@@ -255,8 +253,11 @@
     "favorite": "⭐ Favorilere Ekle",
     "continueShopping": "🛍️ Alışverişe Devam Et",
     "back": "🔙 Geri Dön",
-    "noDescription": "📝 Açıklama bulunamadı."
-
+    "noDescription": "📝 Açıklama bulunamadı.",
+    "toastMessages": {
+      "emptyEmail": "❌ Lütfen geçerli bir e-posta girin!",
+      "thankYou": "✅ Abone olduğunuz için teşekkürler!"
+    }
   },
   "nav": {
     "home": "Ana Sayfa",
@@ -319,7 +320,12 @@
     "totalPrice": "💰 Toplam",
     "vat": "📊 Vergi (KDV)",
     "shippingCost": "🚚 Nakliye Ücreti",
-    "grandTotal": "🧾 Genel Toplam"
+    "grandTotal": "🧾 Genel Toplam",
+    "unitPrice": "Birim Fiyat",
+    "increaseSuccess": "Ürün miktarı artırıldı!",
+    "decreaseSuccess": "Ürün miktarı azaltıldı!",
+    "removeSuccess": "Ürün sepetten kaldırıldı!",
+    "error": "Bir hata oluştu."
   },
   "categories": {
     "title": "📂 Kategoriler",
@@ -358,7 +364,16 @@
     "addedToFavorites": "❤️ Favorilere Eklendi",
     "removedFromFavorites": "💔 Favorilerden Kaldırıldı",
     "addToFavorites": "⭐ Favorilere Ekle",
-    "inFavorites": "❤️ Favorilerde"
+    "inFavorites": "❤️ Favorilerde",
+    "failedToAdd": "❌ Ürün sepete eklenemedi!",
+    "invalidProduct": "❌ Sepete eklenmeye çalışılan ürün geçersiz!",
+    "loginToBuy": "⚠️ Satın almak için giriş yapmalısınız!",
+    "redirectToCheckout": "✅ Ürün sepete eklendi! Ödeme sayfasına yönlendiriliyorsunuz...",
+    "toastMessages": {
+      "addToCartSuccess": "✅ Ürün sepete eklendi!",
+      "addToCartError": "❌ Ürün sepete eklenemedi!",
+      "buyNowSuccess": "✅ Ürün sepete eklendi! Ödeme sayfasına yönlendiriliyorsunuz..."
+    }
   },
   "products": {
     "title": "Ürün Yönetimi",
@@ -478,7 +493,7 @@
     "viewDetails": "🔍 Detayları Gör",
     "noInvoices": "Henüz bir faturanız bulunmamaktadır."
   },
-  "invoice":{
+  "invoice": {
     "downloadPDF": "PDF"
   },
   "offers": {
@@ -591,7 +606,11 @@
     "orderDate": "📅 Sipariş Tarihi",
     "orderTotal": "💵 Sipariş Toplamı",
     "continueShopping": "🛍️ Alışverişe Devam Et",
-    "viewOrders": "📑 Siparişlerimi Görüntüle"
+    "viewOrders": "📑 Siparişlerimi Görüntüle",
+    "cardHolder": "💳 Kart Sahibi Adı",
+    "cardNumber": "💳 Kart Numarası",
+    "expiryDate": "📅 Son Kullanma Tarihi (MM/YY)",
+    "cvv": "🔐 CVV"
   },
   "userOrders": {
     "title": "📑 Siparişlerim",
@@ -606,8 +625,21 @@
     "shipped": "🚛 Kargoya Verildi",
     "delivered": "✅ Teslim Edildi"
   },
-  "app":{
-    "loading":"⏳ Yükleniyor, lütfen bekleyin..."
+  "app": {
+    "loading": "⏳ Yükleniyor, lütfen bekleyin..."
+  },
+  "review": {
+    "testimonials": "Müşteri Yorumları",
+    "addReview": "Yorumunuzu yazın...",
+    "submitReview": "Gönder",
+    "delete": "Sil",
+    "showMore": "Daha Fazla Göster",
+    "anonymous": "Anonim Kullanıcı",
+    "toast": {
+      "onlyMembers": "🚫 Yorum yapmak için üye olmalısınız!",
+      "emptyReview": "❌ Yorum boş olamaz!",
+      "reviewSubmitted": "✅ Yorum başarıyla eklendi!",
+      "reviewDeleted": "🗑️ Yorum silindi."
+    }
   }
-
 }

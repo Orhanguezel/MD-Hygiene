@@ -691,7 +691,7 @@
       "id": "USR-005",
       "name": "Orhan Güzel",
       "email": "orhanguzell@gmail.com",
-      "password": "14604925",
+      "password": "111111",
       "role": "user",
       "addresses": [
         {
@@ -713,7 +713,7 @@
       "id": "USR-006",
       "name": "Orhan",
       "email": "orhan@gmail.com",
-      "password": "14604925",
+      "password": "111111",
       "role": "admin",
       "addresses": [
         {

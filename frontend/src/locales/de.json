@@ -301,7 +301,11 @@
     "favorite": "⭐ Zu Favoriten hinzufügen",
     "continueShopping": "🛍️ Weiter einkaufen",
     "back": "🔙 Zurück",
-    "noDescription": "📝 Keine Beschreibung verfügbar."
+    "noDescription": "📝 Keine Beschreibung verfügbar.",
+    "toastMessages": {
+      "emptyEmail": "❌ Bitte geben Sie eine gültige E-Mail ein!",
+      "thankYou": "✅ Danke für Ihr Abonnement!"
+    }
   },
   "nav": {
     "home": "Startseite",
@@ -348,7 +352,6 @@
     "invoiceNumber": "Fatura No",
     "orders": "📦 Meine Bestellungen",
     "goToCart": "🛒 Zum Warenkorb"
-
   },
   "cart": {
     "title": "🛒 Mein Warenkorb",
@@ -364,7 +367,13 @@
     "totalPrice": "💰 Gesamtpreis",
     "vat": "📊 Steuer (MwSt.)",
     "shippingCost": "🚚 Versandkosten",
-    "grandTotal": "🧾 Gesamtsumme"
+    "grandTotal": "🧾 Gesamtsumme",
+    "unitPrice": "Stückpreis",
+    "itemTotal": "Gesamtbetrag",
+    "increaseSuccess": "Produktmenge erhöht!",
+    "decreaseSuccess": "Produktmenge verringert!",
+    "removeSuccess": "Produkt aus dem Warenkorb entfernt!",
+    "error": "Ein Fehler ist aufgetreten."
   },
   "categories": {
     "title": "📂 Kategorien",
@@ -396,7 +405,11 @@
     "orderDate": "📅 Bestelldatum",
     "orderTotal": "💵 Bestellsumme",
     "continueShopping": "🛍️ Weiter einkaufen",
-    "viewOrders": "📑 Meine Bestellungen anzeigen"
+    "viewOrders": "📑 Meine Bestellungen anzeigen",
+    "cardHolder": "💳 Karteninhaber Name",
+    "cardNumber": "💳 Kartennummer",
+    "expiryDate": "📅 Ablaufdatum (MM/JJ)",
+    "cvv": "🔐 CVV"
   },
 
   "productDetails": {
@@ -529,7 +542,7 @@
     "viewDetails": "🔍 Details anzeigen",
     "noInvoices": "Sie haben noch keine Rechnungen."
   },
-  "invoice":{
+  "invoice": {
     "downloadPDF": "PDF"
   },
   "company": {
@@ -583,10 +596,32 @@
     "addedToFavorites": "❤️ Zu Favoriten hinzugefügt",
     "removedFromFavorites": "💔 Aus Favoriten entfernt",
     "addToFavorites": "⭐ Zu Favoriten hinzufügen",
-    "inFavorites": "❤️ In den Favoriten"
-  }
-  ,
-  "app":{
-    "loading":"⏳ Laden, bitte warten..."
+    "inFavorites": "❤️ In den Favoriten",
+    "failedToAdd": "❌ Produkt konnte nicht zum Warenkorb hinzugefügt werden!",
+    "invalidProduct": "❌ Das Produkt, das dem Warenkorb hinzugefügt werden sollte, ist ungültig!",
+    "loginToBuy": "⚠️ Sie müssen sich anmelden, um zu kaufen!",
+    "redirectToCheckout": "✅ Produkt wurde zum Warenkorb hinzugefügt! Weiterleitung zur Kasse...",
+    "toastMessages": {
+      "addToCartSuccess": "✅ Produkt wurde zum Warenkorb hinzugefügt!",
+      "addToCartError": "❌ Produkt konnte nicht hinzugefügt werden!",
+      "buyNowSuccess": "✅ Produkt wurde zum Warenkorb hinzugefügt! Weiterleitung zur Kasse..."
+    }
+  },
+  "app": {
+    "loading": "⏳ Laden, bitte warten..."
+  },
+  "review": {
+    "testimonials": "Kundenbewertungen",
+    "addReview": "Schreiben Sie Ihre Bewertung...",
+    "submitReview": "Absenden",
+    "delete": "Löschen",
+    "showMore": "Mehr anzeigen",
+    "anonymous": "Anonymer Benutzer",
+    "toast": {
+      "onlyMembers": "🚫 Sie müssen Mitglied sein, um eine Bewertung zu hinterlassen!",
+      "emptyReview": "❌ Die Bewertung darf nicht leer sein!",
+      "reviewSubmitted": "✅ Bewertung erfolgreich hinzugefügt!",
+      "reviewDeleted": "🗑️ Bewertung gelöscht."
+    }
   }
 }
