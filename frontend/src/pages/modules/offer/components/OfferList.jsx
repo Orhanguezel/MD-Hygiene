@@ -27,19 +27,20 @@ const OfferList = () => {
 
   useEffect(() => {
     dispatch(fetchOffers()).then((response) => {
-      console.log("📡 Teklifler yüklendi:", response.payload); // ✅ Konsolda veriyi kontrol et
+      console.log(texts?.offers?.fetchLog, response.payload); // ✅ Konsolda veriyi kontrol et
     });
   }, [dispatch]);
 
   if (status === "loading") {
-    return <p>⏳ {texts?.offers?.loading || "Teklifler yükleniyor..."}</p>;
+    return <p>⏳ {texts?.offers?.loading}</p>;
   }
 
   // ✅ Filtreleme ve Arama Fonksiyonu
   const filteredOffers = offers.filter((offer) => {
     const offerStatus = offer.status || "draft";
-    const matchesStatus = statusFilter === "all" || offerStatus === statusFilter;
-    const matchesSearch = 
+    const matchesStatus =
+      statusFilter === "all" || offerStatus === statusFilter;
+    const matchesSearch =
       offer.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       offer.companyName?.toLowerCase().includes(searchTerm.toLowerCase());
 
@@ -48,18 +49,18 @@ const OfferList = () => {
 
   const handleDelete = (id) => {
     dispatch(deleteOffer(id));
-    toast.info("🗑️ Teklif siliniyor...");
+    toast.info(texts?.offers?.deleteToast);
   };
 
   return (
     <OfferListContainer theme={theme}>
-      <h2>{texts?.offers?.listTitle || "📋 Teklif Listesi"}</h2>
+      <h2>{texts?.offers?.listTitle}</h2>
 
       {/* ✅ Filtreleme ve Arama Alanı */}
       <FilterContainer>
         <SearchInput
           type="text"
-          placeholder={texts?.offers?.searchPlaceholder || "Ara..."}
+          placeholder={texts?.offers?.searchPlaceholder}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           theme={theme}
@@ -70,8 +71,9 @@ const OfferList = () => {
             key={statusType}
             onClick={() => setStatusFilter(statusType)}
             theme={theme}
+            $active={statusFilter === statusType} // ✅ Seçili olan düğmeyi belirgin yap
           >
-            {texts?.offers?.[statusType] || statusType.charAt(0).toUpperCase() + statusType.slice(1)}
+            {texts?.offers?.statuses?.[statusType]}
           </FilterButton>
         ))}
       </FilterContainer>
@@ -80,11 +82,11 @@ const OfferList = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>{texts?.offers?.companyName || "Firma Adı"}</th>
-            <th>{texts?.offers?.customerName || "Müşteri Adı"}</th>
-            <th>{texts?.offers?.totalAmount || "Toplam Tutar (₺)"}</th>
-            <th>{texts?.offers?.status || "Durum"}</th>
-            <th>{texts?.offers?.actions || "İşlemler"}</th>
+            <th>{texts?.offers?.companyName}</th>
+            <th>{texts?.offers?.customerName}</th>
+            <th>{texts?.offers?.totalAmount}</th>
+            <th>{texts?.offers?.status}</th>
+            <th>{texts?.offers?.actions}</th>
           </tr>
         </thead>
 
@@ -97,21 +99,31 @@ const OfferList = () => {
               <td>
                 {offer.selectedProducts && offer.selectedProducts.length > 0
                   ? offer.selectedProducts
-                      .reduce((acc, product) => acc + (product.customPrice * product.quantity), 0)
+                      .reduce(
+                        (acc, product) =>
+                          acc + product.customPrice * product.quantity,
+                        0
+                      )
                       .toFixed(2) + " ₺"
                   : "0.00 ₺"}
               </td>
               <td>
                 <StatusBadge $status={offer.status || "draft"}>
-                  {texts?.offers?.[offer.status] || offer.status || "Taslak"}
+                  {texts?.offers?.statuses?.[offer.status] || texts?.offers?.statuses?.draft}
                 </StatusBadge>
               </td>
               <td>
-                <OfferButton theme={theme} onClick={() => navigate(`/offers/${offer.id}`)}>
-                  {texts?.offers?.view || "Görüntüle"}
+                <OfferButton
+                  theme={theme}
+                  onClick={() => navigate(`/offers/${offer.id}`)}
+                >
+                  {texts?.offers?.view}
                 </OfferButton>
-                <OfferButton theme={theme} onClick={() => handleDelete(offer.id)}>
-                  {texts?.offers?.delete || "Sil"}
+                <OfferButton
+                  theme={theme}
+                  onClick={() => handleDelete(offer.id)}
+                >
+                  {texts?.offers?.delete}
                 </OfferButton>
               </td>
             </tr>

@@ -1,4 +1,3 @@
-// ✅ src/features/offer/Offer.jsx
 import { useState } from "react";
 import { useLanguage } from "@/features/language/useLanguage";
 import OfferSidebar from "./components/OfferSidebar";
@@ -7,11 +6,10 @@ import OfferCreate from "./components/OfferCreate";
 import OfferPDF from "./components/OfferPDF";
 import SetShippingCost from "./components/SetShippingCost";
 import OfferDetails from "./components/OfferDetails";
-import OfferArchive from "./components/OfferArchive"; // ✅ Arşiv Bileşeni
+import OfferArchive from "./components/OfferArchive";
 
 const Offer = () => {
   const { texts } = useLanguage();
- // const { theme } = useTheme();
 
   const [activeSection, setActiveSection] = useState("list");
   const [selectedOffer, setSelectedOffer] = useState(null);
@@ -36,7 +34,7 @@ const Offer = () => {
             onBack={() => setActiveSection("list")}
           />
         );
-      case "archive": // ✅ Arşiv Eklendi
+      case "archive":
         return <OfferArchive />;
       default:
         return <OfferList onSelectOffer={handleSelectOffer} />;
@@ -47,7 +45,7 @@ const Offer = () => {
     <div>
       <OfferSidebar setActiveSection={setActiveSection} />
       <div>
-        <h1>{texts?.offers?.title || "📋 Teklifler"}</h1>
+        <h1>{texts?.offers?.title}</h1>
         <div>{renderContent()}</div>
       </div>
     </div>

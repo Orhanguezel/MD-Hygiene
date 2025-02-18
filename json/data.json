@@ -1341,6 +1341,89 @@
       "shippingCost": 50,
       "status": "draft",
       "grandTotal": "261.82"
+    },
+    {
+      "id": "55f2cdcf-b15b-4fac-89de-fea3f4a4454c",
+      "offerNumber": "OFR-1155",
+      "offerDate": "2025-02-18",
+      "companyName": "BTU GmbH",
+      "customerId": "a9c3aedd-b60a-41df-8c06-d7de954d9ed4",
+      "selectedProducts": [
+        {
+          "id": "41",
+          "title": "Futuristic Chic High-Heel Boots",
+          "price": 36,
+          "stock": 2,
+          "description": "Elevate your style with our cutting-edge high-heel boots that blend bold design with avant-garde aesthetics. These boots feature a unique color-block heel, a sleek silhouette, and a versatile light grey finish that pairs easily with any cutting-edge outfit. Crafted for the fashion-forward individual, these boots are sure to make a statement.",
+          "images": [
+            "https://i.imgur.com/HqYqLnW.jpeg",
+            "https://i.imgur.com/RlDGnZw.jpeg",
+            "https://i.imgur.com/qa0O6fg.jpeg"
+          ],
+          "creationAt": "2025-02-11T17:05:13.000Z",
+          "updatedAt": "2025-02-11T17:05:13.000Z",
+          "category": {
+            "id": 4,
+            "name": "Shoes",
+            "image": "https://i.imgur.com/qNOjJje.jpeg",
+            "creationAt": "2025-02-11T17:05:13.000Z",
+            "updatedAt": "2025-02-11T17:05:13.000Z"
+          },
+          "quantity": 1,
+          "customPrice": 36,
+          "taxRate": 19
+        },
+        {
+          "id": "42",
+          "title": "Elegant Patent Leather Peep-Toe Pumps with Gold-Tone Heel",
+          "price": 53,
+          "stock": 2,
+          "description": "Step into sophistication with these chic peep-toe pumps, showcasing a lustrous patent leather finish and an eye-catching gold-tone block heel. The ornate buckle detail adds a touch of glamour, perfect for elevating your evening attire or complementing a polished daytime look.",
+          "images": [
+            "https://i.imgur.com/AzAY4Ed.jpeg",
+            "https://i.imgur.com/umfnS9P.jpeg",
+            "https://i.imgur.com/uFyuvLg.jpeg"
+          ],
+          "creationAt": "2025-02-11T17:05:13.000Z",
+          "updatedAt": "2025-02-11T17:05:13.000Z",
+          "category": {
+            "id": 4,
+            "name": "Shoes",
+            "image": "https://i.imgur.com/qNOjJje.jpeg",
+            "creationAt": "2025-02-11T17:05:13.000Z",
+            "updatedAt": "2025-02-11T17:05:13.000Z"
+          },
+          "quantity": 1,
+          "customPrice": 53,
+          "taxRate": 19
+        },
+        {
+          "id": "44",
+          "title": "Classic Blue Suede Casual Shoes",
+          "price": 39,
+          "stock": 2,
+          "description": "Step into comfort with our Classic Blue Suede Casual Shoes, perfect for everyday wear. These shoes feature a stylish blue suede upper, durable rubber soles for superior traction, and classic lace-up fronts for a snug fit. The sleek design pairs well with both jeans and chinos, making them a versatile addition to any wardrobe.",
+          "images": [
+            "https://i.imgur.com/sC0ztOB.jpeg",
+            "https://i.imgur.com/Jf9DL9R.jpeg",
+            "https://i.imgur.com/R1IN95T.jpeg"
+          ],
+          "creationAt": "2025-02-11T17:05:13.000Z",
+          "updatedAt": "2025-02-11T17:05:13.000Z",
+          "category": {
+            "id": 4,
+            "name": "Shoes",
+            "image": "https://i.imgur.com/qNOjJje.jpeg",
+            "creationAt": "2025-02-11T17:05:13.000Z",
+            "updatedAt": "2025-02-11T17:05:13.000Z"
+          },
+          "quantity": 1,
+          "customPrice": 39,
+          "taxRate": 19
+        }
+      ],
+      "shippingCost": "",
+      "status": "draft"
     }
   ],
   "customers": [
@@ -1420,7 +1503,44 @@
       "productId": "23"
     }
   ],
-  "cart": [],
+  "cart": [
+    {
+      "id": "eb48",
+      "productId": "29",
+      "quantity": 1,
+      "price": 24,
+      "title": "Mid-Century Modern Wooden Dining Table",
+      "images": [
+        "https://i.imgur.com/DMQHGA0.jpeg",
+        "https://i.imgur.com/qrs9QBg.jpeg",
+        "https://i.imgur.com/XVp8T1I.jpeg"
+      ]
+    },
+    {
+      "id": "b9ab",
+      "productId": "28",
+      "quantity": 1,
+      "price": 53,
+      "title": "Sleek Modern Leather Sofa",
+      "images": [
+        "https://i.imgur.com/Qphac99.jpeg",
+        "https://i.imgur.com/dJjpEgG.jpeg",
+        "https://i.imgur.com/MxJyADq.jpeg"
+      ]
+    },
+    {
+      "id": "4924",
+      "productId": "27",
+      "quantity": 1,
+      "price": 16,
+      "title": "Sleek Smartwatch with Vibrant Display",
+      "images": [
+        "https://i.imgur.com/LGk9Jn2.jpeg",
+        "https://i.imgur.com/1ttYWaI.jpeg",
+        "https://i.imgur.com/sPRWnJH.jpeg"
+      ]
+    }
+  ],
   "category": [],
   "reviews": [
     {
@@ -1443,7 +1563,7 @@
       "userId": "USR-006"
     },
     {
-      "id": 1739846905683,
+      "id": "1739846905683",
       "name": "Orhan Güzel",
       "feedback": "gggg",
       "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",

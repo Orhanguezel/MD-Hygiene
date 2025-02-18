@@ -14,7 +14,6 @@ import {
   TotalSection,
   OfferHeader,
   OfferDetailsContainer,
-  ProductLabel,
   ProductSelect,
   ProductOption,
   ProductTable,
@@ -119,38 +118,38 @@ const OfferCreate = ({ existingOffer, onOfferCreated }) => {
   // 📌 Teklifi Kaydetme
   const handleSave = () => {
     if (!formData.companyName || !formData.customerId || formData.selectedProducts.length === 0) {
-      toast.error("❌ Lütfen tüm alanları doldurun ve en az bir ürün ekleyin.");
+      toast.error(texts?.offers?.errors?.missingFields);
       return;
     }
 
     if (existingOffer) {
       dispatch(updateOffer(formData))
         .unwrap()
-        .then(() => toast.success("✅ Teklif Güncellendi!"))
-        .catch(() => toast.error("❌ Güncelleme başarısız!"));
+        .then(() => toast.success(texts?.offers?.success?.updated))
+        .catch(() => toast.error(texts?.offers?.errors?.updateFailed));
     } else {
       const newOffer = { ...formData, id: uuidv4(), status: "draft" };
       dispatch(addOffer(newOffer))
         .unwrap()
-        .then(() => toast.success("✅ Teklif Kaydedildi!"))
-        .catch(() => toast.error("❌ Kaydetme başarısız!"));
+        .then(() => toast.success(texts?.offers?.success?.created))
+        .catch(() => toast.error(texts?.offers?.errors?.createFailed));
     }
 
     if (onOfferCreated) onOfferCreated();
   };
 
-  if (isLoading) return <p>⏳ Veriler yükleniyor...</p>;
+  if (isLoading) return <p>{texts?.offers?.loading}</p>;
 
   return (
     <OfferFormContainer theme={theme}>
       <OfferHeader>
-        {existingOffer ? "✏️ Teklif Düzenle" : "➕ Yeni Teklif Oluştur"}
+        {existingOffer ? texts?.offers?.editOffer : texts?.offers?.createOffer}
       </OfferHeader>
 
       <OfferDetailsContainer>
-        <label>🏢 Firma Adı:</label>
+        <label>{texts?.offers?.companyName}:</label>
         <ProductSelect name="companyName" value={formData.companyName} onChange={handleSelectionChange}>
-          <ProductOption value="">Firma Seçin</ProductOption>
+          <ProductOption value="">{texts?.offers?.selectCompany}</ProductOption>
           {uniqueCompanies.map((companyName, index) => (
             <ProductOption key={index} value={companyName}>
               {companyName}
@@ -158,9 +157,9 @@ const OfferCreate = ({ existingOffer, onOfferCreated }) => {
           ))}
         </ProductSelect>
 
-        <label>👤 Müşteri Adı:</label>
+        <label>{texts?.offers?.customerName}:</label>
         <ProductSelect name="customerId" value={formData.customerId} onChange={handleSelectionChange} disabled={!formData.companyName}>
-          <ProductOption value="">Müşteri Seçin</ProductOption>
+          <ProductOption value="">{texts?.offers?.selectCustomer}</ProductOption>
           {filteredCustomers.map((customer) => (
             <ProductOption key={customer.id} value={customer.id}>
               {customer.contactPerson}
@@ -168,9 +167,9 @@ const OfferCreate = ({ existingOffer, onOfferCreated }) => {
           ))}
         </ProductSelect>
 
-        <label>📦 Ürün Seç:</label>
+        <label>{texts?.offers?.selectProduct}:</label>
         <ProductSelect onChange={(e) => handleProductSelect(e.target.value)}>
-          <ProductOption value="">Ürün Seçin</ProductOption>
+          <ProductOption value="">{texts?.offers?.selectProduct}</ProductOption>
           {products.map((product) => (
             <ProductOption key={product.id} value={product.id}>
               {product.title} - {product.price} ₺
@@ -181,46 +180,45 @@ const OfferCreate = ({ existingOffer, onOfferCreated }) => {
 
       {/* 📌 Seçilen Ürünler Listesi */}
       <ProductTable>
-  <thead>
-    <tr>
-      <th>Ürün</th>
-      <th>Adet</th>
-      <th>Fiyat</th>
-      <th>Sil</th>
-    </tr>
-  </thead>
-  <tbody>
-    {formData.selectedProducts.map((product) => (
-      <tr key={product.id}>
-        <td>{product.title}</td>
-        <td>
-          <FormInput
-            type="number"
-            value={product.quantity}
-            onChange={(e) => handleProductChange(product.id, "quantity", e.target.value)}
-          />
-        </td>
-        <td>
-          <FormInput
-            type="number"
-            value={product.customPrice}
-            onChange={(e) => handleProductChange(product.id, "customPrice", e.target.value)}
-          />
-        </td>
-        <td>
-          <ActionButton onClick={() => handleRemoveProduct(product.id)}>🗑️</ActionButton>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</ProductTable>
-
+        <thead>
+          <tr>
+            <th>{texts?.offers?.product}</th>
+            <th>{texts?.offers?.quantity}</th>
+            <th>{texts?.offers?.price}</th>
+            <th>{texts?.offers?.remove}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {formData.selectedProducts.map((product) => (
+            <tr key={product.id}>
+              <td>{product.title}</td>
+              <td>
+                <FormInput
+                  type="number"
+                  value={product.quantity}
+                  onChange={(e) => handleProductChange(product.id, "quantity", e.target.value)}
+                />
+              </td>
+              <td>
+                <FormInput
+                  type="number"
+                  value={product.customPrice}
+                  onChange={(e) => handleProductChange(product.id, "customPrice", e.target.value)}
+                />
+              </td>
+              <td>
+                <ActionButton onClick={() => handleRemoveProduct(product.id)}>🗑️</ActionButton>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </ProductTable>
 
       <TotalSection>
-        <h2>🔢 Genel Toplam: {totals.grandTotal.toFixed(2)} ₺</h2>
+        <h2>{texts?.offers?.total}: {totals.grandTotal.toFixed(2)} ₺</h2>
       </TotalSection>
 
-      <ActionButton onClick={handleSave}>💾 Kaydet</ActionButton>
+      <ActionButton onClick={handleSave}>{texts?.offers?.save}</ActionButton>
     </OfferFormContainer>
   );
 };

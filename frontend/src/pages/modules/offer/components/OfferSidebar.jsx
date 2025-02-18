@@ -1,18 +1,27 @@
-// ✅ src/features/offer/components/OfferSidebar.jsx
-import { SidebarContainer, SidebarButton, SidebarTitle } from "../styles/offerStyles";
-import { useSelector } from "react-redux"; // ✅ RTK kullanımı
+import { useSelector } from "react-redux";
+import {
+  SidebarContainer,
+  SidebarButton,
+  SidebarTitle,
+} from "../styles/offerStyles";
 
 const OfferSidebar = ({ setActiveSection }) => {
-  const texts = useSelector((state) => state.language.texts); // ✅ RTK ile dil verilerini çekiyoruz
+  const texts = useSelector((state) => state.language.texts);
 
   return (
     <SidebarContainer>
       <SidebarTitle>{texts?.offers?.title || "📋 Teklifler"}</SidebarTitle>
-      <SidebarButton onClick={() => setActiveSection("list")}>{texts?.offers?.listSidebar || "📋 Teklif Listesi"}</SidebarButton>
-      <SidebarButton onClick={() => setActiveSection("create")}>{texts?.offers?.create || "➕ Yeni Teklif Oluştur"}</SidebarButton>
-      <SidebarButton onClick={() => setActiveSection("archive")}>{texts?.offers?.archivedTitle || "🗂️ Arşivlenmiş Teklifler"}</SidebarButton>
+      <SidebarButton onClick={() => setActiveSection("list")}>
+        {texts?.offers?.listSidebar || "📋 Teklif Listesi"}
+      </SidebarButton>
+      <SidebarButton onClick={() => setActiveSection("create")}>
+        {texts?.offers?.create || "➕ Yeni Teklif Oluştur"}
+      </SidebarButton>
+      <SidebarButton onClick={() => setActiveSection("archive")}>
+        {texts?.offers?.archivedTitle || "🗂️ Arşivlenmiş Teklifler"}
+      </SidebarButton>
     </SidebarContainer>
   );
 };
 
-export default OfferSidebar; 
+export default OfferSidebar;
