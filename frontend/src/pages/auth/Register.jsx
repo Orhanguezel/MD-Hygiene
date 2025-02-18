@@ -45,7 +45,7 @@ const Register = () => {
     const result = await dispatch(register(formData));
 
     if (result.meta.requestStatus === "fulfilled") {
-      navigate("/login"); // ✅ Başarıyla kayıt olduktan sonra giriş ekranına yönlendirme
+      navigate("/"); // ✅ Başarıyla kayıt olduktan sonra giriş ekranına yönlendirme
     }
   };
 

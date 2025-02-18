@@ -1159,7 +1159,7 @@
       "totalAmount": 90,
       "shippingCost": 20,
       "vatAmount": 11.18,
-      "status": "pending",
+      "status": "archived",
       "paymentStatus": "pending"
     }
   ],
@@ -1281,6 +1281,34 @@
       "totalAmount": 47,
       "shippingCost": 20,
       "issuedAt": "17.02.2025 - 22:02",
+      "status": "paid"
+    },
+    {
+      "id": "INV-65c2d687-fd46-47fd-8b5f-d4c2f7a49c54",
+      "invoiceNumber": "INV-6d178321-c8fc-4e51-93a8-fce5912be55d",
+      "orderId": "ORD-c2d53805-a596-460a-886f-822d2f9c8446",
+      "userId": "USR-006",
+      "userName": "Orhan",
+      "userEmail": "orhan@gmail.com",
+      "items": [
+        {
+          "productId": "d6dd",
+          "title": "Elegant Patent Leather Peep-Toe Pumps with Gold-Tone Heel",
+          "quantity": 1,
+          "unitPrice": 53
+        },
+        {
+          "productId": "6c78",
+          "title": "Elegant Purple Leather Loafers",
+          "quantity": 1,
+          "unitPrice": 17
+        }
+      ],
+      "subtotal": 70,
+      "vatAmount": 11.18,
+      "totalAmount": 90,
+      "shippingCost": 20,
+      "issuedAt": "18.02.2025 - 12:38",
       "status": "paid"
     }
   ],
