@@ -14,7 +14,6 @@ import {
   FormInput,
   ProductTable,
   ActionButton,
-  TotalSection,
   TaxSelect,
   SummaryBox,
 } from "../styles/offerStyles";

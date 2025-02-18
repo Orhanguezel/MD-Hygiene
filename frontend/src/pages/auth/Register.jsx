@@ -27,36 +27,44 @@ const Register = () => {
     email: "",
     password: "",
   });
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { texts } = useLanguage();
   const { theme } = useTheme();
   const { loading, error } = useSelector((state) => state.auth);
 
+  // 📌 Input değişikliklerini yönet
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // 📌 Form gönderildiğinde çalışacak fonksiyon
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await dispatch(register(formData));
+
     if (result.meta.requestStatus === "fulfilled") {
-      navigate("/login"); // ✅ Kayıt sonrası giriş sayfasına yönlendirme
+      navigate("/login"); // ✅ Başarıyla kayıt olduktan sonra giriş ekranına yönlendirme
     }
   };
 
   return (
     <AuthContainer theme={theme}>
       <Card theme={theme}>
+        {/* 📌 Kayıt Ol Görseli */}
         <AuthImage src={RegisterImageSrc} alt="Register" />
 
+        {/* 📌 Kayıt Formu */}
         <AuthForm theme={theme} onSubmit={handleSubmit}>
           <Title theme={theme}>
             {texts?.auth?.registerTitle || "📝 Kayıt Ol"}
           </Title>
 
+          {/* 📌 Hata Mesajı */}
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
+          {/* 📌 Kullanıcı Adı Alanı */}
           <InputContainer theme={theme}>
             <Icon theme={theme}>
               <FaUser />
@@ -71,6 +79,7 @@ const Register = () => {
             />
           </InputContainer>
 
+          {/* 📌 Email Alanı */}
           <InputContainer theme={theme}>
             <Icon theme={theme}>
               <FaEnvelope />
@@ -85,6 +94,7 @@ const Register = () => {
             />
           </InputContainer>
 
+          {/* 📌 Şifre Alanı */}
           <InputContainer theme={theme}>
             <Icon theme={theme}>
               <FaLock />
@@ -99,17 +109,19 @@ const Register = () => {
             />
           </InputContainer>
 
+          {/* 📌 Kayıt Ol Butonu */}
           <Button theme={theme} type="submit" disabled={loading}>
-            {loading ? texts.auth.registerTitle : texts.auth.registerButton}
-            {""}
+            {loading ? texts?.auth?.registering || "Kaydediliyor..." : texts?.auth?.registerButton || "Kayıt Ol"}
             <FaUserPlus />
           </Button>
 
+          {/* 📌 Giriş Yap Bağlantısı */}
           <SwitchText theme={theme}>
             {texts?.auth?.haveAccount || "Zaten hesabınız var mı?"}{" "}
             <Link to="/login">{texts?.auth?.login || "Giriş Yap"}</Link>
           </SwitchText>
 
+          {/* 📌 Yüklenme Animasyonu */}
           {loading && <LoadingSpinner theme={theme} />}
         </AuthForm>
       </Card>

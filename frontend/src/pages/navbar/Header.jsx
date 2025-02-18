@@ -89,25 +89,30 @@ export default function Header() {
           </NavItem>
 
           <ProfileSection onClick={handleProfileClick}>
-            {user.profileImage ? (
-              <ProfileImage src={user.profileImage} alt={user.name} />
+            {/* ✅ Profil Resmi Varsa Göster, Yoksa Varsayılan Avatar Koy */}
+            {user?.profileImage ? (
+              <ProfileImage
+                src={user.profileImage}
+                alt={user.name || "Kullanıcı"}
+                onError={(e) => (e.target.src = "/default-avatar.png")} // ✅ Resim yüklenmezse avatar koy
+              />
             ) : (
               <FaUserCircle size={24} />
             )}
-            <span>{user.name || "Kullanıcı"}</span>
+
+            <span>{user?.name || "Kullanıcı"}</span>
 
             {dropdownOpen && (
               <ProfileDropdown>
                 <Link to="/profile">
                   <FaUserCircle /> {texts?.profile?.title || "Profilim"}
                 </Link>
-                {user.role === "admin" && (
+                {user?.role === "admin" && (
                   <Link to="/settings">
-                  <FaCog /> {texts?.settings?.title || "Ayarlar"}
-                </Link>
-                  )}
-                
-                {user.role === "admin" && (
+                    <FaCog /> {texts?.settings?.title || "Ayarlar"}
+                  </Link>
+                )}
+                {user?.role === "admin" && (
                   <Link to="/dashboard">
                     🛠 {texts?.admin?.dashboard || "Yönetim Paneli"}
                   </Link>

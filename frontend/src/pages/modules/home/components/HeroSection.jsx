@@ -79,7 +79,7 @@ const HeroSection = () => {
     <HeroContainer theme={theme}>
       {/* ✅ Ürün Açıklama Alanı */}
       <HeroContent>
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="sync">
           <motion.h2 
             key={currentSlide}
             initial={{ opacity: 0, y: -30 }} 
