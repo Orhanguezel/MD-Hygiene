@@ -3,9 +3,10 @@ import { getSales, getSaleById, getMonthlySales } from "../controllers/saleContr
 
 const router = express.Router();
 
-router.get("/", getSales);
-router.get("/:id", getSaleById);
-router.get("/monthly-report", getMonthlySales);
+router.route("/").get(getSales);
+router.route("/:id").get(getSaleById);
+router.route("/monthly-report").get(getMonthlySales);
+
 
 export default router;
 

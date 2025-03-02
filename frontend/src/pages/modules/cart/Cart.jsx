@@ -5,7 +5,9 @@ import {
   fetchCart,
   increaseQuantity,
   decreaseQuantity,
+  removeFromCart,
   clearCart,
+  addToCart,
 } from "@/features/cart/cartSlice";
 import { useLanguage } from "@/features/language/useLanguage";
 import { toast } from "react-toastify";
@@ -32,37 +34,52 @@ const Cart = () => {
   const navigate = useNavigate();
   const { texts } = useLanguage();
 
-  // 📌 **Redux Store'dan Sepet Verileri**
-  const cartItems = useSelector((state) => state.cart.cartItems);
-  const totalPrice = useSelector((state) => state.cart.totalPrice);
-  const vatAmount = useSelector((state) => state.cart.vatAmount);
-  const shippingCost = useSelector((state) => state.cart.shippingCost);
-  const grandTotal = useSelector((state) => state.cart.grandTotal);
+  const cartItems = useSelector((state) => state.cart.cartItems) || [];
+  const totalPrice = useSelector((state) => state.cart.totalPrice) || 0;
+  const vatAmount = useSelector((state) => state.cart.vatAmount) || 0;
+  const shippingCost = useSelector((state) => state.cart.shippingCost) || 0;
+  const grandTotal = useSelector((state) => state.cart.grandTotal) || 0;
 
   useEffect(() => {
     dispatch(fetchCart());
   }, [dispatch]);
 
-  const handleIncrease = (productId) => {
-    dispatch(increaseQuantity(productId))
-      .then(() => {
-        dispatch(fetchCart());
-        toast.success(texts.cart.toast?.increaseSuccess || "✅ Ürün miktarı artırıldı!");
-      })
-      .catch(() => toast.error(texts.cart.toast?.error || "❌ Hata oluştu!"));
+  // ✅ **Ürün Miktarını Artırma**
+  const handleIncrease = async (productId) => {
+    try {
+      await dispatch(increaseQuantity(productId)).unwrap();
+      await dispatch(fetchCart()).unwrap();
+      toast.success(texts.cart.toast?.increaseSuccess || "✅ Ürün miktarı artırıldı!");
+    } catch {
+      toast.error(texts.cart.toast?.error || "❌ Hata oluştu!");
+    }
   };
 
-  const handleDecrease = (productId, quantity) => {
-    dispatch(decreaseQuantity(productId))
-      .then(() => {
-        dispatch(fetchCart());
-        if (quantity > 1) {
-          toast.info(texts.cart.toast?.decreaseSuccess || "➖ Ürün miktarı azaltıldı!");
-        } else {
-          toast.warn(texts.cart.toast?.removeSuccess || "🗑️ Ürün sepetten kaldırıldı!");
-        }
-      })
-      .catch(() => toast.error(texts.cart.toast?.error || "❌ Hata oluştu!"));
+  // ✅ **Ürün Miktarını Azaltma**
+  const handleDecrease = async (productId, quantity) => {
+    try {
+      await dispatch(decreaseQuantity(productId)).unwrap();
+      await dispatch(fetchCart()).unwrap();
+
+      if (quantity > 1) {
+        toast.info(texts.cart.toast?.decreaseSuccess || "➖ Ürün miktarı azaltıldı!");
+      } else {
+        toast.warn(texts.cart.toast?.removeSuccess || "🗑️ Ürün sepetten kaldırıldı!");
+      }
+    } catch {
+      toast.error(texts.cart.toast?.error || "❌ Hata oluştu!");
+    }
+  };
+
+  // ✅ **Ürünü Sepetten Kaldırma**
+  const handleRemove = async (productId) => {
+    try {
+      await dispatch(removeFromCart(productId)).unwrap();
+      await dispatch(fetchCart()).unwrap();
+      toast.warn(texts.cart.toast?.removeSuccess || "🗑️ Ürün sepetten kaldırıldı!");
+    } catch {
+      toast.error(texts.cart.toast?.error || "❌ Ürün kaldırılırken hata oluştu!");
+    }
   };
 
   return (
@@ -73,7 +90,7 @@ const Cart = () => {
       ) : (
         <>
           {cartItems.map((item, index) => (
-            <CartItem key={item.id}>
+            <CartItem key={item.product._id}>
               <ProductImage
                 src={item.images?.[0] || "/placeholder.jpg"}
                 alt={item.title || "Ürün resmi"}
@@ -83,16 +100,17 @@ const Cart = () => {
                 <h3>{index + 1}. {item.title}</h3>
                 <p>{texts.cart.unitPrice}: ${item.price}</p>
                 <QuantityControls>
-                  <StyledButton onClick={() => handleDecrease(item.productId, item.quantity)}>
+                  <StyledButton onClick={() => handleDecrease(item.product._id, item.quantity)}>
                     -
                   </StyledButton>
                   <span>{texts.cart.quantity}: {item.quantity}</span>
-                  <StyledButton onClick={() => handleIncrease(item.productId)}>
+                  <StyledButton onClick={() => handleIncrease(item.product._id)}>
                     +
                   </StyledButton>
                 </QuantityControls>
                 <p>{texts.cart.itemTotal}: ${(item.price * item.quantity).toFixed(2)}</p>
-                <StyledButton onClick={() => handleDecrease(item.productId, 1)}>
+                {/* 🔥 Güncellenmiş buton */}
+                <StyledButton onClick={() => handleRemove(item.product._id)}>
                   {texts.cart.remove}
                 </StyledButton>
               </ProductDetails>
@@ -103,7 +121,7 @@ const Cart = () => {
             <Invoice>{texts.cart.invoiceDetails}</Invoice>
             <InvoiceDetails>
               {cartItems.map((item, index) => (
-                <SummaryItem key={item.id}>
+                <SummaryItem key={item.product._id}>
                   <ListItems>{index + 1}. {item.title} (x{item.quantity})</ListItems>
                   <ListItems>${(item.price * item.quantity).toFixed(2)}</ListItems>
                 </SummaryItem>

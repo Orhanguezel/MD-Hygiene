@@ -1,0 +1,21 @@
+[
+    {
+      "id": "1",
+      "name": "John Doe",
+      "feedback": "✨ Bu ürün hayatımı değiştirdi!",
+      "avatar": "https://randomuser.me/api/portraits/men/1.jpg"
+    },
+    {
+      "id": "2",
+      "name": "Jane Smith",
+      "feedback": "🔥 Mükemmel hizmet ve harika kalite.",
+      "avatar": "https://randomuser.me/api/portraits/women/2.jpg"
+    },
+    {
+      "id": 1739877445184,
+      "name": "Güzel",
+      "feedback": "hallo",
+      "avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
+      "userId": "145f"
+    }
+  ]

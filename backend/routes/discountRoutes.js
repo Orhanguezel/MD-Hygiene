@@ -3,9 +3,8 @@ import { getDiscounts, createDiscount, applyDiscount, deleteDiscount } from "../
 
 const router = express.Router();
 
-router.get("/", getDiscounts);
-router.post("/", createDiscount);
-router.post("/apply", applyDiscount); // İndirim kodunu uygula
-router.delete("/:id", deleteDiscount); // İndirim kodunu sil
+router.route("/").get(getDiscounts).post(createDiscount);
+router.route("/:id").delete(deleteDiscount);
+router.route("/apply").post(applyDiscount);
 
 export default router;

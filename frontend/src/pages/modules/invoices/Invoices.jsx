@@ -26,7 +26,7 @@ const Invoices = () => {
 
   if (status === "loading") return <p>📦 {texts?.invoices?.loading || "Faturalar yükleniyor..."}</p>;
   if (status === "failed") {
-    toast.error(texts?.invoices?.error || "Bir hata oluştu!");
+    toast.error(texts?.invoices?.error || "🚨 Bir hata oluştu!");
     return <p>{error}</p>;
   }
 
@@ -34,21 +34,23 @@ const Invoices = () => {
     <InvoicesContainer theme={theme}>
       <h1>{texts?.invoices?.title || "Faturalar"}</h1>
 
-      <InvoicesTable theme={theme}>
-        <thead>
-          <tr>
-            <Th>{texts?.invoices?.invoiceNumber || "Fatura No"}</Th>
-            <Th>{texts?.invoices?.customer || "Müşteri"}</Th>
-            <Th>{texts?.invoices?.date || "Tarih"}</Th>
-            <Th>{texts?.invoices?.amount || "Tutar"}</Th>
-            <Th>{texts?.invoices?.status || "Durum"}</Th>
-            <Th>{texts?.invoices?.actions || "İşlemler"}</Th>
-          </tr>
-        </thead>
-        <tbody>
-          {invoices.length > 0 ? (
-            invoices.map((invoice) => (
-              <tr key={invoice.id}>
+      {invoices.length === 0 ? (
+        <p>{texts?.invoices?.noInvoices || "Henüz fatura yok."}</p>
+      ) : (
+        <InvoicesTable theme={theme}>
+          <thead>
+            <tr>
+              <Th>{texts?.invoices?.invoiceNumber || "Fatura No"}</Th>
+              <Th>{texts?.invoices?.customer || "Müşteri"}</Th>
+              <Th>{texts?.invoices?.date || "Tarih"}</Th>
+              <Th>{texts?.invoices?.amount || "Tutar"}</Th>
+              <Th>{texts?.invoices?.status || "Durum"}</Th>
+              <Th>{texts?.invoices?.actions || "İşlemler"}</Th>
+            </tr>
+          </thead>
+          <tbody>
+            {invoices.map((invoice) => (
+              <tr key={invoice._id}> {/* ✅ `invoice.id` yerine `invoice._id` kullanıldı */}
                 <Td>{invoice.invoiceNumber}</Td>
                 <Td>{invoice.userName || "Bilinmiyor"}</Td>
                 <Td>{new Date(invoice.issuedAt).toLocaleDateString()}</Td>
@@ -59,19 +61,15 @@ const Invoices = () => {
                   </StatusBadge>
                 </Td>
                 <Td>
-                  <Link to={`/invoices/${invoice.id}`}>
+                  <Link to={`/invoices/${invoice._id}`}> {/* ✅ Hata buradaydı */}
                     <ActionButton theme={theme}>🔍 {texts?.invoices?.viewDetails || "Detayları Gör"}</ActionButton>
                   </Link>
                 </Td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <Td colSpan="6">{texts?.invoices?.noInvoices || "Henüz fatura yok."}</Td>
-            </tr>
-          )}
-        </tbody>
-      </InvoicesTable>
+            ))}
+          </tbody>
+        </InvoicesTable>
+      )}
     </InvoicesContainer>
   );
 };

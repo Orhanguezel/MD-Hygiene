@@ -3,11 +3,8 @@ import { getShipments, addShipment, getShipmentById, updateShipment, deleteShipm
 
 const router = express.Router();
 
-router.get("/", getShipments);
-router.post("/", addShipment);
-router.get("/:id", getShipmentById); // Belirli bir kargoyu getir
-router.put("/:id", updateShipment); // Kargoyu güncelle
-router.delete("/:id", deleteShipment); // Kargoyu sil
+router.route("/").get(getShipments).post(addShipment);
+router.route("/:id").get(getShipmentById).put(updateShipment).delete(deleteShipment);
 
 export default router;
 

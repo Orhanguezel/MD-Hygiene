@@ -1,39 +1,51 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+import asyncHandler from "express-async-handler";
 
 // 🔑 Kullanıcı Doğrulama (JWT ile)
-export const authenticate = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
+export const authenticate = asyncHandler(async (req, res, next) => {
+  let token;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ success: false, message: 'Yetkisiz erişim. Token bulunamadı.' });
-  }
+  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+    try {
+      token = req.headers.authorization.split(" ")[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  const token = authHeader.split(' ')[1];
+      req.user = await User.findById(decoded.id).select("-password");
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id).select('-password');
+      if (!req.user) {
+        return res.status(401).json({ success: false, message: "Geçersiz kimlik doğrulama!" });
+      }
 
-    if (!req.user) {
-      return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+      if (!req.user.isActive) {
+        return res.status(403).json({ success: false, message: "Hesabınız devre dışı bırakılmıştır!" });
+      }
+
+      next();
+    } catch (error) {
+      return res.status(401).json({ success: false, message: "Yetkisiz, geçersiz token!" });
     }
-
-    next();
-  } catch (error) {
-    res.status(401).json({ success: false, message: 'Geçersiz token.', error: error.message });
+  } else {
+    return res.status(401).json({ success: false, message: "Yetkisiz, token eksik!" });
   }
-};
+});
 
 // 👑 Rol Bazlı Yetkilendirme (Admin veya Belirli Roller)
 export const authorizeRoles = (...roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ success: false, message: `Bu işlem için yetkiniz yok: ${roles.join(', ')}` });
+    console.log("🛑 Kullanıcı Rolü:", req.user.role);
+    console.log("✅ Gerekli Roller:", roles);
+
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).json({ 
+        success: false, 
+        message: `Yetkisiz işlem! Gerekli roller: ${roles.join(', ')}` 
+      });
     }
     next();
   };
 };
 
+
 export const protect = authenticate;
-export const admin = authorizeRoles('admin');
+export const admin = authorizeRoles("admin");

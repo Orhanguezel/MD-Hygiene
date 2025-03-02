@@ -3,7 +3,6 @@ import { getAuditLogs, createAuditLog } from "../controllers/auditLogController.
 
 const router = express.Router();
 
-router.get("/", getAuditLogs);
-router.post("/", createAuditLog);
+router.route("/").get(getAuditLogs).post(createAuditLog);
 
 export default router; // ✅ Eksikse ekleyin

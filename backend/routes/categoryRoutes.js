@@ -3,10 +3,10 @@ import { getCategories, addCategory, updateCategory, deleteCategory } from "../c
 
 const router = express.Router();
 
-router.get("/", getCategories);
-router.post("/", addCategory);
-router.put("/:id", updateCategory); // Kategori güncelleme
-router.delete("/:id", deleteCategory); // Kategori silme
+
+router.route("/").get(getCategories).post(addCategory);
+router.route("/:id").put(updateCategory).delete(deleteCategory);
+
 
 export default router;
 

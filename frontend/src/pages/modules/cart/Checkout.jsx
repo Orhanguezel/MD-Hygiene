@@ -58,6 +58,7 @@ const Checkout = () => {
     console.log("📌 Ödeme Bilgileri:", paymentDetails);
     console.log("📌 Sepetteki Ürünler:", cartItems);
 
+    // ✅ **Ödeme bilgileri eksikse hata mesajı ver**
     if (Object.values(paymentDetails).some((value) => !value.trim())) {
       toast.error(texts.checkout?.missingDetails || "❌ Lütfen tüm ödeme bilgilerini doldurun!");
       return;
@@ -72,14 +73,10 @@ const Checkout = () => {
       toast.success(texts.checkout?.success || "✅ Sipariş oluşturuldu!", {
         position: "top-center",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
       });
 
       // ✅ **Sepeti temizle**
-      dispatch(clearCart());
+      await dispatch(clearCart()).unwrap();
 
       // ✅ **Kullanıcıyı Sipariş Onay sayfasına yönlendir**
       navigate("/order-confirmation");

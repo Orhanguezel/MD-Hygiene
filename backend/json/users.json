@@ -1,0 +1,136 @@
+[
+    {
+      "id": "USR-001",
+      "name": "Ayşe Yılmaz",
+      "email": "ayse.yilmaz@example.com",
+      "password": "hashed_password_2",
+      "role": "user",
+      "addresses": [
+        {
+          "street": "Cumhuriyet Mah.",
+          "city": "Ankara",
+          "postalCode": "06000",
+          "country": "Turkey",
+          "isDefault": true
+        }
+      ],
+      "phone": "+905551234567",
+      "orders": [
+        "ORD-001",
+        "ORD-002"
+      ],
+      "profileImage": "https://randomuser.me/api/portraits/women/1.jpg",
+      "isActive": true
+    },
+    {
+      "id": "USR-003",
+      "name": "Mehmet Demir",
+      "email": "mehmet.demir@example.com",
+      "password": "hashed_password_3",
+      "role": "moderator",
+      "addresses": [
+        {
+          "street": "Barbaros Blv.",
+          "city": "Izmir",
+          "postalCode": "35000",
+          "country": "Turkey",
+          "isDefault": false
+        }
+      ],
+      "phone": "+905301234567",
+      "orders": [
+        "ORD-003"
+      ],
+      "profileImage": "https://randomuser.me/api/portraits/men/4.jpg",
+      "isActive": true
+    },
+    {
+      "id": "USR-004",
+      "name": "Zeynep Kaya",
+      "email": "zeynep.kaya@example.com",
+      "password": "hashed_password_4",
+      "role": "staff",
+      "addresses": [
+        {
+          "street": "Gazi Cd.",
+          "city": "Bursa",
+          "postalCode": "16000",
+          "country": "Turkey",
+          "isDefault": true
+        }
+      ],
+      "phone": "+905401234567",
+      "orders": [],
+      "profileImage": "https://randomuser.me/api/portraits/women/5.jpg",
+      "isActive": true
+    },
+    {
+      "id": "USR-005",
+      "name": "Orhan Güzel",
+      "email": "orhanguzell@gmail.com",
+      "password": "111111",
+      "role": "user",
+      "addresses": [
+        {
+          "street": "Gazi Cd.",
+          "city": "Bursa",
+          "postalCode": "16000",
+          "country": "Turkey",
+          "isDefault": true
+        }
+      ],
+      "phone": "+905401234567",
+      "orders": [],
+      "profileImage": "http://localhost:5173/profil-orhan.jpeg",
+      "isActive": true,
+      "surname": "",
+      "address": "Grevenbroich"
+    },
+    {
+      "id": "USR-006",
+      "name": "Orhan",
+      "email": "orhan@gmail.com",
+      "password": "111111",
+      "role": "admin",
+      "addresses": [
+        {
+          "street": "Gazi Cd.",
+          "city": "Bursa",
+          "postalCode": "16000",
+          "country": "Turkey",
+          "isDefault": true
+        }
+      ],
+      "phone": "+905401234567",
+      "orders": [],
+      "profileImage": "http://localhost:5173/profil-orhan.jpeg",
+      "isActive": true
+    },
+    {
+      "id": "0e41",
+      "name": "Orhan",
+      "email": "nguzell@gmail.com",
+      "password": "11111111111",
+      "role": "user",
+      "isActive": true,
+      "createdAt": "2025-02-18T10:42:46.924Z"
+    },
+    {
+      "id": "145f",
+      "name": "Güzel",
+      "email": "guzel@gmail.com",
+      "password": "111111",
+      "role": "user",
+      "isActive": true,
+      "createdAt": "2025-02-18T11:07:23.312Z"
+    },
+    {
+      "id": "40f6",
+      "name": "abc",
+      "email": "o@gmail.com",
+      "password": "111111",
+      "role": "user",
+      "isActive": true,
+      "createdAt": "2025-02-18T11:18:12.382Z"
+    }
+  ]

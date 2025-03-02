@@ -1,6 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
-import { fetchInvoices } from "@/features/invoices/invoicesSlice";
 import API from "@/services/api";
 
 const initialState = {
@@ -11,207 +9,165 @@ const initialState = {
   error: null,
 };
 
-// 📥 **Tüm siparişleri getir (Admin Panel)**
-export const fetchOrders = createAsyncThunk(
-  "orders/fetchOrders",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await API.get("/orders");
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "Siparişler yüklenemedi!");
-    }
+// 📥 **Tüm Siparişleri Getir**
+export const fetchOrders = createAsyncThunk("orders/fetchOrders", async (_, { rejectWithValue }) => {
+  try {
+    const response = await API.get("/orders");
+    return response.data;
+  } catch (error) {
+    console.error("🚨 Siparişler yüklenemedi!", error);
+    return rejectWithValue(error.response?.data || "🚨 Siparişler yüklenemedi!");
   }
-);
+});
 
-// 📥 **Belirli bir siparişi getir**
-export const fetchOrderById = createAsyncThunk(
-  "orders/fetchOrderById",
-  async (orderId, { rejectWithValue }) => {
-    try {
-      const response = await API.get(`/orders/${orderId}`);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "Sipariş bulunamadı!");
-    }
+// 📥 **Belirli Bir Siparişi Getir**
+export const fetchOrderById = createAsyncThunk("orders/fetchOrderById", async (orderId, { rejectWithValue }) => {
+  try {
+    if (!orderId) throw new Error("🚨 Sipariş ID eksik!");
+    console.log(`📌 API Çağrısı: /orders/${orderId}`);
+    const response = await API.get(`/orders/${orderId}`);
+    return response.data;
+  } catch (error) {
+    console.error("🚨 Sipariş bulunamadı!", error);
+    return rejectWithValue(error.response?.data || "🚨 Sipariş bulunamadı!");
   }
-);
+});
 
 // 📥 **Kullanıcının Siparişlerini Getir**
-export const fetchUserOrders = createAsyncThunk(
-  "orders/fetchUserOrders",
-  async (userId, { rejectWithValue }) => {
-    try {
-      const response = await API.get(`/orders?userId=${userId}`);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "Siparişler yüklenemedi!");
-    }
+export const fetchUserOrders = createAsyncThunk("orders/fetchUserOrders", async (_, { getState, rejectWithValue }) => {
+  try {
+    const userId = getState().auth.user?.id;
+    if (!userId) return rejectWithValue("🚨 Kullanıcı oturum açmamış!");
+
+    const response = await API.get(`/orders/user/${userId}`);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || "🚨 Siparişler yüklenemedi!");
   }
-);
+});
 
-// ✏️ **Sipariş Güncelleme (Admin Panel)**
-export const updateOrder = createAsyncThunk(
-  "orders/updateOrder",
-  async (updatedOrder, { rejectWithValue, dispatch }) => {
-    try {
-      const response = await API.put(`/orders/${updatedOrder.id}`, updatedOrder);
+// ✏️ **Sipariş Güncelleme (Admin)**
+export const updateOrder = createAsyncThunk("orders/updateOrder", async ({ orderId, status }, { rejectWithValue, dispatch }) => {
+  try {
+    console.log(`📌 API Çağrısı: /orders/${orderId}/status - Yeni Durum: ${status}`);
+    const response = await API.put(`/orders/${orderId}/status`, { status });
 
-      // 📌 **Sipariş "shipped" olduğunda fatura oluştur**
-      if (updatedOrder.status === "shipped") {
-        const now = new Date();
-        const invoiceDate = `${now.getDate().toString().padStart(2, "0")}.${(now.getMonth() + 1)
-          .toString()
-          .padStart(2, "0")}.${now.getFullYear()} - ${now
-          .getHours()
-          .toString()
-          .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
+    dispatch(fetchOrderById(orderId)); // ✅ Güncellenen siparişi Redux Store’a çek
+    dispatch(fetchOrders()); // ✅ Sipariş listesini de güncelle
 
-        const invoiceData = {
-          id: `INV-${uuidv4()}`,
-          invoiceNumber: `INV-${uuidv4()}`,
-          orderId: updatedOrder.id,
-          userId: updatedOrder.userId,
-          userName: updatedOrder.userName,
-          userEmail: updatedOrder.userEmail,
-          userAddress: updatedOrder.userAddress,
-          items: updatedOrder.items,
-          subtotal: updatedOrder.totalAmount - updatedOrder.shippingCost,
-          vatAmount: updatedOrder.vatAmount,
-          totalAmount: updatedOrder.totalAmount,
-          shippingCost: updatedOrder.shippingCost,
-          issuedAt: invoiceDate,
-          status: "paid",
-        };
-
-        await API.post("/invoices", invoiceData);
-        dispatch(fetchInvoices());
-      }
-
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "Sipariş güncellenemedi!");
-    }
+    return response.data;
+  } catch (error) {
+    console.error("🚨 Sipariş güncellenemedi!", error);
+    return rejectWithValue(error.response?.data || "🚨 Sipariş güncellenemedi!");
   }
-);
+});
 
-// ❌ **Siparişi Sil (Admin Panel)**
-export const deleteOrder = createAsyncThunk(
-  "orders/deleteOrder",
-  async (orderId, { rejectWithValue }) => {
-    try {
-      await API.delete(`/orders/${orderId}`);
-      return orderId;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "Sipariş silinemedi!");
-    }
+
+// ❌ **Siparişi Sil (Admin)**
+export const deleteOrder = createAsyncThunk("orders/deleteOrder", async (orderId, { rejectWithValue }) => {
+  try {
+    await API.delete(`/orders/${orderId}`);
+    return orderId;
+  } catch (error) {
+    console.error("🚨 Sipariş silinemedi!", error);
+    return rejectWithValue(error.response?.data || "🚨 Sipariş silinemedi!");
   }
-);
+});
 
-// ➕ **Yeni Sipariş Oluştur (Checkout Sayfası)**
-export const addOrder = createAsyncThunk(
-  "orders/addOrder",
-  async (cartItems, { getState, rejectWithValue }) => {
-    try {
-      const state = getState();
-      const user = state.auth.user;
-      const cart = state.cart;
+// ➕ **Yeni Sipariş Oluştur (Checkout)**
+export const addOrder = createAsyncThunk("orders/addOrder", async (_, { getState, rejectWithValue }) => {
+  try {
+    const state = getState();
+    const user = state.auth.user;
+    const cartItems = state.cart.cartItems;
 
-      if (!user) {
-        return rejectWithValue("Kullanıcı oturum açmamış.");
-      }
+    if (!user) return rejectWithValue("🚨 Kullanıcı oturum açmamış!");
+    if (!cartItems.length) return rejectWithValue("🚨 Sepetiniz boş!");
 
-      // 📌 **Toplam tutar kontrolü** (cartSlice ile tutarlı mı?)
-      if (cart.grandTotal !== cart.totalPrice + cart.shippingCost) {
-        return rejectWithValue("Sepet toplamı değişti, lütfen tekrar deneyin.");
-      }
+    const SHIPPING_COST = 20;
+    const TAX_RATE = 0.19;
+    const subtotal = cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
+    const taxAmount = (subtotal * TAX_RATE) / (1 + TAX_RATE);
+    const finalAmount = subtotal + SHIPPING_COST;
 
-      const now = new Date();
-      const formattedDate = `${now.getDate().toString().padStart(2, "0")}.${(now.getMonth() + 1)
-        .toString()
-        .padStart(2, "0")}.${now.getFullYear()} - ${now
-        .getHours()
-        .toString()
-        .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
+    const newOrder = {
+      user: user.id,
+      products: cartItems.map((item) => ({
+        productId: item.product._id,
+        name: item.product?.title || "Ürün adı eksik!",
+        quantity: item.quantity,
+        unitPrice: item.price,
+      })),
+      totalAmount: parseFloat(finalAmount.toFixed(2)),
+      taxAmount: parseFloat(taxAmount.toFixed(2)),
+      shippingAddress: user.address || { street: "", city: "", postalCode: "", country: "" },
+      status: "pending",
+      paymentStatus: "pending",
+      orderDate: new Date().toISOString(),
+    };
 
-      const newOrder = {
-        id: `ORD-${uuidv4()}`,
-        userId: user.id,
-        userName: user.name,
-        userEmail: user.email,
-        userAddress: user.address,
-        orderDate: formattedDate,
-        items: cartItems.map((item) => ({
-          productId: item.id,
-          title: item.title,
-          quantity: item.quantity,
-          unitPrice: item.price,
-        })),
-        totalAmount: cart.grandTotal, // 📌 **CartSlice'tan alındı**
-        shippingCost: cart.shippingCost, // 📌 **CartSlice'tan alındı**
-        vatAmount: cart.vatAmount, // 📌 **CartSlice'tan alındı**
-        status: "pending",
-        paymentStatus: "pending",
-      };
+    console.log("📌 Sipariş Verisi:", newOrder);
 
-      const response = await API.post("/orders", newOrder);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue("Sipariş oluşturulamadı.");
-    }
+    const response = await API.post("/orders", newOrder);
+    return response.data;
+  } catch (error) {
+    console.error("🚨 Sipariş oluşturulamadı!", error);
+    return rejectWithValue(error.response?.data || "🚨 Sipariş oluşturulamadı!");
   }
-);
+});
 
 // ✅ **Redux Slice Tanımlaması**
 const ordersSlice = createSlice({
   name: "orders",
-  initialState: {
-    orders: [],
-    userOrders: [],
-    selectedOrder: null,
-    status: "idle",
-    error: null,
+  initialState,
+  reducers: {
+    setSelectedOrder: (state, action) => {
+      state.selectedOrder = action.payload;
+    },
   },
-  reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(fetchOrders.pending, (state) => {
+        state.status = "loading";
+      })
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.orders = action.payload;
         state.status = "succeeded";
       })
-      .addCase(fetchUserOrders.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(fetchUserOrders.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.userOrders = action.payload;
-      })
-      .addCase(fetchUserOrders.rejected, (state, action) => {
+      .addCase(fetchOrders.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
-      .addCase(addOrder.fulfilled, (state, action) => {
-        state.orders.unshift(action.payload);
+      .addCase(fetchUserOrders.fulfilled, (state, action) => {
+        state.userOrders = action.payload;
+      })
+      .addCase(fetchOrderById.fulfilled, (state, action) => {
+        state.selectedOrder = action.payload;
       })
       .addCase(updateOrder.fulfilled, (state, action) => {
-        const index = state.orders.findIndex(order => order.id === action.payload.id);
+        state.selectedOrder = action.payload;
+
+        // Redux store içindeki sipariş listesini güncelle
+        const index = state.orders.findIndex((order) => order._id === action.payload._id);
         if (index !== -1) {
           state.orders[index] = action.payload;
         }
       })
-      .addCase(fetchOrderById.pending, (state) => {
-        state.status = "loading";
+      .addCase(deleteOrder.fulfilled, (state, action) => {
+        state.orders = state.orders.filter(order => order._id !== action.payload);
       })
-      .addCase(fetchOrderById.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.selectedOrder = action.payload; // ✅ Seçili siparişi güncelle
+      .addCase(addOrder.fulfilled, (state, action) => {
+        state.orders.push(action.payload);
       })
-      .addCase(fetchOrderById.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-        state.selectedOrder = null;
-      });
+      .addMatcher(
+        (action) => action.type.endsWith("/rejected"),
+        (state, action) => {
+          state.status = "failed";
+          state.error = action.payload;
+        }
+      );
   },
 });
 
+export const { setSelectedOrder } = ordersSlice.actions;
 export default ordersSlice.reducer;

@@ -29,7 +29,7 @@ export const createOffer = async (req, res) => {
       items: enrichedItems,
       totalAmount: finalAmount,
       taxAmount,
-      status: "pending", // 📌 Varsayılan durum: Beklemede
+      status: "draft", // 📌 Varsayılan durum: Taslak
     });
 
     await offer.save();
@@ -52,15 +52,22 @@ export const getOffers = async (req, res) => {
 // ✅ Belirli bir teklifi getir
 export const getOfferById = async (req, res) => {
   try {
-    const offer = await Offer.findById(req.params.id).populate("user", "name email").populate("items.product", "name price");
+    console.log("🟢 Teklif Getir API Çağrıldı:", req.params.id);
+
+    // ✅ Eğer ID ObjectId formatında değilse, offerNumber üzerinden ara
+    const offer = await Offer.findOne({ offerNumber: req.params.id }) // ✅ `offerNumber` ile arama
+      .populate("user", "name email")
+      .populate("items.product", "name price");
 
     if (!offer) return res.status(404).json({ message: "Teklif bulunamadı!" });
 
     res.status(200).json(offer);
   } catch (error) {
+    console.error("❌ Teklif getirme hatası:", error);
     res.status(500).json({ message: "Teklif getirilemedi!", error: error.message });
   }
 };
+
 
 // ✅ Teklifi güncelle
 export const updateOffer = async (req, res) => {
@@ -133,3 +140,4 @@ export const deleteOffer = async (req, res) => {
     res.status(500).json({ message: "Teklif silinemedi!", error: error.message });
   }
 };
+

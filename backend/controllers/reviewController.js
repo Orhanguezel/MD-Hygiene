@@ -1,132 +1,97 @@
+import asyncHandler from "express-async-handler";
 import Review from "../models/Review.js";
-import Product from "../models/Product.js";
-import mongoose from "mongoose";
 
-// ✅ **Tüm yorumları getir (Admin)**
-export const getAllReviews = async (req, res) => {
-  try {
-    const reviews = await Review.find().populate("user", "name email").populate("product", "name");
+// 📌 **Tüm yorumları getir (Admin)**
+export const fetchReviews = asyncHandler(async (req, res) => {
+  const reviews = await Review.find().populate("user", "name email profileImage");
+  res.json(reviews);
+});
 
-    res.status(200).json(reviews);
-  } catch (error) {
-    console.error("❌ Tüm yorumları alırken hata:", error);
-    res.status(500).json({ error: "Tüm yorumlar getirilirken hata oluştu!", details: error.message });
+// 📌 **Belirli bir ürünün yorumlarını getir**
+export const fetchProductReviews = asyncHandler(async (req, res) => {
+  const reviews = await Review.find({ productId: req.params.productId }).populate("user", "name profileImage");
+  
+  if (!reviews) {
+    res.status(404);
+    throw new Error("Bu ürün için yorum bulunamadı.");
   }
-};
 
-// ✅ **Belirli bir ürünün yorumlarını getir**
-export const getReviewsByProduct = async (req, res) => {
-  try {
-    const { productId } = req.params;
+  res.json({ reviews });
+});
 
-    if (!mongoose.Types.ObjectId.isValid(productId)) {
-      return res.status(400).json({ error: "Geçersiz ürün ID!" });
-    }
+// 📌 **Yeni yorum ekleme**
+export const addReview = asyncHandler(async (req, res) => {
+  const { productId, rating, comment } = req.body;
 
-    const reviews = await Review.find({ product: productId }).populate("user", "name email");
+  const review = await Review.create({
+    productId,
+    user: req.user.id,
+    name: req.user.name,
+    avatar: req.user.profileImage || "https://randomuser.me/api/portraits/lego/1.jpg",
+    rating,
+    comment,
+  });
 
-    res.status(200).json(reviews);
-  } catch (error) {
-    console.error("❌ Ürün yorumlarını alırken hata:", error);
-    res.status(500).json({ error: "Yorumlar alınırken hata oluştu!", details: error.message });
+  res.status(201).json(review);
+});
+
+// 📌 **Yorumu Güncelleme**
+export const updateReview = asyncHandler(async (req, res) => {
+  const { rating, comment } = req.body;
+
+  const review = await Review.findById(req.params.id);
+
+  if (!review) {
+    res.status(404);
+    throw new Error("Yorum bulunamadı.");
   }
-};
 
-// ✅ **Yeni yorum ekleme**
-export const addReview = async (req, res) => {
-  try {
-    const { productId, rating, comment } = req.body;
-    const userId = req.user.id;
-
-    if (!productId || !rating || !comment) {
-      return res.status(400).json({ error: "Tüm alanlar zorunludur!" });
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(productId)) {
-      return res.status(400).json({ error: "Geçersiz ürün ID!" });
-    }
-
-    // ✅ Kullanıcı daha önce yorum yaptı mı?
-    const existingReview = await Review.findOne({ product: productId, user: userId });
-    if (existingReview) {
-      return res.status(400).json({ error: "Bu ürüne zaten yorum yaptınız!" });
-    }
-
-    // ✅ Yeni yorum oluştur
-    const newReview = new Review({ user: userId, product: productId, rating, comment });
-    await newReview.save();
-
-    // ✅ Ürünün ortalama puanını güncelle
-    const avgRating = await Review.calculateAverageRating(productId);
-    await Product.findByIdAndUpdate(productId, { averageRating: avgRating });
-
-    res.status(201).json({ message: "Yorum başarıyla eklendi!", review: newReview });
-  } catch (error) {
-    console.error("❌ Yorum eklenirken hata:", error);
-    res.status(500).json({ error: "Yorum eklenirken hata oluştu!", details: error.message });
+  // Kullanıcı yetkisini kontrol et
+  if (review.user.toString() !== req.user.id.toString() && req.user.role !== "admin") {
+    res.status(403);
+    throw new Error("Bu yorumu güncelleme yetkiniz yok.");
   }
-};
 
-// ✅ **Yorumu güncelle**
-export const updateReview = async (req, res) => {
-  try {
-    const { rating, comment } = req.body;
-    const userId = req.user.id;
-    const reviewId = req.params.id;
+  review.rating = rating || review.rating;
+  review.comment = comment || review.comment;
 
-    if (!mongoose.Types.ObjectId.isValid(reviewId)) {
-      return res.status(400).json({ error: "Geçersiz yorum ID!" });
-    }
+  await review.save();
+  res.json(review);
+});
 
-    const review = await Review.findById(reviewId);
-    if (!review) return res.status(404).json({ error: "Yorum bulunamadı!" });
+// 📌 **Yorum Silme (Admin veya yorumu yazan kişi)**
+export const deleteReview = asyncHandler(async (req, res) => {
+  const review = await Review.findById(req.params.id);
 
-    if (review.user.toString() !== userId) {
-      return res.status(403).json({ error: "Bu yorumu güncelleme yetkiniz yok!" });
-    }
-
-    review.rating = rating;
-    review.comment = comment;
-    review.editedAt = new Date();
-    await review.save();
-
-    // ✅ Ürünün ortalama puanını güncelle
-    const avgRating = await Review.calculateAverageRating(review.product);
-    await Product.findByIdAndUpdate(review.product, { averageRating: avgRating });
-
-    res.status(200).json({ message: "Yorum başarıyla güncellendi!", review });
-  } catch (error) {
-    console.error("❌ Yorum güncellenirken hata:", error);
-    res.status(500).json({ error: "Yorum güncellenirken hata oluştu!", details: error.message });
+  if (!review) {
+    res.status(404);
+    throw new Error("Yorum bulunamadı.");
   }
-};
 
-// ✅ **Yorumu sil**
-export const deleteReview = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const reviewId = req.params.id;
-
-    if (!mongoose.Types.ObjectId.isValid(reviewId)) {
-      return res.status(400).json({ error: "Geçersiz yorum ID!" });
-    }
-
-    const review = await Review.findById(reviewId);
-    if (!review) return res.status(404).json({ error: "Yorum bulunamadı!" });
-
-    if (review.user.toString() !== userId) {
-      return res.status(403).json({ error: "Bu yorumu silme yetkiniz yok!" });
-    }
-
-    await review.deleteOne();
-
-    // ✅ Ürünün ortalama puanını güncelle
-    const avgRating = await Review.calculateAverageRating(review.product);
-    await Product.findByIdAndUpdate(review.product, { averageRating: avgRating });
-
-    res.status(200).json({ message: "Yorum başarıyla silindi!" });
-  } catch (error) {
-    console.error("❌ Yorum silinirken hata:", error);
-    res.status(500).json({ error: "Yorum silinirken hata oluştu!", details: error.message });
+  // Kullanıcı yetkisini kontrol et
+  if (review.user.toString() !== req.user.id.toString() && req.user.role !== "admin") {
+    res.status(403);
+    throw new Error("Bu yorumu silme yetkiniz yok.");
   }
-};
+
+  await review.deleteOne();
+  res.json({ message: "Yorum başarıyla silindi." });
+});
+
+// 📌 **Belirli bir kullanıcının yorumlarını getir (Admin)**
+export const getReviewsByUser = asyncHandler(async (req, res) => {
+  const reviews = await Review.find({ user: req.params.userId });
+
+  if (!reviews) {
+    res.status(404);
+    throw new Error("Bu kullanıcıya ait yorum bulunamadı.");
+  }
+
+  res.json(reviews);
+});
+
+// 📌 **Belirli bir ürünün tüm yorumlarını sil (Admin)**
+export const deleteAllReviewsByProduct = asyncHandler(async (req, res) => {
+  await Review.deleteMany({ productId: req.params.productId });
+  res.json({ message: "Ürüne ait tüm yorumlar silindi." });
+});

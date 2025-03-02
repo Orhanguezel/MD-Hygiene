@@ -1,0 +1,11 @@
+[
+  {
+    "id": "1",
+    "name": "MD-Hygienelogistik GmbH",
+    "address": "Musterstraße 123, 40210 Düsseldorf, Germany",
+    "email": "info@md-hygiene.de",
+    "taxNumber": "DE123456789",
+    "bankIban": "DE89 3704 0044 0532 0130 00",
+    "bankBic": "COBADEFFXXX"
+  }
+]

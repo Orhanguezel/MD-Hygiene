@@ -4,9 +4,8 @@ import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/", protect, createPayment); // Ödeme oluştur
-router.get("/", protect, getPayments); // Tüm ödemeleri getir
-router.get("/:id", protect, getPaymentById); // Belirli bir ödeme detayını getir
+router.route("/").post(createPayment).get(getPayments);
+router.route("/:id").get(getPaymentById);
 
 export default router;
 

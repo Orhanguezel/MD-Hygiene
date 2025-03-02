@@ -1,19 +1,29 @@
 import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  id: { type: String, required: true, unique: true }, // ✅ JSON'daki id değerini koruyoruz
+  title: { type: String, required: true },
   description: { type: String },
   price: { type: Number, required: true },
-  stock: { type: Number, required: true },
-  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
-  brand: { type: String, required: true },
-  unit: { type: String, enum: ["Stück", "Liter", "Kilogramm", "Packung"], required: true },
-  weight: { type: String },
-  volume: { type: String },
-  gtin_ean: { type: String, unique: true }, // 🔹 Barkod numarası eklendi
-  reach_compliance: { type: Boolean, default: false }, // 🔹 REACH uyumu eklendi
-  images: [{ type: String }], // 🔹 Ürün görselleri eklendi
-}, { timestamps: true });
+  stock: { type: Number, required: true, default: 0 },
+  images: [{ type: String }],
+
+  category: {
+    id: { type: Number, required: true },
+    name: { type: String, required: true },
+    image: { type: String },
+    creationAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
+  },
+
+  gtin_ean: { 
+    type: String, 
+    default: undefined, // ✅ `null` değerlerini `undefined` yaparak hatayı engelle
+  },
+
+  creationAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+}, { timestamps: false });
 
 const Product = mongoose.model("Product", productSchema);
 

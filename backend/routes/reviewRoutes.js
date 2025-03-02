@@ -1,24 +1,30 @@
 import express from "express";
-import { getReviewsByProduct, addReview, updateReview, deleteReview } from "../controllers/reviewController.js";
-import { protect } from "../middleware/authMiddleware.js"; // Giriş gerektiriyorsa
+import { 
+  fetchReviews, 
+  fetchProductReviews, 
+  addReview, 
+  updateReview, 
+  deleteReview, 
+  getReviewsByUser, 
+  deleteAllReviewsByProduct 
+} from "../controllers/reviewController.js";
+import { protect, admin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/:productId", getReviewsByProduct); // ✅ Belirli ürünün yorumlarını getir
-router.post("/", protect, addReview); // ✅ Yorum ekle (Giriş gerektiriyor)
-router.put("/:id", protect, updateReview); // ✅ Yorumu güncelle (Giriş gerektiriyor)
-router.delete("/:id", protect, deleteReview); // ✅ Yorumu sil (Giriş gerektiriyor)
-router.get("/", async (req, res) => {
-    try {
-      const reviews = await Review.find()
-        .populate("user", "name email")
-        .populate("product", "name");
-  
-      res.status(200).json(reviews);
-    } catch (error) {
-      res.status(500).json({ error: "Tüm yorumlar getirilirken hata oluştu!", details: error.message });
-    }
-  });
-  
+// ✅ **Tüm yorumları getir (Sadece Admin)**
+router.route("/").get(protect, admin, fetchReviews).post(protect, addReview);
+
+// ✅ **Belirli bir ürünün yorumlarını getir**
+router.route("/product/:productId").get(fetchProductReviews);
+
+// ✅ **Belirli bir kullanıcının yorumlarını getir (Sadece Admin)**
+router.route("/user/:userId").get(protect, admin, getReviewsByUser);
+
+// ✅ **Belirli bir ürünün tüm yorumlarını sil (Sadece Admin)**
+router.route("/product/:productId").delete(protect, admin, deleteAllReviewsByProduct);
+
+// ✅ **Tek bir yorumu getir, güncelle veya sil**
+router.route("/:id").put(protect, updateReview).delete(protect, deleteReview);
 
 export default router;

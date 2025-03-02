@@ -1,13 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "@/services/api"; // ✅ Merkezi API yapısı
 
-
 // 📌 Ürünleri API’den çekme
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async (_, thunkAPI) => {
     try {
-      const response = await API.get("/data"); // ✅ Doğru endpoint
+      const response = await API.get("/products"); // ✅ Güncellenmiş endpoint
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || "Ürünler alınırken hata oluştu");
@@ -20,69 +19,39 @@ export const fetchCategories = createAsyncThunk(
   "products/fetchCategories",
   async (_, thunkAPI) => {
     try {
-      const response = await API.get("/category");
+      const response = await API.get("/products/categories"); // ✅ Güncellenmiş endpoint
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data || "Kategoriler alınırken hata oluştu"
-      );
+      return thunkAPI.rejectWithValue(error.response?.data || "Kategoriler alınırken hata oluştu");
     }
   }
 );
 
-export const addProduct = createAsyncThunk("products/addProduct", async (productData, thunkAPI) => {
-  try {
-    // 📌 Yeni ürün için ID oluştur (JSON Server bazen ID gerektirir)
-    const newProduct = {
-      id: Date.now(), // ✅ Geçici ID
-      title: productData.title,
-      price: parseFloat(productData.price),
-      stock: parseInt(productData.stock),
-      images: productData.images.length > 0 ? productData.images : ["/placeholder.jpg"],
-      category: productData.category?.id 
-        ? productData.category 
-        : { id: 1, name: "General", image: "" },
-      creationAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+// ✅ Ürün Ekleme
+export const addProduct = createAsyncThunk(
+  "products/addProduct",
+  async (productData, thunkAPI) => {
+    try {
+      const response = await API.post("/products", productData, {
+        headers: { Authorization: `Bearer ${thunkAPI.getState().auth.token}` }, // ✅ Yetkilendirme eklendi
+      });
 
-    console.log("📌 API'ye Gönderilen Veri:", newProduct); // 🔍 API’ye giden veriyi konsolda gör
-
-    const response = await API.post("/data", newProduct);
-    console.log("✅ API Yanıtı:", response.data); // 🔍 API’nin döndürdüğü cevabı konsolda gör
-
-    return response.data;
-  } catch (error) {
-    console.error("❌ API Hatası:", error); // 🔍 Konsolda API Hatası gör
-    return thunkAPI.rejectWithValue(error.response?.data || "Ürün eklenirken hata oluştu");
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || "Ürün eklenirken hata oluştu");
+    }
   }
-});
+);
 
-
-// Ürün Güncelleme
+// ✅ Ürün Güncelleme
 export const updateProduct = createAsyncThunk(
   "products/updateProduct",
-  async ({ id, price, stock }, thunkAPI) => {
+  async ({ id, productData }, thunkAPI) => {
     try {
-      // 📌 Mevcut ürünü bul (Eksik alanları tamamlamak için)
-      const state = thunkAPI.getState().product;
-      const existingProduct = state.products.find((product) => product.id === id);
+      const response = await API.put(`/products/${id}`, productData, {
+        headers: { Authorization: `Bearer ${thunkAPI.getState().auth.token}` }, // ✅ Yetkilendirme eklendi
+      });
 
-      if (!existingProduct) {
-        return thunkAPI.rejectWithValue("Güncellenmek istenen ürün bulunamadı.");
-      }
-
-      // 📌 Eksik alanları tamamla
-      const updatedProduct = {
-        ...existingProduct,
-        price: price ? parseFloat(price) : existingProduct.price,
-        stock: stock ? parseInt(stock) : existingProduct.stock,
-        updatedAt: new Date().toISOString(),
-      };
-
-      console.log("📌 Güncellenecek Ürün:", updatedProduct); // 🔍 Konsolda kontrol et
-
-      const response = await API.put(`/data/${id}`, updatedProduct);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || "Ürün güncellenirken hata oluştu");
@@ -90,18 +59,18 @@ export const updateProduct = createAsyncThunk(
   }
 );
 
-
-// Ürün Silme
+// ✅ Ürün Silme
 export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
   async (id, thunkAPI) => {
     try {
-      await API.delete(`/data/${id}`);
+      await API.delete(`/products/${id}`, {
+        headers: { Authorization: `Bearer ${thunkAPI.getState().auth.token}` }, // ✅ Yetkilendirme eklendi
+      });
+
       return id;
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data || "Ürün silinirken hata oluştu"
-      );
+      return thunkAPI.rejectWithValue(error.response?.data || "Ürün silinirken hata oluştu");
     }
   }
 );
@@ -117,12 +86,13 @@ const productSlice = createSlice({
     error: null,
   },
   reducers: {
+    // 📌 Kategoriye Göre Ürünleri Filtreleme
     filterByCategory: (state, action) => {
       const categoryId = action.payload;
       state.selectedCategory = categoryId;
       state.filteredProducts = categoryId
         ? state.products.filter((product) => product.category.id === categoryId)
-        : state.products; // 📌 Eğer `null` ise tüm ürünleri göster
+        : state.products;
     },
   },
   extraReducers: (builder) => {
@@ -134,7 +104,7 @@ const productSlice = createSlice({
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
         state.products = action.payload;
-        state.filteredProducts = action.payload; // 📌 Başlangıçta tüm ürünleri göster
+        state.filteredProducts = action.payload;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
@@ -151,15 +121,13 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(addProduct.fulfilled, (state, action) => {
-        console.log("✅ Yeni ürün Redux Store'a eklendi:", action.payload);
         state.products.push(action.payload);
-        state.loading = false; // 📌 Yükleme durumunu sıfırla
+        state.loading = false;
       })
       .addCase(addProduct.rejected, (state, action) => {
         state.error = action.payload || "Ürün eklenemedi.";
-        state.loading = false; // 📌 Yükleme durumunu sıfırla
+        state.loading = false;
       })
-
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.products = state.products.map((product) =>
           product.id === action.payload.id ? action.payload : product
@@ -168,7 +136,6 @@ const productSlice = createSlice({
       .addCase(updateProduct.rejected, (state, action) => {
         state.error = action.payload || "Ürün güncellenemedi.";
       })
-
       .addCase(deleteProduct.fulfilled, (state, action) => {
         state.products = state.products.filter(
           (product) => product.id !== action.payload

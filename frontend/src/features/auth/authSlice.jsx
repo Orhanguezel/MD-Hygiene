@@ -1,33 +1,23 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "@/services/api";
 
-// 🔑 Kullanıcı Girişi (Login)
+// 🔑 **Kullanıcı Girişi (Login)**
 export const login = createAsyncThunk(
   "auth/login",
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await API.get("/users", {
-        params: { email: credentials.email, password: credentials.password },
-      });
+      const response = await API.post("/auth/login", credentials);
 
-      if (!response.data.length) {
-        return rejectWithValue("❌ Geçersiz email veya şifre!");
-      }
+      const user = response.data.user;
+      const token = response.data.user.token; // Token al
 
-      const user = response.data[0];
+      // ✅ Kullanıcı ve token'ı localStorage'a kaydet
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
 
-      if (!user.isActive) {
-        return rejectWithValue("❌ Hesabınız aktif değil!");
-      }
-
-      // 🛑 **Gereksiz tekrarları önlemek için önce `localStorage` kontrolü yapalım**
-      if (!localStorage.getItem("user")) {
-        localStorage.setItem("user", JSON.stringify(user));
-      }
-
-      return { user };
+      return { user, token };
     } catch (error) {
-      return rejectWithValue("❌ Giriş başarısız! Lütfen tekrar deneyin.");
+      return rejectWithValue(error.response?.data?.message || "❌ Giriş başarısız!");
     }
   }
 );
@@ -37,14 +27,16 @@ export const register = createAsyncThunk(
   "auth/register",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await API.post("/users", {
-        ...userData,
-        role: "user",
-        isActive: true,
-        createdAt: new Date().toISOString(),
-      });
+      const response = await API.post("/auth/register", userData);
 
-      return response.data;
+      const user = response.data.user;
+      const token = response.data.user.token;
+
+      // ✅ Kullanıcı ve token'ı localStorage'a kaydet
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+
+      return { user, token };
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || "❌ Kayıt başarısız!");
     }
@@ -54,6 +46,7 @@ export const register = createAsyncThunk(
 // 🚪 **Çıkış Yapma (Logout)**
 export const logout = createAsyncThunk("auth/logout", async () => {
   localStorage.removeItem("user");
+  localStorage.removeItem("token");
   return null;
 });
 
@@ -62,6 +55,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: JSON.parse(localStorage.getItem("user")) || null,
+    token: localStorage.getItem("token") || null,
     isAuthenticated: !!localStorage.getItem("user"),
     loading: false,
     error: null,
@@ -82,6 +76,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = true;
         state.user = action.payload.user;
+        state.token = action.payload.token;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -92,6 +87,7 @@ const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.isAuthenticated = false;
         state.user = null;
+        state.token = null;
       })
 
       // 🟢 **Kayıt İşlemi (Register)**
@@ -103,6 +99,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = true;
         state.user = action.payload.user;
+        state.token = action.payload.token;
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;

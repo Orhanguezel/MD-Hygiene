@@ -20,6 +20,9 @@ import offerRoutes from "./routes/offerRoutes.js"; // ✅ Teklifler
 import notificationRoutes from "./routes/notificationRoutes.js"; // ✅ Bildirimler
 import auditLogRoutes from "./routes/auditLogRoutes.js"; // ✅ Sistem Logları
 import discountRoutes from "./routes/discountRoutes.js"; // ✅ İndirimler
+import cartRoutes from "./routes/cartRoutes.js"; // ✅ Sepet Yönetimi
+import customerRoutes from "./routes/customerRoutes.js"; // ✅ Müşteri Yönetimi
+import companyRoutes from "./routes/companyRoutes.js"; // ✅ Şirket Bilgileri
 
 // ✅ Çevresel değişkenleri yükle
 dotenv.config();
@@ -68,6 +71,26 @@ app.use("/api/offers", offerRoutes); // ✅ Teklif Yönetimi
 app.use("/api/notifications", notificationRoutes); // ✅ Bildirimler
 app.use("/api/audit-logs", auditLogRoutes); // ✅ Sistem Logları
 app.use("/api/discounts", discountRoutes); // ✅ İndirimler
+app.use("/api/cart", cartRoutes); // ✅ Sepet Yönetimi
+app.use("/api/customers", customerRoutes); // ✅ Müşteri Yönetimi
+app.use("/api/companies", companyRoutes);
+
+
+
+const logEndpoints = () => {
+  console.log("📌 Tanımlı Endpoints:");
+  app._router.stack
+    .filter((r) => r.route) // Sadece route olanları al
+    .map((r) => {
+      const methods = Object.keys(r.route.methods)
+        .map((m) => m.toUpperCase())
+        .join(", ");
+      const url = `http://localhost:${port}${r.route.path}`;
+      console.log(`${methods}: ${url}`);
+    });
+};
+
+// ✅ Tanımlı Endpoints'i konsola yazdır
 
 // ✅ MongoDB Bağlantısını Başlat ve Örnek Verileri Yükle
 const startServer = async () => {

@@ -1,13 +1,11 @@
 import express from "express";
-import { getStores, addStore, getStoreById, updateStore, deleteStore } from "../controllers/storeController.js";
+import { getStores, addStore, getStoreById, updateStore, deleteStore} from "../controllers/storeController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", getStores);
-router.post("/add", protect, addStore);
-router.get("/:id", getStoreById); // Belirli bir mağazayı getir
-router.put("/:id", protect, updateStore); // Mağazayı güncelle
-router.delete("/:id", protect, deleteStore); // Mağazayı sil
+router.route("/").get(getStores)
+router.route("/:id").get(getStoreById).put(protect, updateStore).delete(protect, deleteStore);
+router.route("/add").post(protect, addStore);
 
 export default router;

@@ -1,20 +1,25 @@
 import express from "express";
-import {
+import { 
   createInvoice,
   getAllInvoices,
   getInvoiceById,
   getUserInvoices,
   generateInvoicePDF
 } from "../controllers/invoiceController.js";
-
-import { protect } from "../middleware/authMiddleware.js";
+import { protect, admin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", getAllInvoices); // ✅ Admin için tüm faturalar
-router.get("/user", protect, getUserInvoices); // ✅ Kullanıcının faturaları
-router.get("/:id", protect, getInvoiceById);
-router.post("/", protect, createInvoice);
-router.get("/:id/pdf", protect, generateInvoicePDF); // ✅ PDF olarak indir
+// ✅ Admin: Tüm faturaları getir ve yeni fatura oluştur
+router.route("/").get(protect, admin, getAllInvoices).post(protect, createInvoice);
+
+// ✅ Kullanıcının kendi faturalarını getir
+router.route("/user").get(protect, getUserInvoices);
+
+// ✅ Belirli faturayı getir
+router.route("/:id").get(protect, getInvoiceById);
+
+// ✅ Faturayı PDF olarak indir
+router.route("/:id/pdf").get(protect, generateInvoicePDF);
 
 export default router;

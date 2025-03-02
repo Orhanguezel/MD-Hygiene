@@ -11,22 +11,19 @@ import { protect, admin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// ✅ Teklif oluştur
-router.post("/", protect, createOffer);
+router
+  .route("/")
+  .get(protect, admin, getOffers)   // Admin yetkisiyle tüm teklifleri getir
+  .post(protect, createOffer);      // Kullanıcı teklif oluşturabilir
 
-// ✅ Tüm teklifleri getir (Admin yetkisi gerekir)
-router.get("/", protect, admin, getOffers);
+router
+  .route("/:id")
+  .get(protect, getOfferById)       // Tek bir teklifi getir
+  .put(protect, updateOffer)        // Teklifi güncelle
+  .delete(protect, admin, deleteOffer); // Admin teklifi silebilir
 
-// ✅ Tek bir teklifi getir
-router.get("/:id", protect, getOfferById);
-
-// ✅ Teklifi güncelle
-router.put("/:id", protect, updateOffer);
-
-// ✅ Teklif durumunu güncelle (Onayla/Reddet)
-router.patch("/:id/status", protect, updateOfferStatus);
-
-// ✅ Teklifi sil (Sadece admin)
-router.delete("/:id", protect, admin, deleteOffer);
+router
+  .route("/:id/status")
+  .patch(protect, updateOfferStatus);  // Teklif durumunu güncelle (onayla/reddet)
 
 export default router;

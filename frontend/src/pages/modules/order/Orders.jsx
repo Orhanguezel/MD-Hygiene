@@ -75,32 +75,20 @@ const Orders = () => {
           <tbody>
             {orders.length > 0 ? (
               orders.map((order) => (
-                <tr key={order.id}>
-                  <Td>{order.id}</Td>
-                  <Td>
-                    {order.userName ||
-                      texts?.orders?.unknownCustomer ||
-                      "Bilinmiyor"}
-                  </Td>
+                <tr key={order._id}> {/* ✅ Unique key olarak _id kullanıyoruz */}
+                  <Td>{order._id}</Td>
+                  <Td>{order.user?.name || texts?.orders?.unknownCustomer || "Bilinmiyor"}</Td>
                   <Td>
                     <StatusBadge $status={order.status}>
                       {texts.orders[order.status] || order.status}
                     </StatusBadge>
                   </Td>
+                  <Td>{Number(order.totalAmount || 0).toFixed(2)} ₺</Td>
                   <Td>
-                    {isNaN(order.totalAmount)
-                      ? "0.00"
-                      : Number(order.totalAmount).toFixed(2)}{" "}
-                    ₺
-                  </Td>
-
-                  <Td>
-                    <ActionButton
-                      onClick={() => navigate(`/orders/${order.id}`)}
-                    >
+                    <ActionButton onClick={() => navigate(`/orders/${order._id}`)}>
                       {texts?.orders?.viewDetails || "Detayları Gör"}
                     </ActionButton>
-                    <DeleteButton onClick={() => handleDeleteOrder(order.id)}>
+                    <DeleteButton onClick={() => handleDeleteOrder(order._id)}>
                       {texts?.orders?.deleteOrder || "❌ Sil"}
                     </DeleteButton>
                   </Td>

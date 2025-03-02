@@ -14,6 +14,12 @@ const generateInvoicePDF = (invoiceData, company) => {
     return;
   }
 
+  // ✅ Eksik verileri tamamla
+  const orderId = invoiceData.order?._id || invoiceData.order?.id || "Fehlende Bestellnummer";
+  const subtotal = (invoiceData.totalAmount / 1.19).toFixed(2);
+  const vatAmount = ((invoiceData.totalAmount * 0.19) / 1.19).toFixed(2);
+  const shippingCost = invoiceData.shippingCost !== undefined ? invoiceData.shippingCost.toFixed(2) : "0.00";
+
   const doc = new jsPDF({ unit: "mm", format: "a4" });
 
   // ✅ LOGO & Şirket Bilgileri
@@ -33,9 +39,9 @@ const generateInvoicePDF = (invoiceData, company) => {
   doc.setFont("helvetica", "bold");
   doc.text("Rechnung an:", 20, 50);
   doc.setFont("helvetica", "normal");
-  doc.text(`${safeText(invoiceData.userName)}`, 20, 56);
-  doc.text(`${safeText(invoiceData.userAddress)}`, 20, 62);
-  doc.text(`E-Mail: ${safeText(invoiceData.userEmail)}`, 20, 68);
+  doc.text(`${safeText(invoiceData.user?.name)}`, 20, 56);
+  doc.text(`${safeText(invoiceData.user?.address)}`, 20, 62);
+  doc.text(`E-Mail: ${safeText(invoiceData.user?.email)}`, 20, 68);
 
   // ✅ FATURA BAŞLIĞI
   doc.setFont("helvetica", "bold");
@@ -45,24 +51,32 @@ const generateInvoicePDF = (invoiceData, company) => {
   doc.setFont("helvetica", "normal");
   doc.text("Vielen Dank für Ihren Einkauf. Hier ist Ihre Rechnung:", 20, 86);
 
+  let startY = 92;
+
   // ✅ Fatura Detayları
   autoTable(doc, {
-    startY: 92,
+    startY,
     head: [["Rechnungsnr.", "Bestellnr.", "Datum"]],
-    body: [[safeText(invoiceData.invoiceNumber), safeText(invoiceData.orderId), safeText(invoiceData.issuedAt)]],
+    body: [[
+      safeText(invoiceData.invoiceNumber), 
+      orderId, // ✅ Sipariş numarası artık eksik değil
+      safeText(invoiceData.issuedAt)
+    ]],
     theme: "grid",
     styles: { fontSize: 10, cellPadding: 4 },
     headStyles: { fillColor: [230, 230, 230], textColor: "#000" },
     margin: { left: 20, right: 20 },
   });
 
+  startY = doc.lastAutoTable.finalY + 10;
+
   // ✅ Ürün Tablosu
   autoTable(doc, {
-    startY: doc.autoTable.previous.finalY + 10,
+    startY,
     head: [["Pos.", "Bezeichnung", "Menge", "Einzel €", "Gesamt €"]],
     body: invoiceData.items.map((product, index) => [
       index + 1,
-      safeText(product.title),
+      safeText(product.name || product.title || "Produktname fehlt"), // ✅ Ürün adı eksikse artık eksik değil
       `${safeText(product.quantity)} Stück`,
       `${parseFloat(product.unitPrice).toFixed(2)} ${euro}`,
       `${(parseFloat(product.unitPrice) * parseFloat(product.quantity)).toFixed(2)} ${euro}`,
@@ -72,13 +86,15 @@ const generateInvoicePDF = (invoiceData, company) => {
     margin: { left: 20, right: 20 },
   });
 
+  startY = doc.lastAutoTable.finalY + 10;
+
   // ✅ TOPLAMLAR
   autoTable(doc, {
-    startY: doc.autoTable.previous.finalY + 10,
+    startY,
     body: [
-      ["Summe Netto:", `${safeText(invoiceData.subtotal)} ${euro}`],
-      ["zzgl. 19% Umsatzsteuer:", `${safeText(invoiceData.vatAmount)} ${euro}`],
-      ["Versandkosten:", `${safeText(invoiceData.shippingCost)} ${euro}`],
+      ["Summe Netto:", `${subtotal} ${euro}`], // ✅ Net toplam hesaplandı
+      ["zzgl. 19% Umsatzsteuer:", `${vatAmount} ${euro}`], // ✅ KDV hesaplandı
+      ["Versandkosten:", `${shippingCost} ${euro}`], // ✅ Kargo ücreti çekildi
       [{ content: "Gesamtbetrag:", styles: { fontStyle: "bold" } }, `${safeText(invoiceData.totalAmount)} ${euro}`],
     ],
     theme: "plain",
