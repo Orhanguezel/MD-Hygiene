@@ -1,76 +1,59 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import API from "@/services/api"; // ✅ Merkezi API yapısı
+import API from "@/services/api";
 
-// 📌 Ürünleri API’den çekme
+// ✅ **Ürünleri API’den çekme**
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async (_, thunkAPI) => {
     try {
-      const response = await API.get("/products"); // ✅ Güncellenmiş endpoint
+      const response = await API.get("/products");
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Ürünler alınırken hata oluştu");
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Ürünler alınırken hata oluştu");
     }
   }
 );
 
-// ✅ Kategorileri Çekme
-export const fetchCategories = createAsyncThunk(
-  "products/fetchCategories",
-  async (_, thunkAPI) => {
-    try {
-      const response = await API.get("/products/categories"); // ✅ Güncellenmiş endpoint
-      return response.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Kategoriler alınırken hata oluştu");
-    }
-  }
-);
-
-// ✅ Ürün Ekleme
+// ✅ **Ürün Ekleme**
 export const addProduct = createAsyncThunk(
   "products/addProduct",
   async (productData, thunkAPI) => {
     try {
-      const response = await API.post("/products", productData, {
-        headers: { Authorization: `Bearer ${thunkAPI.getState().auth.token}` }, // ✅ Yetkilendirme eklendi
-      });
+      const formattedData = {
+        ...productData,
+        category: productData.category._id || productData.category, // ✅ `_id` varsa kullan, yoksa direkt ID gönder
+      };
 
+      const response = await API.post("/products", formattedData);
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Ürün eklenirken hata oluştu");
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Ürün eklenirken hata oluştu");
     }
   }
 );
 
-// ✅ Ürün Güncelleme
+// ✅ **Ürün Güncelleme**
 export const updateProduct = createAsyncThunk(
   "products/updateProduct",
   async ({ id, productData }, thunkAPI) => {
     try {
-      const response = await API.put(`/products/${id}`, productData, {
-        headers: { Authorization: `Bearer ${thunkAPI.getState().auth.token}` }, // ✅ Yetkilendirme eklendi
-      });
-
+      const response = await API.put(`/products/${id}`, productData);
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Ürün güncellenirken hata oluştu");
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Ürün güncellenirken hata oluştu");
     }
   }
 );
 
-// ✅ Ürün Silme
+// ✅ **Ürün Silme**
 export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
   async (id, thunkAPI) => {
     try {
-      await API.delete(`/products/${id}`, {
-        headers: { Authorization: `Bearer ${thunkAPI.getState().auth.token}` }, // ✅ Yetkilendirme eklendi
-      });
-
+      await API.delete(`/products/${id}`);
       return id;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Ürün silinirken hata oluştu");
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Ürün silinirken hata oluştu");
     }
   }
 );
@@ -80,19 +63,19 @@ const productSlice = createSlice({
   initialState: {
     products: [],
     filteredProducts: [],
-    categories: [],
-    selectedCategory: null,
+    selectedCategory: "all", // ✅ Varsayılan olarak "all" seçili
     loading: false,
     error: null,
   },
   reducers: {
-    // 📌 Kategoriye Göre Ürünleri Filtreleme
     filterByCategory: (state, action) => {
-      const categoryId = action.payload;
-      state.selectedCategory = categoryId;
-      state.filteredProducts = categoryId
-        ? state.products.filter((product) => product.category.id === categoryId)
-        : state.products;
+      state.selectedCategory = action.payload;
+
+      // ✅ Kategoriye göre filtreleme
+      state.filteredProducts =
+        action.payload === "all"
+          ? state.products
+          : state.products.filter((product) => product.category === action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -102,47 +85,38 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
+        console.log("📌 API’den Gelen Ürün Verisi:", action.payload); // ✅ Ürünlerde kategori var mı, kontrol et
+
         state.loading = false;
         state.products = action.payload;
-        state.filteredProducts = action.payload;
+        state.filteredProducts =
+          state.selectedCategory === "all"
+            ? action.payload
+            : action.payload.filter((product) => product.category === state.selectedCategory);
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || "Ürünler yüklenemedi.";
-      })
-      .addCase(fetchCategories.fulfilled, (state, action) => {
-        state.categories = action.payload;
-      })
-      .addCase(fetchCategories.rejected, (state, action) => {
-        state.error = action.payload || "Kategoriler yüklenemedi.";
-      })
-      .addCase(addProduct.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.error = action.payload;
       })
       .addCase(addProduct.fulfilled, (state, action) => {
         state.products.push(action.payload);
-        state.loading = false;
-      })
-      .addCase(addProduct.rejected, (state, action) => {
-        state.error = action.payload || "Ürün eklenemedi.";
-        state.loading = false;
+        if (state.selectedCategory === "all" || action.payload.category === state.selectedCategory) {
+          state.filteredProducts.push(action.payload);
+        }
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.products = state.products.map((product) =>
-          product.id === action.payload.id ? action.payload : product
+          product._id === action.payload._id ? action.payload : product
         );
-      })
-      .addCase(updateProduct.rejected, (state, action) => {
-        state.error = action.payload || "Ürün güncellenemedi.";
+
+        // ✅ Eğer güncellenen ürün seçili kategorideyse, filteredProducts’ı güncelle
+        state.filteredProducts = state.selectedCategory === "all"
+          ? state.products
+          : state.products.filter((product) => product.category === state.selectedCategory);
       })
       .addCase(deleteProduct.fulfilled, (state, action) => {
-        state.products = state.products.filter(
-          (product) => product.id !== action.payload
-        );
-      })
-      .addCase(deleteProduct.rejected, (state, action) => {
-        state.error = action.payload || "Ürün silinemedi.";
+        state.products = state.products.filter((product) => product._id !== action.payload);
+        state.filteredProducts = state.filteredProducts.filter((product) => product._id !== action.payload);
       });
   },
 });

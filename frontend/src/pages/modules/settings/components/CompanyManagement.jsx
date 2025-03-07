@@ -18,6 +18,7 @@ const CompanyManagement = () => {
     address: "",
     email: "",
     taxNumber: "",
+    handelsregisterNumber: "", // ✅ Ticaret Sicil Numarası eklendi
     bankIban: "",
     bankBic: "",
   });
@@ -60,6 +61,9 @@ const CompanyManagement = () => {
 
       <label>{texts.company.taxNumber}:</label>
       <FormInput type="text" name="taxNumber" value={companyData.taxNumber} onChange={handleInputChange} />
+
+      <label>{texts.company.handelsregisterNumber}:</label> {/* ✅ Yeni alan eklendi */}
+      <FormInput type="text" name="handelsregisterNumber" value={companyData.handelsregisterNumber} onChange={handleInputChange} />
 
       <label>{texts.company.bankIban}:</label>
       <FormInput type="text" name="bankIban" value={companyData.bankIban} onChange={handleInputChange} />

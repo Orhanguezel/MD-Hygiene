@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// ✅ **Sadece Canlı Sunucu için API Adresi**
+// ✅ **Canlı Backend API URL**
 const API_BASE_URL = "http://localhost:5010/api"; 
 
 const API = axios.create({
@@ -36,3 +36,4 @@ API.interceptors.response.use(
 );
 
 export default API;
+

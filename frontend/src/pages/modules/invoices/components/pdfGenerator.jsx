@@ -15,10 +15,10 @@ const generateInvoicePDF = (invoiceData, company) => {
   }
 
   // ✅ Eksik verileri tamamla
-  const orderId = invoiceData.order?._id || invoiceData.order?.id || "Fehlende Bestellnummer";
-  const subtotal = (invoiceData.totalAmount / 1.19).toFixed(2);
-  const vatAmount = ((invoiceData.totalAmount * 0.19) / 1.19).toFixed(2);
-  const shippingCost = invoiceData.shippingCost !== undefined ? invoiceData.shippingCost.toFixed(2) : "0.00";
+  const orderId = invoiceData.order?._id || invoiceData.order?.id || "Bestellnummer nicht verfügbar";
+  const subtotal = (parseFloat(invoiceData.totalAmount) / (1 + 0.19)).toFixed(2);
+  const vatAmount = (parseFloat(invoiceData.totalAmount) - subtotal).toFixed(2);
+  const shippingCost = invoiceData.shippingCost !== undefined ? parseFloat(invoiceData.shippingCost).toFixed(2) : "0.00";
 
   const doc = new jsPDF({ unit: "mm", format: "a4" });
 
@@ -59,7 +59,7 @@ const generateInvoicePDF = (invoiceData, company) => {
     head: [["Rechnungsnr.", "Bestellnr.", "Datum"]],
     body: [[
       safeText(invoiceData.invoiceNumber), 
-      orderId, // ✅ Sipariş numarası artık eksik değil
+      orderId,
       safeText(invoiceData.issuedAt)
     ]],
     theme: "grid",
@@ -76,7 +76,7 @@ const generateInvoicePDF = (invoiceData, company) => {
     head: [["Pos.", "Bezeichnung", "Menge", "Einzel €", "Gesamt €"]],
     body: invoiceData.items.map((product, index) => [
       index + 1,
-      safeText(product.name || product.title || "Produktname fehlt"), // ✅ Ürün adı eksikse artık eksik değil
+      safeText(product.name || product.title || "Unbekanntes Produkt"), // ✅ Ürün adı eksikse artık eksik değil
       `${safeText(product.quantity)} Stück`,
       `${parseFloat(product.unitPrice).toFixed(2)} ${euro}`,
       `${(parseFloat(product.unitPrice) * parseFloat(product.quantity)).toFixed(2)} ${euro}`,

@@ -5,8 +5,8 @@ const userSchema = new mongoose.Schema(
   {
     id: { type: String, unique: true, default: () => new mongoose.Types.ObjectId().toString() },
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    email: { type: String, required: true, unique: true, match: /.+\@.+\..+/ },
+    password: { type: String, required: true, select: false},
     role: { 
       type: String, 
       enum: ["admin", "user", "customer", "moderator", "staff"], 
@@ -31,8 +31,8 @@ const userSchema = new mongoose.Schema(
       },
     },
     orders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
-    profileImage: { type: String },
-    isActive: { type: Boolean, default: true }, // Kullanıcı aktif mi?
+    profileImage: { type: String, default: "https://via.placeholder.com/150" },
+    isActive: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

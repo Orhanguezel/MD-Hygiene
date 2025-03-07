@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { fetchProducts } from "@/features/products/productSlice";
+import { fetchCategories } from "@/features/categories/categorySlice"; // ✅ Kategoriler eklendi
 import { useTheme } from "@/features/theme/useTheme";
 import { useLanguage } from "@/features/language/useLanguage";
-import { Outlet } from "react-router-dom"; // 📌 Outlet ekledik
+import { Outlet } from "react-router-dom";
 import { ProductContainer, ContentContainer, PageTitle } from "./styles/productStyles";
 import ProductSidebar from "./components/ProductSidebar";
 
@@ -14,17 +15,15 @@ const Products = () => {
 
   useEffect(() => {
     dispatch(fetchProducts());
+    dispatch(fetchCategories()); // ✅ Kategoriler de çekiliyor
   }, [dispatch]);
 
   return (
     <ProductContainer theme={theme}>
-      {/* ✅ Sidebar her zaman burada olacak */}
       <ProductSidebar />
-
-      {/* ✅ İçerik alanı değişecek */}
       <ContentContainer theme={theme}>
         <PageTitle>{texts?.products?.title || "Ürün Yönetimi"}</PageTitle>
-        <Outlet /> {/* 📌 Dinamik içerik burada gösterilecek */}
+        <Outlet />
       </ContentContainer>
     </ProductContainer>
   );

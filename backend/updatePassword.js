@@ -1,12 +1,25 @@
 import bcrypt from "bcryptjs"; // ✅ bcryptjs kullan
 import mongoose from "mongoose";
 import User from "./models/User.js"; // ✅ Kullanıcı modelini içe aktar
+import dotenv from "dotenv";
+dotenv.config();
+
+const MONGO_URL = process.env.MONGO_URI;
 
 // MongoDB'ye bağlan
 mongoose
-  .connect("mongodb://localhost:27017/md-hygiene")
-  .then(() => console.log("✅ MongoDB bağlantısı başarılı!"))
-  .catch((error) => console.error("❌ MongoDB bağlantı hatası:", error));
+  .connect(MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("✅ MongoDB'ye bağlanıldı.");
+  }
+  )
+  .catch((error) => {
+    console.error("❌ MongoDB bağlantısı başarısız oldu:", error);
+  }
+  );
 
 async function updatePassword() {
   try {

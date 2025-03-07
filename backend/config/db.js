@@ -6,9 +6,8 @@ import { fileURLToPath } from "url";
 // ✅ `.env` dosyasının tam yolunu belirle
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const envPath = path.resolve(__dirname, "../.env");  // ✅ `../.env` ile ana dizine bakıyoruz!
+const envPath = path.resolve(__dirname, "../.env"); 
 
-// ✅ `.env` dosyasını yükle
 dotenv.config({ path: envPath });
 
 console.log(`🛠️ ENV Dosyası Yüklendi: ${envPath}`);
@@ -17,20 +16,20 @@ console.log(`🛠️ ENV Dosyası Yüklendi: ${envPath}`);
 const { MONGO_URI } = process.env;
 
 if (!MONGO_URI) {
-  console.error("❌ MONGO_URI tanımlı değil! `.env` dosyanızı kontrol edin.");
+  console.error("❌ HATA: MONGO_URI tanımlı değil! `.env` dosyanızı kontrol edin.");
   process.exit(1);
 }
 
+// ✅ Deprecation Uyarılarını Kaldır
+mongoose.set("strictQuery", false);
+
 const connectDB = async () => {
   try {
-    console.log(`⏳ MongoDB'ye bağlanılıyor: ${MONGO_URI}`);
-    const conn = await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000,
-    });
+    console.log(`⏳ MongoDB'ye bağlanılıyor...`);
 
-    console.log(`✅ MongoDB Bağlandı: ${conn.connection.host}`);
+    const conn = await mongoose.connect(MONGO_URI);
+    console.log(`✅ MongoDB Bağlantısı Başarılı: ${conn.connection.host}`);
+
     return conn;
   } catch (error) {
     console.error(`❌ MongoDB Bağlantı Hatası: ${error.message}`);

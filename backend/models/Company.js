@@ -4,6 +4,7 @@ const companySchema = new mongoose.Schema(
   {
     companyName: { type: String, required: true, unique: true },
     taxNumber: { type: String, required: true },
+    handelsregisterNumber: { type: String, required: false }, // ✅ Ticaret Sicil Numarası eklendi
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true },
     address: {
@@ -22,3 +23,4 @@ const companySchema = new mongoose.Schema(
 );
 
 export default mongoose.model("Company", companySchema);
+

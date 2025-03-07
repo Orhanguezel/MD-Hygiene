@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  fetchProducts,
-  deleteProduct
-} from "@/features/products/productSlice";
+import { fetchProducts, deleteProduct } from "@/features/products/productSlice";
 import { useLanguage } from "@/features/language/useLanguage";
 import { toast } from "react-toastify";
 import {
@@ -19,6 +16,7 @@ import {
 const ProductList = () => {
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.product);
+  const { categories } = useSelector((state) => state.category);
   const { texts } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState("all");
 
@@ -28,23 +26,27 @@ const ProductList = () => {
 
   const handleDelete = (id) => {
     dispatch(deleteProduct(id));
-    toast.warn("🗑️ Ürün silindi!");
+    toast.warn(texts?.products?.deleteSuccess || "🗑️ Ürün başarıyla silindi!");
   };
 
   const handleCategorySelect = (categoryId) => {
     setSelectedCategory(categoryId);
   };
 
+  console.log("📌 Seçilen Kategori ID:", selectedCategory);
+  console.log("📌 Ürünlerin Kategorileri:", products.map(p => p.category));
+  console.log("📌 Kategori Listesi:", categories.map(c => c._id));
+
+  // ✅ Ürünlerin kategoriye göre filtrelenmesi düzeltildi!
   const filteredProducts =
     selectedCategory === "all"
       ? products
-      : products.filter((product) => product.category?.id === selectedCategory);
+      : products.filter((product) => product.category?._id?.toString() === selectedCategory);
 
   return (
     <ListContainer>
       <h2>{texts?.products?.list || "Ürün Listesi"}</h2>
 
-      {/* 📌 Kategori Butonları */}
       <CategoryButtonContainer>
         <CategoryButton
           $isActive={selectedCategory === "all"}
@@ -53,49 +55,35 @@ const ProductList = () => {
           📌 {texts?.products?.allCategories || "Tüm Kategoriler"}
         </CategoryButton>
 
-        {products
-          .map((product) => product.category)
-          .filter(
-            (category, index, self) =>
-              category && self.findIndex((c) => c.id === category.id) === index
-          )
-          .map((category) => (
-            <CategoryButton
-              key={category.id}
-              $isActive={selectedCategory === category.id}
-              onClick={() => handleCategorySelect(category.id)}
-            >
-              {category.name}
-            </CategoryButton>
-          ))}
+        {categories.map((category) => (
+          <CategoryButton
+            key={category._id}
+            $isActive={selectedCategory === category._id}
+            onClick={() => handleCategorySelect(category._id)}
+          >
+            {category.name}
+          </CategoryButton>
+        ))}
       </CategoryButtonContainer>
 
       {loading && <p>🔄 {texts?.products?.loading || "Yükleniyor..."}</p>}
-      {error && (
-        <p style={{ color: "red" }}>
-          {texts?.products?.error || "Ürünleri yüklerken hata oluştu."}
-        </p>
-      )}
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {filteredProducts.map((product) => (
-        <ProductItem key={product.id}>
-          <ProductImage
-            src={product.images?.[0] || "/placeholder.jpg"}
-            alt={product.title}
-          />
-          <ProductDetails>
-            <h5>{product.title}</h5>
-            <p>{product.price} ₺</p>
-            <p>
-              {texts?.products?.stock || "Stok"}:{" "}
-              {product.stock || "Bilinmiyor"}
-            </p>
-          </ProductDetails>
-          <DeleteButton onClick={() => handleDelete(product.id)}>
-            🗑️
-          </DeleteButton>
-        </ProductItem>
-      ))}
+      {filteredProducts.length === 0 ? (
+        <p>{texts?.products?.noProducts || "Bu kategoride ürün bulunmamaktadır."}</p>
+      ) : (
+        filteredProducts.map((product) => (
+          <ProductItem key={product._id}>
+            <ProductImage src={product.images?.[0] || "/placeholder.jpg"} alt={product.title} />
+            <ProductDetails>
+              <h5>{product.title}</h5>
+              <p>{product.price} ₺</p>
+              <p>{texts?.products?.stock || "Stok"}: {product.stock}</p>
+            </ProductDetails>
+            <DeleteButton onClick={() => handleDelete(product._id)}>🗑️</DeleteButton>
+          </ProductItem>
+        ))
+      )}
     </ListContainer>
   );
 };

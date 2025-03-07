@@ -1,75 +1,73 @@
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchInvoices } from "@/features/invoices/invoicesSlice";
-import { useLanguage } from "@/features/language/useLanguage";
-import { useTheme } from "@/features/theme/useTheme";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import {
   InvoicesContainer,
   InvoicesTable,
   Th,
   Td,
-  StatusBadge,
   ActionButton,
 } from "./styles/invoicesStyles";
+import { toast } from "react-toastify";
 
 const Invoices = () => {
   const dispatch = useDispatch();
-  const { invoices, status, error } = useSelector((state) => state.invoices);
-  const { texts } = useLanguage();
-  const { theme } = useTheme();
+  const navigate = useNavigate();
 
+  const invoices = useSelector((state) => state.invoices.invoices) || [];
+  const status = useSelector((state) => state.invoices.status);
+  const error = useSelector((state) => state.invoices.error);
+
+  const [localInvoices, setLocalInvoices] = useState([]); // ✅ Lokal state tanımlandı
+
+  // ✅ Faturaları sadece bileşen mount edildiğinde getir
   useEffect(() => {
-    dispatch(fetchInvoices()); // ✅ API'den faturaları getir
+    dispatch(fetchInvoices()).then((response) => {
+      if (response.payload) {
+        setLocalInvoices(response.payload); // ✅ useEffect içinde state güncellemesi yapıldı
+      }
+    });
   }, [dispatch]);
 
-  if (status === "loading") return <p>📦 {texts?.invoices?.loading || "Faturalar yükleniyor..."}</p>;
-  if (status === "failed") {
-    toast.error(texts?.invoices?.error || "🚨 Bir hata oluştu!");
-    return <p>{error}</p>;
-  }
+  if (status === "loading") return <p>📄 Faturalar yükleniyor...</p>;
+  if (status === "failed") return <p>🚨 Hata: {error}</p>;
 
   return (
-    <InvoicesContainer theme={theme}>
-      <h1>{texts?.invoices?.title || "Faturalar"}</h1>
-
-      {invoices.length === 0 ? (
-        <p>{texts?.invoices?.noInvoices || "Henüz fatura yok."}</p>
-      ) : (
-        <InvoicesTable theme={theme}>
-          <thead>
-            <tr>
-              <Th>{texts?.invoices?.invoiceNumber || "Fatura No"}</Th>
-              <Th>{texts?.invoices?.customer || "Müşteri"}</Th>
-              <Th>{texts?.invoices?.date || "Tarih"}</Th>
-              <Th>{texts?.invoices?.amount || "Tutar"}</Th>
-              <Th>{texts?.invoices?.status || "Durum"}</Th>
-              <Th>{texts?.invoices?.actions || "İşlemler"}</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoices.map((invoice) => (
-              <tr key={invoice._id}> {/* ✅ `invoice.id` yerine `invoice._id` kullanıldı */}
+    <InvoicesContainer>
+      <h1>📑 Fatura Listesi</h1>
+      <InvoicesTable>
+        <thead>
+          <tr>
+            <Th>Fatura No</Th>
+            <Th>Müşteri</Th>
+            <Th>Tarih</Th>
+            <Th>Toplam Tutar</Th>
+            <Th>İşlemler</Th>
+          </tr>
+        </thead>
+        <tbody>
+          {localInvoices.length > 0 ? (
+            localInvoices.map((invoice) => (
+              <tr key={invoice._id}>
                 <Td>{invoice.invoiceNumber}</Td>
-                <Td>{invoice.userName || "Bilinmiyor"}</Td>
+                <Td>{invoice.user?.name || "Bilinmiyor"}</Td>
                 <Td>{new Date(invoice.issuedAt).toLocaleDateString()}</Td>
-                <Td>€{Number(invoice.totalAmount || 0).toFixed(2)}</Td>
+                <Td>{invoice.totalAmount.toFixed(2)} €</Td>
                 <Td>
-                  <StatusBadge theme={theme} $status={invoice.status}>
-                    {texts?.invoices?.[invoice.status] || invoice.status}
-                  </StatusBadge>
-                </Td>
-                <Td>
-                  <Link to={`/invoices/${invoice._id}`}> {/* ✅ Hata buradaydı */}
-                    <ActionButton theme={theme}>🔍 {texts?.invoices?.viewDetails || "Detayları Gör"}</ActionButton>
-                  </Link>
+                  <ActionButton onClick={() => navigate(`/invoices/${invoice._id}`)}>
+                    📜 Detaylar
+                  </ActionButton>
                 </Td>
               </tr>
-            ))}
-          </tbody>
-        </InvoicesTable>
-      )}
+            ))
+          ) : (
+            <tr>
+              <Td colSpan="5">Henüz fatura yok.</Td>
+            </tr>
+          )}
+        </tbody>
+      </InvoicesTable>
     </InvoicesContainer>
   );
 };

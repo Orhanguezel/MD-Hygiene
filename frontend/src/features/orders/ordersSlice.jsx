@@ -1,10 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "@/services/api";
+import { createInvoiceFromOrder } from "@/features/invoices/invoicesSlice"; // ✅ Fatura oluşturma import edildi
 
 const initialState = {
   orders: [],
   userOrders: [],
   selectedOrder: null,
+  invoices: [], // ✅ Redux Store'da faturalar için alan eklendi
   status: "idle",
   error: null,
 };
@@ -47,32 +49,28 @@ export const fetchUserOrders = createAsyncThunk("orders/fetchUserOrders", async 
 });
 
 // ✏️ **Sipariş Güncelleme (Admin)**
-export const updateOrder = createAsyncThunk("orders/updateOrder", async ({ orderId, status }, { rejectWithValue, dispatch }) => {
-  try {
-    console.log(`📌 API Çağrısı: /orders/${orderId}/status - Yeni Durum: ${status}`);
-    const response = await API.put(`/orders/${orderId}/status`, { status });
+export const updateOrder = createAsyncThunk(
+  "orders/updateOrder",
+  async ({ orderId, status }, { rejectWithValue, dispatch }) => {
+    try {
+      console.log(`📌 API Çağrısı: /orders/${orderId}/status - Yeni Durum: ${status}`);
+      const response = await API.put(`/orders/${orderId}/status`, { status });
 
-    dispatch(fetchOrderById(orderId)); // ✅ Güncellenen siparişi Redux Store’a çek
-    dispatch(fetchOrders()); // ✅ Sipariş listesini de güncelle
+      // ✅ Eğer sipariş "shipped" olduysa fatura oluşturma işlemi tetiklenmeli
+      if (status === "shipped") {
+        console.log("🚀 Sipariş kargoya verildi, fatura oluşturuluyor...");
+        await dispatch(createInvoiceFromOrder(response.data)).unwrap();
+      }
 
-    return response.data;
-  } catch (error) {
-    console.error("🚨 Sipariş güncellenemedi!", error);
-    return rejectWithValue(error.response?.data || "🚨 Sipariş güncellenemedi!");
+      await dispatch(fetchOrderById(orderId)).unwrap();
+      await dispatch(fetchOrders()).unwrap();
+      return response.data;
+    } catch (error) {
+      console.error("🚨 Sipariş güncellenemedi!", error);
+      return rejectWithValue(error.response?.data || "🚨 Sipariş güncellenemedi!");
+    }
   }
-});
-
-
-// ❌ **Siparişi Sil (Admin)**
-export const deleteOrder = createAsyncThunk("orders/deleteOrder", async (orderId, { rejectWithValue }) => {
-  try {
-    await API.delete(`/orders/${orderId}`);
-    return orderId;
-  } catch (error) {
-    console.error("🚨 Sipariş silinemedi!", error);
-    return rejectWithValue(error.response?.data || "🚨 Sipariş silinemedi!");
-  }
-});
+);
 
 // ➕ **Yeni Sipariş Oluştur (Checkout)**
 export const addOrder = createAsyncThunk("orders/addOrder", async (_, { getState, rejectWithValue }) => {
@@ -111,10 +109,21 @@ export const addOrder = createAsyncThunk("orders/addOrder", async (_, { getState
     const response = await API.post("/orders", newOrder);
     return response.data;
   } catch (error) {
-    console.error("🚨 Sipariş oluşturulamadı!", error);
     return rejectWithValue(error.response?.data || "🚨 Sipariş oluşturulamadı!");
   }
 });
+
+export const deleteOrder = createAsyncThunk("orders/deleteOrder", async (orderId, { rejectWithValue }) => {
+  try {
+    if (!orderId) return rejectWithValue("🚨 Sipariş ID eksik!");
+    console.log(`📌 API Çağrısı: /orders/${orderId}`);
+    const response = await API.delete(`/orders/${orderId}`);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || "🚨 Sipariş silinemedi!");
+  }
+});
+
 
 // ✅ **Redux Slice Tanımlaması**
 const ordersSlice = createSlice({
@@ -153,11 +162,29 @@ const ordersSlice = createSlice({
           state.orders[index] = action.payload;
         }
       })
-      .addCase(deleteOrder.fulfilled, (state, action) => {
-        state.orders = state.orders.filter(order => order._id !== action.payload);
+      .addCase(addOrder.pending, (state) => {
+        state.status = "loading";
       })
       .addCase(addOrder.fulfilled, (state, action) => {
         state.orders.push(action.payload);
+      })
+      .addCase(addOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(deleteOrder.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(deleteOrder.fulfilled, (state, action) => {
+        state.orders = state.orders.filter((order) => order._id !== action.payload._id);
+      })
+      .addCase(deleteOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(createInvoiceFromOrder.fulfilled, (state, action) => {
+        console.log("✅ Fatura başarıyla oluşturuldu:", action.payload);
+        state.invoices.push(action.payload);
       })
       .addMatcher(
         (action) => action.type.endsWith("/rejected"),

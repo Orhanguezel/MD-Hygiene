@@ -1,0 +1,23 @@
+[
+    {
+      "_id": "65c9ff7c95cf7cddcd3c6bd1",
+      "name": "Electronics",
+      "image": "https://i.imgur.com/ZANVnHE.jpeg"
+    },
+    {
+      "_id": "65c9ff7c95cf7cddcd3c6bd2",
+      "name": "Furniture",
+      "image": "https://i.imgur.com/Qphac99.jpeg"
+    },
+    {
+      "_id": "65c9ff7c95cf7cddcd3c6bd3",
+      "name": "Shoes",
+      "image": "https://i.imgur.com/qNOjJje.jpeg"
+    },
+    {
+      "_id": "65c9ff7c95cf7cddcd3c6bd4",
+      "name": "Miscellaneous",
+      "image": "https://i.imgur.com/BG8J0Fj.jpg"
+    }
+  ]
+  

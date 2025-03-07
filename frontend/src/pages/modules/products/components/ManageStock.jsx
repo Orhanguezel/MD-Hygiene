@@ -4,7 +4,14 @@ import { updateProduct } from "@/features/products/productSlice";
 import { useLanguage } from "@/features/language/useLanguage";
 import { useTheme } from "@/features/theme/useTheme";
 import { toast } from "react-toastify";
-import { ListContainer, ProductItem, ProductImage, ProductDetails, FormInput, SubmitButton } from "../styles/productStyles";
+import { 
+  ListContainer, 
+  ProductItem, 
+  ProductImage, 
+  ProductDetails, 
+  FormInput, 
+  SubmitButton 
+} from "../styles/productStyles";
 
 const ManageStock = () => {
   const dispatch = useDispatch();
@@ -13,26 +20,36 @@ const ManageStock = () => {
   const { theme } = useTheme();
   const [updatedProducts, setUpdatedProducts] = useState([]);
 
+  // ✅ Stok yönetimi için ürün listesini güncelle
   useEffect(() => {
-    setUpdatedProducts(products.map(product => ({
-      ...product,
-      newPrice: product.price,
-      newStock: product.stock,
-    })));
+    if (products?.length) {
+      setUpdatedProducts(products.map(product => ({
+        ...product,
+        newPrice: product.price,
+        newStock: product.stock,
+      })));
+    }
   }, [products]);
 
+  // ✅ Input değişikliklerini yönet
   const handleChange = (id, field, value) => {
-    setUpdatedProducts(updatedProducts.map(product =>
-      product.id === id ? { ...product, [field]: value } : product
-    ));
+    setUpdatedProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product._id === id ? { ...product, [field]: value } : product
+      )
+    );
   };
 
+  // ✅ Güncellenen veriyi kaydet
   const handleSave = (product) => {
     dispatch(updateProduct({ 
-      id: product.id, 
-      price: product.newPrice, 
-      stock: product.newStock 
+      id: product._id, 
+      productData: {
+        price: product.newPrice, 
+        stock: product.newStock 
+      } 
     }));
+
     toast.success(`✅ ${product.title} ${texts?.products?.updated || "güncellendi"}!`);
   };
 
@@ -40,18 +57,37 @@ const ManageStock = () => {
     <ListContainer>
       <h2>{texts?.products?.manageStock || "📦 Fiyat ve Stok Yönetimi"}</h2>
 
-      {updatedProducts.map((product) => (
-        <ProductItem key={product.id}>
-          <ProductImage src={product.images?.[0] || "/placeholder.jpg"} alt={product.title} />
-          <ProductDetails>
-            <label>{texts?.products?.price || "Fiyat"}:</label>
-            <FormInput theme={theme} type="number" value={product.newPrice} onChange={(e) => handleChange(product.id, "newPrice", e.target.value)} />
-            <label>{texts?.products?.stock || "Stok"}:</label>
-            <FormInput theme={theme} type="number" value={product.newStock} onChange={(e) => handleChange(product.id, "newStock", e.target.value)} />
-          </ProductDetails>
-          <SubmitButton theme={theme} onClick={() => handleSave(product)}>💾 {texts?.products?.save || "Kaydet"}</SubmitButton>
-        </ProductItem>
-      ))}
+      {updatedProducts.length === 0 ? (
+        <p>{texts?.products?.noProducts || "Ürün bulunamadı."}</p>
+      ) : (
+        updatedProducts.map((product) => (
+          <ProductItem key={product._id}> {/* ✅ Benzersiz key hatası düzeltildi */}
+            <ProductImage 
+              src={product.images?.[0] || "/placeholder.jpg"} 
+              alt={product.title} 
+            />
+            <ProductDetails>
+              <label>{texts?.products?.price || "Fiyat"}:</label>
+              <FormInput 
+                theme={theme} 
+                type="number" 
+                value={product.newPrice} 
+                onChange={(e) => handleChange(product._id, "newPrice", e.target.value)} 
+              />
+              <label>{texts?.products?.stock || "Stok"}:</label>
+              <FormInput 
+                theme={theme} 
+                type="number" 
+                value={product.newStock} 
+                onChange={(e) => handleChange(product._id, "newStock", e.target.value)} 
+              />
+            </ProductDetails>
+            <SubmitButton theme={theme} onClick={() => handleSave(product)}>
+              💾 {texts?.products?.save || "Kaydet"}
+            </SubmitButton>
+          </ProductItem>
+        ))
+      )}
     </ListContainer>
   );
 };

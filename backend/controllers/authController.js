@@ -1,7 +1,6 @@
 import User from "../models/User.js";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import asyncHandler from "express-async-handler"; // ✅ asyncHandler import edildi
+import asyncHandler from "express-async-handler";
 
 // ✅ JWT Token oluşturma fonksiyonu
 const generateToken = (user) => {
@@ -16,7 +15,6 @@ const generateToken = (user) => {
 export const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, role = "user", phone, addresses } = req.body;
 
-  // ✅ Role kontrolü
   const validRoles = ["admin", "user", "customer", "moderator", "staff"];
   if (!validRoles.includes(role)) {
     res.status(400);
@@ -29,12 +27,10 @@ export const registerUser = asyncHandler(async (req, res) => {
     throw new Error("Bu e-posta zaten kayıtlı.");
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-
   const user = await User.create({
     name,
     email,
-    password: hashedPassword,
+    password,
     role,
     phone,
     addresses,
@@ -59,23 +55,9 @@ export const registerUser = asyncHandler(async (req, res) => {
 export const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  console.log("📩 Gelen Email:", email);
-  console.log("🔑 Gelen Şifre:", password);
+  const user = await User.findOne({ email }).select("+password");
 
-  const user = await User.findOne({ email });
-  if (!user) {
-    console.log("❌ Kullanıcı bulunamadı!");
-    res.status(401);
-    throw new Error("Geçersiz kimlik bilgileri!");
-  }
-
-  console.log("✅ Kullanıcı bulundu:", user);
-
-  const isMatch = await bcrypt.compare(password, user.password);
-  console.log("🔍 Şifre Doğrulama Sonucu:", isMatch);
-
-  if (!isMatch) {
-    console.log("❌ Şifre eşleşmedi!");
+  if (!user || !(await user.comparePassword(password))) {
     res.status(401);
     throw new Error("Geçersiz kimlik bilgileri!");
   }
@@ -94,8 +76,6 @@ export const loginUser = asyncHandler(async (req, res) => {
     },
   });
 });
-
-
 
 // ✅ Kullanıcı Profili Getirme
 export const getUserProfile = asyncHandler(async (req, res) => {
@@ -156,14 +136,8 @@ export const changePassword = asyncHandler(async (req, res) => {
     throw new Error("Mevcut ve yeni şifre gereklidir.");
   }
 
-  const user = await User.findById(req.user.id);
-  if (!user) {
-    res.status(404);
-    throw new Error("Kullanıcı bulunamadı.");
-  }
-
-  const isMatch = await bcrypt.compare(currentPassword, user.password);
-  if (!isMatch) {
+  const user = await User.findById(req.user.id).select("+password");
+  if (!user || !(await user.comparePassword(currentPassword))) {
     res.status(401);
     throw new Error("Geçersiz mevcut şifre.");
   }
@@ -173,7 +147,7 @@ export const changePassword = asyncHandler(async (req, res) => {
     throw new Error("Yeni şifre eski şifreyle aynı olamaz.");
   }
 
-  user.password = await bcrypt.hash(newPassword, 10);
+  user.password = newPassword;
   await user.save();
 
   res.status(200).json({ success: true, message: "Şifre başarıyla değiştirildi." });
@@ -182,18 +156,14 @@ export const changePassword = asyncHandler(async (req, res) => {
 // ✅ Kullanıcı Rol Güncelleme (Admin Yetkisi Gerektirir)
 export const updateUserRole = asyncHandler(async (req, res) => {
   const { role } = req.body;
-  const validRoles = ["admin", "user", "moderator"];
+  const validRoles = ["admin", "user", "moderator", "customer", "staff"];
 
   if (!validRoles.includes(role)) {
     res.status(400);
     throw new Error("Geçersiz rol.");
   }
 
-  const user = await User.findByIdAndUpdate(
-    req.params.id,
-    { role },
-    { new: true, runValidators: true }
-  );
+  const user = await User.findByIdAndUpdate(req.params.id, { role }, { new: true, runValidators: true });
 
   if (!user) {
     res.status(404);

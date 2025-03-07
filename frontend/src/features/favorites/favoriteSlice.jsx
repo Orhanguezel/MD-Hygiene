@@ -1,130 +1,102 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "@/services/api";
 import { toast } from "react-toastify";
+import { useLanguage } from "@/features/language/useLanguage";
 
 // ✅ Kullanıcının favorilerini çekme
 export const fetchFavorites = createAsyncThunk(
   "favorites/fetchFavorites",
   async (_, thunkAPI) => {
     try {
-      const state = thunkAPI.getState();
-      const userId = state.auth.user?.id; // ✅ Giriş yapan kullanıcının ID'sini al
-
-      if (!userId) {
-        return thunkAPI.rejectWithValue("Giriş yapmış bir kullanıcı bulunamadı!");
-      }
-
-      const response = await API.get(`/favorites?userId=${userId}`); // ✅ Sadece kullanıcının favorilerini getir
-      return response.data;
+      const response = await API.get("/favorites/user"); // ✅ Kullanıcı JWT'den çekildiği için userId gerekmez
+      return response.data; // ✅ Backend sadece productId listesi döndürüyor
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Favoriler yüklenemedi!");
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Favoriler yüklenemedi!");
     }
   }
 );
 
-
-// 📌 Favorilere Ürün Ekleme
+// 📌 Favorilere ürün ekleme
 export const addFavorite = createAsyncThunk(
-  "favorite/addFavorite",
-  async (productId, thunkAPI) => {
+  "favorites/addFavorite",
+  async (product, thunkAPI) => {
     try {
-      await API.post("/favorites", { productId });
-      return productId;
+      await API.post("/favorites", { productId: product.id });
+      toast.success(`${product.title} favorilere eklendi!`); // ✅ Kullanıcıya bildirim göster
+      return product.id;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Favori eklenirken hata oluştu");
+      toast.error("Favori eklenirken hata oluştu!");
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Favori eklenemedi!");
     }
   }
 );
 
-// 📌 Favoriden Ürün Silme
+// 📌 Favoriden ürün kaldırma
 export const removeFavorite = createAsyncThunk(
-  "favorite/removeFavorite",
-  async (productId, thunkAPI) => {
+  "favorites/removeFavorite",
+  async (product, thunkAPI) => {
     try {
-      const response = await API.get("/favorites");
-      const favorite = response.data.find((fav) => fav.productId === productId);
-
-      if (favorite) {
-        await API.delete(`/favorites/${favorite.id}`);
-        return productId;
-      }
+      await API.delete(`/favorites/remove/${product.id}`);
+      toast.info(`${product.title} favorilerden kaldırıldı!`); // ✅ Kullanıcıya bildirim göster
+      return product.id;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Favori silinirken hata oluştu");
+      toast.error("Favori silinirken hata oluştu!");
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Favori silinemedi!");
     }
   }
 );
 
-// ✅ Favori ekleme/silme işlemi (userId ile)
+// 📌 Favori ekleme/kaldırma (toggle)
 export const toggleFavorite = createAsyncThunk(
   "favorites/toggleFavorite",
-  async (productId, thunkAPI) => {
+  async (product, thunkAPI) => {
     try {
       const state = thunkAPI.getState();
-      const userId = state.auth.user?.id; // ✅ Giriş yapan kullanıcıyı al
+      const isFavorite = state.favorite.favorites.includes(product.id);
 
-      if (!userId) {
-        return thunkAPI.rejectWithValue("Giriş yapmış bir kullanıcı bulunamadı!");
-      }
-
-      // 📌 Mevcut favorileri kontrol et
-      const response = await API.get(`/favorites?userId=${userId}&productId=${productId}`);
-      const existingFavorite = response.data[0];
-
-      if (existingFavorite) {
-        // ❌ Eğer favoride varsa, sil
-        await API.delete(`/favorites/${existingFavorite.id}`);
-        return { productId, removed: true };
+      if (isFavorite) {
+        await API.delete(`/favorites/remove/${product.id}`);
+        toast.info(`${product.title} favorilerden kaldırıldı!`);
+        return { productId: product.id, removed: true };
       } else {
-        // ✅ Favoriye ekle
-        const newFavorite = { userId, productId };
-        const addResponse = await API.post("/favorites", newFavorite);
-        return addResponse.data;
+        await API.post("/favorites", { productId: product.id });
+        toast.success(`${product.title} favorilere eklendi!`);
+        return { productId: product.id, removed: false };
       }
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Favori işlemi başarısız!");
+      toast.error("Favori işlemi başarısız!");
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Favori işlemi başarısız!");
     }
   }
 );
-
-
 
 const favoriteSlice = createSlice({
   name: "favorite",
   initialState: {
     favorites: [],
     status: "idle",
-    loading: false,
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-    .addCase(fetchFavorites.pending, (state) => {
-      state.status = "loading";
-    })
-    .addCase(fetchFavorites.fulfilled, (state, action) => {
-      state.status = "succeeded";
-      state.favorites = action.payload.map((fav) => fav.productId); // ✅ Sadece productId'leri kaydet
-    })
-    .addCase(fetchFavorites.rejected, (state, action) => {
-      state.status = "failed";
-      state.error = action.payload;
-    })
-
+      .addCase(fetchFavorites.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchFavorites.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.favorites = action.payload; // ✅ Backend sadece `productId` listesi döndürüyor
+      })
+      .addCase(fetchFavorites.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
       .addCase(addFavorite.fulfilled, (state, action) => {
         state.favorites.push(action.payload);
       })
-      .addCase(addFavorite.rejected, (state, action) => {
-        state.error = action.payload;
-      })
-
       .addCase(removeFavorite.fulfilled, (state, action) => {
         state.favorites = state.favorites.filter((id) => id !== action.payload);
       })
-      .addCase(removeFavorite.rejected, (state, action) => {
-        state.error = action.payload;
-      })
-      
       .addCase(toggleFavorite.fulfilled, (state, action) => {
         if (action.payload.removed) {
           state.favorites = state.favorites.filter((id) => id !== action.payload.productId);

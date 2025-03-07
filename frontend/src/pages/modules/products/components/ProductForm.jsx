@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct, fetchProducts } from "@/features/products/productSlice";
+import { addProduct } from "@/features/products/productSlice";
+import { fetchCategories } from "@/features/categories/categorySlice"; // ✅ Kategorileri çek
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useLanguage } from "@/features/language/useLanguage";
@@ -10,7 +11,7 @@ import { FormContainer, FormInput, SubmitButton } from "../styles/productStyles"
 const ProductForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { products } = useSelector((state) => state.product);
+  const { categories, loading } = useSelector((state) => state.category);
   const { texts } = useLanguage();
   const { theme } = useTheme();
 
@@ -23,58 +24,32 @@ const ProductForm = () => {
   });
 
   useEffect(() => {
-    dispatch(fetchProducts()); // 📌 Ürünleri Redux Store'dan al (Kategorileri içeren)
+    dispatch(fetchCategories());
   }, [dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === "category") {
-      setProduct({ ...product, category: parseInt(value) }); // 📌 Kategori ID'sini integer olarak kaydet
-    } else if (name === "images") {
-      setProduct({ ...product, images: [value] }); // 📌 Resim URL'sini diziye çevir
-    } else {
-      setProduct({ ...product, [name]: value });
-    }
+    setProduct((prev) => ({
+      ...prev,
+      [name]: name === "images" ? value.split(",") : value,
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!product.title || !product.price || !product.category) {
-      toast.error(texts?.products?.error || "Lütfen tüm alanları doldurun!");
+      toast.error("⚠️ Lütfen tüm alanları doldurun!");
       return;
     }
 
-    const categoryObject = products
-      .map((p) => p.category)
-      .find((cat) => cat.id === parseInt(product.category)) || { id: 1, name: "Genel", image: "" };
-
-    const newProductData = {
-      ...product,
-      price: parseFloat(product.price),
-      stock: parseInt(product.stock),
-      category: categoryObject,
-      images: product.images.length > 0 ? product.images : ["/placeholder.jpg"],
-    };
-
-    console.log("📌 Gönderilecek Ürün:", newProductData); // 🔍 API'ye gönderilecek veriyi kontrol et
-
-    dispatch(addProduct(newProductData))
+    dispatch(addProduct(product))
       .unwrap()
       .then(() => {
-        toast.success(texts?.products?.addSuccess || "✅ Ürün başarıyla eklendi!");
-        navigate("/products"); // ✅ Listeye yönlendir
+        toast.success("✅ Ürün başarıyla eklendi!");
+        navigate("/products");
       })
-      .catch(() => toast.error(texts?.products?.addError || "❌ Ürün eklenirken hata oluştu!"));
-
-    setProduct({
-      title: "",
-      price: "",
-      stock: "",
-      category: "",
-      images: [""],
-    });
+      .catch(() => toast.error("❌ Ürün eklenirken hata oluştu!"));
   };
 
   return (
@@ -91,28 +66,25 @@ const ProductForm = () => {
       <FormInput theme={theme} type="number" name="stock" value={product.stock} onChange={handleChange} required />
 
       <label>{texts?.products?.category || "Kategori"}:</label>
-      <select name="category" value={product.category || ""} onChange={handleChange} required>
+      <select name="category" value={product.category} onChange={handleChange} required>
         <option value="">{texts?.products?.selectCategory || "Kategori Seç"}</option>
-        {products.length > 0 ? (
-          products
-            .map((p) => p.category)
-            .filter((category, index, self) => 
-              category && self.findIndex(c => c.id === category.id) === index
-            )
-            .map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))
-        ) : (
+        {loading ? (
           <option disabled>{texts?.products?.loadingCategories || "Kategoriler yükleniyor..."}</option>
+        ) : (
+          categories.map((category) => (
+            <option key={category._id} value={category._id}>
+              {category.name}
+            </option>
+          ))
         )}
       </select>
 
       <label>{texts?.products?.imageURL || "Ürün Resmi URL"}:</label>
-      <FormInput theme={theme} type="text" name="images" value={product.images[0]} onChange={handleChange} required />
+      <FormInput theme={theme} type="text" name="images" value={product.images.join(",")} onChange={handleChange} required />
 
-      <SubmitButton theme={theme} type="submit">{texts?.products?.submit || "Kaydet"}</SubmitButton>
+      <SubmitButton theme={theme} type="submit">
+        {texts?.products?.submit || "Kaydet"}
+      </SubmitButton>
     </FormContainer>
   );
 };
