@@ -33,10 +33,6 @@ const ProductList = () => {
     setSelectedCategory(categoryId);
   };
 
-  console.log("📌 Seçilen Kategori ID:", selectedCategory);
-  console.log("📌 Ürünlerin Kategorileri:", products.map(p => p.category));
-  console.log("📌 Kategori Listesi:", categories.map(c => c._id));
-
   // ✅ Ürünlerin kategoriye göre filtrelenmesi düzeltildi!
   const filteredProducts =
     selectedCategory === "all"

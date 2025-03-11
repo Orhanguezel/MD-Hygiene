@@ -404,3 +404,115 @@ export const SaveButton = styled(SubmitButton)`
     background: #218838;
   }
 `;
+
+
+/* ✅ Kategori Yönetimi Konteyneri */
+export const CategoryContainer = styled.div`
+  background: ${({ theme }) => theme.cardBackground};
+  color: ${({ theme }) => theme.text};
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px ${({ theme }) => theme.shadow};
+`;
+
+
+
+/* ✅ Kategori Resmi */
+export const CategoryImage = styled.img`
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+`;
+
+/* ✅ Kategori Başlığı */
+export const CategoryTitle = styled.h3`
+  font-size: 16px;
+  font-weight: bold;
+  color: ${({ theme }) => theme.text};
+`;
+
+/* ✅ Form */
+export const CategoryForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+`;
+
+/* ✅ Input */
+export const InputField = styled.input`
+  padding: 10px;
+  border: 1px solid ${({ theme }) => theme.border};
+  border-radius: 6px;
+`;
+
+/* ✅ Düzenleme Butonu */
+export const EditButton = styled.button`
+  background: green;
+`;
+
+
+export const FormTextarea = styled.textarea`
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  resize: vertical;
+  min-height: 80px;
+`;
+
+export const ImagePreviewContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+`;
+
+export const ImagePreview = styled.img`
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+`;
+
+export const FileInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+`;
+
+export const HiddenFileInput = styled.input`
+  display: none;
+`;
+
+export const FileUploadButton = styled.label`
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+export const RemoveImageButton = styled.button`
+  background: #dc3545;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background: #c82333;
+  }
+`;
+
+

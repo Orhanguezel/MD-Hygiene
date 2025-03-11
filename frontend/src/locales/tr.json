@@ -435,7 +435,8 @@
     "warehouseLocation": "Depo Lokasyonu",
     "returnPolicy": "İade Politikası",
     "barcode": "Barkod",
-    "serialNumber": "Seri Numarası"
+    "serialNumber": "Seri Numarası",
+    "manage": "Kategorileri Yönet"
   },
   "invoices": {
     "title": "Fatura",
@@ -668,5 +669,20 @@
       "reviewSubmitted": "✅ Yorum başarıyla eklendi!",
       "reviewDeleted": "🗑️ Yorum silindi."
     }
+  },
+  "categoryManagement": {
+    "title": "Kategori Yönetimi",
+    "addCategory": "Kategori Ekle",
+    "updateCategory": "Kategori Güncelle",
+    "deleteCategory": "Kategori Sil",
+    "categoryName": "Kategori Adı",
+    "categoryImage": "Resim URL",
+    "loading": "Yükleniyor...",
+    "error": "Hata oluştu!",
+    "confirmDelete": "Bu kategoriyi silmek istediğinize emin misiniz?",
+    "successAdd": "Kategori başarıyla eklendi!",
+    "successUpdate": "Kategori başarıyla güncellendi!",
+    "successDelete": "Kategori başarıyla silindi!"
   }
+
 }

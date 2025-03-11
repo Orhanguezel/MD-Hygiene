@@ -9,6 +9,7 @@ export const fetchCategories = createAsyncThunk(
       const response = await API.get("/categories");
       return response.data;
     } catch (error) {
+      console.error("❌ Kategorileri çekerken hata:", error);
       return thunkAPI.rejectWithValue(error.response?.data?.message || "Kategoriler alınırken hata oluştu");
     }
   }
@@ -22,6 +23,7 @@ export const addCategory = createAsyncThunk(
       const response = await API.post("/categories", categoryData);
       return response.data;
     } catch (error) {
+      console.error("❌ Kategori eklenirken hata:", error);
       return thunkAPI.rejectWithValue(error.response?.data?.message || "Kategori eklenirken hata oluştu");
     }
   }
@@ -35,19 +37,29 @@ export const updateCategory = createAsyncThunk(
       const response = await API.put(`/categories/${id}`, categoryData);
       return response.data;
     } catch (error) {
+      console.error("❌ Kategori güncellenirken hata:", error);
       return thunkAPI.rejectWithValue(error.response?.data?.message || "Kategori güncellenirken hata oluştu");
     }
   }
 );
 
-// ✅ **Kategori silme**
+// ✅ **Kategori silme (Güncellenmiş)**
 export const deleteCategory = createAsyncThunk(
   "categories/deleteCategory",
   async (id, thunkAPI) => {
     try {
-      await API.delete(`/categories/${id}`);
-      return id;
+      console.log(`🗑️ Kategori Silme Başlatıldı: ${id}`);
+      const response = await API.delete(`/categories/${id}`);
+
+      // ✅ Backend hata döndürmezse başarılı say
+      if (response.status === 200) {
+        console.log(`✅ Kategori başarıyla silindi: ${id}`);
+        return id;
+      } else {
+        throw new Error("Kategori silinemedi.");
+      }
     } catch (error) {
+      console.error("❌ Kategori silinirken hata:", error);
       return thunkAPI.rejectWithValue(error.response?.data?.message || "Kategori silinirken hata oluştu");
     }
   }
@@ -106,7 +118,7 @@ const categorySlice = createSlice({
         state.error = action.payload;
       })
 
-      // ✅ **Kategori silme**
+      // ✅ **Kategori silme (Güncellenmiş)**
       .addCase(deleteCategory.pending, (state) => {
         state.loading = true;
       })
@@ -117,6 +129,7 @@ const categorySlice = createSlice({
       .addCase(deleteCategory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        console.error("❌ Kategori silme işlemi başarısız:", action.payload);
       });
   },
 });

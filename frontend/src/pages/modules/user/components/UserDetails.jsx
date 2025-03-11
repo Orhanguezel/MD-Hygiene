@@ -20,7 +20,7 @@ const UserDetails = () => {
   const { texts } = useLanguage();
   const { theme } = useTheme();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.selectedUser);
+  const user = useSelector((state) => state.users.selectedUser);
 
   useEffect(() => {
     dispatch(fetchUserById(id));

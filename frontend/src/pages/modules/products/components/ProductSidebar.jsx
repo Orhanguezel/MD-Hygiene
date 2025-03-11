@@ -15,8 +15,14 @@ const ProductSidebar = () => {
       <SidebarButton onClick={() => navigate("/products/add")}>
         ➕ {texts?.products?.add || "Ürün Ekle"}
       </SidebarButton>
+      <SidebarButton onClick={() => navigate("/products/edit")}>
+        ✏️ {texts?.products?.edit || "Ürün Güncelle"}
+      </SidebarButton>
       <SidebarButton onClick={() => navigate("/products/manageStock")}>
         📦 {texts?.products?.manageStock || "Fiyat ve Stok Yönetimi"}
+      </SidebarButton>
+      <SidebarButton onClick={() => navigate("/products/categories")}>
+        📁 {texts?.products?.manage || "Kategorileri Yönet"}
       </SidebarButton>
     </SidebarContainer>
   );

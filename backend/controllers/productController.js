@@ -1,110 +1,112 @@
 import Product from "../models/Product.js";
 import Category from "../models/Category.js";
 import asyncHandler from "express-async-handler";
-import mongoose from "mongoose"; // ObjectId dönüşümü için eklenmeli
+import mongoose from "mongoose"; // ✅ ObjectId dönüşümü için
 
-// 📌 **Tüm ürünleri getirirken kategoriyi de ilişkilendiriyoruz!**
+// 📌 **Tüm ürünleri getir**
 export const fetchProducts = asyncHandler(async (req, res) => {
   try {
-    const products = await Product.find().populate({
-      path: "category",
-      select: "name image", // Sadece gerekli alanları getir
-    });
-
+    const products = await Product.find().populate("category", "name image");
     res.json(products);
   } catch (error) {
-    res.status(500).json({ message: "Ürünler getirilemedi", error });
+    res.status(500).json({ message: "⚠️ Ürünler getirilemedi!", error: error.message });
   }
 });
 
-// 📌 **Yeni ürün oluştur (Admin)**
+// 📌 **Ürün Ekleme**
 export const createProduct = asyncHandler(async (req, res) => {
-  console.log("📌 Backend'e Gelen Veri:", req.body); // Debug için
+  console.log("📌 Backend'e Gelen Veri:", req.body);
 
   const { title, description, price, stock, category } = req.body;
-  const images = req.files ? req.files.map((file) => file.path) : [];
-
-  // ✅ **Zorunlu alan kontrolü**
+  
   if (!title || !price || !stock || !category) {
-    return res.status(400).json({ message: "Lütfen tüm zorunlu alanları doldurun!" });
+    return res.status(400).json({ message: "⚠️ Lütfen tüm zorunlu alanları doldurun!" });
   }
 
-  // ✅ **Kategori ID'sinin geçerli ObjectId olup olmadığını kontrol et**
   if (!mongoose.Types.ObjectId.isValid(category)) {
-    return res.status(400).json({ message: "Geçersiz kategori ID!" });
+    return res.status(400).json({ message: "⚠️ Geçersiz kategori ID!" });
   }
 
-  // ✅ **Kategori veritabanında var mı kontrol et**
   const existingCategory = await Category.findById(category);
   if (!existingCategory) {
-    return res.status(400).json({ message: "Kategori bulunamadı!" });
+    return res.status(404).json({ message: "⚠️ Kategori bulunamadı!" });
   }
+
+  // 📌 **Yüklenen Resimleri Al ve Tam URL Yap**
+  let images = req.files.length > 0 ? req.files.map(file => `/uploads/${file.filename}`) : [];
 
   const newProduct = new Product({
     title,
     description,
     price,
     stock,
-    category: category, // ✅ `new mongoose.Schema.Types.ObjectId(category)` YANLIŞTI!
-    images,
+    category,
+    images
   });
 
   await newProduct.save();
-  res.status(201).json(newProduct);
+  res.status(201).json({ message: "✅ Ürün başarıyla oluşturuldu!", product: newProduct });
 });
 
 // 📌 **Belirli bir ürünü getir (Kategori bilgileriyle birlikte)**
 export const getProductById = asyncHandler(async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    return res.status(400).json({ message: "Geçersiz ürün ID!" });
+    return res.status(400).json({ message: "⚠️ Geçersiz ürün ID!" });
   }
 
   const product = await Product.findById(req.params.id)
-    .populate("category", "name image") // ✅ Seçili alanları getiriyoruz
+    .populate("category", "name image")
     .select("-__v");
 
-  if (!product) return res.status(404).json({ message: "Ürün bulunamadı" });
+  if (!product) return res.status(404).json({ message: "⚠️ Ürün bulunamadı!" });
 
   res.json(product);
 });
 
-// 📌 **Ürünü güncelle (Admin)**
+// 📌 **Ürünü Güncelle**
 export const updateProduct = asyncHandler(async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    return res.status(400).json({ message: "Geçersiz ürün ID!" });
+    return res.status(400).json({ message: "⚠️ Geçersiz ürün ID!" });
   }
 
   const { title, description, price, stock, category } = req.body;
-  const images = req.files ? req.files.map((file) => file.path) : undefined;
 
-  // ✅ **Kategori geçerli mi kontrol et**
-  if (category && !mongoose.Types.ObjectId.isValid(category)) {
-    return res.status(400).json({ message: "Geçersiz kategori ID!" });
-  }
+  // 📌 **Mevcut ürünü getir**
+  const existingProduct = await Product.findById(req.params.id);
+  if (!existingProduct) return res.status(404).json({ message: "⚠️ Ürün bulunamadı!" });
 
-  // ✅ **Güncellenecek alanları belirle**
-  const updatedFields = { title, description, price, stock };
-  if (images) updatedFields.images = images;
-  if (category) updatedFields.category = category; // Kategori güncellenebilir
+  // 📌 **Yüklenen Resimleri Al ve Güncelle**
+  let images = req.files.length > 0 ? req.files.map((file) => `/uploads/${file.filename}`) : existingProduct.images;
 
-  const updatedProduct = await Product.findByIdAndUpdate(req.params.id, updatedFields, {
-    new: true,
-    runValidators: true,
-  }).populate("category", "name image");
+  existingProduct.title = title || existingProduct.title;
+  existingProduct.description = description || existingProduct.description;
+  existingProduct.price = price || existingProduct.price;
+  existingProduct.stock = stock || existingProduct.stock;
+  existingProduct.category = category || existingProduct.category;
+  existingProduct.images = images;
 
-  if (!updatedProduct) return res.status(404).json({ message: "Ürün bulunamadı" });
+  const updatedProduct = await existingProduct.save();
 
-  res.json(updatedProduct);
+  res.json({ message: "✅ Ürün başarıyla güncellendi!", product: updatedProduct });
 });
 
-// 📌 **Ürünü sil (Admin)**
+// 📌 **Ürünü Sil (Admin)**
 export const deleteProduct = asyncHandler(async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    return res.status(400).json({ message: "Geçersiz ürün ID!" });
+    return res.status(400).json({ message: "⚠️ Geçersiz ürün ID!" });
   }
 
   const product = await Product.findByIdAndDelete(req.params.id);
-  if (!product) return res.status(404).json({ message: "Ürün bulunamadı!" });
+  if (!product) return res.status(404).json({ message: "⚠️ Ürün bulunamadı!" });
 
-  res.json({ message: "Ürün başarıyla silindi" });
+  res.json({ message: "✅ Ürün başarıyla silindi!" });
+});
+// 📌 **Ürünleri Kategoriye Göre Filtrele**
+export const fetchProductsByCategory = asyncHandler(async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: "⚠️ Geçersiz kategori ID!" });
+  }
+
+  const products = await Product.find({ category: req.params.id }).populate("category", "name image");
+  res.json(products);
 });

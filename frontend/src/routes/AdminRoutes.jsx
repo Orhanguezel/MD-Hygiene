@@ -15,7 +15,6 @@ import ProfileUpdate from "@/pages/modules/profile/components/ProfileUpdate";
 import AddressBook from "@/pages/modules/profile/components/AddressInfo";
 import OrderHistory from "@/pages/modules/profile/components/OrderHistory";
 
-
 // ✅ Dashboard
 import AdminDashboard from "@/pages/modules/dashboard/AdminDashboard";
 
@@ -32,7 +31,6 @@ import OrderDetails from "@/pages/modules/order/components/OrderDetails";
 import Invoices from "@/pages/modules/invoices/Invoices";
 import InvoiceDetails from "@/pages/modules/invoices/components/InvoiceDetails";
 
-
 // ✅ Offers Modülü
 import Offers from "@/pages/modules/offer/Offer";
 import OfferDetails from "@/pages/modules/offer/components/OfferDetails";
@@ -44,6 +42,8 @@ import Products from "@/pages/modules/products/Products";
 import ProductForm from "@/pages/modules/products/components/ProductForm";
 import ManageStock from "@/pages/modules/products/components/ManageStock";
 import ProductList from "@/pages/modules/products/components/ProductList";
+import CategoryManagement from "@/pages/modules/products/components/CategoryManagement";
+import ProductEdit from "@/pages/modules/products/components/ProductEdit";
 
 // ✅ Ayarlar Modülü
 import Settings from "@/pages/modules/settings/Settings";
@@ -119,9 +119,11 @@ const AdminRoutes = () => {
 
         {/* ✅ Products Modülü */}
         <Route path="products" element={<Products />}>
-          <Route index element={<ProductList />} />{" "}
-          <Route path="add" element={<ProductForm />} />{" "}
-          <Route path="manageStock" element={<ManageStock />} />{" "}
+          <Route index element={<ProductList />} />
+          <Route path="add" element={<ProductForm />} />
+          <Route path="manageStock" element={<ManageStock />} />
+          <Route path="categories" element={<CategoryManagement />} />{" "}
+          <Route path="edit" element={<ProductEdit />} />
         </Route>
 
         {/* ✅ Diğer Modüller */}

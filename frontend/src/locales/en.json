@@ -506,7 +506,8 @@
     "warehouseLocation": "Warehouse Location",
     "returnPolicy": "Return Policy",
     "barcode": "Barcode",
-    "serialNumber": "Serial Number"
+    "serialNumber": "Serial Number",
+    "manage": "Manage Categories"
   },
   "invoices": {
     "title": "Invoice",
@@ -640,5 +641,19 @@
       "reviewSubmitted": "✅ Review successfully submitted!",
       "reviewDeleted": "🗑️ Review deleted."
     }
+  },
+  "categoryManagement": {
+    "title": "Category Management",
+    "addCategory": "Add Category",
+    "updateCategory": "Update Category",
+    "deleteCategory": "Delete Category",
+    "categoryName": "Category Name",
+    "categoryImage": "Image URL",
+    "loading": "Loading...",
+    "error": "An error occurred!",
+    "confirmDelete": "Are you sure you want to delete this category?",
+    "successAdd": "Category successfully added!",
+    "successUpdate": "Category successfully updated!",
+    "successDelete": "Category successfully deleted!"
   }
 }

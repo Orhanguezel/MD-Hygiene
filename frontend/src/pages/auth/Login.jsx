@@ -28,17 +28,28 @@ const Login = () => {
   const navigate = useNavigate();
   const { texts } = useLanguage();
   const { theme } = useTheme();
-  const { loading, error, user } = useSelector((state) => state.auth);
+  const { loading, error } = useSelector((state) => state.auth);
 
+  // ✅ **Giriş işlemi**
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await dispatch(login({ email, password }));
 
     if (result.meta.requestStatus === "fulfilled") {
-      if (user?.role === "admin") {
-        navigate("/dashboard"); // ✅ Admin giriş yapınca dashboard'a yönlendir
+      const user = result.payload?.user; // ✅ Redux yerine `result.payload` içinden user alındı
+      const token = result.payload?.token;
+
+      if (user && token) {
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", token); // ✅ Token artık burada düzgün saklanıyor!
+
+        if (user.role === "admin") {
+          navigate("/dashboard"); // ✅ Admin giriş yapınca dashboard'a yönlendir
+        } else {
+          navigate("/"); // ✅ Normal kullanıcıyı ana sayfaya yönlendir
+        }
       } else {
-        navigate("/"); // ✅ Kullanıcı giriş yapınca ana sayfaya yönlendir
+        console.error("❌ Kullanıcı veya token bilgisi eksik!");
       }
     }
   };
@@ -53,8 +64,10 @@ const Login = () => {
             {texts?.auth?.loginTitle || "🔑 Giriş Yap"}
           </Title>
 
+          {/* ✅ Hata mesajını göster */}
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
+          {/* ✅ E-mail Giriş Alanı */}
           <InputContainer theme={theme}>
             <Icon theme={theme}>
               <FaEnvelope />
@@ -68,6 +81,7 @@ const Login = () => {
             />
           </InputContainer>
 
+          {/* ✅ Şifre Giriş Alanı */}
           <InputContainer theme={theme}>
             <Icon theme={theme}>
               <FaLock />
@@ -81,16 +95,19 @@ const Login = () => {
             />
           </InputContainer>
 
+          {/* ✅ Giriş Butonu */}
           <Button type="submit" disabled={loading} theme={theme}>
             {loading ? texts.auth.loggingIn : texts.auth.loginButton}{" "}
             <FaSignInAlt />
           </Button>
 
+          {/* ✅ Kayıt Ol Linki */}
           <SwitchText theme={theme}>
             {texts?.auth?.noAccount || "Hesabınız yok mu?"}{" "}
             <Link to="/register">{texts?.auth?.register || "Kayıt Ol"}</Link>
           </SwitchText>
 
+          {/* 🔄 Yüklenme durumu */}
           {loading && <LoadingSpinner theme={theme} />}
         </AuthForm>
       </Card>

@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLanguage } from "@/features/language/useLanguage";
 import { useTheme } from "@/features/theme/useTheme";
-import { register } from "@/features/auth/authSlice";
+import { register, clearError } from "@/features/auth/authSlice";
 import { useNavigate, Link } from "react-router-dom";
 import {
   AuthContainer,
@@ -32,7 +32,26 @@ const Register = () => {
   const navigate = useNavigate();
   const { texts } = useLanguage();
   const { theme } = useTheme();
-  const { loading, error } = useSelector((state) => state.auth);
+  const { loading, error, user, isAuthenticated, token } = useSelector((state) => state.auth);
+
+  // ✅ Sayfa açıldığında önce hatayı temizle
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
+
+  // ✅ Kullanıcı kayıt olduysa, otomatik giriş yap ve yönlendir
+  useEffect(() => {
+    if (isAuthenticated && user && token) {
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+
+      if (user.role === "admin") {
+        navigate("/dashboard"); // ✅ Admin giriş yapınca dashboard'a yönlendir
+      } else {
+        navigate("/"); // ✅ Normal kullanıcı ana sayfaya yönlendir
+      }
+    }
+  }, [isAuthenticated, user, token, navigate]);
 
   // 📌 Input değişikliklerini yönet
   const handleChange = (e) => {
@@ -44,8 +63,23 @@ const Register = () => {
     e.preventDefault();
     const result = await dispatch(register(formData));
 
+    if (result.meta.requestStatus === "rejected") {
+      console.error("❌ Kayıt başarısız:", result.payload || "Bilinmeyen hata");
+      return;
+    }
+
+    // ✅ Başarıyla kayıt olunduysa localStorage'a kaydet
     if (result.meta.requestStatus === "fulfilled") {
-      navigate("/"); // ✅ Başarıyla kayıt olduktan sonra giriş ekranına yönlendirme
+      const { user, token } = result.payload;
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+
+      // ✅ Kullanıcı rolüne göre yönlendirme yap
+      if (user.role === "admin") {
+        navigate("/dashboard");
+      } else {
+        navigate("/");
+      }
     }
   };
 

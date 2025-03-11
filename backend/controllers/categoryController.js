@@ -1,5 +1,7 @@
+import mongoose from "mongoose";
 import Category from "../models/Category.js";
-import asyncHandler from "express-async-handler"; // Hata yönetimi için
+import Product from "../models/Product.js"; // ✅ Ürünleri kontrol etmek için
+import asyncHandler from "express-async-handler"; // ✅ Hata yönetimi için
 
 // ✅ **Tüm kategorileri getir**
 export const fetchCategories = asyncHandler(async (req, res) => {
@@ -29,13 +31,17 @@ export const createCategory = asyncHandler(async (req, res) => {
 
 // ✅ **Belirli bir kategoriyi getir**
 export const getCategoryById = asyncHandler(async (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    console.error("❌ Geçersiz kategori ID:", id);
     return res.status(400).json({ message: "Geçersiz kategori ID!" });
   }
 
-  const category = await Category.findById(req.params.id);
+  const category = await Category.findById(id);
 
   if (!category) {
+    console.error("❌ Kategori bulunamadı:", id);
     return res.status(404).json({ message: "Kategori bulunamadı!" });
   }
 
@@ -44,14 +50,18 @@ export const getCategoryById = asyncHandler(async (req, res) => {
 
 // ✅ **Belirli bir kategoriyi güncelle**
 export const updateCategory = asyncHandler(async (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  const { id } = req.params;
+  const { name, image } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    console.error("❌ Geçersiz kategori ID:", id);
     return res.status(400).json({ message: "Geçersiz kategori ID!" });
   }
 
-  const { name, image } = req.body;
-  const category = await Category.findById(req.params.id);
+  const category = await Category.findById(id);
 
   if (!category) {
+    console.error("❌ Kategori bulunamadı:", id);
     return res.status(404).json({ message: "Kategori bulunamadı!" });
   }
 
@@ -59,18 +69,35 @@ export const updateCategory = asyncHandler(async (req, res) => {
   category.image = image || category.image;
   
   const updatedCategory = await category.save();
+  console.log("✅ Kategori Güncellendi:", updatedCategory);
   res.json(updatedCategory);
 });
 
 // ✅ **Belirli bir kategoriyi sil**
 export const deleteCategory = asyncHandler(async (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    console.error("❌ Geçersiz kategori ID:", id);
     return res.status(400).json({ message: "Geçersiz kategori ID!" });
   }
 
-  const category = await Category.findById(req.params.id);
-  if (!category) return res.status(404).json({ message: "Kategori bulunamadı!" });
+  console.log("🗑️ Silme işlemi başlatıldı:", id);
 
-  await category.deleteOne();
-  res.json({ message: "Kategori başarıyla silindi!" });
+  // **Bu kategoriye bağlı ürün var mı kontrol et**
+  const products = await Product.find({ category: id });
+
+  if (products.length > 0) {
+    console.error("❌ Kategoriye bağlı ürünler var, silinemiyor:", id);
+    return res.status(400).json({ message: "Bu kategoriye bağlı ürünler olduğu için silinemiyor!" });
+  }
+
+  const deletedCategory = await Category.findByIdAndDelete(id);
+  if (!deletedCategory) {
+    console.error("❌ Silme işlemi başarısız, kategori bulunamadı:", id);
+    return res.status(404).json({ message: "Kategori bulunamadı!" });
+  }
+
+  console.log("✅ Kategori Başarıyla Silindi:", deletedCategory);
+  res.json({ message: "Kategori başarıyla silindi" });
 });

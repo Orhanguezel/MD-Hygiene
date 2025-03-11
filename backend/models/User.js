@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
     },
     orders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
     profileImage: { type: String, default: "https://via.placeholder.com/150" },
-    isActive: { type: Boolean, default: true },
+    isActive: { type: Boolean, default: true },  // Kullanıcı aktif mi?
   },
   { timestamps: true }
 );

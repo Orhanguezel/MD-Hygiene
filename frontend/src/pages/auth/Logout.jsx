@@ -1,7 +1,8 @@
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "@/features/auth/authSlice";
-import { AuthContainer, Button } from "@/styles/authStyles"; // ✅ Ortak stil dosyası kullanıldı
+import { AuthContainer, Button } from "@/styles/authStyles";
 import { useTheme } from "@/features/theme/useTheme";
 
 const Logout = () => {
@@ -9,14 +10,14 @@ const Logout = () => {
   const navigate = useNavigate();
   const { theme } = useTheme();
 
-  const handleLogout = () => {
+  useEffect(() => {
     dispatch(logout());
     navigate("/login"); // ✅ Çıkış sonrası login sayfasına yönlendirme
-  };
+  }, [dispatch, navigate]);
 
   return (
     <AuthContainer theme={theme}>
-      <Button theme={theme} onClick={handleLogout}>🚪 Çıkış Yap</Button>
+      <Button theme={theme} onClick={() => dispatch(logout())}>🚪 Çıkış Yap</Button>
     </AuthContainer>
   );
 };

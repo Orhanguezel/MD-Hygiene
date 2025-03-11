@@ -505,7 +505,8 @@
     "warehouseLocation": "Lagerstandort",
     "returnPolicy": "Rückgaberecht",
     "barcode": "Barcode",
-    "serialNumber": "Seriennummer"
+    "serialNumber": "Seriennummer",
+    "manage": "Kategorien Verwalten"
   },
   "invoices": {
     "title": "Rechnung",
@@ -644,5 +645,19 @@
       "reviewSubmitted": "✅ Bewertung erfolgreich hinzugefügt!",
       "reviewDeleted": "🗑️ Bewertung gelöscht."
     }
+  },
+  "categoryManagement": {
+    "title": "Kategorieverwaltung",
+    "addCategory": "Kategorie hinzufügen",
+    "updateCategory": "Kategorie aktualisieren",
+    "deleteCategory": "Kategorie löschen",
+    "categoryName": "Kategoriename",
+    "categoryImage": "Bild-URL",
+    "loading": "Wird geladen...",
+    "error": "Ein Fehler ist aufgetreten!",
+    "confirmDelete": "Sind Sie sicher, dass Sie diese Kategorie löschen möchten?",
+    "successAdd": "Kategorie erfolgreich hinzugefügt!",
+    "successUpdate": "Kategorie erfolgreich aktualisiert!",
+    "successDelete": "Kategorie erfolgreich gelöscht!"
   }
 }

@@ -21,8 +21,10 @@ export const addProduct = createAsyncThunk(
     try {
       const formattedData = {
         ...productData,
-        category: productData.category._id || productData.category, // ✅ `_id` varsa kullan, yoksa direkt ID gönder
+        category: productData.category._id || productData.category,
+        images: Array.isArray(productData.images) ? productData.images : [productData.images], 
       };
+      
 
       const response = await API.post("/products", formattedData);
       return response.data;
@@ -63,7 +65,7 @@ const productSlice = createSlice({
   initialState: {
     products: [],
     filteredProducts: [],
-    selectedCategory: "all", // ✅ Varsayılan olarak "all" seçili
+    selectedCategory: "all", // ✅ Varsayılan olarak "all"
     loading: false,
     error: null,
   },
@@ -71,11 +73,14 @@ const productSlice = createSlice({
     filterByCategory: (state, action) => {
       state.selectedCategory = action.payload;
 
-      // ✅ Kategoriye göre filtreleme
+      // ✅ Kategoriye göre filtreleme yap (category bir ObjectId veya string olabilir)
       state.filteredProducts =
         action.payload === "all"
           ? state.products
-          : state.products.filter((product) => product.category === action.payload);
+          : state.products.filter((product) =>
+              product.category?._id?.toString() === action.payload.toString() ||
+              product.category?.toString() === action.payload.toString()
+            );
     },
   },
   extraReducers: (builder) => {
@@ -85,7 +90,6 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
-        console.log("📌 API’den Gelen Ürün Verisi:", action.payload); // ✅ Ürünlerde kategori var mı, kontrol et
 
         state.loading = false;
         state.products = action.payload;

@@ -1,17 +1,18 @@
 import express from "express";
 import dotenv from "dotenv";
-import corsMiddleware from "./config/cors.js"; // ✅ CORS middleware'i dışarı alındı
+import corsMiddleware from "./config/cors.js";
 import connectDB from "./config/db.js";
 import swaggerDocs from "./config/swagger.js";
 import routes from "./routes/index.js";
+import { serveUploads } from "./middleware/upload.js"; // ✅ Upload middleware
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 app.use(corsMiddleware);
-
 app.use("/api", routes);
+app.use(serveUploads); // ✅ `uploads` klasörünü servis et
 
 const startServer = async () => {
   try {

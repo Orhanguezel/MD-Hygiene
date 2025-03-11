@@ -10,15 +10,20 @@ const AppLayout = () => {
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const { theme } = useTheme(); // ✅ Tema desteği
 
+  // 🔄 **Eğer yetkilendirme bilgileri henüz yüklenmediyse bekleme ekranı**
+  if (isAuthenticated === null) {
+    return <p>🔄 Sayfa yükleniyor...</p>;
+  }
+
   return (
     <LayoutContainer theme={theme}>
       {/* 🔥 Tek Header Kullanımı */}
       <Header />
 
       <div style={{ display: "flex", flex: 1 }}>
-        {/* 🔥 Sidebar Sadece Admin Kullanıcıları İçin */}
-        {user?.role === "admin" && <Sidebar />}
-        
+        {/* 🔥 Sidebar: Eğer admin değilse, boş div ile yüklenmeyi hızlandır */}
+        {isAuthenticated && user?.role === "admin" ? <Sidebar /> : <div style={{ width: "250px" }}></div>}
+
         <MainContent>
           <Outlet />
         </MainContent>

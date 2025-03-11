@@ -9,7 +9,6 @@ import { useTheme } from "./features/theme/useTheme"; // ✅ Tema desteği
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
 const App = () => {
   const { user, isAuthenticated, loading, error } = useSelector((state) => state.auth);
   const { texts } = useLanguage();
@@ -17,6 +16,7 @@ const App = () => {
 
   const [isAppLoading, setIsAppLoading] = useState(true);
 
+  // ⏳ **Yükleme Ekranı (Global)**
   useEffect(() => {
     if (!loading) {
       setTimeout(() => {
@@ -41,10 +41,7 @@ const App = () => {
       <Routes>
         {isAuthenticated ? (
           user?.role === "admin" ? (
-            <>
-              <Route path="/*" element={<AdminRoutes />} />
-              <Route path="/user/*" element={<UserRoutes />} />
-            </>
+            <Route path="/*" element={<AdminRoutes />} />
           ) : (
             <Route path="/*" element={<UserRoutes />} />
           )
@@ -55,19 +52,19 @@ const App = () => {
 
       {/* ✅ ToastContainer eklendi */}
       <ToastContainer
-  position="top-right"
-  autoClose={2000}
-  hideProgressBar={false}
-  newestOnTop={false}
-  closeOnClick
-  rtl={false}
-  pauseOnFocusLoss
-  draggable
-  pauseOnHover
-  theme={theme.mode} // 🌙 
-  style={{ fontSize: "16px", fontWeight: "bold", textAlign: "center" }}
-  className="custom-toast"
-/>;
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={theme.mode} // 🌙 Tema desteği
+        style={{ fontSize: "16px", fontWeight: "bold", textAlign: "center" }}
+        className="custom-toast"
+      />
     </BrowserRouter>
   );
 };

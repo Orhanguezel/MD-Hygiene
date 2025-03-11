@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "@/features/categories/categorySlice"; // ✅ Kategorileri getir
-import { fetchProducts, filterByCategory } from "@/features/products/productSlice"; // ✅ Ürünleri çek ve filtrele
+import { fetchCategories } from "@/features/categories/categorySlice"; 
+import { fetchProducts, filterByCategory } from "@/features/products/productSlice"; 
 import { useLanguage } from "@/features/language/useLanguage";
 import {
   CategoryContainer,
@@ -13,16 +13,20 @@ import {
 
 const CategorySection = () => {
   const dispatch = useDispatch();
-  const { categories, loading, error } = useSelector((state) => state.category); // ✅ Kategorileri store'dan al
-  const { selectedCategory } = useSelector((state) => state.product); // ✅ Seçili kategori bilgisini al
+  const { categories, loading, error } = useSelector((state) => state.category); 
+  const { selectedCategory } = useSelector((state) => state.product); 
   const { texts } = useLanguage();
 
   useEffect(() => {
-    dispatch(fetchCategories()); // ✅ Kategorileri yükle
-    dispatch(fetchProducts()); // ✅ Ürünleri de yükle
+    dispatch(fetchCategories()); 
+    dispatch(fetchProducts()); 
   }, [dispatch]);
 
-  // ✅ Kategoriler yüklenirken
+  useEffect(() => {
+    console.log("📌 API’den Gelen Kategoriler:", categories);
+    console.log("📌 Seçili Kategori:", selectedCategory);
+  }, [categories, selectedCategory]);
+
   if (loading) return <p>{texts?.loading || "Yükleniyor..."}</p>;
   if (error) return <p>{texts?.error || "Hata oluştu!"}</p>;
   if (!categories || categories.length === 0)
@@ -36,10 +40,11 @@ const CategorySection = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
+        {/* 📌 Sadece API’den Gelen Kategoriler Gösterilecek */}
         {categories.map((category) => (
           <CategoryCard
-            key={category._id} // ✅ `_id` kullanıldı
-            onClick={() => dispatch(filterByCategory(category._id))} // ✅ Seçili kategoriye göre filtrele
+            key={category._id}
+            onClick={() => dispatch(filterByCategory(category._id))}
             $active={selectedCategory === category._id}
             whileTap={{ scale: 0.95 }}
           >
