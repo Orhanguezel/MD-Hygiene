@@ -16,7 +16,9 @@ export const getAllUsers = createAsyncThunk(
       const response = await API.get("/auth/users");
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "❌ Kullanıcılar getirilemedi!");
+      return rejectWithValue(
+        error.response?.data?.message || "❌ Kullanıcılar getirilemedi!"
+      );
     }
   }
 );
@@ -25,24 +27,29 @@ export const getAllUsers = createAsyncThunk(
 export const fetchUserById = createAsyncThunk(
   "users/fetchUserById",
   async (userId, { rejectWithValue }) => {
+    if (!userId) return rejectWithValue("❌ Kullanıcı ID eksik!");
     try {
       const response = await API.get(`/auth/users/${userId}`);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "❌ Kullanıcı bulunamadı!");
+      return rejectWithValue(
+        error.response?.data?.message || "❌ Kullanıcı bulunamadı!"
+      );
     }
   }
 );
 
-// ➕ **Yeni Kullanıcı Ekle**
-export const addUser = createAsyncThunk(
-  "users/addUser",
-  async (newUser, { rejectWithValue }) => {
+// 📥 **Kullanıcının Favori Ürünlerini Getir**
+export const fetchUserFavorites = createAsyncThunk(
+  "users/fetchUserFavorites",
+  async (userId, { rejectWithValue }) => {
     try {
-      const response = await API.post("/auth/users", newUser);
+      const response = await API.get(`/auth/users/${userId}/favorites`);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "❌ Kullanıcı eklenemedi!");
+      return rejectWithValue(
+        error.response?.data?.message || "❌ Favoriler yüklenemedi!"
+      );
     }
   }
 );
@@ -55,7 +62,9 @@ export const updateUser = createAsyncThunk(
       const response = await API.put(`/auth/users/${userId}`, userData);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "❌ Kullanıcı güncellenemedi!");
+      return rejectWithValue(
+        error.response?.data?.message || "❌ Kullanıcı güncellenemedi!"
+      );
     }
   }
 );
@@ -63,10 +72,13 @@ export const updateUser = createAsyncThunk(
 // ❌ **Kullanıcıyı Sil**
 export const deleteUser = createAsyncThunk(
   "users/deleteUser",
-  async (userId, { rejectWithValue }) => {
+  async ({ userId, token }, { rejectWithValue }) => {
+    if (!userId) return rejectWithValue("❌ Kullanıcı ID eksik!");
     try {
-      await API.delete(`/auth/users/${userId}`);
-      return userId;
+      await API.delete(`/auth/users/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return { userId }; // ✅ Silinen ID'yi obje olarak döndür
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || "❌ Kullanıcı silinemedi!");
     }
@@ -76,15 +88,21 @@ export const deleteUser = createAsyncThunk(
 // ✅ **Kullanıcının Aktiflik Durumunu Değiştir**
 export const toggleUserStatus = createAsyncThunk(
   "users/toggleUserStatus",
-  async (userId, { rejectWithValue }) => {
+  async ({ userId, token }, { rejectWithValue }) => {
+    if (!userId) return rejectWithValue("❌ Kullanıcı ID eksik!");
     try {
-      const response = await API.put(`/auth/users/${userId}/status`);
-      return response.data;
+      const response = await API.put(
+        `/auth/users/${userId}/status`,
+        {}, // ✅ `null` yerine `{}` gönderildi
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return { userId, isActive: response.data.isActive }; // ✅ ID + Yeni Durum
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || "❌ Kullanıcı durumu değiştirilemedi!");
     }
   }
 );
+
 
 // 🔹 **Kullanıcı Rolünü Güncelle**
 export const updateUserRole = createAsyncThunk(
@@ -94,7 +112,9 @@ export const updateUserRole = createAsyncThunk(
       const response = await API.put(`/auth/users/${userId}/role`, { role });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "❌ Rol güncellenemedi!");
+      return rejectWithValue(
+        error.response?.data?.message || "❌ Rol güncellenemedi!"
+      );
     }
   }
 );
@@ -107,20 +127,9 @@ export const updateAddress = createAsyncThunk(
       const response = await API.patch(`/auth/users/${userId}`, { address });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "❌ Adres güncellenemedi!");
-    }
-  }
-);
-
-// 📥 **Favorileri Getir**
-export const fetchUserFavorites = createAsyncThunk(
-  "users/fetchUserFavorites",
-  async (userId, { rejectWithValue }) => {
-    try {
-      const response = await API.get(`/auth/users/${userId}/favorites`);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "❌ Favoriler yüklenemedi!");
+      return rejectWithValue(
+        error.response?.data?.message || "❌ Adres güncellenemedi!"
+      );
     }
   }
 );
@@ -148,7 +157,6 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-
       // ✅ **Tek Kullanıcı Getir**
       .addCase(fetchUserById.fulfilled, (state, action) => {
         state.selectedUser = action.payload;
@@ -157,39 +165,41 @@ const userSlice = createSlice({
       // ✅ **Kullanıcı Güncelle**
       .addCase(updateUser.fulfilled, (state, action) => {
         state.users = state.users.map((user) =>
-          user.id === action.payload.id ? action.payload : user
+          user._id === action.payload._id ? action.payload : user
         );
       })
 
       // ✅ **Kullanıcı Sil**
       .addCase(deleteUser.fulfilled, (state, action) => {
-        state.users = state.users.filter((user) => user.id !== action.payload);
+        state.users = state.users.filter((user) => user._id !== action.payload.userId);
       })
+      
 
       // ✅ **Rol Güncelle**
       .addCase(updateUserRole.fulfilled, (state, action) => {
         state.users = state.users.map((user) =>
-          user.id === action.payload.id ? action.payload : user
+          user._id === action.payload._id ? action.payload : user
         );
       })
 
-      // ✅ **Kullanıcı Durumunu Değiştir**
-      .addCase(toggleUserStatus.fulfilled, (state, action) => {
-        state.users = state.users.map((user) =>
-          user.id === action.payload.id ? action.payload : user
-        );
-      })
-
+     // ✅ **Kullanıcı Durumunu Değiştir**
+     .addCase(toggleUserStatus.fulfilled, (state, action) => {
+      state.users = state.users.map((user) =>
+        user._id === action.payload.userId
+          ? { ...user, isActive: action.payload.isActive } // ✅ Durum güncellendi
+          : user
+      );
+    })
       // ✅ **Adres Güncelleme**
       .addCase(updateAddress.fulfilled, (state, action) => {
-        if (state.selectedUser?.id === action.payload.id) {
+        if (state.selectedUser?._id === action.payload._id) {
           state.selectedUser = action.payload;
         }
       })
 
       // ✅ **Favorileri Getir**
       .addCase(fetchUserFavorites.fulfilled, (state, action) => {
-        if (state.selectedUser?.id === action.payload.id) {
+        if (state.selectedUser?._id === action.payload._id) {
           state.selectedUser.favorites = action.payload.favorites;
         }
       });

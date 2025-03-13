@@ -113,7 +113,27 @@
     "emailPlaceholder": "E-Mail-Adresse eingeben",
     "namePlaceholder": "Vollständigen Namen eingeben",
     "rolePlaceholder": "Rolle auswählen",
-    "statusPlaceholder": "Status auswählen"
+    "statusPlaceholder": "Status auswählen",
+    "customerRole": "Kunde",
+    "address": "Adressinformationen",
+    "addressStreet": "Straße",
+    "addressCity": "Stadt",
+    "addressPostalCode": "Postleitzahl",
+    "addressCountry": "Land",
+    "uploadProfileImage": "Profilbild hochladen",
+    "formError": "Bitte füllen Sie alle Felder aus!",
+    "loading": "Lädt...",
+    "birthDate": "Geburtsdatum",
+    "bio": "Biografie",
+    "socialMedia": "Soziale Medien",
+    "notifications": "Benachrichtigungseinstellungen",
+    "emailNotifications": "E-Mail-Benachrichtigungen",
+    "smsNotifications": "SMS-Benachrichtigungen",
+    "favorites": "Lieblingsprodukte",
+    "noFavorites": "Keine Lieblingsprodukte gefunden",
+    "noAddresses": "Keine Adressinformationen gefunden",
+    "unknownItem": "Unbekanntes Produkt",
+    "view": "Ansehen"
   },
 
   "orders": {

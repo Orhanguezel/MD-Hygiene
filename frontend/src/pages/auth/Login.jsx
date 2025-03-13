@@ -34,25 +34,31 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await dispatch(login({ email, password }));
-
+  
+    console.log("🔄 Dispatch Sonucu:", result);
+  
     if (result.meta.requestStatus === "fulfilled") {
-      const user = result.payload?.user; // ✅ Redux yerine `result.payload` içinden user alındı
+      const user = result.payload?.user; 
       const token = result.payload?.token;
-
+  
       if (user && token) {
+        console.log("✅ Giriş başarılı, token alındı:", token);
         localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("token", token); // ✅ Token artık burada düzgün saklanıyor!
-
+        localStorage.setItem("token", token);
+  
         if (user.role === "admin") {
-          navigate("/dashboard"); // ✅ Admin giriş yapınca dashboard'a yönlendir
+          navigate("/dashboard");
         } else {
-          navigate("/"); // ✅ Normal kullanıcıyı ana sayfaya yönlendir
+          navigate("/");
         }
       } else {
-        console.error("❌ Kullanıcı veya token bilgisi eksik!");
+        console.error("❌ Kullanıcı veya token bilgisi eksik!", result.payload);
       }
+    } else {
+      console.error("❌ Giriş başarısız:", result);
     }
   };
+  
 
   return (
     <AuthContainer theme={theme}>

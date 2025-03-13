@@ -5,10 +5,14 @@ import connectDB from "./config/db.js";
 import swaggerDocs from "./config/swagger.js";
 import routes from "./routes/index.js";
 import { serveUploads } from "./middleware/upload.js"; // ✅ Upload middleware
+import bodyParserMiddleware from "./middleware/bodyParser.js"; // ✅ Body parser middleware
 
 dotenv.config();
 
 const app = express();
+app.use(bodyParserMiddleware);
+app.use(express.json({ limit: "50mb" })); // ✅ JSON limiti artırıldı
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(express.json());
 app.use(corsMiddleware);
 app.use("/api", routes);
@@ -31,4 +35,4 @@ const startServer = async () => {
 
 startServer();
 
-export default app;
+

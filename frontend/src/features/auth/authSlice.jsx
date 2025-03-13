@@ -8,9 +8,22 @@ export const login = createAsyncThunk(
     try {
       console.log("🔄 Giriş isteği gönderiliyor:", credentials);
       const response = await API.post("/auth/login", credentials);
-      console.log("🔥 API Yanıtı:", response.data);
+      console.log(
+        "🔥 API Dönen Yanıt:",
+        JSON.stringify(response.data, null, 2)
+      );
 
-      const { user, token } = response.data;
+      console.log("🔥 API Yanıtı:", response); // 🛠 Hata ayıklamak için buraya ekle
+      console.log("🔥 API Yanıtı (data):", response.data);
+
+      // Burada response.data olup olmadığını doğrula
+      if (!response || !response.data) {
+        console.error("❌ API yanıtı boş veya geçersiz!");
+        return rejectWithValue("❌ API'den geçerli bir yanıt alınamadı!");
+      }
+
+      const user = response.data.user;
+      const token = response.data.token || response.data.user?.token;
 
       if (!token) {
         console.error("❌ API yanıtında token eksik:", response.data);
@@ -24,11 +37,12 @@ export const login = createAsyncThunk(
       return { user, token };
     } catch (error) {
       console.error("❌ API Hatası:", error.response?.data || error);
-      return rejectWithValue(error.response?.data?.message || "❌ Giriş başarısız!");
+      return rejectWithValue(
+        error.response?.data?.message || "❌ Giriş başarısız!"
+      );
     }
   }
 );
-
 
 // 🔹 **Kullanıcı Kayıt (Register)**
 export const register = createAsyncThunk(
@@ -36,23 +50,29 @@ export const register = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await API.post("/auth/register", userData);
-      const { user, token } = response.data;
+      
+      // API Yanıtı Loglama
+      console.log("🔥 API Yanıtı:", response.data);
 
-      if (!token) {
+      // **Eksik Token Kontrolü**
+      if (!response.data.user || !response.data.user.token) {
+        console.error("❌ API yanıtında token eksik!", response.data);
         return rejectWithValue("❌ Kayıt başarılı, ancak token alınamadı!");
       }
 
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("token", response.data.user.token);
 
-      return { user, token };
+      return response.data.user;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "❌ Kayıt başarısız! Sunucu yanıt vermedi."
+        error.response?.data?.message || "❌ Kayıt başarısız!"
       );
     }
   }
 );
+
+
 
 // 🔹 **Çıkış Yap (Logout)**
 export const logout = createAsyncThunk("auth/logout", async () => {
@@ -83,6 +103,7 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
+        console.log("✅ Redux'a token eklendi mi?", action.payload.token); // ✅ Log ekle!
         state.loading = false;
         state.isAuthenticated = true;
         state.user = action.payload.user;
@@ -93,9 +114,12 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(register.fulfilled, (state, action) => {
+        console.log("✅ Redux'a eklenen token:", action.payload.token); // ✅ Token Redux'a ekleniyor mu?
         state.loading = false;
         state.isAuthenticated = true;
-        state.user = action.payload.user;
+        if (!state.user || state.user.role !== "admin") {
+          state.user = action.payload.user;
+        }
         state.token = action.payload.token;
       })
       .addCase(logout.fulfilled, (state) => {

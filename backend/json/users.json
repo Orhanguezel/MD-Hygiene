@@ -1,136 +1,126 @@
 [
-    {
-      "id": "USR-001",
-      "name": "Ayşe Yılmaz",
-      "email": "ayse.yilmaz@example.com",
-      "password": "hashed_password_2",
-      "role": "user",
-      "addresses": [
-        {
-          "street": "Cumhuriyet Mah.",
-          "city": "Ankara",
-          "postalCode": "06000",
-          "country": "Turkey",
-          "isDefault": true
-        }
-      ],
-      "phone": "+905551234567",
-      "orders": [
-        "ORD-001",
-        "ORD-002"
-      ],
-      "profileImage": "https://randomuser.me/api/portraits/women/1.jpg",
-      "isActive": true
+  {
+    "name": "Ayşe Yılmaz",
+    "email": "ayse.yilmaz@example.com",
+    "password": "123456",
+    "role": "user",
+    "addresses": [
+      {
+        "street": "Cumhuriyet Mah.",
+        "city": "Ankara",
+        "postalCode": "06000",
+        "country": "Turkey",
+        "isDefault": true
+      }
+    ],
+    "phone": "+905551234567",
+    "orders": [],
+    "profileImage": "https://randomuser.me/api/portraits/women/1.jpg",
+    "isActive": true,
+    "favorites": [],
+    "bio": "Merhaba! Ben Ayşe.",
+    "birthDate": "1990-05-14",
+    "socialMedia": {
+      "facebook": null,
+      "twitter": null,
+      "instagram": null
     },
-    {
-      "id": "USR-003",
-      "name": "Mehmet Demir",
-      "email": "mehmet.demir@example.com",
-      "password": "hashed_password_3",
-      "role": "moderator",
-      "addresses": [
-        {
-          "street": "Barbaros Blv.",
-          "city": "Izmir",
-          "postalCode": "35000",
-          "country": "Turkey",
-          "isDefault": false
-        }
-      ],
-      "phone": "+905301234567",
-      "orders": [
-        "ORD-003"
-      ],
-      "profileImage": "https://randomuser.me/api/portraits/men/4.jpg",
-      "isActive": true
-    },
-    {
-      "id": "USR-004",
-      "name": "Zeynep Kaya",
-      "email": "zeynep.kaya@example.com",
-      "password": "hashed_password_4",
-      "role": "staff",
-      "addresses": [
-        {
-          "street": "Gazi Cd.",
-          "city": "Bursa",
-          "postalCode": "16000",
-          "country": "Turkey",
-          "isDefault": true
-        }
-      ],
-      "phone": "+905401234567",
-      "orders": [],
-      "profileImage": "https://randomuser.me/api/portraits/women/5.jpg",
-      "isActive": true
-    },
-    {
-      "id": "USR-005",
-      "name": "Orhan Güzel",
-      "email": "orhanguzell@gmail.com",
-      "password": "111111",
-      "role": "user",
-      "addresses": [
-        {
-          "street": "Gazi Cd.",
-          "city": "Bursa",
-          "postalCode": "16000",
-          "country": "Turkey",
-          "isDefault": true
-        }
-      ],
-      "phone": "+905401234567",
-      "orders": [],
-      "profileImage": "http://localhost:5173/profil-orhan.jpeg",
-      "isActive": true,
-      "surname": "",
-      "address": "Grevenbroich"
-    },
-    {
-      "id": "USR-006",
-      "name": "Orhan",
-      "email": "orhan@gmail.com",
-      "password": "111111",
-      "role": "admin",
-      "addresses": [
-        {
-          "street": "Gazi Cd.",
-          "city": "Bursa",
-          "postalCode": "16000",
-          "country": "Turkey",
-          "isDefault": true
-        }
-      ],
-      "phone": "+905401234567",
-      "orders": [],
-      "profileImage": "http://localhost:5173/profil-orhan.jpeg",
-      "isActive": true
-    },
-    {
-      "id": "0e41",
-      "name": "Orhan",
-      "email": "nguzell@gmail.com",
-      "password": "11111111111",
-      "role": "user",
-      "isActive": true,
-      "createdAt": "2025-02-18T10:42:46.924Z"
-    },
-    {
-      "id": "145f",
-      "name": "Güzel",
-      "email": "guzel@gmail.com",
-      "password": "111111",
-      "role": "user",
-      "isActive": true,
-      "createdAt": "2025-02-18T11:07:23.312Z"
-    },
-    {
-      "id": "40f6",
-      "name": "abc",
-      "email": "o@gmail.com",
-      "password": "111111",
-      "role": "user",
-      "isActive": true,
-      "createdAt": "2025-02-18T11:18:12.382Z"
+    "notifications": {
+      "emailNotifications": true,
+      "smsNotifications": false
     }
-  ]
+  },
+  {
+    "name": "Mehmet Demir",
+    "email": "mehmet.demir@example.com",
+    "password": "Mehmet123!",
+    "role": "moderator",
+    "addresses": [
+      {
+        "street": "Barbaros Blv.",
+        "city": "Izmir",
+        "postalCode": "35000",
+        "country": "Turkey",
+        "isDefault": false
+      }
+    ],
+    "phone": "+905301234567",
+    "orders": [],
+    "profileImage": "https://randomuser.me/api/portraits/men/4.jpg",
+    "isActive": true,
+    "favorites": [],
+    "bio": "Kod yazmayı seviyorum.",
+    "birthDate": "1985-09-22",
+    "socialMedia": {
+      "facebook": null,
+      "twitter": "https://twitter.com/mehmetd",
+      "instagram": "https://instagram.com/mehmetd"
+    },
+    "notifications": {
+      "emailNotifications": true,
+      "smsNotifications": true
+    }
+  },
+  {
+    "name": "Zeynep Kaya",
+    "email": "zeynep.kaya@example.com",
+    "password": "Zeynep123!",
+    "role": "staff",
+    "addresses": [
+      {
+        "street": "Gazi Cd.",
+        "city": "Bursa",
+        "postalCode": "16000",
+        "country": "Turkey",
+        "isDefault": true
+      }
+    ],
+    "phone": "+905401234567",
+    "orders": [],
+    "profileImage": "https://randomuser.me/api/portraits/women/5.jpg",
+    "isActive": true,
+    "favorites": [],
+    "bio": "Doğa tutkunu.",
+    "birthDate": "1992-08-19",
+    "socialMedia": {
+      "facebook": "https://facebook.com/zeynepkaya",
+      "twitter": "https://twitter.com/zeynepkaya",
+      "instagram": null
+    },
+    "notifications": {
+      "emailNotifications": false,
+      "smsNotifications": true
+    }
+  },
+  {
+    "name": "Admin",
+    "email": "admin@mdhygiene.com",
+    "password": "Admin123!",
+    "role": "admin",
+    "addresses": [
+      {
+        "street": "Gazi Cd.",
+        "city": "Bursa",
+        "postalCode": "16000",
+        "country": "Turkey",
+        "isDefault": true
+      }
+    ],
+    "phone": "+905401234567",
+    "orders": [],
+    "profileImage": "https://via.placeholder.com/150",
+    "isActive": true,
+    "favorites": [],
+    "bio": "Sistem yöneticisi.",
+    "birthDate": "1980-01-01",
+    "socialMedia": {
+      "facebook": null,
+      "twitter": null,
+      "instagram": null
+    },
+    "notifications": {
+      "emailNotifications": true,
+      "smsNotifications": true
+    }
+  }
+]

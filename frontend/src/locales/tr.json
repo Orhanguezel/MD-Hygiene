@@ -112,7 +112,27 @@
     "emailPlaceholder": "E-posta Adresi Giriniz",
     "namePlaceholder": "Ad Soyad Giriniz",
     "rolePlaceholder": "Rol Seçiniz",
-    "statusPlaceholder": "Durum Seçiniz"
+    "statusPlaceholder": "Durum Seçiniz",
+    "customerRole": "Müşteri",
+    "address": "Adres Bilgileri",
+    "addressStreet": "Sokak",
+    "addressCity": "Şehir",
+    "addressPostalCode": "Posta Kodu",
+    "addressCountry": "Ülke",
+    "uploadProfileImage": "Profil Resmi Yükle",
+    "formError": "Lütfen tüm alanları doldurun!",
+    "loading": "Yükleniyor...",
+    "birthDate": "Doğum Tarihi",
+    "bio": "Biyografi",
+    "socialMedia": "Sosyal Medya",
+    "notifications": "Bildirim Ayarları",
+    "emailNotifications": "E-posta Bildirimleri",
+    "smsNotifications": "SMS Bildirimleri",
+    "favorites": "Favori Ürünler",
+    "noFavorites": "Favori ürün bulunamadı",
+    "noAddresses": "Adres bilgisi bulunamadı",
+    "unknownItem": "Bilinmeyen Ürün",
+    "view": "Görüntüle"
   },
 
   "orders": {
@@ -684,5 +704,4 @@
     "successUpdate": "Kategori başarıyla güncellendi!",
     "successDelete": "Kategori başarıyla silindi!"
   }
-
 }

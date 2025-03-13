@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser } from "@/features/users/userSlice";
+import { register } from "@/features/auth/authSlice"; // ✅ `register` kullanıldı
 import { useLanguage } from "@/features/language/useLanguage";
-import { toggleTheme } from "@/features/theme/themeSlice";
 import {
   UsersContainer,
   ActionButton,
@@ -12,31 +11,32 @@ import {
   Select,
   ErrorMessage,
   SectionTitle,
-  ImagePreview, // ✅ Resim önizleme için yeni bir stil
+  ImagePreview,
 } from "../styles/usersStyles";
 
 const AddUserForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { texts } = useLanguage();
-  const themeMode = useSelector((state) => state.theme.mode);
+  const { error, loading } = useSelector((state) => state.auth); // ✅ Auth state kullanıldı
 
+  // 📌 **Başlangıç Form Değerleri**
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    role: "customer",
+    role: "user", // Varsayılan olarak "user" seçili olacak
     isActive: true,
-    profileImage: "", // ✅ Base64 resim verisi burada tutulacak
+    phone: "",
+    profileImage: "", // Base64 olarak tutulacak
   });
-  const [error, setError] = useState("");
 
-  // ✅ Form alanları için değişiklik işleyici
+  // 📌 **Form Alanlarını Güncelleme**
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // ✅ Resim yükleme işleyici
+  // 📌 **Profil Resmi Yükleme**
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -44,33 +44,31 @@ const AddUserForm = () => {
       reader.onloadend = () => {
         setFormData((prev) => ({
           ...prev,
-          profileImage: reader.result, // Base64 olarak kaydet
+          profileImage: reader.result, // ✅ Base64 olarak kaydedilecek
         }));
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError("");
+ // 📌 **Formu Gönderme İşlemi**
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!formData.name || !formData.email || !formData.password) {
-      setError(texts.users.formError);
-      return;
+  try {
+    const response = await dispatch(register(formData)).unwrap();
+    console.log("✅ Kayıt Başarılı:", response);
+
+    if (!response.token) {
+      console.warn("⚠️ Kullanıcı kaydedildi ancak token alınamadı!");
     }
 
-    const newUser = {
-      ...formData,
-      id: `USR-${Date.now()}`,
-      isActive: true,
-      createdAt: new Date().toISOString(),
-      profileImage: formData.profileImage || "/assets/auth-image.png", // Varsayılan resim
-    };
+    navigate("/users"); // ✅ Kullanıcı başarıyla eklenince yönlendir
+  } catch (err) {
+    console.error("❌ Kayıt hatası:", err);
+  }
+};
 
-    dispatch(addUser(newUser));
-    navigate("/users");
-  };
 
   return (
     <UsersContainer>
@@ -79,6 +77,7 @@ const AddUserForm = () => {
       {error && <ErrorMessage>{error}</ErrorMessage>}
 
       <Form onSubmit={handleSubmit}>
+        {/* ✅ Kullanıcı Adı */}
         <Input
           type="text"
           name="name"
@@ -87,6 +86,8 @@ const AddUserForm = () => {
           onChange={handleChange}
           required
         />
+
+        {/* ✅ E-posta */}
         <Input
           type="email"
           name="email"
@@ -95,6 +96,8 @@ const AddUserForm = () => {
           onChange={handleChange}
           required
         />
+
+        {/* ✅ Şifre */}
         <Input
           type="password"
           name="password"
@@ -104,26 +107,42 @@ const AddUserForm = () => {
           required
         />
 
+        {/* ✅ Telefon Numarası */}
+        <Input
+          type="tel"
+          name="phone"
+          placeholder={texts.users.phone}
+          value={formData.phone}
+          onChange={handleChange}
+        />
+
+        {/* ✅ Kullanıcı Rolü */}
         <Select name="role" value={formData.role} onChange={handleChange}>
-          <option value="customer">{texts.users.userRole}</option>
+          <option value="user">{texts.users.userRole}</option>
           <option value="admin">{texts.users.adminRole}</option>
           <option value="moderator">{texts.users.moderatorRole}</option>
           <option value="staff">{texts.users.staffRole}</option>
         </Select>
 
-        {/* ✅ Resim Yükleme Alanı */}
-        <Input
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-        />
+        {/* ✅ Kullanıcı Aktif/Pasif */}
+        <Select name="isActive" value={formData.isActive} onChange={handleChange}>
+          <option value={true}>{texts.users.active}</option>
+          <option value={false}>{texts.users.inactive}</option>
+        </Select>
 
-        {/* ✅ Resim Önizlemesi */}
+        {/* 📌 **Profil Resmi Yükleme Alanı** */}
+        <SectionTitle>{texts.users.uploadProfileImage}</SectionTitle>
+        <Input type="file" accept="image/*" onChange={handleImageUpload} />
+
+        {/* ✅ **Profil Resmi Önizleme** */}
         {formData.profileImage && (
           <ImagePreview src={formData.profileImage} alt="Profile Preview" />
         )}
 
-        <ActionButton type="submit">{texts.users.save}</ActionButton>
+        {/* 📌 **Kaydet Butonu** */}
+        <ActionButton type="submit" disabled={loading}>
+          {loading ? texts.users.saving : texts.users.save}
+        </ActionButton>
       </Form>
     </UsersContainer>
   );

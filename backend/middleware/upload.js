@@ -22,21 +22,21 @@ const storage = multer.diskStorage({
 
 // 📌 **Resim Format Kontrolü**
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png/;
+  const allowedTypes = /jpeg|jpg|png|gif|webp/; // ✅ `gif` ve `webp` desteği eklendi
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = allowedTypes.test(file.mimetype);
 
   if (extname && mimetype) {
     cb(null, true);
   } else {
-    cb(new Error("⚠️ Sadece .jpeg, .jpg ve .png formatları desteklenmektedir!"), false);
+    cb(new Error("⚠️ Sadece .jpeg, .jpg, .png, .gif ve .webp formatları desteklenmektedir!"), false);
   }
 };
 
 // 📌 **Multer Middleware Tanımlaması**
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // ✅ Maksimum 5MB
+  limits: { fileSize: 20 * 1024 * 1024 }, // ✅ Maksimum 20MB olarak güncellendi
   fileFilter,
 });
 
