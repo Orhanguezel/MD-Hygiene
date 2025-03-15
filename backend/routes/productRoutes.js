@@ -7,7 +7,7 @@ import {
   deleteProduct 
 } from "../controllers/productController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
-import upload from "../middleware/upload.js"; // ✅ Resim yükleme middleware
+import upload from "../middleware/uploadMiddleware.js"; // ✅ Resim yükleme middleware
 
 const router = express.Router();
 

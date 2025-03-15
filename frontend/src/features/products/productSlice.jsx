@@ -9,40 +9,73 @@ export const fetchProducts = createAsyncThunk(
       const response = await API.get("/products");
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data?.message || "Ürünler alınırken hata oluştu");
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Ürünler alınırken hata oluştu"
+      );
     }
   }
 );
 
-// ✅ **Ürün Ekleme**
+// ✅ **Ürün Ekleme (FormData Destekli)**
 export const addProduct = createAsyncThunk(
   "products/addProduct",
   async (productData, thunkAPI) => {
     try {
-      const formattedData = {
-        ...productData,
-        category: productData.category._id || productData.category,
-        images: Array.isArray(productData.images) ? productData.images : [productData.images], 
-      };
-      
+      const response = await API.post("/products", productData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-      const response = await API.post("/products", formattedData);
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data?.message || "Ürün eklenirken hata oluştu");
+      console.error("❌ API Hatası:", error.response?.data || error.message);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Ürün eklenirken hata oluştu"
+      );
     }
   }
 );
 
-// ✅ **Ürün Güncelleme**
+
+// ✅ **Ürün Güncelleme (FormData Destekli)**
 export const updateProduct = createAsyncThunk(
   "products/updateProduct",
   async ({ id, productData }, thunkAPI) => {
     try {
-      const response = await API.put(`/products/${id}`, productData);
+      const formData = new FormData();
+      formData.append("title", productData.title);
+      formData.append("description", productData.description);
+      formData.append("price", productData.price);
+      formData.append("stock", productData.stock);
+      formData.append(
+        "category",
+        productData.category._id || productData.category
+      );
+
+      // ✅ Güncellenen eski resimleri FormData'ya ekle
+      if (productData.images) {
+        productData.images.forEach((img) => {
+          if (typeof img === "string") {
+            formData.append("existingImages[]", img);
+          }
+        });
+      }
+
+      // ✅ Yeni yüklenen dosyaları FormData'ya ekle
+      if (productData.newImages) {
+        productData.newImages.forEach((file) => {
+          formData.append("images", file);
+        });
+      }
+
+      const response = await API.put(`/products/${id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data?.message || "Ürün güncellenirken hata oluştu");
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Ürün güncellenirken hata oluştu"
+      );
     }
   }
 );
@@ -55,11 +88,14 @@ export const deleteProduct = createAsyncThunk(
       await API.delete(`/products/${id}`);
       return id;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data?.message || "Ürün silinirken hata oluştu");
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Ürün silinirken hata oluştu"
+      );
     }
   }
 );
 
+// ✅ **Redux Slice**
 const productSlice = createSlice({
   name: "product",
   initialState: {
@@ -77,9 +113,11 @@ const productSlice = createSlice({
       state.filteredProducts =
         action.payload === "all"
           ? state.products
-          : state.products.filter((product) =>
-              product.category?._id?.toString() === action.payload.toString() ||
-              product.category?.toString() === action.payload.toString()
+          : state.products.filter(
+              (product) =>
+                product.category?._id?.toString() ===
+                  action.payload.toString() ||
+                product.category?.toString() === action.payload.toString()
             );
     },
   },
@@ -90,23 +128,30 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
-
         state.loading = false;
         state.products = action.payload;
         state.filteredProducts =
           state.selectedCategory === "all"
             ? action.payload
-            : action.payload.filter((product) => product.category === state.selectedCategory);
+            : action.payload.filter(
+                (product) => product.category === state.selectedCategory
+              );
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
+      .addCase(addProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(addProduct.fulfilled, (state, action) => {
+        state.loading = false;
         state.products.push(action.payload);
-        if (state.selectedCategory === "all" || action.payload.category === state.selectedCategory) {
-          state.filteredProducts.push(action.payload);
-        }
+      })
+      .addCase(addProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.products = state.products.map((product) =>
@@ -114,13 +159,20 @@ const productSlice = createSlice({
         );
 
         // ✅ Eğer güncellenen ürün seçili kategorideyse, filteredProducts’ı güncelle
-        state.filteredProducts = state.selectedCategory === "all"
-          ? state.products
-          : state.products.filter((product) => product.category === state.selectedCategory);
+        state.filteredProducts =
+          state.selectedCategory === "all"
+            ? state.products
+            : state.products.filter(
+                (product) => product.category === state.selectedCategory
+              );
       })
       .addCase(deleteProduct.fulfilled, (state, action) => {
-        state.products = state.products.filter((product) => product._id !== action.payload);
-        state.filteredProducts = state.filteredProducts.filter((product) => product._id !== action.payload);
+        state.products = state.products.filter(
+          (product) => product._id !== action.payload
+        );
+        state.filteredProducts = state.filteredProducts.filter(
+          (product) => product._id !== action.payload
+        );
       });
   },
 });

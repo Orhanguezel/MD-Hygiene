@@ -6,40 +6,25 @@ export const login = createAsyncThunk(
   "auth/login",
   async (credentials, { rejectWithValue }) => {
     try {
-      console.log("🔄 Giriş isteği gönderiliyor:", credentials);
       const response = await API.post("/auth/login", credentials);
-      console.log(
-        "🔥 API Dönen Yanıt:",
-        JSON.stringify(response.data, null, 2)
-      );
 
-      console.log("🔥 API Yanıtı:", response); // 🛠 Hata ayıklamak için buraya ekle
-      console.log("🔥 API Yanıtı (data):", response.data);
-
-      // Burada response.data olup olmadığını doğrula
-      if (!response || !response.data) {
-        console.error("❌ API yanıtı boş veya geçersiz!");
-        return rejectWithValue("❌ API'den geçerli bir yanıt alınamadı!");
+      if (!response.data || !response.data.user || !response.data.user.token) {
+        console.error("❌ API yanıtında eksik bilgi var:", response.data);
+        return rejectWithValue("❌ Giriş başarısız! API'den geçerli bir yanıt alınamadı.");
       }
 
       const user = response.data.user;
-      const token = response.data.token || response.data.user?.token;
-
-      if (!token) {
-        console.error("❌ API yanıtında token eksik:", response.data);
-        return rejectWithValue("❌ Token alınamadı, lütfen tekrar deneyin!");
-      }
+      const token = user.token;
 
       console.log("✅ Token alındı:", token);
+
+      // Token ve kullanıcı bilgilerini kaydet
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", token);
 
       return { user, token };
     } catch (error) {
-      console.error("❌ API Hatası:", error.response?.data || error);
-      return rejectWithValue(
-        error.response?.data?.message || "❌ Giriş başarısız!"
-      );
+      return rejectWithValue(error.response?.data?.message || "❌ Giriş başarısız!");
     }
   }
 );
@@ -50,29 +35,26 @@ export const register = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await API.post("/auth/register", userData);
-      
-      // API Yanıtı Loglama
-      console.log("🔥 API Yanıtı:", response.data);
 
-      // **Eksik Token Kontrolü**
-      if (!response.data.user || !response.data.user.token) {
-        console.error("❌ API yanıtında token eksik!", response.data);
+      if (!response.data || !response.data.user || !response.data.user.token) {
         return rejectWithValue("❌ Kayıt başarılı, ancak token alınamadı!");
       }
 
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-      localStorage.setItem("token", response.data.user.token);
+      const user = response.data.user;
+      const token = user.token;
 
-      return response.data.user;
+      console.log("✅ Yeni kullanıcı kaydedildi:", user);
+
+      // Token ve kullanıcı bilgilerini kaydet
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+
+      return { user, token };
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "❌ Kayıt başarısız!"
-      );
+      return rejectWithValue(error.response?.data?.message || "❌ Kayıt başarısız!");
     }
   }
 );
-
-
 
 // 🔹 **Çıkış Yap (Logout)**
 export const logout = createAsyncThunk("auth/logout", async () => {
@@ -103,7 +85,6 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        console.log("✅ Redux'a token eklendi mi?", action.payload.token); // ✅ Log ekle!
         state.loading = false;
         state.isAuthenticated = true;
         state.user = action.payload.user;
@@ -114,12 +95,9 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(register.fulfilled, (state, action) => {
-        console.log("✅ Redux'a eklenen token:", action.payload.token); // ✅ Token Redux'a ekleniyor mu?
         state.loading = false;
         state.isAuthenticated = true;
-        if (!state.user || state.user.role !== "admin") {
-          state.user = action.payload.user;
-        }
+        state.user = action.payload.user;
         state.token = action.payload.token;
       })
       .addCase(logout.fulfilled, (state) => {

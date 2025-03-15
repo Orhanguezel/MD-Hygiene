@@ -48,7 +48,6 @@ const userSchema = new mongoose.Schema(
 );
 
 // ✅ **Şifreyi kaydetmeden önce hashle**
-// ✅ **Şifreyi kaydetmeden önce hashle**
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next(); // Şifre değiştirilmemişse, tekrar hashleme
 

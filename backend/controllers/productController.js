@@ -15,25 +15,24 @@ export const fetchProducts = asyncHandler(async (req, res) => {
 
 // 📌 **Ürün Ekleme**
 export const createProduct = asyncHandler(async (req, res) => {
-  console.log("📌 Backend'e Gelen Veri:", req.body);
-
   const { title, description, price, stock, category } = req.body;
-  
-  if (!title || !price || !stock || !category) {
-    return res.status(400).json({ message: "⚠️ Lütfen tüm zorunlu alanları doldurun!" });
+
+  let images = [];
+
+  // ✅ Eğer URL'den eklenmişse, onu ekle
+  if (req.body.existingImages) {
+    images = Array.isArray(req.body.existingImages)
+      ? req.body.existingImages
+      : [req.body.existingImages];
   }
 
-  if (!mongoose.Types.ObjectId.isValid(category)) {
-    return res.status(400).json({ message: "⚠️ Geçersiz kategori ID!" });
+  // ✅ Eğer dosya yüklenmişse, doğru URL formatında kaydedelim
+  if (req.files.length > 0) {
+    const uploadedImages = req.files.map(
+      (file) => `/uploads/${file.filename}`
+    );
+    images = [...images, ...uploadedImages];
   }
-
-  const existingCategory = await Category.findById(category);
-  if (!existingCategory) {
-    return res.status(404).json({ message: "⚠️ Kategori bulunamadı!" });
-  }
-
-  // 📌 **Yüklenen Resimleri Al ve Tam URL Yap**
-  let images = req.files.length > 0 ? req.files.map(file => `/uploads/${file.filename}`) : [];
 
   const newProduct = new Product({
     title,
@@ -41,12 +40,15 @@ export const createProduct = asyncHandler(async (req, res) => {
     price,
     stock,
     category,
-    images
+    images,
   });
 
   await newProduct.save();
   res.status(201).json({ message: "✅ Ürün başarıyla oluşturuldu!", product: newProduct });
 });
+
+
+
 
 // 📌 **Belirli bir ürünü getir (Kategori bilgileriyle birlikte)**
 export const getProductById = asyncHandler(async (req, res) => {

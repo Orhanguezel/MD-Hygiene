@@ -15,19 +15,19 @@ import {
   ImagePreviewContainer,
   ImagePreview,
   FileInput,
-} from "../styles/productEditStyles"; // 📌 Stil dosyası
+} from "../styles/productEditStyles"; 
 
 const ProductEdit = () => {
   const dispatch = useDispatch();
   const { texts } = useLanguage();
   const { theme } = useTheme();
-
   const { products, loading } = useSelector((state) => state.product);
   const { categories } = useSelector((state) => state.category);
 
   const [selectedCategory, setSelectedCategory] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [newImages, setNewImages] = useState([]);
   const [productData, setProductData] = useState({
     title: "",
     description: "",
@@ -36,7 +36,6 @@ const ProductEdit = () => {
     category: "",
     images: [],
   });
-  const [newImages, setNewImages] = useState([]); // ✅ Yüklenen yeni resimler
 
   // ✅ Ürünleri ve kategorileri yükle
   useEffect(() => {
@@ -49,7 +48,7 @@ const ProductEdit = () => {
     if (selectedCategory) {
       const filtered = products.filter((p) => String(p.category?._id) === String(selectedCategory));
       setFilteredProducts(filtered);
-      setSelectedProduct(null); // Yeni kategori seçildiğinde ürünü sıfırla
+      setSelectedProduct(null);
     } else {
       setFilteredProducts([]);
       setSelectedProduct(null);
@@ -83,56 +82,59 @@ const ProductEdit = () => {
     const { name, value } = e.target;
     setProductData((prev) => ({
       ...prev,
-      [name]: name === "images" ? value.split(",") : value,
+      [name]: value,
     }));
   };
 
-  // ✅ Resim Yükleme Fonksiyonu
+  // ✅ Resim Yükleme
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     const imageUrls = files.map((file) => URL.createObjectURL(file));
-    
-    setNewImages((prev) => [...prev, ...files]); // Yeni yüklenen dosyaları sakla
+
+    setNewImages((prev) => [...prev, ...files]);
     setProductData((prev) => ({
       ...prev,
-      images: [...prev.images, ...imageUrls], // Önizleme için güncelle
+      images: [...prev.images, ...imageUrls],
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!selectedProduct) {
       toast.error("⚠️ Güncellenecek bir ürün seçmelisiniz!");
       return;
     }
-
+  
     const formData = new FormData();
     formData.append("title", productData.title);
     formData.append("description", productData.description);
     formData.append("price", productData.price);
     formData.append("stock", productData.stock);
     formData.append("category", productData.category);
-    
-    // ✅ Eski resimleri ekle
+  
+    // ✅ URL'den eklenen resimleri FormData'ya ekle
     productData.images.forEach((img, index) => {
-      formData.append(`images[${index}]`, img);
+      if (img.startsWith("http")) {
+        formData.append(`existingImages[${index}]`, img);
+      }
     });
-
-    // ✅ Yeni yüklenen dosyaları FormData'ya ekle
+  
+    // ✅ Yeni yüklenen dosyaları ekle
     newImages.forEach((file) => {
-      formData.append("newImages", file);
+      formData.append("images", file);
     });
-
+  
     dispatch(updateProduct({ id: selectedProduct._id, productData: formData }))
       .unwrap()
       .then(() => {
         toast.success("✅ Ürün başarıyla güncellendi!");
       })
-      .catch(() => toast.error("❌ Ürün güncellenirken hata oluştu!"));
+      .catch((err) => {
+        toast.error("❌ Ürün güncellenirken hata oluştu!");
+      });
   };
-
-  if (loading) return <p>{texts?.products?.loading || "Yükleniyor..."}</p>;
+  
 
   return (
     <EditFormContainer theme={theme} onSubmit={handleSubmit}>
@@ -164,37 +166,25 @@ const ProductEdit = () => {
         </>
       )}
 
-      {/* ✅ Form */}
       {selectedProduct && (
         <>
           <EditLabel>{texts?.products?.productName || "Ürün Adı"}:</EditLabel>
-          <EditFormInput theme={theme} type="text" name="title" value={productData.title} onChange={handleChange} required />
-
-          <EditLabel>{texts?.products?.description || "Açıklama"}:</EditLabel>
-          <EditTextarea theme={theme} name="description" value={productData.description} onChange={handleChange} />
+          <EditFormInput type="text" name="title" value={productData.title} onChange={handleChange} required />
 
           <EditLabel>{texts?.products?.price || "Fiyat (₺)"}:</EditLabel>
-          <EditFormInput theme={theme} type="number" name="price" value={productData.price} onChange={handleChange} required />
+          <EditFormInput type="number" name="price" value={productData.price} onChange={handleChange} required />
 
-          <EditLabel>{texts?.products?.stock || "Stok Adedi"}:</EditLabel>
-          <EditFormInput theme={theme} type="number" name="stock" value={productData.stock} onChange={handleChange} required />
-
-          {/* ✅ Mevcut Resimleri Göster */}
-          <EditLabel>{texts?.products?.imageURL || "Ürün Resmi URL"}:</EditLabel>
-          <EditFormInput theme={theme} type="text" name="images" value={productData.images.join(",")} onChange={handleChange} required />
-
+          {/* ✅ Resim Önizleme */}
           <ImagePreviewContainer>
             {productData.images.map((img, index) => (
               <ImagePreview key={index} src={img} alt={`Product ${index}`} />
             ))}
           </ImagePreviewContainer>
 
-          {/* ✅ Yeni Resim Yükleme */}
           <EditLabel>{texts?.products?.uploadImage || "Dosyadan Resim Yükle"}:</EditLabel>
           <FileInput type="file" multiple onChange={handleImageUpload} />
-          
 
-          <EditSubmitButton theme={theme} type="submit">
+          <EditSubmitButton type="submit">
             {texts?.products?.update || "Güncelle"}
           </EditSubmitButton>
         </>

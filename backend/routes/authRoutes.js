@@ -11,8 +11,10 @@ import {
   updateUserRole,
   toggleUserStatus,
   updateUser,
+  updateProfileImage, // ✅ Yeni eklendi (profil resmi yükleme)
 } from "../controllers/authController.js";
 import { authenticate, authorizeRoles } from "../middleware/authMiddleware.js";
+import upload from "../middleware/uploadMiddleware.js"; 
 
 const router = express.Router();
 
@@ -43,6 +45,11 @@ router
 
 router
   .route("/users/:id/status")
-  .put(authenticate, authorizeRoles("admin"), toggleUserStatus); // Kullanıcıyı blokla/aktif yap
+  .put(authenticate, authorizeRoles("admin"), toggleUserStatus);
+
+// 📌 **Kullanıcı Profil Resmini Güncelleme**
+router
+  .route("/users/:id/profile-image")
+  .put(authenticate, authorizeRoles("admin"), upload.single("profileImage"), updateProfileImage);
 
 export default router;

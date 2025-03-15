@@ -46,33 +46,40 @@ const ProductForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProduct((prev) => ({
-      ...prev,
-      [name]: name === "images" ? value.split(",") : value,
-    }));
+
+    if (name === "images") {
+      const trimmedValue = value.trim();
+      setProduct((prev) => ({
+        ...prev,
+        images: trimmedValue ? trimmedValue.split(",").map((url) => url.trim()) : [],
+      }));
+    } else {
+      setProduct((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   // ✅ Resim Yükleme Fonksiyonu
   const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const validFiles = files.filter((file) => file.type.startsWith("image/"));
+    const files = Array.from(e.target.files).filter((file) => file.type.startsWith("image/"));
 
-    if (validFiles.length === 0) {
+    if (files.length === 0) {
       toast.error("⚠️ Geçerli bir resim dosyası seçin!");
       return;
     }
 
-    if (newImages.length + validFiles.length > 5) {
+    if (newImages.length + files.length > 5) {
       toast.error("⚠️ En fazla 5 resim yükleyebilirsiniz!");
       return;
     }
 
-    // ✅ Önceki Blob URL'leri temizle
     previewImages.forEach((url) => URL.revokeObjectURL(url));
 
-    const imageUrls = validFiles.map((file) => URL.createObjectURL(file));
+    const imageUrls = files.map((file) => URL.createObjectURL(file));
 
-    setNewImages((prev) => [...prev, ...validFiles]);
+    setNewImages((prev) => [...prev, ...files]);
     setPreviewImages((prev) => [...prev, ...imageUrls]);
   };
 
@@ -85,7 +92,6 @@ const ProductForm = () => {
       }));
     } else if (type === "file") {
       URL.revokeObjectURL(previewImages[index]);
-
       setNewImages((prev) => prev.filter((_, i) => i !== index));
       setPreviewImages((prev) => prev.filter((_, i) => i !== index));
     }
@@ -98,44 +104,68 @@ const ProductForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!product.title || !product.price || !product.category) {
+  
+    console.log("📌 Form Gönderme Başlatıldı!");
+    console.log("📋 Mevcut Ürün Verisi:", product);
+  
+    if (!product.title || !product.price || !product.stock || !product.category) {
       toast.error("⚠️ Lütfen tüm alanları doldurun!");
       return;
     }
-
+  
+    const categoryId = product.category?.trim();
+    if (!categoryId || categoryId === "") {
+      console.error("❌ Kategori ID eksik!");
+      toast.error("⚠️ Kategori seçmelisiniz!");
+      return;
+    }
+  
+    console.log("📌 Kategori ID:", categoryId);
+  
     const formData = new FormData();
     formData.append("title", product.title);
-    formData.append("description", product.description);
+    formData.append("description", product.description || "");
     formData.append("price", product.price);
     formData.append("stock", product.stock);
-    formData.append("category", product.category);
-
-    // ✅ Eski resim URL'lerini ekle
-    product.images.forEach((img) => {
-      if (img.startsWith("http")) {
-        formData.append("existingImages[]", img);
-      }
-    });
-
-    // ✅ Yeni yüklenen dosyaları FormData'ya ekle
-    newImages.forEach((file) => {
-      formData.append("images", file);
-    });
-
+    formData.append("category", categoryId);
+  
+    // ✅ URL ile eklenen resimleri FormData'ya ekle
+    if (Array.isArray(product.images) && product.images.length > 0) {
+      product.images.forEach((img, index) => {
+        if (img.startsWith("http")) {
+          formData.append(`existingImages[${index}]`, img);
+        }
+      });
+    }
+  
+    // ✅ Dosya olarak yüklenen resimleri FormData'ya ekle
+    if (newImages.length > 0) {
+      newImages.forEach((file) => {
+        formData.append("images", file);
+      });
+    }
+  
+    console.log("📤 API'ye Gidecek FormData İçeriği:");
+    for (let pair of formData.entries()) {
+      console.log(`🔍 ${pair[0]}:`, pair[1]);
+    }
+  
     try {
       await dispatch(addProduct(formData)).unwrap();
       toast.success("✅ Ürün başarıyla eklendi!");
       navigate("/products");
-
+  
+      // ✅ Form verilerini sıfırla
       if (fileInputRef.current) fileInputRef.current.value = "";
       previewImages.forEach((url) => URL.revokeObjectURL(url));
       setPreviewImages([]);
       setNewImages([]);
     } catch (error) {
+      console.error("❌ Ürün eklenirken hata oluştu!", error);
       toast.error("❌ Ürün eklenirken hata oluştu!");
     }
   };
+  
 
   return (
     <FormContainer theme={theme} onSubmit={handleSubmit}>

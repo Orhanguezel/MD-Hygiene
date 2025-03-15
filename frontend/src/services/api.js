@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// ✅ **Canlı Backend API URL**
-const API_BASE_URL = "http://localhost:5010/api"; 
+// ✅ **Backend API URL**
+const API_BASE_URL = "http://localhost:5010/api";
 
 const API = axios.create({
   baseURL: API_BASE_URL,
@@ -26,7 +26,7 @@ API.interceptors.request.use(
 API.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 || error.response?.status === 403) {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
       window.location.href = "/login";
@@ -36,4 +36,3 @@ API.interceptors.response.use(
 );
 
 export default API;
-

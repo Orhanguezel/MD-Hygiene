@@ -37,7 +37,7 @@ const Users = () => {
 
   useEffect(() => {
     if (authToken) {
-      dispatch(getAllUsers(authToken));
+      dispatch(getAllUsers({ token: authToken }));
     } else {
       toast.error("❌ Yetkilendirme hatası: Token bulunamadı!");
       navigate("/login");
@@ -45,7 +45,12 @@ const Users = () => {
   }, [dispatch, authToken, navigate]);
 
   if (loading) return <p>{texts.users.loading}</p>;
-  if (error) return <p>{texts.users.error}: {error}</p>;
+  if (error)
+    return (
+      <p>
+        {texts.users.error}: {error}
+      </p>
+    );
 
   return (
     <UsersContainer theme={theme}>
@@ -81,22 +86,50 @@ const Users = () => {
                 </UserStatus>
 
                 <div>
-                  <ActionButton theme={theme} onClick={() => navigate(`/users/${_id}`)}>
+                  <ActionButton
+                    theme={theme}
+                    onClick={() => navigate(`/users/${_id}`)}
+                  >
                     {texts.users.view}
                   </ActionButton>
 
-                  <ActionButton theme={theme} onClick={() => navigate(`/users/edit/${_id}`)}>
+                  <ActionButton
+                    theme={theme}
+                    onClick={() => navigate(`/users/edit/${_id}`)}
+                  >
                     {texts.users.edit}
                   </ActionButton>
 
                   <ActionButton
                     theme={theme}
                     onClick={() => {
-                      if (authToken) {
-                        dispatch(toggleUserStatus({ userId: _id, token: authToken }));
-                      } else {
-                        toast.error("❌ Yetkilendirme hatası: Token bulunamadı!");
+                      if (!authToken) {
+                        toast.error(
+                          "❌ Yetkilendirme hatası: Token bulunamadı!"
+                        );
+                        return;
                       }
+
+                      console.log(
+                        "🔄 Kullanıcı Durumu Değiştiriliyor: ID =>",
+                        _id
+                      ); // 📌 LOG EKLENDİ
+
+                      dispatch(toggleUserStatus({ userId: String(_id), token: authToken })
+                      )
+                        .unwrap()
+                        .then(() => {
+                          toast.success(
+                            "✅ Kullanıcı durumu başarıyla güncellendi!"
+                          );
+                        })
+                        .catch((err) => {
+                          console.error(
+                            "❌ Kullanıcı durumu değiştirilemedi:",
+                            err
+                          );
+                          toast.error(`⚠️ Hata: ${err}`);
+                        });
                     }}
                   >
                     {isActive ? texts.users.deactivate : texts.users.activate}
@@ -106,9 +139,18 @@ const Users = () => {
                     theme={theme}
                     onClick={() => {
                       if (authToken) {
-                        dispatch(deleteUser({ userId: _id, token: authToken }));
+                        dispatch(deleteUser({ userId: _id, token: authToken }))
+                          .unwrap()
+                          .then(() => {
+                            toast.success("✅ Kullanıcı başarıyla silindi!");
+                          })
+                          .catch((err) => {
+                            toast.error(`❌ Kullanıcı silinemedi: ${err}`);
+                          });
                       } else {
-                        toast.error("❌ Yetkilendirme hatası: Token bulunamadı!");
+                        toast.error(
+                          "❌ Yetkilendirme hatası: Token bulunamadı!"
+                        );
                       }
                     }}
                   >

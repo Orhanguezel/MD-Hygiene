@@ -4,23 +4,25 @@ import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import { generateToken } from "../utils/jwt.js";
 
-
 // ✅ **Kullanıcı Kayıt**
+
+
 export const registerUser = asyncHandler(async (req, res) => {
-  const {
+  let {
     name,
     email,
     password,
     role = "user",
     phone,
     addresses = [],
-    profileImage = "https://via.placeholder.com/150",
+    profileImage = "",
     bio = "",
     birthDate,
     socialMedia = { facebook: "", twitter: "", instagram: "" },
     notifications = { emailNotifications: true, smsNotifications: false }
   } = req.body;
 
+  // ✅ **Veri Kontrolleri**
   const validRoles = ["admin", "user", "customer", "moderator", "staff"];
   const roleLowerCase = role.toLowerCase();
   if (!validRoles.includes(roleLowerCase)) {
@@ -36,12 +38,42 @@ export const registerUser = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "❌ Şifre en az 6 karakter olmalıdır." });
   }
 
+  if (typeof addresses === "string") {
+    try {
+      addresses = JSON.parse(addresses);
+    } catch (error) {
+      return res.status(400).json({ message: "❌ Adres bilgisi JSON formatında olmalıdır!" });
+    }
+  }
+
   if (!Array.isArray(addresses)) {
     return res.status(400).json({ message: "❌ Adres bilgisi geçerli değil!" });
   }
 
+  // ✅ **Doğum Tarihi Formatı**
+  const formattedBirthDate = birthDate && birthDate.trim() !== "" ? new Date(birthDate) : null;
+
+  // ✅ **Profil Resmi İşleme**
+  if (profileImage && typeof profileImage === "string" && profileImage.startsWith("data:image")) {
+    try {
+      const base64Data = profileImage.split(",")[1]; // Base64 kısmını al
+      const filePath = `uploads/profile-images/${Date.now()}.png`;
+      fs.writeFileSync(filePath, base64Data, "base64");
+      profileImage = filePath; // ✅ Yeni dosya yolunu profileImage olarak kaydet
+    } catch (error) {
+      console.error("❌ Base64 Görsel Kaydetme Hatası:", error);
+      return res.status(400).json({ message: "❌ Profil resmi yüklenirken hata oluştu!" });
+    }
+  } else if (req.file) {
+    profileImage = req.file.path; // ✅ Multer ile yüklenen dosyanın yolunu kaydet
+  } else {
+    profileImage = "https://via.placeholder.com/150"; // ✅ Varsayılan resim
+  }
+
+  // ✅ **Şifre Hashleme**
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  // ✅ **Yeni Kullanıcı Oluşturma**
   let user = await User.create({
     name,
     email,
@@ -51,12 +83,12 @@ export const registerUser = asyncHandler(async (req, res) => {
     addresses,
     profileImage,
     bio,
-    birthDate: birthDate ? new Date(birthDate) : null,
+    birthDate: formattedBirthDate,
     socialMedia,
     notifications
   });
 
-  // 📌 Kullanıcıyı tekrar çekerek `password` seçelim
+  // 📌 **Kullanıcıyı Tekrar Çek (Şifre Dahil)**
   user = await User.findById(user._id).select("+password");
 
   res.status(201).json({
@@ -67,10 +99,12 @@ export const registerUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      token: generateToken(user._id, user.role), // ✅ `generateToken` fonksiyonunu kullandık!
+      profileImage: user.profileImage, // ✅ Profil resmi frontend'e düzgün dönüyor mu kontrol et
+      token: generateToken(user._id, user.role),
     },
   });
 });
+
 
 
 
@@ -202,14 +236,21 @@ export const changePassword = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, message: "✅ Şifre başarıyla değiştirildi." });
 });
 
-// ✅ **Kullanıcıyı Bloklama & Aktif Yapma**
 export const toggleUserStatus = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  let { id } = req.params;
+
+  console.log("📌 Gelen Kullanıcı ID:", id); // 🔥 LOG EKLENDİ
+
+  if (!id || typeof id !== "string") {
+    return res.status(400).json({ message: "❌ Hata: Kullanıcı ID eksik veya geçersiz!" });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(id.trim())) {
+    console.log("❌ Hata: Geçersiz ObjectId formatı!");
     return res.status(400).json({ message: "❌ Geçersiz kullanıcı ID formatı!" });
   }
 
-  const user = await User.findById(id);
+  const user = await User.findById(id.trim());
   if (!user) {
     return res.status(404).json({ message: "❌ Kullanıcı bulunamadı!" });
   }
@@ -217,14 +258,16 @@ export const toggleUserStatus = asyncHandler(async (req, res) => {
   user.isActive = !user.isActive;
   await user.save();
 
-  res.status(200).json({
+  console.log(`✅ Kullanıcı durumu güncellendi: ${user.isActive ? "Aktif" : "Bloklandı"}`);
+
+  return res.status(200).json({
     success: true,
-    message: `Kullanıcı ${user.isActive ? "aktif" : "bloklandı"}!`,
-    userId: user._id,
-    isActive: user.isActive, // ✅ Redux store'a doğrudan aktarılacak
+    message: `✅ Kullanıcı başarıyla ${user.isActive ? "aktifleştirildi" : "bloklandı"}!`,
+    userId: user._id.toString(),
+    isActive: user.isActive,
   });
-  
 });
+
 
 // ✅ **Kullanıcı Rol Güncelleme**
 export const updateUserRole = asyncHandler(async (req, res) => {
@@ -270,6 +313,43 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
     user,
   });
 });
+
+
+
+// ✅ **Kullanıcı Profil Resmini Güncelleme**
+export const updateProfileImage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!req.file) {
+      return res.status(400).json({ message: "❌ Dosya yüklenmedi!" });
+    }
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "❌ Kullanıcı bulunamadı!" });
+    }
+
+    // ✅ Eski resmi sil (eğer varsa)
+    if (user.profileImage && user.profileImage.startsWith("uploads")) {
+      const oldImagePath = path.join(process.cwd(), user.profileImage);
+      if (fs.existsSync(oldImagePath)) {
+        fs.unlinkSync(oldImagePath);
+      }
+    }
+
+    // ✅ Yeni resmi kaydet
+    user.profileImage = `uploads/profile-images/${req.file.filename}`;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "✅ Profil resmi güncellendi!",
+      profileImage: user.profileImage,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "❌ Sunucu hatası!", error });
+  }
+};
 
 
 

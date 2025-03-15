@@ -22,6 +22,7 @@ import AdminDashboard from "@/pages/modules/dashboard/AdminDashboard";
 import Users from "@/pages/modules/user/Users";
 import UserDetails from "@/pages/modules/user/components/UserDetails";
 import AddUserForm from "@/pages/modules/user/components/AddUserForm";
+import EditUserForm from "@/pages/modules/user/components/EditUserForm";
 
 // ✅ Orders Modülü
 import Orders from "@/pages/modules/order/Orders";
@@ -87,8 +88,9 @@ const AdminRoutes = () => {
         <Route path="users" element={<Outlet />}>
           <Route index element={<Users />} />
           <Route path="add" element={<AddUserForm />} />
-          <Route path="edit/:id" element={<AddUserForm />} />
           <Route path=":id" element={<UserDetails />} />
+          <Route path="edit/:id" element={<EditUserForm />} />
+
         </Route>
 
         {/* ✅ Orders Modülü */}
