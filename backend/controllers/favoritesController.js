@@ -4,12 +4,14 @@ import Favorite from "../models/Favorite.js";
 export const getFavorites = async (req, res) => {
   try {
     const userId = req.user.id;
-    const favorites = await Favorite.find({ userId }).populate("productId");
-    res.status(200).json(favorites.map(fav => fav.productId)); // ✅ Sadece `productId` dön
+    const favorites = await Favorite.find({ userId }).select("productId -_id");
+    const favoriteIds = favorites.map((fav) => fav.productId);
+    return res.status(200).json(favoriteIds);
   } catch (error) {
-    res.status(500).json({ message: "Favoriler getirilemedi!" });
+    res.status(500).json({ message: "Favoriler yüklenemedi!" });
   }
 };
+
 
 // ✅ Favoriye yeni ürün ekle
 export const addFavorite = async (req, res) => {

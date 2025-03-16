@@ -28,93 +28,91 @@ const calculateTotals = (cartItems = []) => {
 };
 
 // 📥 **Sepeti Getir**
-export const fetchCart = createAsyncThunk("cart/fetchCart", async (_, { rejectWithValue }) => {
-  try {
-    const response = await API.get("/cart/user");
-    return response.data || [];
-  } catch (error) {
-    return rejectWithValue("🚨 Sepet yüklenemedi!");
+export const fetchCart = createAsyncThunk(
+  "cart/fetchCart",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await API.get("/cart/user");
+      return response.data || [];
+    } catch (error) {
+      return rejectWithValue("🚨 Sepet yüklenemedi!");
+    }
   }
-});
+);
 
 // ➕ **Sepete Ürün Ekle veya Miktar Artır**
-export const addToCart = createAsyncThunk("cart/addToCart", async (product, { dispatch, rejectWithValue }) => {
-  try {
-    if (!product._id) return rejectWithValue("🚨 Ürün ID eksik!");
+export const addToCart = createAsyncThunk(
+  "cart/addToCart",
+  async (product, { dispatch, rejectWithValue }) => {
+    try {
+      if (!product._id) return rejectWithValue("🚨 Ürün ID eksik!");
 
-    const cartResponse = await API.get("/cart/user");
-    const cartItems = cartResponse.data || [];
-
-    const existingItem = cartItems.find((item) => item.product._id === product._id);
-
-    if (existingItem) {
-      // ✅ Eğer ürün sepette varsa, miktarı artır
-      await API.patch(`/cart/increase/${existingItem.product._id}`);
-    } else {
-      // ✅ Yeni ürün ekle
-      const newItem = {
+      await API.post("/cart", {
         productId: product._id,
-        quantity: 1,
+        quantity: product.quantity || 1,
         price: product.price,
         title: product.title,
-        images: product.images || [],
-      };
+        images: product.images,
+      });
 
-      await API.post("/cart", newItem);
+      return dispatch(fetchCart()).unwrap();
+    } catch (error) {
+      return rejectWithValue("🚨 Ürün sepete eklenemedi!");
     }
-
-    // **Sonuç olarak sepeti tekrar güncelle**
-    return dispatch(fetchCart()).unwrap();
-  } catch (error) {
-    return rejectWithValue("🚨 Ürün sepete eklenemedi!");
   }
-});
+);
 
 // 🔺 **Miktar Artır**
-export const increaseQuantity = createAsyncThunk("cart/increaseQuantity", async (productId, { dispatch, rejectWithValue }) => {
-  try {
-    if (!productId) return rejectWithValue("🚨 Ürün ID eksik!");
-
-    await API.patch(`/cart/increase/${productId}`);
-    return dispatch(fetchCart()).unwrap();
-  } catch (error) {
-    return rejectWithValue("🚨 Miktar artırılamadı!");
+export const increaseQuantity = createAsyncThunk(
+  "cart/increaseQuantity",
+  async (productId, { dispatch, rejectWithValue }) => {
+    try {
+      await API.patch(`/cart/increase/${productId}`);
+      return dispatch(fetchCart()).unwrap();
+    } catch (error) {
+      return rejectWithValue("🚨 Miktar artırılamadı!");
+    }
   }
-});
+);
 
 // 🔻 **Miktar Azalt**
-export const decreaseQuantity = createAsyncThunk("cart/decreaseQuantity", async (productId, { dispatch, rejectWithValue }) => {
-  try {
-    if (!productId) return rejectWithValue("🚨 Ürün ID eksik!");
-
-    await API.patch(`/cart/decrease/${productId}`);
-    return dispatch(fetchCart()).unwrap();
-  } catch (error) {
-    return rejectWithValue("🚨 Miktar azaltılamadı!");
+export const decreaseQuantity = createAsyncThunk(
+  "cart/decreaseQuantity",
+  async (productId, { dispatch, rejectWithValue }) => {
+    try {
+      await API.patch(`/cart/decrease/${productId}`);
+      return dispatch(fetchCart()).unwrap();
+    } catch (error) {
+      return rejectWithValue("🚨 Miktar azaltılamadı!");
+    }
   }
-});
+);
 
 // ❌ **Sepetten Ürün Kaldır**
-export const removeFromCart = createAsyncThunk("cart/removeFromCart", async (productId, { dispatch, rejectWithValue }) => {
-  try {
-    if (!productId) return rejectWithValue("🚨 Ürün ID eksik!");
-
-    await API.delete(`/cart/remove/${productId}`);
-    return dispatch(fetchCart()).unwrap();
-  } catch (error) {
-    return rejectWithValue("🚨 Ürün sepetten kaldırılamadı!");
+export const removeFromCart = createAsyncThunk(
+  "cart/removeFromCart",
+  async (productId, { dispatch, rejectWithValue }) => {
+    try {
+      await API.delete(`/cart/remove/${productId}`);
+      return dispatch(fetchCart()).unwrap();
+    } catch (error) {
+      return rejectWithValue("🚨 Ürün sepetten kaldırılamadı!");
+    }
   }
-});
+);
 
 // 🗑️ **Sepeti Temizle**
-export const clearCart = createAsyncThunk("cart/clearCart", async (_, { dispatch, rejectWithValue }) => {
-  try {
-    await API.delete("/cart/clear");
-    return dispatch(fetchCart()).unwrap();
-  } catch (error) {
-    return rejectWithValue("🚨 Sepet temizlenemedi!");
+export const clearCart = createAsyncThunk(
+  "cart/clearCart",
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      await API.delete("/cart/clear");
+      return dispatch(fetchCart()).unwrap();
+    } catch (error) {
+      return rejectWithValue("🚨 Sepet temizlenemedi!");
+    }
   }
-});
+);
 
 // ✅ **Redux Store Tanımlama**
 const cartSlice = createSlice({
@@ -132,18 +130,26 @@ const cartSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // 📥 **Sepeti Yükle**
-      .addCase(fetchCart.fulfilled, (state, action) => {
-        state.cartItems = action.payload || [];
-        const totals = calculateTotals(state.cartItems);
-        state.totalQuantity = totals.totalQuantity;
-        state.totalPrice = totals.totalPrice;
-        state.vatAmount = totals.vatAmount;
-        state.shippingCost = totals.shippingCost;
-        state.grandTotal = totals.grandTotal;
-      })
+         // 📥 **Sepeti yükleme durumu**
+         .addCase(fetchCart.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        })
+        .addCase(fetchCart.fulfilled, (state, action) => {
+          state.cartItems = action.payload;
+          const totals = calculateTotals(state.cartItems);
+          state.totalQuantity = totals.totalQuantity;
+          state.totalPrice = totals.totalPrice;
+          state.vatAmount = totals.vatAmount;
+          state.grandTotal = totals.grandTotal;
+          state.loading = false;
+        })
+        .addCase(fetchCart.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.payload;
+        })
 
-      // ✅ **Sepete Ürün Ekleme**
+      // ➕ **Ürün ekleme işlemi**
       .addCase(addToCart.fulfilled, (state, action) => {
         state.cartItems = action.payload || [];
         const totals = calculateTotals(state.cartItems);
@@ -153,7 +159,7 @@ const cartSlice = createSlice({
         state.grandTotal = totals.grandTotal;
       })
 
-      // 🔺 **Miktar Artır**
+      // 🔺 **Miktar artırma işlemi**
       .addCase(increaseQuantity.fulfilled, (state, action) => {
         state.cartItems = action.payload || [];
         const totals = calculateTotals(state.cartItems);
@@ -163,24 +169,33 @@ const cartSlice = createSlice({
         state.grandTotal = totals.grandTotal;
       })
 
-      // 🔻 **Miktar Azalt**
-      .addCase(decreaseQuantity.fulfilled, (state, action) => {
-        state.cartItems = action.payload || [];
-        const totals = calculateTotals(state.cartItems);
-        state.totalQuantity = totals.totalQuantity;
-        state.totalPrice = totals.totalPrice;
-        state.vatAmount = totals.vatAmount;
-        state.grandTotal = totals.grandTotal;
-      })
+     // 🔻 **Miktar azaltma işlemi**
+     .addCase(decreaseQuantity.fulfilled, (state, action) => {
+      state.cartItems = action.payload || [];
+      const totals = calculateTotals(state.cartItems);
+      state.totalQuantity = totals.totalQuantity;
+      state.totalPrice = totals.totalPrice;
+      state.vatAmount = totals.vatAmount;
+      state.grandTotal = totals.grandTotal;
+    })
 
-      // ❌ **Sepeti Temizle**
+    // ❌ **Ürünü kaldırma işlemi**
+    .addCase(removeFromCart.fulfilled, (state, action) => {
+      state.cartItems = action.payload || [];
+      const totals = calculateTotals(state.cartItems);
+      state.totalQuantity = totals.totalQuantity;
+      state.totalPrice = totals.totalPrice;
+      state.vatAmount = totals.vatAmount;
+      state.grandTotal = totals.grandTotal;
+    })
+
+      // 🗑️ **Sepeti temizleme işlemi**
       .addCase(clearCart.fulfilled, (state) => {
         state.cartItems = [];
         state.totalQuantity = 0;
         state.totalPrice = 0;
         state.vatAmount = 0;
-        state.shippingCost = 20;
-        state.grandTotal = 0;
+        state.grandTotal = 20; // Sadece kargo bedeli kalır
       });
   },
 });

@@ -259,3 +259,36 @@ export const SubmitButton = styled.button`
     transform: scale(1.05);
   }
 `;
+
+/* ✅ Ürün Kartı */
+
+export const FileUploadButton = styled.button`
+  padding: 10px;
+  background: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.buttonText};
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+
+  &:hover {
+    background: ${({ theme }) => theme.primaryHover};
+  }
+`;
+
+export const HiddenFileInput = styled.input`
+  display: none;
+`;
+
+export const ImagePreviewContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+`;
+
+export const ImagePreview = styled.img`
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+`;

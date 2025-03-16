@@ -24,11 +24,11 @@ const Checkout = () => {
   const { texts } = useLanguage();
   const { theme } = useTheme();
 
-  // 📌 **Redux Store'dan Sepet ve Kullanıcı Verileri**
+  // 📌 Redux Store'dan verileri al
   const { cartItems, totalPrice, vatAmount, shippingCost, grandTotal } = useSelector((state) => state.cart);
   const user = useSelector((state) => state.auth.user);
 
-  // 📌 **Ödeme Bilgileri State**
+  // 📌 Ödeme bilgileri state yönetimi
   const [paymentDetails, setPaymentDetails] = useState({
     cardNumber: "",
     expiryDate: "",
@@ -36,55 +36,58 @@ const Checkout = () => {
     name: "",
   });
 
-  // 📌 **Eğer sepet boşsa kullanıcıyı bilgilendir**
-  if (!cartItems.length) {
-    return (
-      <CheckoutContainer theme={theme}>
-        <Title theme={theme}>{texts.checkout?.title || "💳 Ödeme Sayfası"}</Title>
-        <Label theme={theme}>{texts.checkout?.emptyCart || "🚫 Sepetiniz boş."}</Label>
-      </CheckoutContainer>
-    );
-  }
-
-  // 📌 **Ödeme Bilgisi Güncelleme**
+  // 📌 Ödeme Bilgisi Güncelleme
   const handleChange = (e) => {
     setPaymentDetails((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // 📌 **Siparişi Tamamla Butonu**
+  // 📌 Siparişi Tamamla
   const handleCheckout = async (e) => {
     e.preventDefault();
 
-    console.log("📌 Ödeme Bilgileri:", paymentDetails);
-    console.log("📌 Sepetteki Ürünler:", cartItems);
-
-    // ✅ **Ödeme bilgileri eksikse hata mesajı ver**
+    // ✅ Ödeme bilgileri kontrolü
     if (Object.values(paymentDetails).some((value) => !value.trim())) {
       toast.error(texts.checkout?.missingDetails || "❌ Lütfen tüm ödeme bilgilerini doldurun!");
       return;
     }
 
-    try {
-      console.log("📌 Sipariş oluşturuluyor...");
-      const order = await dispatch(addOrder(cartItems)).unwrap();
-      console.log("✅ Sipariş Başarıyla Oluşturuldu:", order);
+    const orderData = {
+      user: user._id,
+      items: cartItems,
+      totalPrice,
+      vatAmount,
+      shippingCost,
+      grandTotal,
+      paymentDetails,
+    };
 
-      // ✅ **Sipariş başarılı mesajı göster**
-      toast.success(texts.checkout?.success || "✅ Sipariş oluşturuldu!", {
+    try {
+      const order = await dispatch(addOrder(orderData)).unwrap();
+
+      toast.success(texts.checkout?.success || "✅ Sipariş başarıyla oluşturuldu!", {
         position: "top-center",
         autoClose: 3000,
       });
 
-      // ✅ **Sepeti temizle**
       await dispatch(clearCart()).unwrap();
-
-      // ✅ **Kullanıcıyı Sipariş Onay sayfasına yönlendir**
       navigate("/order-confirmation");
     } catch (error) {
-      console.error("🚨 Sipariş Oluşturulamadı:", error);
+      console.error(error);
       toast.error(texts.checkout?.error || "❌ Sipariş oluşturulamadı!");
     }
   };
+
+  if (!cartItems.length) {
+    return (
+      <CheckoutContainer theme={theme}>
+        <Title theme={theme}>{texts.checkout?.title || "💳 Ödeme Sayfası"}</Title>
+        <Label theme={theme}>{texts.checkout?.emptyCart || "🚫 Sepetiniz boş."}</Label>
+        <Button theme={theme} onClick={() => navigate("/")}>
+          {texts.checkout?.continueShopping || "🛒 Alışverişe Devam Et"}
+        </Button>
+      </CheckoutContainer>
+    );
+  }
 
   return (
     <CheckoutContainer theme={theme}>
@@ -135,16 +138,20 @@ const Checkout = () => {
 
         <Summary theme={theme}>
           <SummaryItem theme={theme}>
-            {texts.checkout?.totalPrice || "💰 Toplam Fiyat"}: ${totalPrice.toFixed(2)}
+            <strong>{texts.checkout?.totalPrice || "💰 Toplam Fiyat"}:</strong>
+            <span>${totalPrice.toFixed(2)}</span>
           </SummaryItem>
           <SummaryItem theme={theme}>
-            {texts.checkout?.vat || "📊 Vergi (KDV 19%)"}: ${vatAmount.toFixed(2)}
+            <strong>{texts.checkout?.vat || "📊 Vergi (KDV 19%)"}:</strong>
+            <span>${vatAmount.toFixed(2)}</span>
           </SummaryItem>
           <SummaryItem theme={theme}>
-            {texts.checkout?.shippingCost || "🚚 Kargo Ücreti"}: ${shippingCost.toFixed(2)}
+            <strong>{texts.checkout?.shippingCost || "🚚 Kargo Ücreti"}:</strong>
+            <span>${shippingCost.toFixed(2)}</span>
           </SummaryItem>
           <SummaryItem theme={theme}>
-            {texts.checkout?.grandTotal || "🧾 Genel Toplam"}: ${grandTotal.toFixed(2)}
+            <strong>{texts.checkout?.grandTotal || "🧾 Genel Toplam"}:</strong>
+            <span>${grandTotal.toFixed(2)}</span>
           </SummaryItem>
         </Summary>
 

@@ -70,49 +70,42 @@ const handleImageUpload = (e) => {
 
 
   // 📌 **Formu Gönderme İşlemi**
- // 📌 **Formu Gönderme İşlemi**
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  // ✅ FormData Kullanımı (Dosya Upload için)
-  const userData = new FormData();
-  userData.append("name", formData.name);
-  userData.append("email", formData.email);
-  userData.append("password", formData.password);
-  userData.append("role", formData.role);
-  userData.append("isActive", formData.isActive);
-  userData.append("phone", formData.phone || "");
-  userData.append("bio", formData.bio);
-
-  if (formData.birthDate) {
-      userData.append("birthDate", new Date(formData.birthDate).toISOString()); // ✅ Tarih formatı düzeltildi
-  }
-
-  // 📌 JSON Verileri String Olarak Ekleniyor
-  userData.append("addresses", JSON.stringify(formData.addresses)); 
-  userData.append("socialMedia", JSON.stringify(formData.socialMedia));
-  userData.append("notifications", JSON.stringify(formData.notifications));
-
-  // 📌 **Profil Resmi Yükleme Kontrolü**
-  if (formData.profileImage && formData.profileImage instanceof File) {
-      userData.append("profileImage", formData.profileImage); // ✅ Eğer dosya ise dosya olarak ekleniyor
-  } else if (formData.profileImage && typeof formData.profileImage === "string") {
-      userData.append("profileImageBase64", formData.profileImage); // ✅ Eğer Base64 formatında ise ayrı key ile gönder
-  }
-
-  // 📌 **Gönderilen Veriyi Konsola Yazdır**
-  for (let pair of userData.entries()) {
-      console.log("📤 Gönderilen:", pair[0], pair[1]);
-  }
-
-  try {
-      const response = await dispatch(register(userData)).unwrap();
-      console.log("✅ Kayıt Başarılı:", response);
-      navigate("/users");
-  } catch (err) {
-      console.error("❌ Kayıt hatası:", err);
-  }
-};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    const userData = new FormData();
+    userData.append("name", formData.name);
+    userData.append("email", formData.email);
+    userData.append("password", formData.password); // ✅ Şifre ekleniyor mu kontrol et!
+    userData.append("role", formData.role);
+    userData.append("isActive", formData.isActive);
+    userData.append("phone", formData.phone || "");
+    userData.append("bio", formData.bio);
+    userData.append("addresses", JSON.stringify(formData.addresses)); 
+    userData.append("socialMedia", JSON.stringify(formData.socialMedia));
+    userData.append("notifications", JSON.stringify(formData.notifications));
+  
+    if (formData.profileImage && formData.profileImage instanceof File) {
+        userData.append("profileImage", formData.profileImage); 
+    }
+  
+    // 📌 **FormData İçeriğini Konsola Yazdır**
+    console.log("📤 API'ye Gidecek FormData İçeriği:");
+    for (let pair of userData.entries()) {
+        console.log(`🔍 ${pair[0]}:`, pair[1]);
+    }
+  
+    try {
+        const response = await dispatch(register(userData)).unwrap();
+        console.log("✅ Kayıt Başarılı:", response);
+        navigate("/users");
+    } catch (err) {
+        console.error("❌ Kayıt hatası:", err);
+    }
+  };
+  
+  
+  
 
 
   return (

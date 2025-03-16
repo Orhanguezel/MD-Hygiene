@@ -15,6 +15,9 @@ import Cart from "@/pages/modules/cart/Cart";
 import Checkout from "@/pages/modules/cart/Checkout";
 import OrderConfirmation from "@/pages/modules/cart/OrderConfirmation";
 import OrderHistory from "@/pages/modules/profile/components/OrderHistory"; 
+import FavoritePage from "@/pages/modules/home/components/FavoritePage";
+
+
 
 const UserRoutes = () => (
   <Routes>
@@ -27,6 +30,7 @@ const UserRoutes = () => (
       }
     >
       <Route index element={<Home />} />
+      <Route path="favorites" element={<FavoritePage />} />
       <Route path="product/:id" element={<ProductDetail />} />
       <Route path="cart" element={<Cart />} />
       <Route path="checkout" element={<Checkout />} />

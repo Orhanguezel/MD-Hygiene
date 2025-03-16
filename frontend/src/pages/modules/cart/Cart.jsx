@@ -34,7 +34,7 @@ const Cart = () => {
   const navigate = useNavigate();
   const { texts } = useLanguage();
 
-  const cartItems = useSelector((state) => state.cart.cartItems) || [];
+  const { cartItems } = useSelector((state) => state.cart) || [];
   const totalPrice = useSelector((state) => state.cart.totalPrice) || 0;
   const vatAmount = useSelector((state) => state.cart.vatAmount) || 0;
   const shippingCost = useSelector((state) => state.cart.shippingCost) || 0;

@@ -24,35 +24,47 @@ import {
 } from "../styles/ProductDetailStyles";
 
 const ProductDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams(); 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { texts } = useLanguage();
   const { theme } = useTheme();
-  const { products } = useSelector((state) => state.product);
-  const { favorites } = useSelector((state) => state.favorite);
+
+  // ✅ Redux Store'dan verileri al
+  const { products, loading } = useSelector((state) => state.product);
+  const { favorites = [] } = useSelector((state) => state.favorite); // ✅ Default boş dizi tanımlandı
   const { cartItems } = useSelector((state) => state.cart);
 
   const [selectedImage, setSelectedImage] = useState(null);
 
+  // 📌 **Ürünleri yükle, eğer daha önce yüklenmemişse**
   useEffect(() => {
     if (products.length === 0) {
       dispatch(fetchProducts());
     }
   }, [dispatch, products.length]);
 
-  const product = products.find((p) => String(p.id) === String(id));
+  // 📌 **Seçili ürünü bul**
+  const product = products.find((p) => p._id === id);
 
+  // 📌 **Ürün resmi ilk defa yüklendiğinde güncelle**
   useEffect(() => {
     if (product?.images?.length > 0) {
       setSelectedImage(product.images[0]);
     }
   }, [product]);
 
+  // ⏳ **Eğer veri yükleniyorsa bekleme mesajı göster**
+  if (loading) {
+    return <p>⏳ {texts.product?.loading || "Ürün bilgileri yükleniyor..."}</p>;
+  }
+
+  // 🚨 **Eğer ürün bulunamadıysa hata mesajı göster**
   if (!product) {
     return <p>🔍 {texts.product?.notFound || "Ürün bulunamadı."}</p>;
   }
 
+  // 📌 **Sepete ekleme işlemi**
   const handleAddToCart = () => {
     dispatch(addToCart(product))
       .unwrap()
@@ -64,16 +76,24 @@ const ProductDetail = () => {
       });
   };
 
+  // 📌 **Favori ekleme/çıkarma işlemi RTK üzerinden yapılacak**
   const handleToggleFavorite = () => {
-    dispatch(toggleFavorite(product.id));
-    toast.info(
-      favorites.includes(product.id)
-        ? texts.product.toastMessages?.removedFromFavorites || "💔 Ürün favorilerden çıkarıldı!"
-        : texts.product.toastMessages?.addedToFavorites || "❤️ Ürün favorilere eklendi!"
-    );
+    dispatch(toggleFavorite(product))
+      .unwrap()
+      .then(({ removed }) => {
+        toast.info(
+          removed
+            ? texts.product.toastMessages?.removedFromFavorites || "💔 Ürün favorilerden çıkarıldı!"
+            : texts.product.toastMessages?.addedToFavorites || "❤️ Ürün favorilere eklendi!"
+        );
+      })
+      .catch(() => {
+        toast.error("🚨 Favori işlemi başarısız!");
+      });
   };
 
-  const isInCart = cartItems.some((item) => item.id === product.id);
+  // **Favoride olup olmadığını Redux Store'dan kontrol et (GÜVENLİ HALE GETİRİLDİ)**
+  const isFavorited = Array.isArray(favorites) ? favorites.includes(product._id) : false;
 
   return (
     <ProductDetailContainer theme={theme}>
@@ -92,19 +112,25 @@ const ProductDetail = () => {
 
       <ProductInfo>
         <ProductTitle theme={theme}>{product.title}</ProductTitle>
-        <ProductPrice theme={theme}>${product.price}</ProductPrice>
+        <ProductPrice theme={theme}>${product.price.toFixed(2)}</ProductPrice>
         <StockStatus theme={theme}>
           {product.stock > 0 ? texts.product?.inStock || "✅ Stokta Var" : texts.product?.outOfStock || "⚠️ Stok Durumu Belirsiz"}
         </StockStatus>
         <ProductDescription theme={theme}>{product.description}</ProductDescription>
 
-        <AddToCartButton onClick={handleAddToCart} disabled={isInCart} theme={theme}>
-          {isInCart ? texts.product?.inCart || "🛒 Sepette Mevcut" : texts.product?.addToCart || "➕ Sepete Ekle"}
+        <AddToCartButton onClick={handleAddToCart} disabled={cartItems.some((item) => item._id === product._id)} theme={theme}>
+          {cartItems.some((item) => item._id === product._id)
+            ? texts.product?.inCart || "🛒 Sepette Mevcut"
+            : texts.product?.addToCart || "➕ Sepete Ekle"}
         </AddToCartButton>
 
-        <FavoriteButton $favorited={favorites.includes(product.id) ? "true" : "false"} onClick={handleToggleFavorite} theme={theme}>
-          {favorites.includes(product.id)
-            ? "" + (texts.product?.inFavorites || "Favorilerde")
+        <FavoriteButton
+          $favorited={isFavorited ? "true" : "false"}
+          onClick={handleToggleFavorite}
+          theme={theme}
+        >
+          {isFavorited
+            ? texts.product?.inFavorites || "💖 Favorilerde"
             : "🤍 " + (texts.product?.addToFavorites || "Favorilere Ekle")}
         </FavoriteButton>
       </ProductInfo>

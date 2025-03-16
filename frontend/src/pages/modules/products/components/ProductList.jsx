@@ -79,7 +79,7 @@ const ProductList = () => {
       ) : (
         filteredProducts.map((product) => {
           // ✅ Resmin tam URL'sini oluştur
-          const imageSrc = product.images?.[0]?.startsWith("/uploads/")
+          const imageSrc = product.images?.[0]?.startsWith("/uploads/products/")
             ? `${BASE_URL}${product.images[0]}`
             : product.images?.[0] || "/placeholder.jpg";
 

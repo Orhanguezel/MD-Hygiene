@@ -11,10 +11,12 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Middleware'ler
+app.use("/uploads", serveUploads); // ✅ Statik dosya servisi// ✅ Middleware'ler
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(bodyParserMiddleware);
 app.use(corsMiddleware);
-app.use("/uploads", serveUploads); // ✅ Statik dosya servisi
+
 app.use("/api", routes); // ✅ API Rotaları
 
 // ✅ Server başlatma fonksiyonu

@@ -16,10 +16,12 @@ export default defineConfig({
       usePolling: true,       // ✅ Dosya değişikliklerini daha iyi algılar
     },
     hmr: {
-      overlay: false,         // ⚠️ HMR hata mesajlarını kapat (Hata gösterimi için opsiyonel)
+      overlay: false,         // ⚠️ HMR hata mesajlarını kapat (Opsiyonel)
     },
+    historyApiFallback: true,  // 🔥 **React Router için kritik ayar!**
   },
   build: {
     sourcemap: true,           // ✅ Debugging için faydalı olabilir
   },
 });
+

@@ -6,6 +6,7 @@ import AppLayout from "@/layouts/AppLayout";
 import Home from "@/pages/modules/home/Home";
 import ProductDetail from "@/pages/modules/home/components/ProductDetail";
 import Cart from "@/pages/modules/cart/Cart";
+import FavoritePage from "@/pages/modules/home/components/FavoritePage";
 import Checkout from "@/pages/modules/cart/Checkout";
 import OrderConfirmation from "@/pages/modules/cart/OrderConfirmation";
 
@@ -71,6 +72,7 @@ const AdminRoutes = () => {
 
         {/* ✅ Genel Kullanıcı Sayfaları */}
         <Route path="/" element={<Home />} />
+        <Route path="favorites" element={<FavoritePage />} />
         <Route path="cart" element={<Cart />} />
         <Route path="checkout" element={<Checkout />} />
         <Route path="order-confirmation" element={<OrderConfirmation />} />

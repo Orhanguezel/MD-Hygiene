@@ -20,24 +20,28 @@ export const addCategory = createAsyncThunk(
   "categories/addCategory",
   async (categoryData, thunkAPI) => {
     try {
-      const response = await API.post("/categories", categoryData);
+      const response = await API.post("/categories", categoryData, {
+        headers: { "Content-Type": "multipart/form-data" }, // ✅ Önemli
+      });
       return response.data;
     } catch (error) {
-      console.error("❌ Kategori eklenirken hata:", error);
       return thunkAPI.rejectWithValue(error.response?.data?.message || "Kategori eklenirken hata oluştu");
     }
   }
 );
+
+
 
 // ✅ **Kategori güncelleme**
 export const updateCategory = createAsyncThunk(
   "categories/updateCategory",
   async ({ id, categoryData }, thunkAPI) => {
     try {
-      const response = await API.put(`/categories/${id}`, categoryData);
+      const response = await API.put(`/categories/${id}`, categoryData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       return response.data;
     } catch (error) {
-      console.error("❌ Kategori güncellenirken hata:", error);
       return thunkAPI.rejectWithValue(error.response?.data?.message || "Kategori güncellenirken hata oluştu");
     }
   }

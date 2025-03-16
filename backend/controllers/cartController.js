@@ -1,6 +1,5 @@
 import Cart from "../models/Cart.js";
 import Product from "../models/Product.js";
-import mongoose from "mongoose";
 
 
 // 📌 Kullanıcının sepetini getir
@@ -18,32 +17,46 @@ export const getUserCart = async (req, res) => {
 // ✅ **Sepete Ürün Ekleme**
 export const addToCart = async (req, res) => {
   try {
-    if (!req.body.productId) {
+    const { productId, quantity = 1, price, title, images = [] } = req.body;
+
+    if (!productId) {
       return res.status(400).json({ message: "🚨 Ürün ID eksik!" });
     }
 
-    // ✅ `productId` değerini `ObjectId` olarak kullan
-    const productId = new mongoose.Types.ObjectId(req.body.productId);
+    const cart = await Cart.findOne({ user: req.user._id });
 
-    const newItem = {
-      product: productId,
-      quantity: req.body.quantity || 1,
-      price: req.body.price,
-      title: req.body.title,
-      images: req.body.images || [],
-    };
+    if (cart) {
+      // Sepette ürün varsa, miktarını artır.
+      const existingItem = cart.items.find(item => item.product.toString() === productId);
 
-    const cart = await Cart.findOneAndUpdate(
-      { user: req.user._id },
-      { $push: { items: newItem } },
-      { new: true, upsert: true }
-    );
+      if (existingItem) {
+        existingItem.quantity += quantity;
+      } else {
+        cart.items.push({
+          product: productId,
+          quantity,
+          price: req.body.price,
+          title: req.body.title,
+          images
+        });
+      }
 
-    res.status(201).json({ message: "✅ Ürün sepete eklendi!", cart });
+      await cart.save();
+      return res.status(200).json({ message: "✅ Sepet güncellendi!", cart });
+    } else {
+      // Sepet henüz yoksa yeni oluştur.
+      const newCart = await Cart.create({
+        user: req.user._id,
+        items: [{ product: productId, quantity, price: req.body.price, title: req.body.title, images: req.body.images || [] }],
+      });
+
+      res.status(201).json({ message: "✅ Ürün sepete eklendi!", cart: newCart });
+    }
   } catch (error) {
     res.status(500).json({ message: "🚨 Ürün sepete eklenemedi!", error: error.message });
   }
 };
+
 
 
 

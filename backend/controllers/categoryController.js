@@ -2,6 +2,14 @@ import mongoose from "mongoose";
 import Category from "../models/Category.js";
 import Product from "../models/Product.js"; // ✅ Ürünleri kontrol etmek için
 import asyncHandler from "express-async-handler"; // ✅ Hata yönetimi için
+import dotenv from "dotenv";
+
+dotenv.config();
+
+
+// ✅ **Kullanıcı Kayıt**
+
+const BASE_URL = process.env.BASE_URL || "http://localhost:5010"; // ✅ Base URL eklendi
 
 // ✅ **Tüm kategorileri getir**
 export const fetchCategories = asyncHandler(async (req, res) => {
@@ -11,23 +19,23 @@ export const fetchCategories = asyncHandler(async (req, res) => {
 
 // ✅ **Yeni kategori oluştur**
 export const createCategory = asyncHandler(async (req, res) => {
-  const { name, image } = req.body;
+  console.log("📌 Backend'e Gelen Veri:", req.body);
+  console.log("📂 Yüklenen Dosya:", req.file);
+
+  const { name } = req.body;
+  const image = req.file ? `${BASE_URL}/uploads/category-images/${req.file.filename}` : req.body.image;
 
   if (!name || !image) {
-    return res.status(400).json({ message: "Kategori adı ve resmi zorunludur!" });
-  }
-
-  const categoryExists = await Category.findOne({ name });
-
-  if (categoryExists) {
-    return res.status(400).json({ message: "Bu kategori zaten mevcut!" });
+    return res.status(400).json({ message: "⚠️ Kategori adı ve resmi zorunludur!" });
   }
 
   const category = new Category({ name, image });
-  const createdCategory = await category.save();
-
-  res.status(201).json(createdCategory);
+  await category.save();
+  res.status(201).json(category);
 });
+
+
+
 
 // ✅ **Belirli bir kategoriyi getir**
 export const getCategoryById = asyncHandler(async (req, res) => {

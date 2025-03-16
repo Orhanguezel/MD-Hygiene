@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
 import { useLanguage } from "@/features/language/useLanguage";
 import { useTheme } from "@/features/theme/useTheme";
 import { logout } from "@/features/auth/authSlice";
-import { Link, useNavigate } from "react-router-dom";
 import {
   HeaderContainer,
   LogoLink,
@@ -26,6 +26,7 @@ import {
   FaSun,
   FaMoon,
   FaShoppingCart,
+  FaHeart,
 } from "react-icons/fa";
 import logo from "@/assets/logo.png";
 
@@ -35,15 +36,17 @@ export default function Header() {
   const { language, setLanguage, texts } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated } = useSelector((state) => state.auth);
+
   const totalItems = useSelector((state) =>
     state.cart.cartItems.reduce((acc, item) => acc + (item.quantity || 0), 0)
   );
 
+  // ✅ Favori ürünlerin toplam sayısını Redux store'dan al
+  const favoriteCount = useSelector((state) => state.favorite.favorites.length);
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const handleProfileClick = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
+  const handleProfileClick = () => setDropdownOpen(!dropdownOpen);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -84,17 +87,20 @@ export default function Header() {
       {/* ✅ Kullanıcı Girişi Kontrolü */}
       {isAuthenticated ? (
         <>
+          <NavItem as={Link} to="/favorites">
+            <FaHeart size={18} /> ({favoriteCount})
+          </NavItem>
+
           <NavItem as={Link} to="/cart">
             <FaShoppingCart size={18} /> ({totalItems})
           </NavItem>
 
           <ProfileSection onClick={handleProfileClick}>
-            {/* ✅ Profil Resmi Varsa Göster, Yoksa Varsayılan Avatar Koy */}
             {user?.profileImage ? (
               <ProfileImage
                 src={user.profileImage}
                 alt={user.name || "Kullanıcı"}
-                onError={(e) => (e.target.src = "/default-avatar.png")} // ✅ Resim yüklenmezse avatar koy
+                onError={(e) => (e.target.src = "/default-avatar.png")}
               />
             ) : (
               <FaUserCircle size={24} />
@@ -108,14 +114,14 @@ export default function Header() {
                   <FaUserCircle /> {texts?.profile?.title || "Profilim"}
                 </Link>
                 {user?.role === "admin" && (
-                  <Link to="/settings">
-                    <FaCog /> {texts?.settings?.title || "Ayarlar"}
-                  </Link>
-                )}
-                {user?.role === "admin" && (
-                  <Link to="/dashboard">
-                    🛠 {texts?.admin?.dashboard || "Yönetim Paneli"}
-                  </Link>
+                  <>
+                    <Link to="/settings">
+                      <FaCog /> {texts?.settings?.title || "Ayarlar"}
+                    </Link>
+                    <Link to="/dashboard">
+                      🛠 {texts?.admin?.dashboard || "Yönetim Paneli"}
+                    </Link>
+                  </>
                 )}
                 <button onClick={handleLogout}>
                   <FaSignOutAlt /> {texts?.logout || "Çıkış Yap"}

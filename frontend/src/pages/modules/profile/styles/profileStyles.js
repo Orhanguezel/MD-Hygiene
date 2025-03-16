@@ -246,3 +246,101 @@ export const AddressItem = styled.div`
   justify-content: space-between;
   margin-bottom: 6px;
 `;
+
+// ✅ Adres Butonu
+export const AddressButton = styled(Button)`
+  background-color: ${({ theme }) => theme.secondary};
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.secondaryHover};
+  }
+`;
+
+
+// ✅ Adres Listesi
+export const AddressList = styled.div`
+  display: grid;
+  gap: 14px;
+`;
+
+// ✅ Adres
+export const Address = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`;
+
+// ✅ Adres İşlemleri
+export const AddressActions = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
+// ✅ Adres Başlık
+export const AddressTitle = styled.h3`
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+`;
+
+// ✅ Adres İçerik
+export const AddressContent = styled.p`
+  font-size: 1rem;
+`;
+
+//
+export const FileInput = styled.input`
+  display: none;
+`;
+
+// ✅ Profil Resmi Konteyneri
+export const ProfileImageContainer = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+
+// ✅ Profil Resmi
+export const ProfileImage = styled.img`
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+`;
+
+// ✅ Profil Resmi Yükleme Butonu
+export const FileUploadButton = styled.button`
+  background-color: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.buttonText};
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.primaryHover};
+  }
+`;
+
+// ✅ Profil Resmi Önizleme
+export const ImagePreviewContainer = styled.div`
+  position: relative;
+`;
+
+export const TextArea = styled.textarea`
+  width: 100%;
+  padding: 12px;
+  border: 1px solid ${({ theme }) => theme.border};
+  border-radius: 6px;
+  font-size: 1rem;
+  background: ${({ theme }) => theme.inputBackground};
+  color: ${({ theme }) => theme.inputText};
+
+  &::placeholder {
+    color: ${({ theme }) => theme.placeholder};
+  }
+`;
+
+

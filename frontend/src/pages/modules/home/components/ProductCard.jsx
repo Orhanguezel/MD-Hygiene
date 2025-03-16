@@ -21,7 +21,7 @@ const ProductCard = ({ product }) => {
   const navigate = useNavigate();
 
   const handleAddToCart = () => {
-    if (!product || !product.id) {
+    if (!product || !product._id) {
       toast.error(texts.product.toastMessages.addToCartError);
       return;
     }
@@ -39,7 +39,7 @@ const ProductCard = ({ product }) => {
   const handleBuyNow = (e) => {
     e.stopPropagation();
 
-    if (!product || !product.id) {
+    if (!product || !product._id) {
       toast.error(texts.product.toastMessages.addToCartError);
       return;
     }
@@ -56,7 +56,7 @@ const ProductCard = ({ product }) => {
   };
 
   const handleProductClick = () => {
-    navigate(`/product/${product.id}`);
+    navigate(`/product/${product._id}`);
   };
 
   return (

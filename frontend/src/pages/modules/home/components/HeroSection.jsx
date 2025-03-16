@@ -64,7 +64,7 @@ const HeroSection = () => {
   };
 
   const handleProductClick = (product) => {
-    navigate(`/product/${product.id}`);
+    navigate(`/product/${product._id}`);
   };
 
   if (loading) return <p>{texts?.loading || "Yükleniyor..."}</p>;
@@ -78,7 +78,7 @@ const HeroSection = () => {
       <HeroContent>
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentProduct.id}
+            key={currentProduct._id}
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
@@ -114,7 +114,7 @@ const HeroSection = () => {
 
       <HeroImageWrapper onClick={() => handleProductClick(currentProduct)}>
         <motion.img
-          key={`image-${currentProduct.id}`}
+          key={`image-${currentProduct._id}`}
           src={
             currentProduct.images && currentProduct.images.length > 0
               ? currentProduct.images[0]

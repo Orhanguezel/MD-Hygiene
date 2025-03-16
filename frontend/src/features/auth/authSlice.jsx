@@ -29,12 +29,13 @@ export const login = createAsyncThunk(
   }
 );
 
-// 🔹 **Kullanıcı Kayıt (Register)**
 export const register = createAsyncThunk(
   "auth/register",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await API.post("/auth/register", userData);
+      const response = await API.post("/auth/register", userData, {
+        headers: { "Content-Type": "multipart/form-data" }, // ✅ Önemli
+      });
 
       if (!response.data || !response.data.user || !response.data.user.token) {
         return rejectWithValue("❌ Kayıt başarılı, ancak token alınamadı!");
@@ -55,6 +56,7 @@ export const register = createAsyncThunk(
     }
   }
 );
+
 
 // 🔹 **Çıkış Yap (Logout)**
 export const logout = createAsyncThunk("auth/logout", async () => {

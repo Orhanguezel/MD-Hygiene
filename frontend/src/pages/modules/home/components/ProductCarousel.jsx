@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchFavorites, toggleFavorite } from "@/features/favorites/favoriteSlice";
+import { fetchProducts } from "@/features/products/productSlice";
 import { addToCart } from "@/features/cart/cartSlice";
 import { useLanguage } from "@/features/language/useLanguage";
 import { useTheme } from "@/features/theme/useTheme";
@@ -10,6 +11,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   CarouselContainer,
+  CarouselWrapper,
   ProductCard,
   ProductImage,
   ProductTitle,
@@ -19,8 +21,9 @@ import {
   FavoriteIcon,
   StockStatus,
   ProductLabel,
-  CarouselWrapper,
 } from "../styles/ProductCarouselStyles";
+
+const BASE_URL = "http://localhost:5010";
 
 const ProductCarousel = () => {
   const { texts } = useLanguage();
@@ -28,10 +31,10 @@ const ProductCarousel = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { favorites } = useSelector((state) => state.favorite);
-  const { filteredProducts } = useSelector((state) => state.product);
-  const cart = useSelector((state) => state.cart);
-  const user = useSelector((state) => state.auth.user); // ✅ Kullanıcı kontrolü
+  const favorites = useSelector((state) => state.favorite.favorites) || [];
+  const products = useSelector((state) => state.product.products) || [];
+  const filteredProducts = useSelector((state) => state.product.filteredProducts) || [];
+  const user = useSelector((state) => state.auth.user);
 
   const [offset, setOffset] = useState(0);
   const [direction, setDirection] = useState(-1);
@@ -43,22 +46,28 @@ const ProductCarousel = () => {
   const touchEndX = useRef(0);
 
   useEffect(() => {
-    dispatch(fetchFavorites());
-  }, [dispatch]);
+    if (favorites.length === 0) {
+      dispatch(fetchFavorites());
+    }
+    if (products.length === 0) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, favorites.length, products.length]);
 
   useEffect(() => {
-    if (filteredProducts?.length > 0 && !isPaused) {
+    if (filteredProducts.length > 0 && !isPaused) {
       const interval = setInterval(() => {
         setOffset((prev) => {
+          const maxOffset = -filteredProducts.length * 220 + window.innerWidth * 0.5;
           const newOffset = prev + direction * (220 * speed);
-          if (newOffset < -filteredProducts.length * 220 + window.innerWidth * 0.5) {
-            setDirection(1);
-          } else if (newOffset > 0) {
-            setDirection(-1);
-          }
+
+          if (newOffset < maxOffset) setDirection(1);
+          if (newOffset > 0) setDirection(-1);
+
           return newOffset;
         });
       }, 3000);
+
       return () => clearInterval(interval);
     }
   }, [filteredProducts, direction, speed, isPaused]);
@@ -80,37 +89,56 @@ const ProductCarousel = () => {
     }
   };
 
-  const handleAddToCart = (product, event) => {
-    event.stopPropagation();
-    if (!product || !product.id) {
-      toast.error(texts?.product?.toast?.invalidProduct || "❌ Sepete eklenmeye çalışılan ürün geçersiz!");
-      return;
-    }
-    dispatch(addToCart(product))
+  const handleAddToCart = (product, e) => {
+    e.stopPropagation();
+    dispatch(
+      addToCart({
+        _id: product._id,
+        quantity: 1,
+        price: product.price,
+        title: product.title,
+        images: product.images,
+      })
+    )
       .unwrap()
-      .then(() => toast.success(texts?.product?.toast?.addedToCart || "✅ Ürün sepete eklendi!"))
-      .catch(() => toast.error(texts?.product?.toast?.failedToAdd || "❌ Ürün sepete eklenemedi!"));
+      .then(() => toast.success("✅ Ürün sepete eklendi!"))
+      .catch(() => toast.error("❌ Ürün sepete eklenemedi!"));
   };
 
   const handleBuyNow = (product, event) => {
     event.stopPropagation();
 
     if (!user) {
-      toast.warning(texts?.product?.toast?.loginToBuy || "⚠️ Satın almak için giriş yapmalısınız!");
+      toast.warning("⚠️ Satın almak için giriş yapmalısınız!");
       navigate("/login");
       return;
     }
 
-    dispatch(addToCart(product))
-      .unwrap()
-      .then(() => {
-        toast.success(
-          texts?.product?.toast?.redirectToCheckout || "✅ Ürün sepete eklendi! Ödeme sayfasına yönlendiriliyorsunuz..."
-        );
-        navigate("/checkout");
+    dispatch(
+      addToCart({
+        _id: product._id,
+        quantity: 1,
+        price: product.price,
+        title: product.title,
+        images: product.images,
       })
-      .catch(() => toast.error(texts?.product?.toast?.failedToAdd || "❌ Ürün sepete eklenemedi!"));
+    )
+      .unwrap()
+      .then(() => navigate("/checkout"))
+      .catch(() => toast.error("❌ Ürün sepete eklenemedi!"));
   };
+
+  const handleToggleFavorite = (product, e) => {
+    e.stopPropagation();
+    dispatch(toggleFavorite(product))
+      .unwrap()
+      .then(({ removed }) => {
+        toast.info(removed ? "💔 Favorilerden çıkarıldı!" : "❤️ Favorilere eklendi!");
+      })
+      .catch(() => toast.error("🚨 Favori işlemi başarısız!"));
+  };
+
+  const isFavorited = (productId) => favorites.includes(productId);
 
   return (
     <CarouselContainer theme={theme}>
@@ -129,18 +157,31 @@ const ProductCarousel = () => {
           transition={{ ease: "linear", duration: 1 }}
           style={{ display: "flex", gap: "15px", minWidth: "100%" }}
         >
-          {filteredProducts?.map((product, index) => {
-            const stockMessage =
-              product.stock > 0 ? texts?.product?.inStock || "✅ Stokta Var" : texts?.product?.outOfStock || "⚠️ Stok Yok";
+          {filteredProducts.map((product) => {
+            const stockMessage = product.stock > 0 ? "✅ Stokta Var" : "⚠️ Stok Yok";
+            const imageSrc = product.images?.[0]?.startsWith("/uploads/products/")
+              ? `${BASE_URL}${product.images[0]}`
+              : product.images?.[0] || "/placeholder.jpg";
+
             return (
-              <ProductCard key={index} theme={theme} onClick={() => navigate(`/product/${product.id}`)}>
-                {product.isNew && <ProductLabel theme={theme}>🔥 {texts?.home?.newProduct || "Yeni"}</ProductLabel>}
-                <ProductImage src={product.images?.[0] || "/placeholder.jpg"} alt={product.title} />
+              <ProductCard
+                key={product._id}
+                theme={theme}
+                onClick={() => navigate(`/product/${product._id}`)}
+              >
+                {product.isNew && (
+                  <ProductLabel theme={theme}>🔥 {texts?.home?.newProduct || "Yeni"}</ProductLabel>
+                )}
+                <ProductImage src={imageSrc} alt={product.title} />
                 <ProductTitle theme={theme}>{product.title}</ProductTitle>
-                <ProductPrice theme={theme}>${product.price}</ProductPrice>
+                <ProductPrice theme={theme}>${product.price.toFixed(2)}</ProductPrice>
                 <StockStatus theme={theme}>{stockMessage}</StockStatus>
 
-                <AddToCartButton theme={theme} onClick={(e) => handleAddToCart(product, e)} disabled={product.stock === 0}>
+                <AddToCartButton
+                  theme={theme}
+                  onClick={(e) => handleAddToCart(product, e)}
+                  disabled={product.stock === 0}
+                >
                   {texts?.product?.addToCart || "Sepete Ekle"}
                 </AddToCartButton>
 
@@ -150,19 +191,13 @@ const ProductCarousel = () => {
 
                 <FavoriteIcon
                   theme={theme}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    dispatch(toggleFavorite(product.id));
-                    toast.info(
-                      favorites.includes(product.id)
-                        ? texts?.product?.toast?.removedFromFavorites || "💔 Ürün favorilerden çıkarıldı!"
-                        : texts?.product?.toast?.addedToFavorites || "❤️ Ürün favorilere eklendi!"
-                    );
-                  }}
-                  $favorited={favorites.includes(product.id) ? "true" : undefined}
+                  onClick={(e) => handleToggleFavorite(product, e)}
+                  $favorited={isFavorited(product._id) ? "true" : undefined}
                 >
-                  {favorites.includes(product.id) ? "❤️" : "🤍"}
+                  {isFavorited(product._id) ? "❤️" : "🤍"}
                 </FavoriteIcon>
+
+                <StockStatus theme={theme}>{stockMessage}</StockStatus>
               </ProductCard>
             );
           })}

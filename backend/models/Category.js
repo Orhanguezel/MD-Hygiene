@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const categorySchema = new mongoose.Schema(
   {
     name: { type: String, required: true, unique: true }, // ✅ Aynı isimde kategori eklenmesini önler
-    image: { type: String, required: true }
+    image: { type: String}
   },
   { timestamps: true }
 );

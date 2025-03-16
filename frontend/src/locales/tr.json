@@ -323,7 +323,10 @@
     "loading": "📦 Yükleniyor...",
     "invoiceNumber": "Fatura No",
     "orders": "📦 Meine Bestellungen",
-    "goToCart": "🛒 Zum Warenkorb"
+    "goToCart": "🛒 Zum Warenkorb",
+    "phone": "Telefon Numarası",
+    "birthDate": "Doğum Tarihi",
+    "bio": "Hakkımda"
   },
 
   "cart": {

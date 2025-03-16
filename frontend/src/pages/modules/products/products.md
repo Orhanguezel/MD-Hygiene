@@ -1,6 +1,6 @@
-### **📘 Ürün Modülü Dokümantasyonu**
+### **📘 Güncellenmiş Ürün Modülü Dokümantasyonu**
 
-Bu dokümantasyon, **Ürün Yönetim Modülü** ile ilgili tüm detayları içerir. Modül, **ürünlerin yönetilmesi, stok takibi, kategori bazlı filtreleme ve ürün güncellemeleri** gibi işlemleri kapsar. 
+Bu dokümantasyon, **Ürün Yönetim Modülü** ile ilgili tüm detayları içerir. Modül, **ürünlerin yönetilmesi, stok takibi, kategori bazlı filtreleme ve ürün güncellemeleri** gibi işlemleri kapsar.  
 
 ---
 
@@ -21,6 +21,7 @@ Bu dokümantasyon, **Ürün Yönetim Modülü** ile ilgili tüm detayları içer
 ✅ **Ürün ismi, fiyatı, stoğu ve resmini girme**  
 ✅ **Kategori seçimi yaparak ürün ekleme**  
 ✅ **Kategorilerin otomatik yüklenmesi**  
+✅ **Çoklu resim yükleme desteği (Maksimum 5 resim)**  
 ✅ **Karanlık ve açık tema desteği**  
 ✅ **Eksik alanları kontrol etme ve hata mesajları gösterme**  
 
@@ -48,23 +49,35 @@ Bu dokümantasyon, **Ürün Yönetim Modülü** ile ilgili tüm detayları içer
 ✅ **Ürün ekleme, silme ve güncelleme**  
 ✅ **Fiyat ve stok yönetimi**  
 ✅ **Kategori bazlı filtreleme**  
+✅ **Çoklu resim yükleme desteği**  
 ✅ **Hata ve yükleme durumları için state yönetimi**  
 ✅ **Redux Store ile tüm bileşenlerin senkronize olması**  
 
 ---
 
 ## **🔗 API Kullanımı**
-Tüm ürün işlemleri, JSON Server ile sağlanan API üzerinden gerçekleştirilmektedir.  
+Tüm ürün işlemleri, **Node.js + Express + MongoDB** altyapısıyla sağlanan API üzerinden gerçekleştirilmektedir.  
 
 📌 **Mevcut API endpoint'leri:**  
 
 | İşlem | Yöntem | URL |
 |--------|--------|------|
-| Ürünleri Getir | `GET` | `/data` |
-| Ürün Ekle | `POST` | `/data` |
-| Ürün Güncelle | `PUT` | `/data/:id` |
-| Ürün Sil | `DELETE` | `/data/:id` |
-| Kategorileri Getir | `GET` | `/category` |
+| Ürünleri Getir | `GET` | `/api/products` |
+| Ürün Ekle | `POST` | `/api/products` |
+| Ürün Güncelle | `PUT` | `/api/products/:id` |
+| Ürün Sil | `DELETE` | `/api/products/:id` |
+| Kategorileri Getir | `GET` | `/api/categories` |
+| Yeni Kategori Ekle | `POST` | `/api/categories` |
+| Kategori Güncelle | `PUT` | `/api/categories/:id` |
+| Kategori Sil | `DELETE` | `/api/categories/:id` |
+
+---
+
+## **🖼️ Resim Yönetimi**
+✔ **Ürün resimleri `/uploads/products/` klasörüne kaydedilir.**  
+✔ **Maksimum 5 resim yüklenebilir.**  
+✔ **Kategori resimleri `/uploads/categories/` klasörüne kaydedilir.**  
+✔ **Backend URL’leri ile resimlerin doğru gösterilmesi sağlanır.**  
 
 ---
 
@@ -90,7 +103,3 @@ Yeni kategori ekleme, düzenleme ve silme işlemleri için bir arayüz eklenecek
 Teklif oluştururken, ürünlerin teklif modülüne eklenmesi sağlanacak.  
 
 ---
-
-### **📌 Sonuç**
-📢 **Ürün modülü başarıyla tamamlandı!** 🎉  
-🔧 **Artık kategori yönetimi ve gelişmiş arama gibi ek özellikler üzerinde çalışabiliriz.** 🚀  

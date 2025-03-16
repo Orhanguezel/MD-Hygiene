@@ -11,45 +11,85 @@ import {
   updateUserRole,
   toggleUserStatus,
   updateUser,
-  updateProfileImage, // ✅ Yeni eklendi (profil resmi yükleme)
+  updateProfileImage,
 } from "../controllers/authController.js";
 import { authenticate, authorizeRoles } from "../middleware/authMiddleware.js";
-import upload from "../middleware/uploadMiddleware.js"; 
+import upload from "../middleware/uploadMiddleware.js"; // ✅ Dosya yükleme middleware
 
 const router = express.Router();
 
-// 📝 Kullanıcı Kayıt ve Giriş
-router.route("/register").post(registerUser);
-router.route("/login").post(loginUser);
+/* ===========================
+ 📝 Kullanıcı Kayıt ve Giriş
+============================= */
+// ✅ Kullanıcı Kayıt (Profil Resmi ile)
+router.post(
+  "/register",
+  authenticate,
+  (req, res, next) => {
+    req.uploadType = "profile"; // ✅ Profil resmini doğru klasöre kaydet
+    next();
+  },
+  upload.single("profileImage"),
+  registerUser
+);
 
-// 👤 Kullanıcı Profil İşlemleri
+// ✅ Kullanıcı Girişi
+router.post("/login", loginUser);
+
+/* ===========================
+ 👤 Kullanıcı Profil İşlemleri
+============================= */
+// ✅ Kullanıcı Kendi Profilini Getir & Güncelle
 router
   .route("/profile")
   .get(authenticate, getUserProfile)
   .put(authenticate, updateUserProfile);
 
-router.route("/change-password").post(authenticate, changePassword);
+// ✅ Kullanıcı Şifre Değiştirme
+router.post("/change-password", authenticate, changePassword);
 
-// 👑 Admin Yetkisi Gerektiren İşlemler
-router.route("/users").get(authenticate, authorizeRoles("admin"), getUsers);
+/* ===========================
+ 👑 Admin Yetkisi Gerektiren İşlemler
+============================= */
+// ✅ Tüm Kullanıcıları Listeleme (Admin)
+router.get("/users", authenticate, authorizeRoles("admin"), getUsers);
 
+// ✅ Kullanıcı Getirme, Güncelleme ve Silme (Admin)
 router
   .route("/users/:id")
   .get(authenticate, authorizeRoles("admin"), getUserById)
-  .put(authenticate, authorizeRoles("admin"), updateUser)
+  .put(
+    authenticate,
+    authorizeRoles("admin"),
+    (req, res, next) => {
+      req.uploadType = "profile"; // ✅ Profil resmini doğru klasöre kaydet
+      next();
+    },
+    upload.single("profileImage"), // ✅ Dosya yükleme middleware'i
+    updateUser
+  )
   .delete(authenticate, authorizeRoles("admin"), deleteUser);
 
-router
-  .route("/users/:id/role")
-  .put(authenticate, authorizeRoles("admin"), updateUserRole);
+// ✅ Kullanıcı Rolünü Güncelleme (Admin)
+router.put("/users/:id/role", authenticate, authorizeRoles("admin"), updateUserRole);
 
-router
-  .route("/users/:id/status")
-  .put(authenticate, authorizeRoles("admin"), toggleUserStatus);
+// ✅ Kullanıcı Aktif/Pasif Durumunu Güncelleme (Admin)
+router.put("/users/:id/status", authenticate, authorizeRoles("admin"), toggleUserStatus);
 
-// 📌 **Kullanıcı Profil Resmini Güncelleme**
-router
-  .route("/users/:id/profile-image")
-  .put(authenticate, authorizeRoles("admin"), upload.single("profileImage"), updateProfileImage);
+/* ===========================
+ 📌 Kullanıcı Profil Resmi Güncelleme (Herkes)
+============================= */
+router.put(
+  "/users/:id",
+  authenticate,
+  authorizeRoles("admin"),
+  (req, res, next) => {
+    req.uploadType = "profile"; // uploadMiddleware.js'deki uploadType'ı tanımladık
+    next();
+  },
+  upload.single("profileImage"),
+  updateUser
+);
+
 
 export default router;

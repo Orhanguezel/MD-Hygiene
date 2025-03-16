@@ -1,71 +1,39 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "@/services/api";
 import { toast } from "react-toastify";
-import { useLanguage } from "@/features/language/useLanguage";
 
-// ✅ Kullanıcının favorilerini çekme
+// 📌 Favorileri getir
 export const fetchFavorites = createAsyncThunk(
   "favorites/fetchFavorites",
-  async (_, thunkAPI) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const response = await API.get("/favorites/user"); // ✅ Kullanıcı JWT'den çekildiği için userId gerekmez
-      return response.data; // ✅ Backend sadece productId listesi döndürüyor
+      const response = await API.get("/favorites/user");
+      return response.data || []; // ✅ Boş dizi olarak döndür
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data?.message || "Favoriler yüklenemedi!");
+      return rejectWithValue(error.response?.data?.message || "Favoriler yüklenemedi!");
     }
   }
 );
 
-// 📌 Favorilere ürün ekleme
-export const addFavorite = createAsyncThunk(
-  "favorites/addFavorite",
-  async (product, thunkAPI) => {
-    try {
-      await API.post("/favorites", { productId: product.id });
-      toast.success(`${product.title} favorilere eklendi!`); // ✅ Kullanıcıya bildirim göster
-      return product.id;
-    } catch (error) {
-      toast.error("Favori eklenirken hata oluştu!");
-      return thunkAPI.rejectWithValue(error.response?.data?.message || "Favori eklenemedi!");
-    }
-  }
-);
-
-// 📌 Favoriden ürün kaldırma
-export const removeFavorite = createAsyncThunk(
-  "favorites/removeFavorite",
-  async (product, thunkAPI) => {
-    try {
-      await API.delete(`/favorites/remove/${product.id}`);
-      toast.info(`${product.title} favorilerden kaldırıldı!`); // ✅ Kullanıcıya bildirim göster
-      return product.id;
-    } catch (error) {
-      toast.error("Favori silinirken hata oluştu!");
-      return thunkAPI.rejectWithValue(error.response?.data?.message || "Favori silinemedi!");
-    }
-  }
-);
-
-// 📌 Favori ekleme/kaldırma (toggle)
+// 📌 Favoriye Ekle/Çıkar (toggle)
 export const toggleFavorite = createAsyncThunk(
   "favorites/toggleFavorite",
-  async (product, thunkAPI) => {
-    try {
-      const state = thunkAPI.getState();
-      const isFavorite = state.favorite.favorites.includes(product.id);
+  async (product, { getState, rejectWithValue }) => {
+    const state = getState();
+    const favorites = state.favorite.favorites || []; // ✅ undefined kontrolü yap
 
+    const isFavorite = Array.isArray(favorites) ? favorites.includes(product._id) : false;
+    
+    try {
       if (isFavorite) {
-        await API.delete(`/favorites/remove/${product.id}`);
-        toast.info(`${product.title} favorilerden kaldırıldı!`);
-        return { productId: product.id, removed: true };
+        await API.delete(`/favorites/remove/${product._id}`);
+        return { productId: product._id, removed: true };
       } else {
-        await API.post("/favorites", { productId: product.id });
-        toast.success(`${product.title} favorilere eklendi!`);
-        return { productId: product.id, removed: false };
+        await API.post("/favorites", { productId: product._id });
+        return { productId: product._id, removed: false };
       }
     } catch (error) {
-      toast.error("Favori işlemi başarısız!");
-      return thunkAPI.rejectWithValue(error.response?.data?.message || "Favori işlemi başarısız!");
+      return rejectWithValue(error.response?.data?.message || "Favori işlemi başarısız!");
     }
   }
 );
@@ -73,7 +41,7 @@ export const toggleFavorite = createAsyncThunk(
 const favoriteSlice = createSlice({
   name: "favorite",
   initialState: {
-    favorites: [],
+    favorites: [], // ✅ Başlangıçta boş dizi olmalı
     status: "idle",
     error: null,
   },
@@ -85,23 +53,19 @@ const favoriteSlice = createSlice({
       })
       .addCase(fetchFavorites.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.favorites = action.payload; // ✅ Backend sadece `productId` listesi döndürüyor
+        state.favorites = action.payload || []; // ✅ Undefined yerine boş dizi ata
       })
       .addCase(fetchFavorites.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
-      .addCase(addFavorite.fulfilled, (state, action) => {
-        state.favorites.push(action.payload);
-      })
-      .addCase(removeFavorite.fulfilled, (state, action) => {
-        state.favorites = state.favorites.filter((id) => id !== action.payload);
-      })
       .addCase(toggleFavorite.fulfilled, (state, action) => {
-        if (action.payload.removed) {
-          state.favorites = state.favorites.filter((id) => id !== action.payload.productId);
+        const { productId, removed } = action.payload;
+
+        if (removed) {
+          state.favorites = state.favorites.filter((id) => id !== productId);
         } else {
-          state.favorites.push(action.payload.productId);
+          state.favorites.push(productId);
         }
       });
   },

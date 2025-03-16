@@ -2,6 +2,14 @@ import Product from "../models/Product.js";
 import Category from "../models/Category.js";
 import asyncHandler from "express-async-handler";
 import mongoose from "mongoose"; // ✅ ObjectId dönüşümü için
+import dotenv from "dotenv";
+
+dotenv.config();
+
+
+// ✅ **Kullanıcı Kayıt**
+
+const BASE_URL = process.env.BASE_URL || "http://localhost:5010"; // ✅ Base URL eklendi
 
 // 📌 **Tüm ürünleri getir**
 export const fetchProducts = asyncHandler(async (req, res) => {
@@ -15,6 +23,9 @@ export const fetchProducts = asyncHandler(async (req, res) => {
 
 // 📌 **Ürün Ekleme**
 export const createProduct = asyncHandler(async (req, res) => {
+  console.log("📌 Backend'e Gelen Veri:", req.body);
+  console.log("📂 Yüklenen Dosyalar:", req.files);
+
   const { title, description, price, stock, category } = req.body;
 
   let images = [];
@@ -27,9 +38,9 @@ export const createProduct = asyncHandler(async (req, res) => {
   }
 
   // ✅ Eğer dosya yüklenmişse, doğru URL formatında kaydedelim
-  if (req.files.length > 0) {
+  if (req.files && req.files.length > 0) {
     const uploadedImages = req.files.map(
-      (file) => `/uploads/${file.filename}`
+      (file) => `${BASE_URL}/uploads/product-images/${file.filename}`
     );
     images = [...images, ...uploadedImages];
   }

@@ -3,93 +3,73 @@ import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import { generateToken } from "../utils/jwt.js";
+import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
+
+dotenv.config();
+
 
 // ✅ **Kullanıcı Kayıt**
 
+const BASE_URL = process.env.BASE_URL || "http://localhost:5010"; // ✅ Base URL eklendi
 
 export const registerUser = asyncHandler(async (req, res) => {
+  console.log("📌 Backend'e Gelen Veri:", req.body);
+  console.log("📂 Yüklenen Dosya:", req.file);
+
   let {
     name,
     email,
     password,
     role = "user",
     phone,
-    addresses = [],
+    addresses = "[]",
     profileImage = "",
     bio = "",
     birthDate,
-    socialMedia = { facebook: "", twitter: "", instagram: "" },
-    notifications = { emailNotifications: true, smsNotifications: false }
+    socialMedia = '{"facebook": "", "twitter": "", "instagram": ""}',
+    notifications = '{"emailNotifications": true, "smsNotifications": false}'
   } = req.body;
 
-  // ✅ **Veri Kontrolleri**
-  const validRoles = ["admin", "user", "customer", "moderator", "staff"];
-  const roleLowerCase = role.toLowerCase();
-  if (!validRoles.includes(roleLowerCase)) {
-    return res.status(400).json({ message: "❌ Geçersiz rol değeri!" });
+  // 📌 **JSON string'leri parse et**
+  try {
+    addresses = typeof addresses === "string" ? JSON.parse(addresses) : addresses;
+    socialMedia = typeof socialMedia === "string" ? JSON.parse(socialMedia) : socialMedia;
+    notifications = typeof notifications === "string" ? JSON.parse(notifications) : notifications;
+  } catch (error) {
+    return res.status(400).json({ message: "❌ JSON formatı hatalı!" });
   }
 
-  const userExists = await User.findOne({ email });
-  if (userExists) {
-    return res.status(400).json({ message: "❌ Bu e-posta zaten kayıtlı." });
+  // 📌 **Şifre Kontrolü**
+  if (!password) {
+    return res.status(400).json({ message: "❌ Şifre alanı gereklidir!" });
   }
 
-  if (!password || password.length < 6) {
-    return res.status(400).json({ message: "❌ Şifre en az 6 karakter olmalıdır." });
-  }
-
-  if (typeof addresses === "string") {
-    try {
-      addresses = JSON.parse(addresses);
-    } catch (error) {
-      return res.status(400).json({ message: "❌ Adres bilgisi JSON formatında olmalıdır!" });
-    }
-  }
-
-  if (!Array.isArray(addresses)) {
-    return res.status(400).json({ message: "❌ Adres bilgisi geçerli değil!" });
-  }
-
-  // ✅ **Doğum Tarihi Formatı**
-  const formattedBirthDate = birthDate && birthDate.trim() !== "" ? new Date(birthDate) : null;
-
-  // ✅ **Profil Resmi İşleme**
-  if (profileImage && typeof profileImage === "string" && profileImage.startsWith("data:image")) {
-    try {
-      const base64Data = profileImage.split(",")[1]; // Base64 kısmını al
-      const filePath = `uploads/profile-images/${Date.now()}.png`;
-      fs.writeFileSync(filePath, base64Data, "base64");
-      profileImage = filePath; // ✅ Yeni dosya yolunu profileImage olarak kaydet
-    } catch (error) {
-      console.error("❌ Base64 Görsel Kaydetme Hatası:", error);
-      return res.status(400).json({ message: "❌ Profil resmi yüklenirken hata oluştu!" });
-    }
-  } else if (req.file) {
-    profileImage = req.file.path; // ✅ Multer ile yüklenen dosyanın yolunu kaydet
+  // 📌 **Profil Resmi İşleme**
+  if (req.file) {
+    profileImage = `${BASE_URL}/uploads/profile-images/${req.file.filename}`; // ✅ Base URL eklendi
   } else {
     profileImage = "https://via.placeholder.com/150"; // ✅ Varsayılan resim
   }
 
-  // ✅ **Şifre Hashleme**
+  // 📌 **Şifre Hashleme**
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // ✅ **Yeni Kullanıcı Oluşturma**
-  let user = await User.create({
+  // 📌 **Yeni Kullanıcı Oluşturma**
+  const user = await User.create({
     name,
     email,
     password: hashedPassword,
-    role: roleLowerCase,
+    role: role.toLowerCase(),
     phone,
     addresses,
     profileImage,
     bio,
-    birthDate: formattedBirthDate,
+    birthDate,
     socialMedia,
     notifications
   });
-
-  // 📌 **Kullanıcıyı Tekrar Çek (Şifre Dahil)**
-  user = await User.findById(user._id).select("+password");
 
   res.status(201).json({
     success: true,
@@ -99,12 +79,11 @@ export const registerUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      profileImage: user.profileImage, // ✅ Profil resmi frontend'e düzgün dönüyor mu kontrol et
+      profileImage: user.profileImage,
       token: generateToken(user._id, user.role),
     },
   });
 });
-
 
 
 
@@ -177,27 +156,75 @@ export const getUserById = asyncHandler(async (req, res) => {
   res.status(200).json(user);
 });
 
-// ✅ **Kullanıcı Güncelleme**
+const BASE_UPLOAD_DIR = "uploads";
+const PROFILE_IMAGE_FOLDER = "profile-images";
+
+// 📌 **Kullanıcı Güncelleme**
 export const updateUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ message: "❌ Geçersiz kullanıcı ID formatı!" });
-  }
+  let {
+    name,
+    email,
+    role,
+    isActive,
+    phone,
+    bio,
+    birthDate,
+    socialMedia,
+    notifications,
+    addresses,
+    oldProfileImage,
+  } = req.body;
 
-  const user = await User.findByIdAndUpdate(id, req.body, {
-    new: true,
-    runValidators: true,
-  }).select("-password");
+  addresses = addresses ? JSON.parse(addresses) : [];
+  socialMedia = socialMedia ? JSON.parse(socialMedia) : {};
+  notifications = notifications ? JSON.parse(notifications) : {};
 
+  const user = await User.findById(id);
   if (!user) {
     return res.status(404).json({ message: "❌ Kullanıcı bulunamadı!" });
   }
 
+  let profileImage = user.profileImage;
+
+  // 📌 Yeni resim varsa dosya yükleme işlemi
+  if (req.file) {
+    profileImage = `${process.env.BASE_URL || "http://localhost:5010"}/uploads/profile-images/${req.file.filename}`;
+
+    // Eski resmi silme işlemi
+    if (oldProfileImage && oldProfileImage.includes("/uploads/profile-images/")) {
+      const oldImagePath = path.join("uploads/profile-images", path.basename(oldProfileImage));
+      if (fs.existsSync(oldImagePath)) {
+        fs.unlinkSync(oldImagePath);
+        console.log("🗑️ Eski profil resmi silindi:", oldImagePath);
+      }
+    }
+  }
+
+  // Güncelleme işlemi
+  const updatedUser = await User.findByIdAndUpdate(
+    id,
+    {
+      name,
+      email,
+      role,
+      isActive: isActive === "true",
+      phone,
+      bio,
+      birthDate: birthDate || null,
+      socialMedia,
+      notifications,
+      addresses,
+      profileImage,
+    },
+    { new: true, runValidators: true }
+  );
+
   res.status(200).json({
     success: true,
-    message: "✅ Kullanıcı başarıyla güncellendi.",
-    user,
+    message: "✅ Kullanıcı başarıyla güncellendi!",
+    user: updatedUser,
   });
 });
 

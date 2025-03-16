@@ -389,7 +389,10 @@
     "loading": "📦 Loading...",
     "invoiceNumber": "Invoice No",
     "orders": "📦 My Orders",
-    "goToCart": "🛒 Go to Cart"
+    "goToCart": "🛒 Go to Cart",
+    "phone": "Phone Number",
+    "birthDate": "Date of Birth",
+    "bio": "About Me"
   },
   "invoice": {
     "downloadPDF": "PDF"
