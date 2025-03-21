@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+import { model, Schema } from "mongoose";
 
-const shipmentSchema = new mongoose.Schema({
-  order: { type: mongoose.Schema.Types.ObjectId, ref: "Order", required: true },
+const shipmentSchema = new Schema({
+  order: { type: Schema.Types.ObjectId, ref: "Order", required: true },
   trackingNumber: { type: String, required: true, unique: true },
   status: { type: String, enum: ["pending", "shipped", "delivered", "returned"], default: "pending" },
   estimatedDelivery: { type: Date },
@@ -14,6 +14,6 @@ const shipmentSchema = new mongoose.Schema({
   deliveryType: { type: String, enum: ["standard", "express", "same-day"], default: "standard" }, // Kargo tipi eklendi
 }, { timestamps: true });
 
-const Shipment = mongoose.model("Shipment", shipmentSchema);
+const Shipment = model("Shipment", shipmentSchema);
 export default Shipment;
 

@@ -1,10 +1,10 @@
-İşte sipariş modülü ile ilgili **detaylı bir dokümantasyon**! 📦🚀  
+Tabii! İşte güncellenmiş **Sipariş Modülü** dokümantasyonu:  
 
 ---
 
 # 📌 **Sipariş Modülü: Detaylı Açıklama ve Güncellemeler**  
 
-Sipariş modülü, siparişlerin **oluşturulması, yönetilmesi, güncellenmesi ve faturalandırılması** süreçlerini kapsar. **Redux Toolkit (RTK) ve asyncThunk** kullanılarak sipariş yönetimi sağlanmaktadır.  
+Sipariş modülü, **siparişlerin oluşturulması, yönetilmesi, güncellenmesi ve faturalandırılması** süreçlerini kapsar. **Redux Toolkit (RTK) ve asyncThunk** kullanılarak sipariş yönetimi sağlanmaktadır.  
 
 Bu doküman, sipariş modülünün işleyişini, yapılan güncellemeleri ve çözülmesi gereken hataları açıklamaktadır.
 
@@ -42,31 +42,33 @@ Siparişler aşağıdaki aşamalardan geçer:
 - **delivered:** Kullanıcı ürünü teslim aldı, sipariş tamamlandı.  
 - **archived:** Sipariş geçmişe taşındı ve kapandı.  
 
-**Eklenen Güncellemeler:**  
+### **Eklenen Güncellemeler:**  
 ✅ **Redux Store ile Tam Senkronizasyon:** Güncellenen her sipariş **Redux Store’a** anlık olarak yansıyor.  
 ✅ **Bildirim Sistemi:** Sipariş durumu değiştiğinde, kullanıcıya **bildirim gösteriliyor**.  
 ✅ **Fatura Yönetimi:** Sipariş "shipped" durumuna geldiğinde, **otomatik fatura** oluşturuluyor.  
+✅ **PDF Fatura Desteği:** Kullanıcı, oluşturulan faturayı **PDF olarak indirebiliyor**.  
 
 ---
 
 ## 🛠 **Hata Kontrolleri ve Çözümler**  
 
-### 1️⃣ **Siparişler Yüklenmiyor veya Hatalı Görünüyor**  
-🔍 **Yapılması Gerekenler:**  
-✅ `fetchOrders` fonksiyonunun **doğru çalıştığını** kontrol et.  
-✅ API’den gelen veriyi konsolda **kontrol et (`console.log(action.payload)`)**.  
+### 🛑 **1️⃣ Siparişler Yüklenmiyor veya Hatalı Görünüyor**  
+🔍 **Kontrol Edilmesi Gerekenler:**  
+✅ `fetchOrders` fonksiyonunun **doğru çalıştığını** test et.  
+✅ API’den gelen veriyi **konsolda incele (`console.log(action.payload)`)**.  
 ✅ Redux store’a siparişlerin başarıyla kaydedildiğini doğrula.  
 
-### 2️⃣ **Sipariş Detay Sayfası Açılmıyor veya Yanlış Bilgi Gösteriyor**  
+### 🛑 **2️⃣ Sipariş Detay Sayfası Açılmıyor veya Yanlış Bilgi Gösteriyor**  
 🔍 **Çözüm Yöntemleri:**  
-✅ `fetchOrderById` fonksiyonunun **API’den doğru veriyi çektiğini** test et.  
+✅ `fetchOrderById` fonksiyonunun **API’den doğru veriyi çektiğini** doğrula.  
 ✅ `OrderDetails.jsx` içinde `order.items` listesinin dolu olup olmadığını kontrol et.  
 ✅ Eğer `order.items` boşsa, **API çağrısının düzgün yapıldığını doğrula.**  
 
-### 3️⃣ **Sipariş Durumu Güncellenirken Sorun Çıkıyor**  
+### 🛑 **3️⃣ Sipariş Durumu Güncellenirken Sorun Çıkıyor**  
 🔍 **Çözüm Yöntemleri:**  
 ✅ `updateOrder` fonksiyonunun **Redux store’u güncellediğinden** emin ol.  
 ✅ Güncelleme işlemi tamamlandığında, **sipariş listesi tekrar yüklenmeli**.  
+✅ **"shipped" aşamasında fatura oluşturulmadığında**, ilgili fatura modülü ile entegrasyonu kontrol et.  
 
 ---
 
@@ -79,10 +81,12 @@ Siparişler aşağıdaki aşamalardan geçer:
 📌 **2️⃣ Fatura Yönetimini Sipariş Modülüyle Entegre Etmek**  
 - `shipped` durumuna geçildiğinde **otomatik fatura oluşturulmalı**.  
 - Kullanıcı, faturasını PDF olarak **indirebilmeli**.  
+- **Fatura içeriği eksiksiz ve hatasız olmalı** (vergi hesaplamaları dahil).  
 
 📌 **3️⃣ Canlı Bildirim Sistemini Geliştirmek**  
 - Kullanıcı sipariş durumu değiştiğinde **anlık bildirim almalı**.  
 - Bildirimler **Redux store’a kaydedilmeli** ve UI’da gösterilmeli.  
+- **E-posta bildirimi desteği** eklenmeli.  
 
 ---
 
@@ -91,8 +95,9 @@ Siparişler aşağıdaki aşamalardan geçer:
 📌 **Şu anda sipariş modülü stabil çalışıyor ancak geliştirmeler devam ediyor.**  
 📌 **Fatura entegrasyonu ve canlı bildirimler eklenerek, müşteri deneyimi daha da iyileştirilecek.**  
 📌 **Hata kontrolleri düzenli olarak yapılarak, sistemin kararlılığı artırılacak.**  
+📌 **Fatura PDF çıktısında metin bozulmaları ve yanlış karakterlerin düzeltilmesi gerekiyor.**  
 
 🔎 **Bir sonraki adım:**  
-✅ **Fatura yönetimini geliştirmeye başlıyoruz!**  
+✅ **Fatura PDF çıktısını optimize etmek ve karakter sorunlarını çözmek!**  
 
 🚀 **Hazırız! Bir sonraki aşamaya geçebiliriz.**

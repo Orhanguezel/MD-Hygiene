@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchInvoices } from "@/features/invoices/invoicesSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useLanguage } from "@/features/language/useLanguage";
+import { useTheme } from "@/features/theme/useTheme";
+
 import {
   InvoicesContainer,
   InvoicesTable,
@@ -9,11 +13,12 @@ import {
   Td,
   ActionButton,
 } from "./styles/invoicesStyles";
-import { toast } from "react-toastify";
 
 const Invoices = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { texts } = useLanguage();
+  const { theme } = useTheme();
 
   const invoices = useSelector((state) => state.invoices.invoices) || [];
   const status = useSelector((state) => state.invoices.status);
@@ -21,29 +26,41 @@ const Invoices = () => {
 
   const [localInvoices, setLocalInvoices] = useState([]); // ✅ Lokal state tanımlandı
 
-  // ✅ Faturaları sadece bileşen mount edildiğinde getir
+  // ✅ Faturaları bileşen yüklendiğinde getir ve state'i güncelle
   useEffect(() => {
-    dispatch(fetchInvoices()).then((response) => {
-      if (response.payload) {
-        setLocalInvoices(response.payload); // ✅ useEffect içinde state güncellemesi yapıldı
-      }
-    });
-  }, [dispatch]);
+    dispatch(fetchInvoices())
+      .unwrap()
+      .then((data) => {
+        setLocalInvoices(data);
+        toast.success(texts?.invoices?.loaded || "✅ Faturalar başarıyla yüklendi!", {
+          position: "top-center",
+          autoClose: 3000,
+        });
+      })
+      .catch((err) => {
+        toast.error(texts?.invoices?.error || "🚨 Faturalar yüklenirken hata oluştu!", {
+          position: "top-center",
+          autoClose: 4000,
+        });
+        console.error("🚨 API Hatası:", err);
+      });
+  }, [dispatch, texts]);
 
-  if (status === "loading") return <p>📄 Faturalar yükleniyor...</p>;
-  if (status === "failed") return <p>🚨 Hata: {error}</p>;
+  if (status === "loading") return <p>📄 {texts?.invoices?.loading || "Faturalar yükleniyor..."}</p>;
+  if (status === "failed") return <p>🚨 {texts?.invoices?.error || "Hata oluştu!"} - {error}</p>;
 
   return (
-    <InvoicesContainer>
-      <h1>📑 Fatura Listesi</h1>
+    <InvoicesContainer theme={theme}>
+      <h1>{texts?.invoices?.title || "📑 Fatura Listesi"}</h1>
       <InvoicesTable>
         <thead>
           <tr>
-            <Th>Fatura No</Th>
-            <Th>Müşteri</Th>
-            <Th>Tarih</Th>
-            <Th>Toplam Tutar</Th>
-            <Th>İşlemler</Th>
+            <Th>{texts?.invoices?.invoiceNumber || "Fatura No"}</Th>
+            <Th>{texts?.invoices?.customer || "Müşteri"}</Th>
+            <Th>{texts?.invoices?.company || "Şirket"}</Th>
+            <Th>{texts?.invoices?.date || "Tarih"}</Th>
+            <Th>{texts?.invoices?.totalAmount || "Toplam Tutar"}</Th>
+            <Th>{texts?.invoices?.actions || "İşlemler"}</Th>
           </tr>
         </thead>
         <tbody>
@@ -51,19 +68,20 @@ const Invoices = () => {
             localInvoices.map((invoice) => (
               <tr key={invoice._id}>
                 <Td>{invoice.invoiceNumber}</Td>
-                <Td>{invoice.user?.name || "Bilinmiyor"}</Td>
+                <Td>{invoice.customer?.companyName || texts?.invoices?.unknownCustomer || "Bilinmiyor"}</Td>
+                <Td>{invoice.company?.companyName || texts?.invoices?.unknownCompany || "Bilinmiyor"}</Td>
                 <Td>{new Date(invoice.issuedAt).toLocaleDateString()}</Td>
                 <Td>{invoice.totalAmount.toFixed(2)} €</Td>
                 <Td>
-                  <ActionButton onClick={() => navigate(`/invoices/${invoice._id}`)}>
-                    📜 Detaylar
+                  <ActionButton theme={theme} onClick={() => navigate(`/invoices/${invoice._id}`)}>
+                    📜 {texts?.invoices?.details || "Detaylar"}
                   </ActionButton>
                 </Td>
               </tr>
             ))
           ) : (
             <tr>
-              <Td colSpan="5">Henüz fatura yok.</Td>
+              <Td colSpan="6">{texts?.invoices?.noInvoices || "Henüz fatura yok."}</Td>
             </tr>
           )}
         </tbody>

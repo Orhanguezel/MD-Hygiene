@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import { model, Schema } from "mongoose";
 
-const storeSchema = new mongoose.Schema({
+const storeSchema = new Schema({
   name: { type: String, required: true },
   locations: [{ 
     address: String, 
@@ -8,7 +8,7 @@ const storeSchema = new mongoose.Schema({
     country: String,
     postalCode: String 
   }], // 🔹 Çoklu lokasyon desteği eklendi
-  owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
   businessHours: { 
     opening: String, // Örn: "08:00"
     closing: String  // Örn: "20:00"
@@ -16,5 +16,5 @@ const storeSchema = new mongoose.Schema({
   stockLevel: { type: Number, required: true }, // 🔹 Stok seviyesi takip edilebilir hale getirildi
 }, { timestamps: true });
 
-const Store = mongoose.model("Store", storeSchema);
+const Store = model("Store", storeSchema);
 export default Store;

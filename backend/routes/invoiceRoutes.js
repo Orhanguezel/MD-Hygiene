@@ -4,7 +4,7 @@ import {
   getAllInvoices,
   getInvoiceById,
   getUserInvoices,
-  generateInvoicePDF
+  getInvoicePDF // ✅ generateInvoicePDF yerine getInvoicePDF kullanıldı
 } from "../controllers/invoiceController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 
@@ -20,6 +20,6 @@ router.route("/user").get(protect, getUserInvoices);
 router.route("/:id").get(protect, getInvoiceById);
 
 // ✅ Faturayı PDF olarak indir
-router.route("/:id/pdf").get(protect, generateInvoicePDF);
+router.route("/:id/pdf").get(protect, getInvoicePDF); // ✅ generateInvoicePDF yerine getInvoicePDF kullanıldı
 
 export default router;

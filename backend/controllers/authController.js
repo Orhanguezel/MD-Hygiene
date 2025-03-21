@@ -12,7 +12,7 @@ dotenv.config();
 
 // ✅ **Kullanıcı Kayıt**
 
-const BASE_URL = process.env.BASE_URL || "http://localhost:5010"; // ✅ Base URL eklendi
+const BASE_URL = process.env.BASE_URL
 
 export const registerUser = asyncHandler(async (req, res) => {
   console.log("📌 Backend'e Gelen Veri:", req.body);

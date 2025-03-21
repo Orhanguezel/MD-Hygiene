@@ -22,16 +22,10 @@ const router = express.Router();
  📝 Kullanıcı Kayıt ve Giriş
 ============================= */
 // ✅ Kullanıcı Kayıt (Profil Resmi ile)
-router.post(
-  "/register",
-  authenticate,
-  (req, res, next) => {
-    req.uploadType = "profile"; // ✅ Profil resmini doğru klasöre kaydet
-    next();
-  },
-  upload.single("profileImage"),
-  registerUser
-);
+router.post("/register", registerUser);
+
+
+
 
 // ✅ Kullanıcı Girişi
 router.post("/login", loginUser);

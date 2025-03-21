@@ -165,12 +165,41 @@
     "paid": "Bezahlt",
     "unpaid": "Unbezahlt"
   },
+  "loading": "⏳ Angebot wird geladen...",
+  "errors": {
+    "notFound": "❌ Angebot nicht gefunden.",
+    "missingInfo": "Fehlende Information"
+  },
   "notifications": {
     "title": "Benachrichtigungsverwaltung",
     "markAsRead": "Als gelesen markieren",
     "noNotifications": "Noch keine Benachrichtigungen.",
     "unread": "Ungelesen",
-    "read": "Gelesen"
+    "read": "Gelesen",
+    "offerUpdated": "✅ Angebot erfolgreich aktualisiert!",
+    "updateFailed": "❌ Angebot konnte nicht aktualisiert werden!"
+  },
+  "offerDetails": {
+    "title": "Angebotsdetails",
+    "companyInfo": "Firmeninformationen",
+    "customerInfo": "Kundeninformationen",
+    "customerName": "Kundenname",
+    "companyName": "Firmenname",
+    "address": "Adresse",
+    "phone": "Telefon",
+    "product": "Produktname",
+    "unitPrice": "Einheitspreis (₺)",
+    "quantity": "Menge",
+    "tax": "MwSt (%)",
+    "total": "Gesamt (₺)",
+    "shippingCost": "Versandkosten",
+    "netTotal": "Nettobetrag",
+    "taxTotal": "MwSt-Betrag",
+    "grandTotal": "Gesamtbetrag"
+  },
+  "buttons": {
+    "save": "Speichern",
+    "downloadPDF": "PDF herunterladen"
   },
   "reports": {
     "title": "Berichte",
@@ -618,7 +647,18 @@
     "invalidId": "Ungültige Kunden-ID!",
     "list": "Kundenliste",
     "noRecords": "Keine Kunden gefunden.",
-    "loading": "Lade Kunden..."
+    "loading": "Lade Kunden...",
+    "contactName": "Ansprechpartner",
+    "email": "E-Mail",
+    "street": "Straße",
+    "city": "Stadt",
+    "postalCode": "Postleitzahl",
+    "country": "Land",
+    "actions": "Aktionen",
+    "edit": "Bearbeiten",
+    "missingFields": "Bitte füllen Sie alle Pflichtfelder aus!",
+    "addFailed": "Fehler beim Hinzufügen des Kunden!",
+    "error": "Fehler beim Laden der Kunden!"
   },
   "general": {
     "back": "Zurück"

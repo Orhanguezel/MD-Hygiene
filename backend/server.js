@@ -11,7 +11,7 @@ dotenv.config();
 
 const app = express();
 
-app.use("/uploads", serveUploads); // ✅ Statik dosya servisi// ✅ Middleware'ler
+app.use("/uploads", serveUploads);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParserMiddleware);
@@ -25,9 +25,9 @@ const startServer = async () => {
     await connectDB();
     swaggerDocs(app);
 
-    const PORT = process.env.PORT || 5010;
+    const PORT = process.env.PORT
     app.listen(PORT, () => {
-      console.log(`🚀 Server ${PORT} portunda çalışıyor: http://localhost:${PORT}`);
+      console.log(`🚀 Server ${PORT} portunda çalışıyor: https://www.md-hygienelogistik.de:${PORT}`);
     });
   } catch (error) {
     console.error("❌ Sunucu başlatılamadı:", error.message);

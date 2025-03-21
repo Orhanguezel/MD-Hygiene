@@ -168,12 +168,42 @@
     "noOrders": "Henüz siparişiniz bulunmamaktadır.",
     "loading": "📦 Siparişler yükleniyor..."
   },
+  "loading": "⏳ Teklif yükleniyor...",
+  "errors": {
+    "notFound": "❌ Teklif bulunamadı.",
+    "missingInfo": "Eksik bilgi"
+  },
   "notifications": {
     "title": "Bildirim Yönetimi",
     "markAsRead": "Okundu Olarak İşaretle",
     "noNotifications": "Henüz bildirim yok.",
     "unread": "Okunmadı",
-    "read": "Okundu"
+    "read": "Okundu",
+    "offerUpdated": "✅ Teklif başarıyla güncellendi!",
+    "updateFailed": "❌ Teklif güncellenemedi!"
+  },
+  "offerDetails": {
+    "title": " Teklif Detayları",
+    "companyInfo": " Şirket Bilgileri",
+    "customerInfo": " Müşteri Bilgileri",
+    "customerName": "Müşteri Adı",
+    "companyName": "Firma Adı",
+    "address": "Adres",
+    "phone": "Telefon",
+    "taxNumber": "Vergi Numarası",
+    "product": "Ürün Adı",
+    "unitPrice": "Birim Fiyat (₺)",
+    "quantity": "Adet",
+    "tax": "KDV (%)",
+    "total": "Toplam (₺)",
+    "shippingCost": "Nakliye Ücreti",
+    "netTotal": "Net Tutar",
+    "taxTotal": "KDV Tutarı",
+    "grandTotal": "Genel Toplam"
+  },
+  "buttons": {
+    "save": " Kaydet",
+    "downloadPDF": " PDF Olarak İndir"
   },
   "reports": {
     "title": "Raporlar",
@@ -633,7 +663,18 @@
     "invalidId": "Geçersiz müşteri ID!",
     "list": "Müşteri Listesi",
     "noRecords": "Kayıtlı müşteri bulunamadı.",
-    "loading": "Müşteriler yükleniyor..."
+    "loading": "Müşteriler yükleniyor...",
+    "contactName": "Yetkili Kişi",
+    "email": "E-Posta",
+    "street": "Sokak",
+    "city": "Şehir",
+    "postalCode": "Posta Kodu",
+    "country": "Ülke",
+    "actions": "İşlemler",
+    "edit": "Düzenle",
+    "missingFields": "Lütfen tüm zorunlu alanları doldurun!",
+    "addFailed": "Müşteri eklenirken hata oluştu!",
+    "error": "Müşteriler yüklenirken hata oluştu!"
   },
   "general": {
     "back": "Geri Dön"

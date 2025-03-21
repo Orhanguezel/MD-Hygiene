@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearCart } from "@/features/cart/cartSlice";
 import { addOrder } from "@/features/orders/ordersSlice";
+import { fetchCompanyInfo } from "@/features/company/companySlice";
 import { toast } from "react-toastify";
 import { useLanguage } from "@/features/language/useLanguage";
 import { useTheme } from "@/features/theme/useTheme";
@@ -24,9 +25,18 @@ const Checkout = () => {
   const { texts } = useLanguage();
   const { theme } = useTheme();
 
-  // 📌 Redux Store'dan verileri al
+  // Redux Store'dan verileri al
   const { cartItems, totalPrice, vatAmount, shippingCost, grandTotal } = useSelector((state) => state.cart);
   const user = useSelector((state) => state.auth.user);
+  const company = useSelector((state) => state.company.company);
+  const companyStatus = useSelector((state) => state.company.status);
+
+  // ✅ Şirket bilgisini yükle
+  useEffect(() => {
+    if (!company && companyStatus === "idle") {
+      dispatch(fetchCompanyInfo());
+    }
+  }, [company, companyStatus, dispatch]);
 
   // 📌 Ödeme bilgileri state yönetimi
   const [paymentDetails, setPaymentDetails] = useState({
@@ -41,38 +51,54 @@ const Checkout = () => {
     setPaymentDetails((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  // 📌 Ödeme bilgisi doğrulama
+  const isPaymentValid = () => Object.values(paymentDetails).every((value) => value.trim() !== "");
+
   // 📌 Siparişi Tamamla
   const handleCheckout = async (e) => {
     e.preventDefault();
 
-    // ✅ Ödeme bilgileri kontrolü
-    if (Object.values(paymentDetails).some((value) => !value.trim())) {
+    if (!isPaymentValid()) {
       toast.error(texts.checkout?.missingDetails || "❌ Lütfen tüm ödeme bilgilerini doldurun!");
+      return;
+    }
+
+    if (!company || !company._id) {
+      toast.error(texts.checkout?.missingCompany || "❌ Şirket bilgisi eksik! Sipariş verilemez.");
       return;
     }
 
     const orderData = {
       user: user._id,
-      items: cartItems,
-      totalPrice,
-      vatAmount,
+      company: company._id,
+      products: cartItems.map((item) => ({
+        productId: item.product._id,
+        name: item.product.title,
+        quantity: item.quantity,
+        unitPrice: item.price,
+      })),
+      totalAmount: grandTotal,
+      taxAmount: vatAmount,
       shippingCost,
-      grandTotal,
+      shippingAddress: user.address || { street: "", city: "", postalCode: "", country: "" },
       paymentDetails,
+      status: "pending",
+      paymentStatus: "pending",
+      orderDate: new Date().toISOString(),
     };
 
     try {
-      const order = await dispatch(addOrder(orderData)).unwrap();
+      await dispatch(addOrder(orderData)).unwrap();
 
       toast.success(texts.checkout?.success || "✅ Sipariş başarıyla oluşturuldu!", {
         position: "top-center",
         autoClose: 3000,
       });
 
-      await dispatch(clearCart()).unwrap();
+      dispatch(clearCart());
       navigate("/order-confirmation");
     } catch (error) {
-      console.error(error);
+      console.error("🚨 Sipariş oluşturma hatası:", error);
       toast.error(texts.checkout?.error || "❌ Sipariş oluşturulamadı!");
     }
   };

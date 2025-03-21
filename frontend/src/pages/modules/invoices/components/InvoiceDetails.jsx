@@ -20,7 +20,7 @@ const InvoiceDetails = () => {
     if (id) {
       console.log("📌 Fatura Detay Sayfası - ID:", id);
       dispatch(fetchInvoiceById(id));
-      dispatch(fetchCompanyInfo());
+      dispatch(fetchCompanyInfo()); // ✅ Şirket bilgisi dinamik olarak çekiliyor
     } else {
       console.error("🚨 HATA: Fatura ID alınamadı!");
     }

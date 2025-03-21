@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import { model, Schema } from "mongoose";
 
-const categorySchema = new mongoose.Schema(
+const categorySchema = new Schema(
   {
     name: { type: String, required: true, unique: true }, // ✅ Aynı isimde kategori eklenmesini önler
     image: { type: String}
@@ -8,5 +8,5 @@ const categorySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Category = mongoose.model("Category", categorySchema);
+const Category = model("Category", categorySchema);
 export default Category;

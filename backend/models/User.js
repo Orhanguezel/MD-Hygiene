@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+import { model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 
-const userSchema = new mongoose.Schema(
+const userSchema = new Schema(
   {
     name: { type: String, required: true },
     email: { 
@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema(
       unique: true, 
       match: /.+\@.+\..+/ 
     },
-    password: { type: String, required: true, select: false }, // Şifre hashlenerek kaydedilecek
+    password: { type: String, required: true, select: false },
     role: { 
       type: String, 
       enum: ["admin", "user", "customer", "moderator", "staff"], 
@@ -25,15 +25,13 @@ const userSchema = new mongoose.Schema(
         isDefault: { type: Boolean, default: false },
       }
     ],
-    phone: { type: String }, // ✅ Telefon validasyonu tamamen kaldırıldı
-    orders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
+    phone: { type: String },
+    orders: [{ type: Schema.Types.ObjectId, ref: "Order" }],
     profileImage: { type: String, default: "https://via.placeholder.com/150" },
     isActive: { type: Boolean, default: true },
-
-    // ✅ **Yeni Alanlar**
-    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }], // Kullanıcının favori ürünleri
-    bio: { type: String, default: "" }, // Kullanıcı hakkında kısa bilgi
-    birthDate: { type: Date }, // Kullanıcının doğum tarihi
+    favorites: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+    bio: { type: String, default: "" }, 
+    birthDate: { type: Date },
     socialMedia: {
       facebook: { type: String, default: "" },
       twitter: { type: String, default: "" },
@@ -80,5 +78,5 @@ userSchema.methods.isPasswordHashed = function () {
   return this.password.startsWith("$2b$10$"); // bcrypt hash formatı kontrolü
 };
 
-const User = mongoose.model("User", userSchema);
+const User = model("User", userSchema);
 export default User;

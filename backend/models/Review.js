@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
+import { model, Schema } from "mongoose";
 
-const reviewSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  product: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
+const reviewSchema = new Schema({
+  user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  product: { type: Schema.Types.ObjectId, ref: "Product", required: true },
   rating: { type: Number, required: true, min: 1, max: 5 },
   comment: { type: String, required: true },
   editedAt: { type: Date, default: Date.now },
@@ -17,7 +17,7 @@ reviewSchema.statics.calculateAverageRating = async function (productId) {
   return result.length ? { averageRating: result[0].averageRating, totalReviews: result[0].totalReviews } : { averageRating: 0, totalReviews: 0 };
 };
 
-const Review = mongoose.model("Review", reviewSchema);
+const Review = model("Review", reviewSchema);
 export default Review;
 
 

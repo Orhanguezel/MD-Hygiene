@@ -27,7 +27,7 @@ const OfferList = () => {
 
   useEffect(() => {
     dispatch(fetchOffers()).then((response) => {
-      console.log(texts?.offers?.fetchLog, response.payload); // ✅ Konsolda veriyi kontrol et
+      console.log("📌 Teklifler Yüklendi:", response.payload);
     });
   }, [dispatch]);
 
@@ -41,15 +41,50 @@ const OfferList = () => {
     const matchesStatus =
       statusFilter === "all" || offerStatus === statusFilter;
     const matchesSearch =
-      offer.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      offer.companyName?.toLowerCase().includes(searchTerm.toLowerCase());
+      offer.customer?.contactName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      offer.company?.companyName?.toLowerCase().includes(searchTerm.toLowerCase());
 
     return matchesStatus && matchesSearch;
   });
 
   const handleDelete = (id) => {
-    dispatch(deleteOffer(id));
-    toast.info(texts?.offers?.deleteToast);
+    dispatch(deleteOffer(id))
+      .unwrap()
+      .then(() => toast.success(texts?.offers?.deleteToast))
+      .catch(() => toast.error("❌ Teklif silinemedi!"));
+  };
+
+  // ✅ Teklif Satırını Render Etme
+  const renderOfferRow = (offer) => {
+    const totalNet = offer.items.reduce((acc, item) => acc + item.customPrice * item.quantity, 0);
+    const taxAmount = (totalNet * offer.taxRate) / 100;
+    const grandTotal = totalNet + taxAmount + (offer.shippingCost || 0);
+
+    return (
+      <tr key={offer._id}>
+        <td>{offer.offerNumber}</td>
+        <td>{offer.company?.companyName || "Bilinmeyen Şirket"}</td>
+        <td>{offer.customer?.contactName || "Bilinmeyen Müşteri"}</td>
+        <td>{totalNet.toFixed(2)} ₺</td>
+        <td>{taxAmount.toFixed(2)} ₺</td>
+        <td>{grandTotal.toFixed(2)} ₺</td>
+        <td>{offer.paymentTerms || "Tanımlanmamış"}</td>
+        <td>{new Date(offer.validUntil).toLocaleDateString()}</td>
+        <td>
+          <StatusBadge $status={offer.status || "draft"}>
+            {texts?.offers?.statuses?.[offer.status] || texts?.offers?.statuses?.draft}
+          </StatusBadge>
+        </td>
+        <td>
+          <OfferButton theme={theme} onClick={() => navigate(`/offers/${offer._id}`)}>
+            {texts?.offers?.view}
+          </OfferButton>
+          <OfferButton theme={theme} onClick={() => handleDelete(offer._id)}>
+            {texts?.offers?.delete}
+          </OfferButton>
+        </td>
+      </tr>
+    );
   };
 
   return (
@@ -71,7 +106,7 @@ const OfferList = () => {
             key={statusType}
             onClick={() => setStatusFilter(statusType)}
             theme={theme}
-            $active={statusFilter === statusType} // ✅ Seçili olan düğmeyi belirgin yap
+            $active={statusFilter === statusType}
           >
             {texts?.offers?.statuses?.[statusType]}
           </FilterButton>
@@ -81,53 +116,27 @@ const OfferList = () => {
       <OfferTable theme={theme}>
         <thead>
           <tr>
-            <th>ID</th>
+            <th>{texts?.offers?.offerNumber}</th>
             <th>{texts?.offers?.companyName}</th>
             <th>{texts?.offers?.customerName}</th>
+            <th>{texts?.offers?.netTotal}</th>
+            <th>{texts?.offers?.taxTotal}</th>
             <th>{texts?.offers?.totalAmount}</th>
+            <th>{texts?.offers?.paymentTerms}</th>
+            <th>{texts?.offers?.validUntil}</th>
             <th>{texts?.offers?.status}</th>
             <th>{texts?.offers?.actions}</th>
           </tr>
         </thead>
 
         <tbody>
-          {filteredOffers.map((offer) => (
-            <tr key={offer.id}>
-              <td>{offer.id}</td>
-              <td>{offer.companyName}</td>
-              <td>{offer.customerName}</td>
-              <td>
-                {offer.selectedProducts && offer.selectedProducts.length > 0
-                  ? offer.selectedProducts
-                      .reduce(
-                        (acc, product) =>
-                          acc + product.customPrice * product.quantity,
-                        0
-                      )
-                      .toFixed(2) + " ₺"
-                  : "0.00 ₺"}
-              </td>
-              <td>
-                <StatusBadge $status={offer.status || "draft"}>
-                  {texts?.offers?.statuses?.[offer.status] || texts?.offers?.statuses?.draft}
-                </StatusBadge>
-              </td>
-              <td>
-                <OfferButton
-                  theme={theme}
-                  onClick={() => navigate(`/offers/${offer.id}`)}
-                >
-                  {texts?.offers?.view}
-                </OfferButton>
-                <OfferButton
-                  theme={theme}
-                  onClick={() => handleDelete(offer.id)}
-                >
-                  {texts?.offers?.delete}
-                </OfferButton>
-              </td>
+          {filteredOffers.length > 0 ? (
+            filteredOffers.map(renderOfferRow)
+          ) : (
+            <tr>
+              <td colSpan="10">{texts?.offers?.noOffers}</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </OfferTable>
     </OfferListContainer>

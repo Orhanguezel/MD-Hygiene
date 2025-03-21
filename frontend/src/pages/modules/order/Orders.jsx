@@ -17,51 +17,48 @@ const Orders = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const texts = useSelector((state) => state.language.texts) || {}; // ✅ Dil desteği
-  const orders = useSelector((state) => state.orders.orders) || []; // ✅ Siparişleri çek
-  const status = useSelector((state) => state.orders.status); // ✅ Yüklenme durumu
-  const error = useSelector((state) => state.orders.error); // ✅ Hata kontrolü
+  const texts = useSelector((state) => state.language.texts) || {};
+  const { orders, ordersStatus: status, error } = useSelector((state) => state.orders);
 
-  // ✅ Siparişleri API'den çek (sayfa açıldığında)
   useEffect(() => {
-    dispatch(fetchOrders()).then((response) => {
-      console.log("📌 API'den Gelen Siparişler:", response.payload);
-    });
+    dispatch(fetchOrders())
+      .unwrap()
+      .catch((err) => {
+        console.error("🚨 Siparişler yüklenemedi:", err);
+        toast.error("❌ Siparişler yüklenemedi!");
+      });
   }, [dispatch]);
 
-  // ✅ **Sipariş Silme Fonksiyonu**
   const handleDeleteOrder = async (orderId) => {
-    if (
-      window.confirm(
-        texts?.orders?.confirmDelete ||
-          "Bu siparişi silmek istediğinizden emin misiniz?"
-      )
-    ) {
-      try {
-        await dispatch(deleteOrder(orderId)).unwrap();
-        toast.success(
-          texts?.orders?.orderDeleted || "✅ Sipariş başarıyla silindi!"
-        );
-        dispatch(fetchOrders()); // ✅ Silme sonrası siparişleri tekrar çek
-      } catch {
-        toast.error(
-          texts?.orders?.orderDeleteError || "❌ Sipariş silinemedi!"
-        );
-      }
+    const confirmMessage = texts?.orders?.confirmDelete || "Bu siparişi silmek istediğinizden emin misiniz?";
+    if (!window.confirm(confirmMessage)) return;
+
+    try {
+      await dispatch(deleteOrder(orderId)).unwrap();
+      toast.success(texts?.orders?.orderDeleted || "✅ Sipariş başarıyla silindi!");
+    } catch (err) {
+      console.error("🚨 Sipariş silme hatası:", err);
+      toast.error(texts?.orders?.orderDeleteError || "❌ Sipariş silinemedi!");
     }
   };
 
+  if (status === "loading") {
+    return <p>{texts?.orders?.loading || "📦 Siparişler yükleniyor..."}</p>;
+  }
+
+  if (status === "failed") {
+    return (
+      <p>
+        {texts?.orders?.error || "❌ Siparişler yüklenirken hata oluştu!"} - {error}
+      </p>
+    );
+  }
+
   return (
     <OrdersContainer>
-      <h1>{texts?.orders?.title || "Siparişler"}</h1>
+      <h1>{texts?.orders?.title || "📦 Siparişler"}</h1>
 
-      {status === "loading" ? (
-        <p>{texts?.orders?.loading || "Siparişler yükleniyor..."}</p>
-      ) : status === "failed" ? (
-        <p>
-          {texts?.orders?.error || "Siparişler yüklenemedi!"} - {error}
-        </p>
-      ) : (
+      {orders && orders.length > 0 ? (
         <OrdersTable>
           <thead>
             <tr>
@@ -73,36 +70,30 @@ const Orders = () => {
             </tr>
           </thead>
           <tbody>
-            {orders.length > 0 ? (
-              orders.map((order) => (
-                <tr key={order._id}> {/* ✅ Unique key olarak _id kullanıyoruz */}
-                  <Td>{order._id}</Td>
-                  <Td>{order.user?.name || texts?.orders?.unknownCustomer || "Bilinmiyor"}</Td>
-                  <Td>
-                    <StatusBadge $status={order.status}>
-                      {texts.orders[order.status] || order.status}
-                    </StatusBadge>
-                  </Td>
-                  <Td>{Number(order.totalAmount || 0).toFixed(2)} ₺</Td>
-                  <Td>
-                    <ActionButton onClick={() => navigate(`/orders/${order._id}`)}>
-                      {texts?.orders?.viewDetails || "Detayları Gör"}
-                    </ActionButton>
-                    <DeleteButton onClick={() => handleDeleteOrder(order._id)}>
-                      {texts?.orders?.deleteOrder || "❌ Sil"}
-                    </DeleteButton>
-                  </Td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <Td colSpan="5">
-                  {texts?.orders?.noOrders || "Henüz sipariş yok."}
+            {orders.map(({ _id, user, status, totalAmount }) => (
+              <tr key={_id}>
+                <Td>{_id}</Td>
+                <Td>{user?.name || texts?.orders?.unknownCustomer || "Bilinmiyor"}</Td>
+                <Td>
+                  <StatusBadge $status={status}>
+                    {texts?.orders?.[status] || status}
+                  </StatusBadge>
+                </Td>
+                <Td>{Number(totalAmount || 0).toFixed(2)} ₺</Td>
+                <Td>
+                  <ActionButton onClick={() => navigate(`/orders/${_id}`)}>
+                    {texts?.orders?.viewDetails || "Detayları Gör"}
+                  </ActionButton>
+                  <DeleteButton onClick={() => handleDeleteOrder(_id)}>
+                    {texts?.orders?.deleteOrder || "❌ Sil"}
+                  </DeleteButton>
                 </Td>
               </tr>
-            )}
+            ))}
           </tbody>
         </OrdersTable>
+      ) : (
+        <p>{texts?.orders?.noOrders || "🚫 Henüz sipariş yok."}</p>
       )}
     </OrdersContainer>
   );

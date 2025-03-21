@@ -110,43 +110,6 @@ export const ToggleButton = styled.button`
 `;
 
 
-// 📌 **Tablo (Table)**
-export const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  background: ${({ theme }) => theme.cardBackground};
-  box-shadow: 0px 3px 8px ${({ theme }) => theme.shadow};
-`;
-
-// 📌 **Tablo Satırı (Row)**
-export const TableRow = styled.tr`
-  border-bottom: 1px solid ${({ theme }) => theme.border};
-`;
-
-// 📌 **Tablo Hücresi (Cell)**
-export const TableCell = styled.td`
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid ${({ theme }) => theme.border};
-`;
-
-// 📌 **Düzenle Butonu**
-export const EditButton = styled(Button)`
-  background: #ffc107;
-  &:hover {
-    background: #e0a800;
-  }
-`;
-
-// 📌 **Silme Butonu**
-export const DeleteButton = styled(Button)`
-  background: #dc3545;
-  &:hover {
-    background: #c82333;
-  }
-`;
-
 // 📌 **Aksiyon Butonu**
 export const ActionButton = styled(Button)`
   margin-top: 10px;
@@ -252,4 +215,75 @@ export const SelectInput = styled.select`
   color: ${({ theme }) => (theme === "dark" ? "#fff" : "#000")};
   border-radius: 5px;
 `;
+
+
+export const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
+  border-radius: 8px;
+  overflow: hidden;
+`;
+
+export const TableRow = styled.tr`
+  &:nth-child(even) {
+    background-color: ${({ theme }) => theme.tableRowEven};
+  }
+  &:nth-child(odd) {
+    background-color: ${({ theme }) => theme.tableRowOdd};
+  }
+`;
+
+export const TableCell = styled.td`
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid ${({ theme }) => theme.border};
+  word-break: break-word;
+  max-width: 200px;
+`;
+
+export const TableHeader = styled.th`
+  padding: 12px;
+  text-align: left;
+  background-color: ${({ theme }) => theme.primary};
+  color: white;
+  border-bottom: 2px solid ${({ theme }) => theme.border};
+`;
+
+export const ActionCell = styled(TableCell)`
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+`;
+
+export const EditButton = styled.button`
+  background-color: #f4c542;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  &:hover {
+    background-color: #e0b132;
+  }
+`;
+
+export const DeleteButton = styled.button`
+  background-color: #d9534f;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  &:hover {
+    background-color: #c9302c;
+  }
+`;
+
 

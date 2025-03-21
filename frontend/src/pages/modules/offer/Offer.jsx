@@ -3,7 +3,7 @@ import { useLanguage } from "@/features/language/useLanguage";
 import OfferSidebar from "./components/OfferSidebar";
 import OfferList from "./components/OfferList";
 import OfferCreate from "./components/OfferCreate";
-import OfferPDF from "./components/OfferPDF";
+import OfferPDFDocument from "./components/OfferPDFDocument";
 import SetShippingCost from "./components/SetShippingCost";
 import OfferDetails from "./components/OfferDetails";
 import OfferArchive from "./components/OfferArchive";
@@ -24,7 +24,7 @@ const Offer = () => {
       case "create":
         return <OfferCreate onOfferCreated={() => setActiveSection("list")} />;
       case "pdf":
-        return <OfferPDF offer={selectedOffer} />;
+        return <OfferPDFDocument offer={selectedOffer} />;
       case "shipping":
         return <SetShippingCost />;
       case "details":
@@ -45,7 +45,7 @@ const Offer = () => {
     <div>
       <OfferSidebar setActiveSection={setActiveSection} />
       <div>
-        <h1>{texts?.offers?.title}</h1>
+        <h1>{texts?.offers?.title || "📄 Teklifler"}</h1>
         <div>{renderContent()}</div>
       </div>
     </div>

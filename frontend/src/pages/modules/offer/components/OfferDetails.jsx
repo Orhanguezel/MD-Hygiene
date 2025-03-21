@@ -24,13 +24,13 @@ const OfferDetail = () => {
   const { selectedOffer, status } = useSelector((state) => state.offer);
   const { company } = useSelector((state) => state.company);
   const { customers } = useSelector((state) => state.customer);
-  const { texts } = useLanguage();
+  const { texts } = useLanguage(); // 🌍 Dil desteği aktif
   const { theme } = useTheme();
   const [offerData, setOfferData] = useState(null);
 
   useEffect(() => {
     dispatch(fetchOfferById(id));
-    dispatch(fetchCompanyInfo()); 
+    dispatch(fetchCompanyInfo());
     dispatch(fetchCustomers());
   }, [dispatch, id]);
 
@@ -40,40 +40,43 @@ const OfferDetail = () => {
     }
   }, [selectedOffer]);
 
-  if (status === "loading") return <p>⏳ Teklif yükleniyor...</p>;
-  if (!offerData) return <p>❌ Teklif bulunamadı.</p>;
+  if (status === "loading") return <p>⏳ {texts?.loading}</p>;
+  if (!offerData) return <p>❌ {texts?.errors?.notFound}</p>;
 
   // 📌 Müşteri Bilgilerini Redux Store'dan Al
-  const customer = customers.find((c) => c.id === offerData.customerId) || {};
+  const customer = customers.find((c) => c._id === offerData.customer?._id) || {};
 
-  // 📌 Ürün Bilgilerini Güncelleme
-  const handleProductChange = (id, field, value) => {
-    const updatedProducts = offerData.selectedProducts.map((product) =>
-      product.id === id ? { ...product, [field]: Number(value) } : product
+  // 📌 Ürün Güncelleme (KDV Seçilebilir)
+  const handleProductUpdate = (id, field, value) => {
+    let sanitizedValue = value.replace(/^0+/, ""); // Başındaki sıfırları kaldır
+    sanitizedValue = sanitizedValue === "" ? "0" : sanitizedValue; // Boş girişleri sıfır olarak ayarla
+
+    const updatedProducts = offerData.items.map((product) =>
+      product._id === id ? { ...product, [field]: Number(sanitizedValue) } : product
     );
-    setOfferData((prev) => ({ ...prev, selectedProducts: updatedProducts }));
+
+    setOfferData((prev) => ({ ...prev, items: updatedProducts }));
   };
 
-  // 📌 Nakliye Ücretini Güncelleme
+  // 📌 Kargo Ücretini Güncelleme
   const handleShippingCostChange = (e) => {
-    let value = e.target.value;
-    setOfferData((prev) => ({
-      ...prev,
-      shippingCost: value === "" ? "" : Number(value),
-    }));
+    let value = e.target.value.replace(/^0+/, "");
+    value = value === "" ? "0" : value;
+    setOfferData((prev) => ({ ...prev, shippingCost: Number(value) }));
   };
 
   // 📌 Tutarları Hesapla
   const calculateTotals = () => {
-    if (!offerData.selectedProducts) return { netTotal: 0, taxTotal: 0, grandTotal: 0 };
+    if (!offerData.items) return { netTotal: 0, taxTotal: 0, grandTotal: 0 };
 
-    const netTotal = offerData.selectedProducts.reduce(
+    const netTotal = offerData.items.reduce(
       (acc, item) => acc + (item.customPrice || 0) * (item.quantity || 1),
       0
     );
 
-    const taxTotal = offerData.selectedProducts.reduce(
-      (acc, item) => acc + (item.customPrice || 0) * (item.quantity || 1) * ((item.taxRate || 0) / 100),
+    const taxTotal = offerData.items.reduce(
+      (acc, item) =>
+        acc + (item.customPrice || 0) * (item.quantity || 1) * ((item.taxRate || 19) / 100),
       0
     );
 
@@ -86,76 +89,71 @@ const OfferDetail = () => {
 
   // 📌 Teklif Güncelleme Fonksiyonu
   const handleSave = () => {
-    const updatedOffer = { ...offerData, grandTotal: totals.grandTotal.toFixed(2) };
+    const updatedOffer = { ...offerData, totalAmount: totals.grandTotal.toFixed(2) };
     dispatch(updateOffer(updatedOffer))
       .unwrap()
-      .then(() => {
-        toast.success("✅ Teklif başarıyla güncellendi!");
-      })
-      .catch(() => {
-        toast.error("❌ Teklif güncellenemedi!");
-      });
+      .then(() => toast.success(texts?.notifications?.offerUpdated))
+      .catch(() => toast.error(texts?.notifications?.updateFailed));
   };
 
   return (
     <OfferDetailsContainer theme={theme}>
-      <h2>📄 Teklif Detayları</h2>
+      <h2>📄 {texts?.offerDetails?.title}</h2>
 
-      {/* 🏢 Firma Bilgileri */}
-      <h3>🏢 Firma Bilgileri</h3>
-      <p><strong>{company?.name || "Firma adı eksik"}</strong></p>
-      <p>{company?.address || "Adres bilgisi eksik"}</p>
-      <p>{company?.email || "E-posta eksik"}</p>
-      <p>📌 Vergi Numarası: {company?.taxNumber || "Eksik"}</p>
-      <p>🏦 IBAN: {company?.bankIban || "Eksik"}</p>
-      <p>🏦 BIC: {company?.bankBic || "Eksik"}</p>
+      {/* 🏢 Şirket Bilgileri */}
+      <h3>🏢 {texts?.offerDetails?.companyInfo}</h3>
+      <p><strong>{company?.companyName || texts?.errors?.missingInfo}</strong></p>
+      <p>{company?.email || texts?.errors?.missingInfo}</p>
+      <p>📍 {texts?.offerDetails?.address}: {company?.address?.street}, {company?.address?.city}, {company?.address?.postalCode}, {company?.address?.country}</p>
+      <p>📌 {texts?.offerDetails?.taxNumber}: {company?.taxNumber || texts?.errors?.missingInfo}</p>
+      <p>🏦 IBAN: {company?.bankDetails?.iban || texts?.errors?.missingInfo}</p>
+      <p>🏦 BIC: {company?.bankDetails?.bic || texts?.errors?.missingInfo}</p>
 
       {/* 👤 Müşteri Bilgileri */}
-      <h3>👤 Müşteri Bilgileri</h3>
-      <p><strong>👤 Müşteri Adı:</strong> {customer?.contactPerson || "Bilinmiyor"}</p>
-      <p><strong>🏢 Firma Adı:</strong> {customer?.companyName || "Firma bilgisi eksik"}</p>
-      <p><strong>📍 Adres:</strong> {customer?.address || "Adres bilinmiyor"}</p>
-      <p><strong>📞 Telefon:</strong> {customer?.phone || "Telefon bilinmiyor"}</p>
+      <h3>👤 {texts?.offerDetails?.customerInfo}</h3>
+      <p><strong>{texts?.offerDetails?.customerName}:</strong> {customer?.contactName || texts?.errors?.missingInfo}</p>
+      <p><strong>{texts?.offerDetails?.companyName}:</strong> {customer?.companyName || texts?.errors?.missingInfo}</p>
+      <p><strong>📍 {texts?.offerDetails?.address}:</strong> 
+        {customer?.address?.street || texts?.errors?.missingInfo}, 
+        {customer?.address?.city || texts?.errors?.missingInfo}, 
+        {customer?.address?.postalCode || texts?.errors?.missingInfo}, 
+        {customer?.address?.country || texts?.errors?.missingInfo}
+      </p>
+      <p><strong>📞 {texts?.offerDetails?.phone}:</strong> {customer?.phone || texts?.errors?.missingInfo}</p>
 
       {/* 📦 Ürün Listesi */}
       <ProductTable theme={theme}>
         <thead>
           <tr>
-            <th>Ürün Adı</th>
-            <th>Birim Fiyat (₺)</th>
-            <th>Adet</th>
-            <th>KDV (%)</th>
-            <th>Toplam (₺)</th>
+            <th>{texts?.offerDetails?.product}</th>
+            <th>{texts?.offerDetails?.unitPrice}</th>
+            <th>{texts?.offerDetails?.quantity}</th>
+            <th>{texts?.offerDetails?.tax}</th>
+            <th>{texts?.offerDetails?.total}</th>
           </tr>
         </thead>
         <tbody>
-          {offerData.selectedProducts.map((product) => (
-            <tr key={product.id}>
-              <td>{product.title || "Ürün adı eksik"}</td>
+          {offerData.items.map((product) => (
+            <tr key={product._id}>
+              <td>{product.title || texts?.errors?.missingInfo}</td>
               <td>
                 <FormInput
                   type="number"
                   value={product.customPrice || 0}
-                  onChange={(e) =>
-                    handleProductChange(product.id, "customPrice", e.target.value)
-                  }
+                  onChange={(e) => handleProductUpdate(product._id, "customPrice", e.target.value)}
                 />
               </td>
               <td>
                 <FormInput
                   type="number"
                   value={product.quantity || 1}
-                  onChange={(e) =>
-                    handleProductChange(product.id, "quantity", e.target.value)
-                  }
+                  onChange={(e) => handleProductUpdate(product._id, "quantity", e.target.value)}
                 />
               </td>
               <td>
                 <TaxSelect
-                  value={product.taxRate || 0}
-                  onChange={(e) =>
-                    handleProductChange(product.id, "taxRate", e.target.value)
-                  }
+                  value={product.taxRate || 19}
+                  onChange={(e) => handleProductUpdate(product._id, "taxRate", e.target.value)}
                 >
                   <option value="19">%19</option>
                   <option value="7">%7</option>
@@ -167,18 +165,18 @@ const OfferDetail = () => {
         </tbody>
       </ProductTable>
 
-      {/* 💰 Toplamlar - İkonlarla Geri Eklendi */}
+      {/* 💰 Toplamlar */}
       <SummaryBox theme={theme}>
-        <h3>💰 Net Tutar: {totals.netTotal.toFixed(2)} ₺</h3>
-        <h3>💸 KDV: {totals.taxTotal.toFixed(2)} ₺</h3>
-        <h3>🚚 Nakliye Ücreti: 
-          <FormInput type="number" value={offerData.shippingCost || ""} onChange={handleShippingCostChange} />
+        <h3>🚚 {texts?.offerDetails?.shippingCost}: 
+          <FormInput type="number" value={offerData.shippingCost || 0} onChange={handleShippingCostChange} />
         </h3>
-        <h2>🔢 Genel Toplam: {totals.grandTotal.toFixed(2)} ₺</h2>
+        <h3>💰 {texts?.offerDetails?.netTotal}: {totals.netTotal.toFixed(2)} ₺</h3>
+        <h3>💸 {texts?.offerDetails?.taxTotal}: {totals.taxTotal.toFixed(2)} ₺</h3>
+        <h2>🔢 {texts?.offerDetails?.grandTotal}: {totals.grandTotal.toFixed(2)} ₺</h2>
       </SummaryBox>
 
-      <ActionButton onClick={handleSave}>💾 Kaydet</ActionButton>
-      <ActionButton onClick={() => generateOfferPDF(offerData, company, customers)}>📄 PDF Olarak İndir</ActionButton>
+      <ActionButton onClick={handleSave}>💾 {texts?.buttons?.save}</ActionButton>
+      <ActionButton onClick={() => generateOfferPDF(offerData, company, customers)}>📄 {texts?.buttons?.downloadPDF}</ActionButton>
     </OfferDetailsContainer>
   );
 };

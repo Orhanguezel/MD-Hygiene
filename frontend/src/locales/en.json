@@ -165,12 +165,41 @@
     "paid": "Paid",
     "unpaid": "Unpaid"
   },
+  "loading": "⏳ Loading offer...",
+  "errors": {
+    "notFound": "❌ Offer not found.",
+    "missingInfo": "Missing information"
+  },
   "notifications": {
     "title": "Notification Management",
     "markAsRead": "Mark as Read",
     "noNotifications": "No notifications yet.",
     "unread": "Unread",
-    "read": "Read"
+    "read": "Read",
+    "offerUpdated": "✅ Offer successfully updated!",
+    "updateFailed": "❌ Offer update failed!"
+  },
+  "offerDetails": {
+    "title": "Offer Details",
+    "companyInfo": "Company Information",
+    "customerInfo": "Customer Information",
+    "customerName": "Customer Name",
+    "companyName": "Company Name",
+    "address": "Address",
+    "phone": "Phone",
+    "product": "Product Name",
+    "unitPrice": "Unit Price (₺)",
+    "quantity": "Quantity",
+    "tax": "VAT (%)",
+    "total": "Total (₺)",
+    "shippingCost": "Shipping Cost",
+    "netTotal": "Net Total",
+    "taxTotal": "VAT Amount",
+    "grandTotal": "Grand Total"
+  },
+  "buttons": {
+    "save": "Save",
+    "downloadPDF": "Download PDF"
   },
   "reports": {
     "title": "Reports",
@@ -619,7 +648,18 @@
     "invalidId": "Invalid customer ID!",
     "list": "Customer List",
     "noRecords": "No customers found.",
-    "loading": "Loading customers..."
+    "loading": "Loading customers...",
+    "contactName": "Contact Person",
+    "email": "Email",
+    "street": "Street",
+    "city": "City",
+    "postalCode": "Postal Code",
+    "country": "Country",
+    "actions": "Actions",
+    "edit": "Edit",
+    "missingFields": "Please fill in all required fields!",
+    "addFailed": "Failed to add customer!",
+    "error": "Error loading customers!"
   },
   "general": {
     "back": "Back"

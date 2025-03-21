@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
 import API from "@/services/api";
 
 const initialState = {
@@ -10,120 +9,88 @@ const initialState = {
   error: null,
 };
 
-// 📥 **Tüm faturaları getir (Admin Panel)**
-export const fetchInvoices = createAsyncThunk(
-  "invoices/fetchInvoices",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await API.get("/invoices");
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "🚨 Faturalar yüklenirken hata oluştu!");
-    }
+// 📌 **Genel API Çağrısı Yönetimi**
+const apiCall = async (method, url, data = null, rejectWithValue) => {
+  try {
+    const response = await API[method](url, data);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || "🚨 İşlem gerçekleştirilemedi!");
   }
+};
+
+// 📥 **Tüm faturaları getir (Admin Panel)**
+export const fetchInvoices = createAsyncThunk("invoices/fetchInvoices", async (_, { rejectWithValue }) =>
+  apiCall("get", "/invoices", null, rejectWithValue)
 );
 
 // 📥 **Kullanıcının faturalarını getir**
-export const fetchUserInvoices = createAsyncThunk(
-  "invoices/fetchUserInvoices",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await API.get("/invoices/user");
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "🚨 Kullanıcı faturaları alınamadı!");
-    }
-  }
+export const fetchUserInvoices = createAsyncThunk("invoices/fetchUserInvoices", async (_, { rejectWithValue }) =>
+  apiCall("get", "/invoices/user", null, rejectWithValue)
 );
 
 // 📥 **Belirli bir faturayı getir**
-export const fetchInvoiceById = createAsyncThunk(
-  "invoices/fetchInvoiceById",
-  async (invoiceId, { rejectWithValue }) => {
-    try {
-      if (!invoiceId) {
-        console.error("🚨 HATA: API çağrısı yapılamadı. invoiceId eksik!");
-        return rejectWithValue("Fatura ID eksik!");
-      }
+export const fetchInvoiceById = createAsyncThunk("invoices/fetchInvoiceById", async (invoiceId, { rejectWithValue }) => {
+  if (!invoiceId) return rejectWithValue("🚨 Fatura ID eksik!");
+  return apiCall("get", `/invoices/${invoiceId}`, null, rejectWithValue);
+});
 
-      console.log("📌 API Çağrısı Yapılıyor: /invoices/" + invoiceId);
-      const response = await API.get(`/invoices/${invoiceId}`);
-      return response.data;
-    } catch (error) {
-      console.error("🚨 API Hatası:", error);
-      return rejectWithValue(error.response?.data || "Fatura bulunamadı!");
-    }
-  }
-);
-
-
-// 📝 **Siparişten Fatura Oluştur**
+// 📥 **Siparişten Fatura Oluştur**
 export const createInvoiceFromOrder = createAsyncThunk(
   "invoices/createInvoiceFromOrder",
   async (orderData, { rejectWithValue }) => {
-    try {
-      if (!orderData || !orderData._id) {
-        return rejectWithValue("🚨 Sipariş verisi eksik!");
-      }
+    console.log("📌 Fatura oluşturulacak sipariş verisi:", orderData);
 
-      const invoiceData = {
-        invoiceNumber: `INV-${Date.now()}-${uuidv4()}`,
-        order: orderData._id,
-        user: orderData.userId,
-        items: orderData.items.map(item => ({
-          product: item.product?._id || "Bilinmeyen Ürün",
-          name: item.product?.title || item.product?.name || "Bilinmeyen Ürün",
-          quantity: item.quantity,
-          unitPrice: item.unitPrice,
-        })),
-        totalAmount: orderData.totalAmount,
-        taxAmount: orderData.taxAmount,
-        issuedAt: new Date().toISOString(),
-        status: "pending",
-      };
+    if (!orderData || !orderData.order) return rejectWithValue("🚨 Sipariş verisi eksik!");
+    if (!orderData.company) return rejectWithValue("🚨 Şirket bilgisi eksik!");
 
-      const response = await API.post("/invoices", invoiceData);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "🚨 Fatura oluşturulamadı!");
-    }
+    const invoiceData = {
+      invoiceNumber: `INV-${Date.now()}`,
+      order: orderData.order,
+      user: orderData.user, // ✅ burada "user" doğru şekilde geliyor
+      company: orderData.company,
+      items: orderData.products.map((item) => ({
+        product: item.productId,
+        name: item.name,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+      })),
+      totalAmount: orderData.totalAmount,
+      taxAmount: orderData.taxAmount,
+      issuedAt: new Date().toISOString(),
+      status: "pending",
+    };
+
+    console.log("📌 Oluşturulan fatura verisi:", invoiceData);
+
+    return apiCall("post", "/invoices", invoiceData, rejectWithValue);
   }
 );
+
 
 
 // 📥 **Fatura PDF oluştur ve indir**
-export const fetchInvoicePDF = createAsyncThunk(
-  "invoices/fetchInvoicePDF",
-  async (invoiceId, { rejectWithValue }) => {
-    try {
-      if (!invoiceId) {
-        return rejectWithValue("🚨 Fatura ID eksik!");
-      }
+export const fetchInvoicePDF = createAsyncThunk("invoices/fetchInvoicePDF", async (invoiceId, { rejectWithValue }) => {
+  if (!invoiceId) return rejectWithValue("🚨 Fatura ID eksik!");
 
-      const response = await API.get(`/invoices/${invoiceId}/pdf`, {
-        responseType: "blob", // ✅ PDF dosyası indirilecek
-      });
+  try {
+    const response = await API.get(`/invoices/${invoiceId}/pdf`, { responseType: "blob" });
+    if (!response.data) return rejectWithValue("🚨 Fatura PDF verisi boş!");
 
-      if (!response.data) {
-        return rejectWithValue("🚨 Fatura PDF verisi boş geldi!");
-      }
+    const blob = new Blob([response.data], { type: "application/pdf" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `invoice-${invoiceId}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
-      const blob = new Blob([response.data], { type: "application/pdf" });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `invoice-${invoiceId}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      return invoiceId;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "🚨 Fatura PDF alınamadı!");
-    }
+    return invoiceId;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || "🚨 Fatura PDF alınamadı!");
   }
-);
-
+});
 
 // ✅ **Redux Slice Tanımlaması**
 const invoicesSlice = createSlice({
@@ -133,69 +100,41 @@ const invoicesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // 📌 **Tüm Faturalar**
-      .addCase(fetchInvoices.pending, (state) => {
-        state.status = "loading";
-      })
       .addCase(fetchInvoices.fulfilled, (state, action) => {
-        state.status = "succeeded";
         state.invoices = action.payload;
-      })
-      .addCase(fetchInvoices.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
+        state.status = "succeeded";
       })
 
       // 📌 **Kullanıcı Faturaları**
-      .addCase(fetchUserInvoices.pending, (state) => {
-        state.fetchStatus = "loading"; // ✅ Yeni state tanımlandı
-      })
       .addCase(fetchUserInvoices.fulfilled, (state, action) => {
-        state.status = "succeeded";
         state.invoices = action.payload;
-      })
-      .addCase(fetchUserInvoices.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
+        state.status = "succeeded";
       })
 
       // 📌 **Belirli Bir Fatura**
-      .addCase(fetchInvoiceById.pending, (state) => {
-        state.status = "loading";
-        // Eğer daha önce fatura varsa koru, null yapma
-        if (!state.selectedInvoice) {
-          state.selectedInvoice = null;
-        }
-      })
       .addCase(fetchInvoiceById.fulfilled, (state, action) => {
-        state.status = "succeeded";
         state.selectedInvoice = action.payload;
-      })
-      .addCase(fetchInvoiceById.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
+        state.status = "succeeded";
       })
 
       // 📌 **Siparişten Fatura Oluştur**
-      .addCase(createInvoiceFromOrder.pending, (state) => {
-        state.status = "loading";
-      })
       .addCase(createInvoiceFromOrder.fulfilled, (state, action) => {
-        state.status = "succeeded";
         state.invoices.push(action.payload);
-      })
-      .addCase(createInvoiceFromOrder.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
+        state.status = "succeeded";
       })
 
       // 📌 **Fatura PDF İndirme**
-      .addCase(fetchInvoicePDF.pending, (state) => {
-        state.status = "loading";
-      })
       .addCase(fetchInvoicePDF.fulfilled, (state) => {
         state.status = "succeeded";
       })
-      .addCase(fetchInvoicePDF.rejected, (state, action) => {
+
+      // 🔄 **Tüm Pending İşlemler İçin**
+      .addMatcher((action) => action.type.endsWith("/pending"), (state) => {
+        state.status = "loading";
+      })
+
+      // ❌ **Tüm Rejected İşlemler İçin**
+      .addMatcher((action) => action.type.endsWith("/rejected"), (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });

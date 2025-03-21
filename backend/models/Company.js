@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import { model, Schema } from "mongoose";
 
-const companySchema = new mongoose.Schema(
+const companySchema = new Schema(
   {
     companyName: { type: String, required: true, unique: true },
     taxNumber: { type: String, required: true },
@@ -18,9 +18,9 @@ const companySchema = new mongoose.Schema(
       iban: { type: String, required: true },
       swiftCode: { type: String, required: true },
     },
+    logoUrl: { type: String, required: false }, // ✅ Şirket logosu için URL alanı eklendi
   },
   { timestamps: true }
 );
 
-export default mongoose.model("Company", companySchema);
-
+export default model("Company", companySchema);
