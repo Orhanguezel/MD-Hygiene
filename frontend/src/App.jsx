@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
 import AdminRoutes from "./routes/AdminRoutes";
 import UserRoutes from "./routes/UserRoutes";
@@ -41,12 +41,12 @@ const App = () => {
       <Routes>
         {isAuthenticated ? (
           user?.role === "admin" ? (
-            <Route path="/*" element={<AdminRoutes />} />
+            <AdminRoutes />
           ) : (
-            <Route path="/*" element={<UserRoutes />} />
+            <UserRoutes />
           )
         ) : (
-          <Route path="/*" element={<VisitorRoutes />} />
+          <VisitorRoutes />
         )}
       </Routes>
 

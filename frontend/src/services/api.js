@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // ✅ **Backend API URL**
-const API_BASE_URL = "http://localhost:5010/api";
+const API_BASE_URL = "https://www.md-hygienelogistik.de:5018/api";
 
 const API = axios.create({
   baseURL: API_BASE_URL,
