@@ -1,7 +1,6 @@
 import axios from "axios";
 
-// ✅ **Backend API URL**
-const API_BASE_URL = "https://www.md-hygienelogistik.de:5018/api";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const API = axios.create({
   baseURL: API_BASE_URL,
@@ -10,7 +9,7 @@ const API = axios.create({
   },
 });
 
-// ✅ **JWT Token'ı otomatik olarak istek başlıklarına ekle**
+// ✅ Token varsa sadece o zaman ekle
 API.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -22,15 +21,18 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ✅ **Hata Yönetimi ve Yetkilendirme Kontrolü**
+// ✅ Hata yönetimi: sadece giriş yapılmışsa yönlendirme yap
 API.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401 || error.response?.status === 403) {
+    const token = localStorage.getItem("token");
+
+    if (token && (error.response?.status === 401 || error.response?.status === 403)) {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
       window.location.href = "/login";
     }
+
     return Promise.reject(error);
   }
 );
