@@ -1,22 +1,20 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter, Routes } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { useSelector } from "react-redux";
 import AdminRoutes from "./routes/AdminRoutes";
 import UserRoutes from "./routes/UserRoutes";
 import VisitorRoutes from "./routes/VisitorRoutes";
 import { useLanguage } from "./features/language/useLanguage";
-import { useTheme } from "./features/theme/useTheme"; // ✅ Tema desteği
+import { useTheme } from "./features/theme/useTheme";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect, useState } from "react";
 
 const App = () => {
   const { user, isAuthenticated, loading, error } = useSelector((state) => state.auth);
   const { texts } = useLanguage();
-  const { theme } = useTheme(); // ✅ Tema desteği
-
+  const { theme } = useTheme();
   const [isAppLoading, setIsAppLoading] = useState(true);
 
-  // ⏳ **Yükleme Ekranı (Global)**
   useEffect(() => {
     if (!loading) {
       setTimeout(() => {
@@ -27,7 +25,7 @@ const App = () => {
 
   if (isAppLoading) {
     return (
-      <div style={{ textAlign: "center", justifyContent:"center", padding: "20px", color: theme.text, background: theme.background }}>
+      <div style={{ textAlign: "center", justifyContent: "center", padding: "20px", color: theme.text, background: theme.background }}>
         <h3>{texts.app?.loading}</h3>
       </div>
     );
@@ -38,19 +36,17 @@ const App = () => {
       {/* ✅ Hata mesajı gösterme */}
       {error && <div style={{ color: "red", textAlign: "center" }}>{error}</div>}
 
-      <Routes>
-        {isAuthenticated ? (
-          user?.role === "admin" ? (
-            <AdminRoutes />
-          ) : (
-            <UserRoutes />
-          )
+      {/* ❗️Buradaki switch, koşula göre Route yapılarının kendisini döndürüyor */}
+      {isAuthenticated ? (
+        user?.role === "admin" ? (
+          <AdminRoutes /> // ✅ Bu dosya zaten <Routes> içeriyor
         ) : (
-          <VisitorRoutes />
-        )}
-      </Routes>
+          <UserRoutes />
+        )
+      ) : (
+        <VisitorRoutes />
+      )}
 
-      {/* ✅ ToastContainer eklendi */}
       <ToastContainer
         position="top-right"
         autoClose={2000}
@@ -61,7 +57,7 @@ const App = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme={theme.mode} // 🌙 Tema desteği
+        theme={theme.mode}
         style={{ fontSize: "16px", fontWeight: "bold", textAlign: "center" }}
         className="custom-toast"
       />

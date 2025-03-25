@@ -71,7 +71,7 @@ const AdminRoutes = () => {
         <Route path="dashboard" element={<AdminDashboard />} />
 
         {/* ✅ Genel Kullanıcı Sayfaları */}
-        <Route path="/" element={<Home />} />
+        <Route index element={<Home />} />
         <Route path="favorites" element={<FavoritePage />} />
         <Route path="cart" element={<Cart />} />
         <Route path="checkout" element={<Checkout />} />
